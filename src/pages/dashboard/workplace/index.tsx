@@ -35,7 +35,7 @@ const Workplace: React.FC = () => {
   );
 
   const { data: abData, loading: abLoading } = useRequest(
-    () => getSharedAddressBooks({ pageSize: 1, page: 1 }),
+    () => getSharedAddressBooks({ pageSize: 1, current: 1 }),
     { manual: false },
   );
 

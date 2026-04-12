@@ -150,7 +150,7 @@ const SharedAddressBook: React.FC = () => {
         request={async (params) => {
           const result = await getSharedAddressBooks({
             pageSize: params.pageSize || 10,
-            page: params.current || 1,
+            current: params.current || 1,
           });
           return {
             data: result.data || [],

@@ -17,7 +17,7 @@ export async function getPersonalAddressBook() {
 }
 
 export async function getSharedAddressBooks(
-  params?: { pageSize?: number; page?: number },
+  params?: { pageSize?: number; current?: number },
   options?: { [key: string]: any },
 ) {
   return request<API.PaginatedResult<API.SharedAddressBook>>('/api/ab/shared/profiles', {
