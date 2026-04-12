@@ -58,10 +58,12 @@ declare namespace API {
   type DeviceItem = {
     id: string;
     guid: string;
-    hostname?: string;
-    os?: string;
-    os_version?: string;
-    status?: string;
+    info?: {
+      username?: string;
+      os?: string;
+      device_name?: string;
+    };
+    status?: number;
     user?: string;
     user_name?: string;
     device_group?: string;

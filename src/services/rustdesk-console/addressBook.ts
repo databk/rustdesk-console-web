@@ -39,8 +39,18 @@ export async function deleteSharedAddressBooks(data: string[]) {
   return request('/api/ab/shared', { method: 'DELETE', data });
 }
 
-export async function getPeers() {
-  return request('/api/ab/peers', { method: 'GET' });
+export async function getPeers(
+  params: {
+    current?: number;
+    pageSize?: number;
+    ab?: string;
+    hide_password?: boolean;
+  },
+) {
+  return request<API.PaginatedResult<API.PeerItem>>('/api/ab/peers', {
+    method: 'GET',
+    params,
+  });
 }
 
 export async function addPeer(guid: string, data: API.AddPeerParams) {

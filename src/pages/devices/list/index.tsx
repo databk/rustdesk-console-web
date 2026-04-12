@@ -7,7 +7,7 @@ import {
 import type { ActionType, ProColumns } from "@ant-design/pro-components";
 import { PageContainer, ProTable } from "@ant-design/pro-components";
 import { FormattedMessage, useIntl } from "@umijs/max";
-import { App, Button, Popconfirm, Select, Space, Tag } from "antd";
+import { App, Button, Form, Input, Popconfirm, Select, Space, Tag } from "antd";
 import React, { useRef, useState } from "react";
 
 const DeviceList: React.FC = () => {
@@ -15,8 +15,7 @@ const DeviceList: React.FC = () => {
   const { message: msgApi } = App.useApp();
   const actionRef = useRef<ActionType>();
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [accessibleFilter, setAccessibleFilter] = useState<string>("all");
+  const [searchForm] = Form.useForm();
 
   const handleEnable = async (guid: string) => {
     try {
@@ -80,36 +79,60 @@ const DeviceList: React.FC = () => {
 
   const columns: ProColumns<API.DeviceItem>[] = [
     {
+      title: "",
+      dataIndex: "index",
+      valueType: "indexBorder",
+      width: 50,
+    },
+    {
       title: "ID",
       dataIndex: "id",
       copyable: true,
-      width: 200,
+      width: 150,
       ellipsis: true,
+      sorter: true,
+    },
+    {
+      title: (
+        <FormattedMessage id="pages.devices.device" defaultMessage="Device" />
+      ),
+      dataIndex: "device_name",
+      width: 150,
+      ellipsis: true,
+      render: (_, record) => record.info?.device_name || "-",
     },
     {
       title: (
         <FormattedMessage
-          id="pages.devices.hostname"
-          defaultMessage="Hostname"
+          id="pages.devices.deviceGroup"
+          defaultMessage="Group"
         />
       ),
-      dataIndex: "hostname",
-      ellipsis: true,
-    },
-    {
-      title: <FormattedMessage id="pages.devices.os" defaultMessage="OS" />,
-      dataIndex: "os",
+      dataIndex: "device_group_name",
       width: 120,
       ellipsis: true,
+      render: (_, record) => record.device_group_name || "-",
+    },
+    {
+      title: <FormattedMessage id="pages.devices.user" defaultMessage="User" />,
+      dataIndex: "user_name",
+      width: 120,
+      ellipsis: true,
+      render: (_, record) => record.user_name || "-",
     },
     {
       title: (
         <FormattedMessage id="pages.devices.status" defaultMessage="Status" />
       ),
       dataIndex: "status",
-      width: 100,
+      width: 80,
+      filters: true,
+      valueEnum: {
+        0: { text: intl.formatMessage({ id: "pages.devices.offline", defaultMessage: "Offline" }), status: "Default" },
+        1: { text: intl.formatMessage({ id: "pages.devices.online", defaultMessage: "Online" }), status: "Success" },
+      },
       render: (_, record) => {
-        const isOnline = record.status === "online";
+        const isOnline = record.status === 1;
         return (
           <Tag color={isOnline ? "green" : "default"}>
             {isOnline ? (
@@ -128,44 +151,30 @@ const DeviceList: React.FC = () => {
       },
     },
     {
-      title: <FormattedMessage id="pages.devices.user" defaultMessage="User" />,
-      dataIndex: "user_name",
-      ellipsis: true,
-    },
-    {
       title: (
-        <FormattedMessage
-          id="pages.devices.deviceGroup"
-          defaultMessage="Device Group"
-        />
+        <FormattedMessage id="pages.devices.info" defaultMessage="Info" />
       ),
-      dataIndex: "device_group_name",
+      dataIndex: "info",
+      width: 200,
       ellipsis: true,
+      search: false,
+      render: (_, record) => record.info?.os || "-",
     },
     {
       title: <FormattedMessage id="pages.devices.note" defaultMessage="Note" />,
       dataIndex: "note",
+      width: 150,
       ellipsis: true,
       search: false,
-    },
-    {
-      title: (
-        <FormattedMessage
-          id="pages.devices.lastOnline"
-          defaultMessage="Last Online"
-        />
-      ),
-      dataIndex: "last_online_time",
-      valueType: "dateTime",
-      width: 180,
-      search: false,
+      render: (_, record) => record.note || "-",
     },
     {
       title: (
         <FormattedMessage id="pages.common.action" defaultMessage="Action" />
       ),
       valueType: "option",
-      width: 200,
+      width: 150,
+      fixed: "right",
       render: (_, record) => (
         <Space size="small">
           <Button
@@ -226,9 +235,9 @@ const DeviceList: React.FC = () => {
         request={async (params) => {
           const result = await getDeviceList({
             current: params.current || 1,
-            pageSize: params.pageSize || 10,
-            accessible: accessibleFilter,
-            status: statusFilter,
+            pageSize: params.pageSize || 20,
+            accessible: "all",
+            status: "all",
           });
           return {
             data: result.data || [],
@@ -241,65 +250,44 @@ const DeviceList: React.FC = () => {
           selectedRowKeys,
           onChange: setSelectedRowKeys,
         }}
-        search={false}
+        search={
+          <Form form={searchForm} layout="inline">
+            <Form.Item name="id">
+              <Input placeholder="ID" style={{ width: 150 }} />
+            </Form.Item>
+            <Form.Item name="device_name">
+              <Input placeholder={intl.formatMessage({ id: "pages.devices.device", defaultMessage: "Device" })} style={{ width: 150 }} />
+            </Form.Item>
+            <Form.Item name="user_name">
+              <Input placeholder={intl.formatMessage({ id: "pages.devices.user", defaultMessage: "User" })} style={{ width: 150 }} />
+            </Form.Item>
+            <Form.Item name="status">
+              <Select
+                placeholder={intl.formatMessage({ id: "pages.devices.status", defaultMessage: "Status" })}
+                style={{ width: 120 }}
+                allowClear
+                options={[
+                  { label: intl.formatMessage({ id: "pages.devices.online", defaultMessage: "Online" }), value: "online" },
+                  { label: intl.formatMessage({ id: "pages.devices.offline", defaultMessage: "Offline" }), value: "offline" },
+                ]}
+              />
+            </Form.Item>
+            <Space>
+              <Button onClick={() => searchForm.resetFields()}>
+                <FormattedMessage id="pages.common.reset" defaultMessage="Reset" />
+              </Button>
+              <Button type="primary" onClick={() => actionRef.current?.reload()}>
+                <FormattedMessage id="pages.common.search" defaultMessage="Search" />
+              </Button>
+            </Space>
+          </Form>
+        }
         pagination={{
-          defaultPageSize: 10,
+          defaultPageSize: 20,
           showSizeChanger: true,
           showQuickJumper: true,
         }}
-        toolBarRender={() => [
-          <Select
-            key="status"
-            value={statusFilter}
-            onChange={setStatusFilter}
-            style={{ width: 120 }}
-            options={[
-              {
-                label: intl.formatMessage({
-                  id: "pages.devices.allStatus",
-                  defaultMessage: "All Status",
-                }),
-                value: "all",
-              },
-              {
-                label: intl.formatMessage({
-                  id: "pages.devices.online",
-                  defaultMessage: "Online",
-                }),
-                value: "online",
-              },
-              {
-                label: intl.formatMessage({
-                  id: "pages.devices.offline",
-                  defaultMessage: "Offline",
-                }),
-                value: "offline",
-              },
-            ]}
-          />,
-          <Select
-            key="accessible"
-            value={accessibleFilter}
-            onChange={setAccessibleFilter}
-            style={{ width: 150 }}
-            options={[
-              {
-                label: intl.formatMessage({
-                  id: "pages.devices.allDevices",
-                  defaultMessage: "All Devices",
-                }),
-                value: "all",
-              },
-              {
-                label: intl.formatMessage({
-                  id: "pages.devices.myDevices",
-                  defaultMessage: "My Devices",
-                }),
-                value: "me",
-              },
-            ]}
-          />,
-        ]}
+        scroll={{ x: 1200 }}
       />
     </PageContainer>
   );
