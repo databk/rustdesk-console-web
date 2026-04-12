@@ -1,7 +1,7 @@
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
-import { App, Button, Form, Input, Modal, Popconfirm, Switch, Tag } from 'antd';
+import { App, Button, Form, Input, Modal, Popconfirm, Space, Switch, Tag } from 'antd';
 import React, { useRef, useState } from 'react';
 import {
   createUser,
@@ -17,8 +17,13 @@ const UserList: React.FC = () => {
   const actionRef = useRef<ActionType>();
   const [createModalVisible, setCreateModalVisible] = useState(false);
   const [createForm] = Form.useForm();
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [searchParams, setSearchParams] = useState<{
+    search?: string;
+    status?: string;
+  }>({});
 
-  const handleCreate = async (values: any) => {
+  const handleCreate = async (values: API.CreateUserParams) => {
     try {
       await createUser({ ...values, is_admin: values.is_admin || false });
       msgApi.success(
@@ -76,25 +81,36 @@ const UserList: React.FC = () => {
     }
   };
 
+  const handleSearch = (values: { search?: string; status?: string }) => {
+    setSearchParams(values);
+    actionRef.current?.reload();
+  };
+
   const columns: ProColumns<API.UserItem>[] = [
     {
-      title: <FormattedMessage id="pages.users.name" defaultMessage="Name" />,
+      title: "",
+      dataIndex: "index",
+      valueType: "indexBorder",
+      width: 50,
+    },
+    {
+      title: <FormattedMessage id="pages.users.name" defaultMessage="Username" />,
       dataIndex: 'name',
+      width: 150,
+      ellipsis: true,
     },
     {
       title: <FormattedMessage id="pages.users.email" defaultMessage="Email" />,
       dataIndex: 'email',
-    },
-    {
-      title: <FormattedMessage id="pages.users.note" defaultMessage="Note" />,
-      dataIndex: 'note',
+      width: 200,
       ellipsis: true,
+      render: (_: unknown, record: API.UserItem) => record.email || '-',
     },
     {
       title: <FormattedMessage id="pages.users.status" defaultMessage="Status" />,
       dataIndex: 'status',
-      width: 100,
-      render: (_, record) => {
+      width: 80,
+      render: (_: unknown, record: API.UserItem) => {
         const isActive = record.status === 1;
         return <Tag color={isActive ? 'green' : 'red'}>{isActive ? 'Active' : 'Disabled'}</Tag>;
       },
@@ -102,8 +118,9 @@ const UserList: React.FC = () => {
     {
       title: <FormattedMessage id="pages.users.role" defaultMessage="Role" />,
       dataIndex: 'is_admin',
-      width: 80,
-      render: (_, record) =>
+      width: 100,
+      search: false,
+      render: (_: unknown, record: API.UserItem) =>
         record.is_admin ? (
           <Tag color="blue">Admin</Tag>
         ) : (
@@ -111,11 +128,20 @@ const UserList: React.FC = () => {
         ),
     },
     {
+      title: <FormattedMessage id="pages.users.note" defaultMessage="Note" />,
+      dataIndex: 'note',
+      width: 150,
+      ellipsis: true,
+      search: false,
+      render: (_: unknown, record: API.UserItem) => record.note || '-',
+    },
+    {
       title: <FormattedMessage id="pages.common.action" defaultMessage="Action" />,
       valueType: 'option',
-      width: 200,
-      render: (_, record) => (
-        <>
+      width: 180,
+      fixed: 'right',
+      render: (_: unknown, record: API.UserItem) => (
+        <Space size="small">
           {record.status === 1 ? (
             <Button key="disable" type="link" size="small" onClick={() => handleDisable(record.guid)}>
               <FormattedMessage id="pages.users.disable" defaultMessage="Disable" />
@@ -139,7 +165,7 @@ const UserList: React.FC = () => {
               <FormattedMessage id="pages.common.delete" defaultMessage="Delete" />
             </Button>
           </Popconfirm>
-        </>
+        </Space>
       ),
     },
   ];
@@ -153,7 +179,9 @@ const UserList: React.FC = () => {
         request={async (params) => {
           const result = await getUserList({
             current: params.current || 1,
-            pageSize: params.pageSize || 10,
+            pageSize: params.pageSize || 20,
+            search: searchParams.search,
+            status: searchParams.status,
           });
           return {
             data: result.data || [],
@@ -162,15 +190,32 @@ const UserList: React.FC = () => {
           };
         }}
         columns={columns}
-        search={false}
+        rowSelection={{
+          selectedRowKeys,
+          onChange: setSelectedRowKeys,
+        }}
+        search={{
+          labelWidth: 'auto',
+          defaultCollapsed: false,
+          optionRender: (searchConfig, formProps, dom) => [
+            ...dom.reverse(),
+          ],
+        }}
+        form={{
+          onSubmit: handleSearch,
+          onReset: () => {
+            setSearchParams({});
+          },
+        }}
         pagination={{
-          defaultPageSize: 10,
+          defaultPageSize: 20,
           showSizeChanger: true,
           showQuickJumper: true,
         }}
+        scroll={{ x: 1000 }}
         toolBarRender={() => [
           <Button key="create" type="primary" onClick={() => setCreateModalVisible(true)}>
-            <FormattedMessage id="pages.users.create" defaultMessage="Create User" />
+            <FormattedMessage id="pages.users.create" defaultMessage="Create" />
           </Button>,
         ]}
       />
@@ -181,17 +226,17 @@ const UserList: React.FC = () => {
         onCancel={() => setCreateModalVisible(false)}
         onOk={() => createForm.submit()}
       >
-        <Form form={createForm} onFinish={handleCreate}>
+        <Form form={createForm} onFinish={handleCreate} layout="vertical">
           <Form.Item
             name="name"
-            label="Name"
-            rules={[{ required: true, message: 'Please enter name' }]}
+            label={<FormattedMessage id="pages.users.name" defaultMessage="Username" />}
+            rules={[{ required: true, message: 'Please enter username' }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
             name="email"
-            label="Email"
+            label={<FormattedMessage id="pages.users.email" defaultMessage="Email" />}
             rules={[
               { required: true, message: 'Please enter email' },
               { type: 'email', message: 'Please enter valid email' },
@@ -201,15 +246,15 @@ const UserList: React.FC = () => {
           </Form.Item>
           <Form.Item
             name="password"
-            label="Password"
+            label={<FormattedMessage id="pages.users.password" defaultMessage="Password" />}
             rules={[{ required: true, message: 'Please enter password' }]}
           >
             <Input.Password />
           </Form.Item>
-          <Form.Item name="note" label="Note">
+          <Form.Item name="note" label={<FormattedMessage id="pages.users.note" defaultMessage="Note" />}>
             <Input.TextArea />
           </Form.Item>
-          <Form.Item name="is_admin" label="Admin" valuePropName="checked">
+          <Form.Item name="is_admin" label={<FormattedMessage id="pages.users.isAdmin" defaultMessage="Admin" />} valuePropName="checked">
             <Switch />
           </Form.Item>
         </Form>

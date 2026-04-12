@@ -2,16 +2,24 @@ import { request } from '@umijs/max';
 
 export async function getDeviceList(
   params: {
-    current: number;
-    pageSize: number;
-    accessible?: string;
+    current?: number;
+    pageSize?: number;
+    page?: number;
+    search?: string;
     status?: string;
+    accessible?: string;
   },
   options?: { [key: string]: any },
 ) {
   return request<API.PaginatedResult<API.DeviceItem>>('/api/peers', {
     method: 'GET',
-    params,
+    params: {
+      page: params.current || params.page || 1,
+      pageSize: params.pageSize || 20,
+      search: params.search,
+      status: params.status,
+      accessible: params.accessible,
+    },
     ...(options || {}),
   });
 }

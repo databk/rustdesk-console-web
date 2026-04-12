@@ -17,6 +17,10 @@ const DeviceList: React.FC = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [accessibleFilter, setAccessibleFilter] = useState<string>("all");
+  const [searchParams, setSearchParams] = useState<{
+    search?: string;
+    status?: string;
+  }>({});
 
   const handleEnable = async (guid: string) => {
     try {
@@ -78,6 +82,11 @@ const DeviceList: React.FC = () => {
     }
   };
 
+  const handleSearch = (values: { search?: string; status?: string }) => {
+    setSearchParams(values);
+    actionRef.current?.reload();
+  };
+
   const columns: ProColumns<API.DeviceItem>[] = [
     {
       title: "ID",
@@ -103,12 +112,11 @@ const DeviceList: React.FC = () => {
       ellipsis: true,
     },
     {
-      title: (
-        <FormattedMessage id="pages.devices.status" defaultMessage="Status" />
-      ),
+      title: <FormattedMessage id="pages.devices.status" defaultMessage="Status" />,
       dataIndex: "status",
       width: 100,
-      render: (_, record) => {
+      search: false,
+      render: (_: unknown, record: API.DeviceItem) => {
         const isOnline = record.status === "online";
         return (
           <Tag color={isOnline ? "green" : "default"}>
@@ -166,7 +174,7 @@ const DeviceList: React.FC = () => {
       ),
       valueType: "option",
       width: 200,
-      render: (_, record) => (
+      render: (_: unknown, record: API.DeviceItem) => (
         <Space size="small">
           <Button
             key="enable"
@@ -228,7 +236,8 @@ const DeviceList: React.FC = () => {
             current: params.current || 1,
             pageSize: params.pageSize || 10,
             accessible: accessibleFilter,
-            status: statusFilter,
+            status: statusFilter === "all" ? searchParams.status : statusFilter,
+            search: searchParams.search,
           });
           return {
             data: result.data || [],
@@ -241,7 +250,19 @@ const DeviceList: React.FC = () => {
           selectedRowKeys,
           onChange: setSelectedRowKeys,
         }}
-        search={false}
+        search={{
+          labelWidth: 'auto',
+          defaultCollapsed: false,
+          optionRender: (searchConfig, formProps, dom) => [
+            ...dom.reverse(),
+          ],
+        }}
+        form={{
+          onSubmit: handleSearch,
+          onReset: () => {
+            setSearchParams({});
+          },
+        }}
         pagination={{
           defaultPageSize: 10,
           showSizeChanger: true,

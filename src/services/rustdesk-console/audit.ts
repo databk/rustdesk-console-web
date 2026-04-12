@@ -1,7 +1,13 @@
 import { request } from '@umijs/max';
 
 export async function getConnectionAudits(
-  params: { current: number; pageSize: number },
+  params: {
+    current?: number;
+    pageSize?: number;
+    remote?: string;
+    conn_type?: number;
+    created_at?: string;
+  },
   options?: { [key: string]: any },
 ) {
   return request<API.PaginatedResult<API.ConnectionAuditItem>>('/api/audits/conn', {
@@ -12,7 +18,12 @@ export async function getConnectionAudits(
 }
 
 export async function getFileAudits(
-  params: { current: number; pageSize: number },
+  params: {
+    current?: number;
+    pageSize?: number;
+    remote?: string;
+    created_at?: string;
+  },
   options?: { [key: string]: any },
 ) {
   return request<API.PaginatedResult<API.FileAuditItem>>('/api/audits/file', {
@@ -23,7 +34,11 @@ export async function getFileAudits(
 }
 
 export async function getAlarmAudits(
-  params: { current: number; pageSize: number },
+  params: {
+    current?: number;
+    pageSize?: number;
+    created_at?: string;
+  },
   options?: { [key: string]: any },
 ) {
   return request<API.PaginatedResult<API.AlarmAuditItem>>('/api/audits/alarm', {
@@ -34,7 +49,11 @@ export async function getAlarmAudits(
 }
 
 export async function getConsoleAudits(
-  params: { current: number; pageSize: number },
+  params: {
+    current?: number;
+    pageSize?: number;
+    created_at?: string;
+  },
   options?: { [key: string]: any },
 ) {
   return request<API.PaginatedResult<API.ConsoleAuditItem>>('/api/audits/console', {
