@@ -1,79 +1,89 @@
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { FormattedMessage, useIntl } from '@umijs/max';
+import { FormattedMessage, useIntl, useRequest } from '@umijs/max';
 import { App, Button, Form, Input, Modal, Popconfirm, Space, Tag } from 'antd';
 import React, { useRef, useState } from 'react';
-import { getPeers, addPeer, updatePeer, deletePeer, getTags } from '@/services/rustdesk-console/addressBook';
+import {
+  getPersonalAddressBook,
+  getPeers,
+  addPeer,
+  deletePeer,
+  getTags,
+  addTag,
+} from '@/services/rustdesk-console/addressBook';
 
 const PersonalAddressBook: React.FC = () => {
   const intl = useIntl();
   const { message: msgApi } = App.useApp();
   const actionRef = useRef<ActionType>();
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const [editModalVisible, setEditModalVisible] = useState(false);
-  const [currentPeer, setCurrentPeer] = useState<API.PeerItem | null>(null);
-  const [form] = Form.useForm();
-  const [tags, setTags] = useState<API.TagItem[]>([]);
+  const [addPeerModalVisible, setAddPeerModalVisible] = useState(false);
+  const [addTagModalVisible, setAddTagModalVisible] = useState(false);
+  const [addPeerForm] = Form.useForm();
+  const [addTagForm] = Form.useForm();
   const [searchParams, setSearchParams] = useState<{
     search?: string;
   }>({});
 
-  const loadTags = async () => {
-    try {
-      const result = await getTags('personal');
-      setTags(result || []);
-    } catch {
-      console.error('Failed to load tags');
-    }
-  };
+  const { data: abData, loading: abLoading } = useRequest(getPersonalAddressBook);
+  const { data: tags = [] } = useRequest(
+    () => (abData ? getTags(abData) : Promise.resolve([])),
+    { ready: !!abData }
+  );
 
-  const handleEdit = (record: API.PeerItem) => {
-    setCurrentPeer(record);
-    form.setFieldsValue({
-      id: record.id,
-      username: record.username,
-      hostname: record.hostname,
-      alias: record.alias,
-      platform: record.platform,
-      tags: record.tags,
-    });
-    setEditModalVisible(true);
-  };
-
-  const handleSave = async (values: API.UpdatePeerParams) => {
+  const handleAddPeer = async (values: API.AddPeerParams) => {
+    if (!abData) return;
     try {
-      if (currentPeer) {
-        await updatePeer('personal', { ...values, id: currentPeer.id });
-        msgApi.success(
-          intl.formatMessage({ id: 'pages.addressBook.updateSuccess', defaultMessage: 'Peer updated' }),
-        );
-      } else {
-        await addPeer('personal', values as API.AddPeerParams);
-        msgApi.success(
-          intl.formatMessage({ id: 'pages.addressBook.addSuccess', defaultMessage: 'Peer added' }),
-        );
-      }
-      setEditModalVisible(false);
-      form.resetFields();
-      setCurrentPeer(null);
-      actionRef.current?.reload();
-    } catch {
-      msgApi.error(
-        intl.formatMessage({ id: 'pages.addressBook.saveFailed', defaultMessage: 'Failed to save peer' }),
-      );
-    }
-  };
-
-  const handleDelete = async (id: string) => {
-    try {
-      await deletePeer('personal', { id });
+      await addPeer(abData, values);
       msgApi.success(
-        intl.formatMessage({ id: 'pages.addressBook.deleteSuccess', defaultMessage: 'Peer deleted' }),
+        intl.formatMessage({ id: 'pages.addressBook.peerAdded', defaultMessage: 'Peer added' }),
+      );
+      setAddPeerModalVisible(false);
+      addPeerForm.resetFields();
+      actionRef.current?.reload();
+    } catch {
+      msgApi.error(
+        intl.formatMessage({
+          id: 'pages.addressBook.peerAddFailed',
+          defaultMessage: 'Failed to add peer',
+        }),
+      );
+    }
+  };
+
+  const handleAddTag = async (values: API.AddTagParams) => {
+    if (!abData) return;
+    try {
+      await addTag(abData, values);
+      msgApi.success(
+        intl.formatMessage({ id: 'pages.addressBook.tagAdded', defaultMessage: 'Tag added' }),
+      );
+      setAddTagModalVisible(false);
+      addTagForm.resetFields();
+    } catch {
+      msgApi.error(
+        intl.formatMessage({
+          id: 'pages.addressBook.tagAddFailed',
+          defaultMessage: 'Failed to add tag',
+        }),
+      );
+    }
+  };
+
+  const handleDeletePeer = async (id: string) => {
+    if (!abData) return;
+    try {
+      await deletePeer(abData, { id });
+      msgApi.success(
+        intl.formatMessage({ id: 'pages.addressBook.peerDeleted', defaultMessage: 'Peer deleted' }),
       );
       actionRef.current?.reload();
     } catch {
       msgApi.error(
-        intl.formatMessage({ id: 'pages.addressBook.deleteFailed', defaultMessage: 'Failed to delete peer' }),
+        intl.formatMessage({
+          id: 'pages.addressBook.peerDeleteFailed',
+          defaultMessage: 'Failed to delete peer',
+        }),
       );
     }
   };
@@ -91,50 +101,48 @@ const PersonalAddressBook: React.FC = () => {
       width: 50,
     },
     {
-      title: <FormattedMessage id="pages.addressBook.id" defaultMessage="ID" />,
-      dataIndex: 'id',
+      title: "ID",
+      dataIndex: "id",
+      copyable: true,
       width: 150,
       ellipsis: true,
-      render: (_: unknown, record: API.PeerItem) => (
-        <span>
-          {record.id}
-          {record.alias && <span style={{ color: '#999' }}> ({record.alias})</span>}
-        </span>
+    },
+    {
+      title: (
+        <FormattedMessage id="pages.addressBook.device" defaultMessage="Device" />
       ),
-    },
-    {
-      title: <FormattedMessage id="pages.addressBook.username" defaultMessage="Username" />,
-      dataIndex: 'username',
-      width: 120,
-      ellipsis: true,
-      render: (_: unknown, record: API.PeerItem) => record.username || '-',
-    },
-    {
-      title: <FormattedMessage id="pages.addressBook.hostname" defaultMessage="Hostname" />,
-      dataIndex: 'hostname',
+      dataIndex: "hostname",
       width: 150,
       ellipsis: true,
-      render: (_: unknown, record: API.PeerItem) => record.hostname || '-',
+      search: false,
+      render: (_: unknown, record: API.PeerItem) => record.hostname || "-",
     },
     {
-      title: <FormattedMessage id="pages.addressBook.platform" defaultMessage="Platform" />,
-      dataIndex: 'platform',
-      width: 100,
-      render: (_: unknown, record: API.PeerItem) => record.platform || '-',
+      title: (
+        <FormattedMessage id="pages.addressBook.alias" defaultMessage="Alias" />
+      ),
+      dataIndex: "alias",
+      width: 150,
+      ellipsis: true,
+      search: false,
+      render: (_: unknown, record: API.PeerItem) => (record as API.PeerItem & { alias?: string }).alias || "-",
     },
     {
-      title: <FormattedMessage id="pages.addressBook.tags" defaultMessage="Tags" />,
-      dataIndex: 'tags',
+      title: (
+        <FormattedMessage id="pages.addressBook.tags" defaultMessage="Tags" />
+      ),
+      dataIndex: "tags",
       width: 200,
       search: false,
       render: (_: unknown, record: API.PeerItem) => {
-        if (!record.tags || record.tags.length === 0) return '-';
+        const peerTags = record.tags || [];
+        if (peerTags.length === 0) return "-";
         return (
           <Space size={[0, 4]} wrap>
-            {record.tags.map((tag: string) => {
-              const tagInfo = tags.find((t) => t.name === tag);
+            {peerTags.map((tag: string) => {
+              const tagInfo = (tags as API.TagItem[]).find((t: API.TagItem) => t.name === tag);
               return (
-                <Tag key={tag} color={tagInfo?.color || 'blue'}>
+                <Tag key={tag} color={tagInfo?.color || "blue"}>
                   {tag}
                 </Tag>
               );
@@ -144,23 +152,33 @@ const PersonalAddressBook: React.FC = () => {
       },
     },
     {
-      title: <FormattedMessage id="pages.common.action" defaultMessage="Action" />,
-      valueType: 'option',
+      title: (
+        <FormattedMessage id="pages.addressBook.note" defaultMessage="Note" />
+      ),
+      dataIndex: "note",
       width: 150,
-      fixed: 'right',
+      ellipsis: true,
+      search: false,
+      render: (_: unknown, record: API.PeerItem) => record.note || "-",
+    },
+    {
+      title: (
+        <FormattedMessage id="pages.common.action" defaultMessage="Action" />
+      ),
+      valueType: "option",
+      width: 120,
+      fixed: "right",
       render: (_: unknown, record: API.PeerItem) => (
         <Space size="small">
-          <Button type="link" size="small" onClick={() => handleEdit(record)}>
-            <FormattedMessage id="pages.common.edit" defaultMessage="Edit" />
-          </Button>
           <Popconfirm
+            key="delete"
             title={
               <FormattedMessage
-                id="pages.addressBook.deleteConfirm"
+                id="pages.addressBook.deletePeerConfirm"
                 defaultMessage="Are you sure to delete this peer?"
               />
             }
-            onConfirm={() => handleDelete(record.id)}
+            onConfirm={() => handleDeletePeer(record.id)}
           >
             <Button type="link" size="small" danger>
               <FormattedMessage id="pages.common.delete" defaultMessage="Delete" />
@@ -174,14 +192,21 @@ const PersonalAddressBook: React.FC = () => {
   return (
     <PageContainer>
       <ProTable<API.PeerItem>
-        headerTitle={<FormattedMessage id="pages.addressBook.personal" defaultMessage="Personal Address Book" />}
+        headerTitle={
+          <FormattedMessage id="pages.addressBook.personal" defaultMessage="Personal Address Book" />
+        }
         actionRef={actionRef}
         rowKey="id"
+        loading={abLoading}
         request={async (params) => {
+          if (!abData) {
+            return { data: [], total: 0, success: true };
+          }
           const result = await getPeers({
             current: params.current || 1,
             pageSize: params.pageSize || 20,
-            ab: 'personal',
+            ab: abData,
+            hide_password: true,
             search: searchParams.search,
           });
           return {
@@ -215,58 +240,51 @@ const PersonalAddressBook: React.FC = () => {
         }}
         scroll={{ x: 1000 }}
         toolBarRender={() => [
-          <Button
-            key="add"
-            type="primary"
-            onClick={() => {
-              setCurrentPeer(null);
-              form.resetFields();
-              setEditModalVisible(true);
-            }}
-          >
-            <FormattedMessage id="pages.addressBook.addPeer" defaultMessage="Add Peer" />
+          <Button key="add" type="primary" onClick={() => setAddPeerModalVisible(true)}>
+            <FormattedMessage id="pages.addressBook.addPeer" defaultMessage="Add" />
+          </Button>,
+          <Button key="addTag" onClick={() => setAddTagModalVisible(true)}>
+            <FormattedMessage id="pages.addressBook.addTag" defaultMessage="Add Tag" />
           </Button>,
         ]}
       />
 
       <Modal
-        title={
-          currentPeer ? (
-            <FormattedMessage id="pages.addressBook.editPeer" defaultMessage="Edit Peer" />
-          ) : (
-            <FormattedMessage id="pages.addressBook.addPeer" defaultMessage="Add Peer" />
-          )
-        }
-        open={editModalVisible}
-        onCancel={() => {
-          setEditModalVisible(false);
-          setCurrentPeer(null);
-          form.resetFields();
-        }}
-        onOk={() => form.submit()}
+        title={<FormattedMessage id="pages.addressBook.addPeer" defaultMessage="Add Peer" />}
+        open={addPeerModalVisible}
+        onCancel={() => setAddPeerModalVisible(false)}
+        onOk={() => addPeerForm.submit()}
       >
-        <Form form={form} onFinish={handleSave} layout="vertical">
+        <Form form={addPeerForm} onFinish={handleAddPeer} layout="vertical">
           <Form.Item
             name="id"
-            label={<FormattedMessage id="pages.addressBook.id" defaultMessage="ID" />}
-            rules={[{ required: true, message: 'Please enter ID' }]}
+            label="ID"
+            rules={[{ required: true, message: 'Please enter peer ID' }]}
           >
-            <Input disabled={!!currentPeer} />
-          </Form.Item>
-          <Form.Item name="username" label={<FormattedMessage id="pages.addressBook.username" defaultMessage="Username" />}>
             <Input />
           </Form.Item>
-          <Form.Item name="hostname" label={<FormattedMessage id="pages.addressBook.hostname" defaultMessage="Hostname" />}>
+          <Form.Item name="hostname" label={<FormattedMessage id="pages.addressBook.device" defaultMessage="Device" />}>
             <Input />
           </Form.Item>
-          <Form.Item name="alias" label={<FormattedMessage id="pages.addressBook.alias" defaultMessage="Alias" />}>
-            <Input />
+          <Form.Item name="note" label={<FormattedMessage id="pages.addressBook.note" defaultMessage="Note" />}>
+            <Input.TextArea />
           </Form.Item>
-          <Form.Item name="platform" label={<FormattedMessage id="pages.addressBook.platform" defaultMessage="Platform" />}>
+        </Form>
+      </Modal>
+
+      <Modal
+        title={<FormattedMessage id="pages.addressBook.addTag" defaultMessage="Add Tag" />}
+        open={addTagModalVisible}
+        onCancel={() => setAddTagModalVisible(false)}
+        onOk={() => addTagForm.submit()}
+      >
+        <Form form={addTagForm} onFinish={handleAddTag} layout="vertical">
+          <Form.Item
+            name="name"
+            label={<FormattedMessage id="pages.addressBook.tagName" defaultMessage="Tag Name" />}
+            rules={[{ required: true, message: 'Please enter tag name' }]}
+          >
             <Input />
-          </Form.Item>
-          <Form.Item name="password" label={<FormattedMessage id="pages.addressBook.password" defaultMessage="Password" />}>
-            <Input.Password />
           </Form.Item>
         </Form>
       </Modal>

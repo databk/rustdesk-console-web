@@ -9,6 +9,7 @@ import {
   disableUser,
   enableUser,
   getUserList,
+  inviteUser,
 } from '@/services/rustdesk-console/user';
 
 const UserList: React.FC = () => {
@@ -16,7 +17,9 @@ const UserList: React.FC = () => {
   const { message: msgApi } = App.useApp();
   const actionRef = useRef<ActionType>();
   const [createModalVisible, setCreateModalVisible] = useState(false);
+  const [inviteModalVisible, setInviteModalVisible] = useState(false);
   const [createForm] = Form.useForm();
+  const [inviteForm] = Form.useForm();
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [searchParams, setSearchParams] = useState<{
     search?: string;
@@ -35,6 +38,21 @@ const UserList: React.FC = () => {
     } catch {
       msgApi.error(
         intl.formatMessage({ id: 'pages.users.createFailed', defaultMessage: 'Failed to create user' }),
+      );
+    }
+  };
+
+  const handleInvite = async (values: API.InviteUserParams) => {
+    try {
+      await inviteUser(values);
+      msgApi.success(
+        intl.formatMessage({ id: 'pages.users.inviteSuccess', defaultMessage: 'Invitation sent' }),
+      );
+      setInviteModalVisible(false);
+      inviteForm.resetFields();
+    } catch {
+      msgApi.error(
+        intl.formatMessage({ id: 'pages.users.inviteFailed', defaultMessage: 'Failed to send invitation' }),
       );
     }
   };
@@ -110,6 +128,7 @@ const UserList: React.FC = () => {
       title: <FormattedMessage id="pages.users.status" defaultMessage="Status" />,
       dataIndex: 'status',
       width: 80,
+      search: false,
       render: (_: unknown, record: API.UserItem) => {
         const isActive = record.status === 1;
         return <Tag color={isActive ? 'green' : 'red'}>{isActive ? 'Active' : 'Disabled'}</Tag>;
@@ -217,6 +236,9 @@ const UserList: React.FC = () => {
           <Button key="create" type="primary" onClick={() => setCreateModalVisible(true)}>
             <FormattedMessage id="pages.users.create" defaultMessage="Create" />
           </Button>,
+          <Button key="invite" onClick={() => setInviteModalVisible(true)}>
+            <FormattedMessage id="pages.users.invite" defaultMessage="Invite" />
+          </Button>,
         ]}
       />
 
@@ -256,6 +278,29 @@ const UserList: React.FC = () => {
           </Form.Item>
           <Form.Item name="is_admin" label={<FormattedMessage id="pages.users.isAdmin" defaultMessage="Admin" />} valuePropName="checked">
             <Switch />
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      <Modal
+        title={<FormattedMessage id="pages.users.invite" defaultMessage="Invite User" />}
+        open={inviteModalVisible}
+        onCancel={() => setInviteModalVisible(false)}
+        onOk={() => inviteForm.submit()}
+      >
+        <Form form={inviteForm} onFinish={handleInvite} layout="vertical">
+          <Form.Item
+            name="email"
+            label={<FormattedMessage id="pages.users.email" defaultMessage="Email" />}
+            rules={[
+              { required: true, message: 'Please enter email' },
+              { type: 'email', message: 'Please enter valid email' },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item name="note" label={<FormattedMessage id="pages.users.note" defaultMessage="Note" />}>
+            <Input.TextArea />
           </Form.Item>
         </Form>
       </Modal>

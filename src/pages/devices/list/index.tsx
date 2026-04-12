@@ -7,7 +7,7 @@ import {
 import type { ActionType, ProColumns } from "@ant-design/pro-components";
 import { PageContainer, ProTable } from "@ant-design/pro-components";
 import { FormattedMessage, useIntl } from "@umijs/max";
-import { App, Button, Popconfirm, Select, Space, Tag } from "antd";
+import { App, Button, Popconfirm, Space, Tag } from "antd";
 import React, { useRef, useState } from "react";
 
 const DeviceList: React.FC = () => {
@@ -15,8 +15,6 @@ const DeviceList: React.FC = () => {
   const { message: msgApi } = App.useApp();
   const actionRef = useRef<ActionType>();
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [accessibleFilter, setAccessibleFilter] = useState<string>("all");
   const [searchParams, setSearchParams] = useState<{
     search?: string;
     status?: string;
@@ -89,35 +87,56 @@ const DeviceList: React.FC = () => {
 
   const columns: ProColumns<API.DeviceItem>[] = [
     {
+      title: "",
+      dataIndex: "index",
+      valueType: "indexBorder",
+      width: 50,
+    },
+    {
       title: "ID",
       dataIndex: "id",
       copyable: true,
-      width: 200,
+      width: 150,
       ellipsis: true,
     },
     {
       title: (
-        <FormattedMessage
-          id="pages.devices.hostname"
-          defaultMessage="Hostname"
-        />
+        <FormattedMessage id="pages.devices.device" defaultMessage="Device" />
       ),
-      dataIndex: "hostname",
+      dataIndex: "device_name",
+      width: 150,
       ellipsis: true,
+      search: false,
+      render: (_: unknown, record: API.DeviceItem) => record.info?.device_name || "-",
     },
     {
-      title: <FormattedMessage id="pages.devices.os" defaultMessage="OS" />,
-      dataIndex: "os",
+      title: (
+        <FormattedMessage
+          id="pages.devices.deviceGroup"
+          defaultMessage="Group"
+        />
+      ),
+      dataIndex: "device_group_name",
       width: 120,
       ellipsis: true,
+      search: false,
+      render: (_: unknown, record: API.DeviceItem) => record.device_group_name || "-",
+    },
+    {
+      title: <FormattedMessage id="pages.devices.user" defaultMessage="User" />,
+      dataIndex: "user_name",
+      width: 120,
+      ellipsis: true,
+      search: false,
+      render: (_: unknown, record: API.DeviceItem) => record.user_name || "-",
     },
     {
       title: <FormattedMessage id="pages.devices.status" defaultMessage="Status" />,
       dataIndex: "status",
-      width: 100,
+      width: 80,
       search: false,
       render: (_: unknown, record: API.DeviceItem) => {
-        const isOnline = record.status === "online";
+        const isOnline = record.status === "online" || record.status === 1;
         return (
           <Tag color={isOnline ? "green" : "default"}>
             {isOnline ? (
@@ -136,37 +155,22 @@ const DeviceList: React.FC = () => {
       },
     },
     {
-      title: <FormattedMessage id="pages.devices.user" defaultMessage="User" />,
-      dataIndex: "user_name",
-      ellipsis: true,
-    },
-    {
       title: (
-        <FormattedMessage
-          id="pages.devices.deviceGroup"
-          defaultMessage="Device Group"
-        />
+        <FormattedMessage id="pages.devices.info" defaultMessage="Info" />
       ),
-      dataIndex: "device_group_name",
+      dataIndex: "info",
+      width: 200,
       ellipsis: true,
+      search: false,
+      render: (_: unknown, record: API.DeviceItem) => record.info?.os || "-",
     },
     {
       title: <FormattedMessage id="pages.devices.note" defaultMessage="Note" />,
       dataIndex: "note",
+      width: 150,
       ellipsis: true,
       search: false,
-    },
-    {
-      title: (
-        <FormattedMessage
-          id="pages.devices.lastOnline"
-          defaultMessage="Last Online"
-        />
-      ),
-      dataIndex: "last_online_time",
-      valueType: "dateTime",
-      width: 180,
-      search: false,
+      render: (_: unknown, record: API.DeviceItem) => record.note || "-",
     },
     {
       title: (
@@ -174,6 +178,7 @@ const DeviceList: React.FC = () => {
       ),
       valueType: "option",
       width: 200,
+      fixed: "right",
       render: (_: unknown, record: API.DeviceItem) => (
         <Space size="small">
           <Button
@@ -234,10 +239,9 @@ const DeviceList: React.FC = () => {
         request={async (params) => {
           const result = await getDeviceList({
             current: params.current || 1,
-            pageSize: params.pageSize || 10,
-            accessible: accessibleFilter,
-            status: statusFilter === "all" ? searchParams.status : statusFilter,
+            pageSize: params.pageSize || 20,
             search: searchParams.search,
+            status: searchParams.status,
           });
           return {
             data: result.data || [],
@@ -264,63 +268,11 @@ const DeviceList: React.FC = () => {
           },
         }}
         pagination={{
-          defaultPageSize: 10,
+          defaultPageSize: 20,
           showSizeChanger: true,
           showQuickJumper: true,
         }}
-        toolBarRender={() => [
-          <Select
-            key="status"
-            value={statusFilter}
-            onChange={setStatusFilter}
-            style={{ width: 120 }}
-            options={[
-              {
-                label: intl.formatMessage({
-                  id: "pages.devices.allStatus",
-                  defaultMessage: "All Status",
-                }),
-                value: "all",
-              },
-              {
-                label: intl.formatMessage({
-                  id: "pages.devices.online",
-                  defaultMessage: "Online",
-                }),
-                value: "online",
-              },
-              {
-                label: intl.formatMessage({
-                  id: "pages.devices.offline",
-                  defaultMessage: "Offline",
-                }),
-                value: "offline",
-              },
-            ]}
-          />,
-          <Select
-            key="accessible"
-            value={accessibleFilter}
-            onChange={setAccessibleFilter}
-            style={{ width: 150 }}
-            options={[
-              {
-                label: intl.formatMessage({
-                  id: "pages.devices.allDevices",
-                  defaultMessage: "All Devices",
-                }),
-                value: "all",
-              },
-              {
-                label: intl.formatMessage({
-                  id: "pages.devices.myDevices",
-                  defaultMessage: "My Devices",
-                }),
-                value: "me",
-              },
-            ]}
-          />,
-        ]}
+        scroll={{ x: 1200 }}
       />
     </PageContainer>
   );
