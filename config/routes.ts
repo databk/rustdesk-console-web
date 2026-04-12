@@ -114,7 +114,7 @@
   {
     path: '/audits',
     name: 'audits',
-    icon: 'file-search',
+    icon: 'FileSearchOutlined',
     access: 'canAdmin',
     routes: [
       {
