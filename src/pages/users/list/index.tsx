@@ -20,10 +20,13 @@ const UserList: React.FC = () => {
   const [inviteModalVisible, setInviteModalVisible] = useState(false);
   const [createForm] = Form.useForm();
   const [inviteForm] = Form.useForm();
-  const [searchForm] = Form.useForm();
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [searchParams, setSearchParams] = useState<{
+    search?: string;
+    status?: string;
+  }>({});
 
-  const handleCreate = async (values: any) => {
+  const handleCreate = async (values: API.CreateUserParams) => {
     try {
       await createUser({ ...values, is_admin: values.is_admin || false });
       msgApi.success(
@@ -39,7 +42,7 @@ const UserList: React.FC = () => {
     }
   };
 
-  const handleInvite = async (values: any) => {
+  const handleInvite = async (values: API.InviteUserParams) => {
     try {
       await inviteUser(values);
       msgApi.success(
@@ -96,6 +99,11 @@ const UserList: React.FC = () => {
     }
   };
 
+  const handleSearch = (values: { search?: string; status?: string }) => {
+    setSearchParams(values);
+    actionRef.current?.reload();
+  };
+
   const columns: ProColumns<API.UserItem>[] = [
     {
       title: "",
@@ -114,17 +122,13 @@ const UserList: React.FC = () => {
       dataIndex: 'email',
       width: 200,
       ellipsis: true,
-      render: (_, record) => record.email || '-',
+      render: (_: unknown, record: API.UserItem) => record.email || '-',
     },
     {
       title: <FormattedMessage id="pages.users.status" defaultMessage="Status" />,
       dataIndex: 'status',
       width: 80,
-      valueEnum: {
-        0: { text: intl.formatMessage({ id: 'pages.users.disabled', defaultMessage: 'Disabled' }), status: 'Error' },
-        1: { text: intl.formatMessage({ id: 'pages.users.active', defaultMessage: 'Active' }), status: 'Success' },
-      },
-      render: (_, record) => {
+      render: (_: unknown, record: API.UserItem) => {
         const isActive = record.status === 1;
         return <Tag color={isActive ? 'green' : 'red'}>{isActive ? 'Active' : 'Disabled'}</Tag>;
       },
@@ -133,7 +137,8 @@ const UserList: React.FC = () => {
       title: <FormattedMessage id="pages.users.role" defaultMessage="Role" />,
       dataIndex: 'is_admin',
       width: 100,
-      render: (_, record) =>
+      search: false,
+      render: (_: unknown, record: API.UserItem) =>
         record.is_admin ? (
           <Tag color="blue">Admin</Tag>
         ) : (
@@ -145,7 +150,8 @@ const UserList: React.FC = () => {
       dataIndex: 'group_name',
       width: 120,
       ellipsis: true,
-      render: (_, record) => (record as any).group_name || '-',
+      search: false,
+      render: (_: unknown, record: API.UserItem) => (record as API.UserItem & { group_name?: string }).group_name || '-',
     },
     {
       title: <FormattedMessage id="pages.users.note" defaultMessage="Note" />,
@@ -153,14 +159,14 @@ const UserList: React.FC = () => {
       width: 150,
       ellipsis: true,
       search: false,
-      render: (_, record) => record.note || '-',
+      render: (_: unknown, record: API.UserItem) => record.note || '-',
     },
     {
       title: <FormattedMessage id="pages.common.action" defaultMessage="Action" />,
       valueType: 'option',
       width: 180,
       fixed: 'right',
-      render: (_, record) => (
+      render: (_: unknown, record: API.UserItem) => (
         <Space size="small">
           {record.status === 1 ? (
             <Button key="disable" type="link" size="small" onClick={() => handleDisable(record.guid)}>
@@ -200,6 +206,8 @@ const UserList: React.FC = () => {
           const result = await getUserList({
             current: params.current || 1,
             pageSize: params.pageSize || 20,
+            search: searchParams.search,
+            status: searchParams.status,
           });
           return {
             data: result.data || [],
@@ -212,24 +220,19 @@ const UserList: React.FC = () => {
           selectedRowKeys,
           onChange: setSelectedRowKeys,
         }}
-        search={
-          <Form form={searchForm} layout="inline">
-            <Form.Item name="name">
-              <Input placeholder={intl.formatMessage({ id: 'pages.users.name', defaultMessage: 'Username' })} style={{ width: 150 }} />
-            </Form.Item>
-            <Form.Item name="email">
-              <Input placeholder={intl.formatMessage({ id: 'pages.users.email', defaultMessage: 'Email' })} style={{ width: 200 }} />
-            </Form.Item>
-            <Space>
-              <Button onClick={() => searchForm.resetFields()}>
-                <FormattedMessage id="pages.common.reset" defaultMessage="Reset" />
-              </Button>
-              <Button type="primary" onClick={() => actionRef.current?.reload()}>
-                <FormattedMessage id="pages.common.search" defaultMessage="Search" />
-              </Button>
-            </Space>
-          </Form>
-        }
+        search={{
+          labelWidth: 'auto',
+          defaultCollapsed: false,
+          optionRender: (searchConfig, formProps, dom) => [
+            ...dom.reverse(),
+          ],
+        }}
+        form={{
+          onSubmit: handleSearch,
+          onReset: () => {
+            setSearchParams({});
+          },
+        }}
         pagination={{
           defaultPageSize: 20,
           showSizeChanger: true,

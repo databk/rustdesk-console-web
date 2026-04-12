@@ -1,12 +1,23 @@
 import { request } from '@umijs/max';
 
 export async function getUserList(
-  params: { current: number; pageSize: number },
+  params: {
+    current?: number;
+    pageSize?: number;
+    page?: number;
+    search?: string;
+    status?: string;
+  },
   options?: { [key: string]: any },
 ) {
   return request<API.PaginatedResult<API.UserItem>>('/api/users', {
     method: 'GET',
-    params,
+    params: {
+      page: params.current || params.page || 1,
+      pageSize: params.pageSize || 20,
+      search: params.search,
+      status: params.status,
+    },
     ...(options || {}),
   });
 }

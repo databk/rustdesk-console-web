@@ -17,7 +17,7 @@ export async function getPersonalAddressBook() {
 }
 
 export async function getSharedAddressBooks(
-  params?: { pageSize?: number; current?: number },
+  params?: { pageSize?: number; current?: number; search?: string },
   options?: { [key: string]: any },
 ) {
   return request<API.PaginatedResult<API.SharedAddressBook>>('/api/ab/shared/profiles', {
@@ -45,6 +45,7 @@ export async function getPeers(
     pageSize?: number;
     ab?: string;
     hide_password?: boolean;
+    search?: string;
   },
 ) {
   return request<API.PaginatedResult<API.PeerItem>>('/api/ab/peers', {

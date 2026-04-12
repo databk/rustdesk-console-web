@@ -15,7 +15,10 @@ const DeviceList: React.FC = () => {
   const { message: msgApi } = App.useApp();
   const actionRef = useRef<ActionType>();
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const [searchForm] = Form.useForm();
+  const [searchParams, setSearchParams] = useState<{
+    search?: string;
+    status?: string;
+  }>({});
 
   const handleEnable = async (guid: string) => {
     try {
@@ -77,6 +80,11 @@ const DeviceList: React.FC = () => {
     }
   };
 
+  const handleSearch = (values: { search?: string; status?: string }) => {
+    setSearchParams(values);
+    actionRef.current?.reload();
+  };
+
   const columns: ProColumns<API.DeviceItem>[] = [
     {
       title: "",
@@ -90,7 +98,6 @@ const DeviceList: React.FC = () => {
       copyable: true,
       width: 150,
       ellipsis: true,
-      sorter: true,
     },
     {
       title: (
@@ -99,7 +106,7 @@ const DeviceList: React.FC = () => {
       dataIndex: "device_name",
       width: 150,
       ellipsis: true,
-      render: (_, record) => record.info?.device_name || "-",
+      render: (_: unknown, record: API.DeviceItem) => record.info?.device_name || "-",
     },
     {
       title: (
@@ -111,14 +118,14 @@ const DeviceList: React.FC = () => {
       dataIndex: "device_group_name",
       width: 120,
       ellipsis: true,
-      render: (_, record) => record.device_group_name || "-",
+      render: (_: unknown, record: API.DeviceItem) => record.device_group_name || "-",
     },
     {
       title: <FormattedMessage id="pages.devices.user" defaultMessage="User" />,
       dataIndex: "user_name",
       width: 120,
       ellipsis: true,
-      render: (_, record) => record.user_name || "-",
+      render: (_: unknown, record: API.DeviceItem) => record.user_name || "-",
     },
     {
       title: (
@@ -126,12 +133,7 @@ const DeviceList: React.FC = () => {
       ),
       dataIndex: "status",
       width: 80,
-      filters: true,
-      valueEnum: {
-        0: { text: intl.formatMessage({ id: "pages.devices.offline", defaultMessage: "Offline" }), status: "Default" },
-        1: { text: intl.formatMessage({ id: "pages.devices.online", defaultMessage: "Online" }), status: "Success" },
-      },
-      render: (_, record) => {
+      render: (_: unknown, record: API.DeviceItem) => {
         const isOnline = record.status === 1;
         return (
           <Tag color={isOnline ? "green" : "default"}>
@@ -158,7 +160,7 @@ const DeviceList: React.FC = () => {
       width: 200,
       ellipsis: true,
       search: false,
-      render: (_, record) => record.info?.os || "-",
+      render: (_: unknown, record: API.DeviceItem) => record.info?.os || "-",
     },
     {
       title: <FormattedMessage id="pages.devices.note" defaultMessage="Note" />,
@@ -166,7 +168,7 @@ const DeviceList: React.FC = () => {
       width: 150,
       ellipsis: true,
       search: false,
-      render: (_, record) => record.note || "-",
+      render: (_: unknown, record: API.DeviceItem) => record.note || "-",
     },
     {
       title: (
@@ -175,7 +177,7 @@ const DeviceList: React.FC = () => {
       valueType: "option",
       width: 150,
       fixed: "right",
-      render: (_, record) => (
+      render: (_: unknown, record: API.DeviceItem) => (
         <Space size="small">
           <Button
             key="enable"
@@ -236,8 +238,8 @@ const DeviceList: React.FC = () => {
           const result = await getDeviceList({
             current: params.current || 1,
             pageSize: params.pageSize || 20,
-            accessible: "all",
-            status: "all",
+            search: searchParams.search,
+            status: searchParams.status,
           });
           return {
             data: result.data || [],
@@ -250,38 +252,19 @@ const DeviceList: React.FC = () => {
           selectedRowKeys,
           onChange: setSelectedRowKeys,
         }}
-        search={
-          <Form form={searchForm} layout="inline">
-            <Form.Item name="id">
-              <Input placeholder="ID" style={{ width: 150 }} />
-            </Form.Item>
-            <Form.Item name="device_name">
-              <Input placeholder={intl.formatMessage({ id: "pages.devices.device", defaultMessage: "Device" })} style={{ width: 150 }} />
-            </Form.Item>
-            <Form.Item name="user_name">
-              <Input placeholder={intl.formatMessage({ id: "pages.devices.user", defaultMessage: "User" })} style={{ width: 150 }} />
-            </Form.Item>
-            <Form.Item name="status">
-              <Select
-                placeholder={intl.formatMessage({ id: "pages.devices.status", defaultMessage: "Status" })}
-                style={{ width: 120 }}
-                allowClear
-                options={[
-                  { label: intl.formatMessage({ id: "pages.devices.online", defaultMessage: "Online" }), value: "online" },
-                  { label: intl.formatMessage({ id: "pages.devices.offline", defaultMessage: "Offline" }), value: "offline" },
-                ]}
-              />
-            </Form.Item>
-            <Space>
-              <Button onClick={() => searchForm.resetFields()}>
-                <FormattedMessage id="pages.common.reset" defaultMessage="Reset" />
-              </Button>
-              <Button type="primary" onClick={() => actionRef.current?.reload()}>
-                <FormattedMessage id="pages.common.search" defaultMessage="Search" />
-              </Button>
-            </Space>
-          </Form>
-        }
+        search={{
+          labelWidth: "auto",
+          defaultCollapsed: false,
+          optionRender: (searchConfig, formProps, dom) => [
+            ...dom.reverse(),
+          ],
+        }}
+        form={{
+          onSubmit: handleSearch,
+          onReset: () => {
+            setSearchParams({});
+          },
+        }}
         pagination={{
           defaultPageSize: 20,
           showSizeChanger: true,
