@@ -35,6 +35,12 @@ functions/*
 
 # screenshot
 screenshot
-.firebase
+firebase
 
 build
+
+# playwright
+/test-results/
+/playwright-report/
+/blob/
+/debug-*.png

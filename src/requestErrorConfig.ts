@@ -2,7 +2,7 @@
 import type { RequestConfig } from '@umijs/max';
 import { history } from '@umijs/max';
 import { message, notification } from 'antd';
-import { getToken, removeToken } from './app';
+import { getToken, removeToken } from '@/utils/auth';
 
 const loginPath = '/user/login';
 

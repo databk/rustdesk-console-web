@@ -4,8 +4,14 @@ import { SettingDrawer } from '@ant-design/pro-components';
 import type { RequestConfig, RunTimeLayoutConfig } from '@umijs/max';
 import { history, Link } from '@umijs/max';
 import React from 'react';
-import { AvatarDropdown, AvatarName, Footer, SelectLang } from '@/components';
+import {
+  AvatarDropdown,
+  AvatarName,
+  Footer,
+  SelectLang,
+} from '@/components';
 import { currentUser as queryCurrentUser } from '@/services/rustdesk-console/auth';
+import { getToken } from '@/utils/auth';
 import defaultSettings from '../config/defaultSettings';
 import { errorConfig } from './requestErrorConfig';
 import '@ant-design/v5-patch-for-react-19';
@@ -13,20 +19,7 @@ import '@ant-design/v5-patch-for-react-19';
 const isDev = process.env.NODE_ENV === 'development' || process.env.CI;
 const loginPath = '/user/login';
 
-const TOKEN_KEY = 'rustdesk_access_token';
 const THEME_KEY = 'rustdesk_theme_settings';
-
-export function getToken(): string | null {
-  return localStorage.getItem(TOKEN_KEY);
-}
-
-export function setToken(token: string) {
-  localStorage.setItem(TOKEN_KEY, token);
-}
-
-export function removeToken() {
-  localStorage.removeItem(TOKEN_KEY);
-}
 
 function getStoredThemeSettings(): Partial<LayoutSettings> | undefined {
   try {

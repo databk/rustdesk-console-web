@@ -5,7 +5,7 @@ import { Spin } from 'antd';
 import { createStyles } from 'antd-style';
 import React from 'react';
 import { flushSync } from 'react-dom';
-import { removeToken } from '@/app';
+import { removeToken } from '@/utils/auth';
 import { logout } from '@/services/rustdesk-console/auth';
 import HeaderDropdown from '../HeaderDropdown';
 

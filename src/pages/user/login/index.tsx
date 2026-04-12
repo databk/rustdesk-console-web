@@ -11,7 +11,7 @@ import { Alert, App } from 'antd';
 import { createStyles } from 'antd-style';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
-import { setToken } from '@/app';
+import { setToken } from '@/utils/auth';
 import { Footer } from '@/components';
 import { login } from '@/services/rustdesk-console/auth';
 import Settings from '../../../../config/defaultSettings';
