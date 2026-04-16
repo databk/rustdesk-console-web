@@ -4,7 +4,6 @@ export async function getUserList(
   params: {
     current?: number;
     pageSize?: number;
-    page?: number;
     search?: string;
     status?: string;
   },
@@ -13,7 +12,7 @@ export async function getUserList(
   return request<API.PaginatedResult<API.UserItem>>('/api/users', {
     method: 'GET',
     params: {
-      page: params.current || params.page || 1,
+      current: params.current || 1,
       pageSize: params.pageSize || 20,
       search: params.search,
       status: params.status,
