@@ -1,5 +1,5 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { LoginForm, ProFormText } from '@ant-design/pro-components';
+import { LoginForm, ProFormCheckbox, ProFormText } from '@ant-design/pro-components';
 import {
   FormattedMessage,
   Helmet,
@@ -7,7 +7,7 @@ import {
   useIntl,
   useModel,
 } from '@umijs/max';
-import { Alert, App } from 'antd';
+import { Alert, App, Checkbox, Space, Typography } from 'antd';
 import { createStyles } from 'antd-style';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
@@ -15,6 +15,8 @@ import { setToken } from '@/utils/auth';
 import { Footer } from '@/components';
 import { login } from '@/services/rustdesk-console/auth';
 import Settings from '../../../../config/defaultSettings';
+
+const { Link, Text } = Typography;
 
 const useStyles = createStyles(({ token }) => {
   return {
@@ -37,6 +39,21 @@ const useStyles = createStyles(({ token }) => {
       backgroundImage:
         "url('https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/V-_oS6r-i7wAAAAAAAAAAAAAFl94AQBr')",
       backgroundSize: '100% 100%',
+    },
+    loginFormExtra: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 16,
+    },
+    forgotPassword: {
+      color: token.colorPrimary,
+      cursor: 'pointer',
+      transition: 'color 0.3s',
+      ':hover': {
+        color: token.colorPrimaryHover,
+        textDecoration: 'underline',
+      },
     },
   };
 });
@@ -68,6 +85,7 @@ const LoginMessage: React.FC<{
 
 const Login: React.FC = () => {
   const [loginError, setLoginError] = useState<string>('');
+  const [rememberMe, setRememberMe] = useState(false);
   const { initialState, setInitialState } = useModel('@@initialState');
   const { styles } = useStyles();
   const { message } = App.useApp();
@@ -85,11 +103,11 @@ const Login: React.FC = () => {
     }
   };
 
-  const handleSubmit = async (values: API.LoginParams) => {
+  const handleSubmit = async (values: API.LoginParams & { rememberMe?: boolean }) => {
     try {
       const msg = await login(values);
       if (msg.access_token) {
-        setToken(msg.access_token);
+        setToken(msg.access_token, values.rememberMe);
         const defaultLoginSuccessMessage = intl.formatMessage({
           id: 'pages.login.success',
           defaultMessage: 'Login successful!',
@@ -114,6 +132,15 @@ const Login: React.FC = () => {
       message.error(defaultLoginFailureMessage);
       setLoginError(defaultLoginFailureMessage);
     }
+  };
+
+  const handleForgotPassword = () => {
+    message.info(
+      intl.formatMessage({
+        id: 'pages.login.forgotPasswordInfo',
+        defaultMessage: 'Please contact administrator to reset password',
+      })
+    );
   };
 
   return (
@@ -143,15 +170,17 @@ const Login: React.FC = () => {
           title="RustDesk Console"
           subTitle="RustDesk Remote Desktop Management Console"
           onFinish={async (values) => {
-            await handleSubmit(values as API.LoginParams);
+            await handleSubmit(values as API.LoginParams & { rememberMe?: boolean });
           }}
         >
           {loginError && <LoginMessage content={loginError} />}
+
           <ProFormText
             name="username"
             fieldProps={{
               size: 'large',
               prefix: <UserOutlined />,
+              autoComplete: 'username',
             }}
             placeholder={intl.formatMessage({
               id: 'pages.login.username.placeholder',
@@ -169,11 +198,13 @@ const Login: React.FC = () => {
               },
             ]}
           />
+
           <ProFormText.Password
             name="password"
             fieldProps={{
               size: 'large',
               prefix: <LockOutlined />,
+              autoComplete: 'current-password',
             }}
             placeholder={intl.formatMessage({
               id: 'pages.login.password.placeholder',
@@ -191,6 +222,20 @@ const Login: React.FC = () => {
               },
             ]}
           />
+
+          <div className={styles.loginFormExtra}>
+            <ProFormCheckbox
+              name="rememberMe"
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+            >
+              <FormattedMessage id="pages.login.rememberMe" defaultValue="Remember me" />
+            </ProFormCheckbox>
+
+            <a className={styles.forgotPassword} onClick={handleForgotPassword}>
+              <FormattedMessage id="pages.login.forgotPassword" defaultValue="Forgot Password?" />
+            </a>
+          </div>
         </LoginForm>
       </div>
       <Footer />
@@ -199,3 +244,8 @@ const Login: React.FC = () => {
 };
 
 export default Login;
+
+function FormattedMessage(props: { id: string; defaultMessage?: string }): React.JSX.Element {
+  const intl = useIntl();
+  return <>{intl.formatMessage(props)}</>;
+}

@@ -5,7 +5,7 @@ const Settings: ProLayoutProps & {
   logo?: string;
 } = {
   navTheme: 'light',
-  colorPrimary: '#00b96b',
+  colorPrimary: '#1890ff',
   layout: 'side',
   contentWidth: 'Fluid',
   fixedHeader: true,
@@ -15,7 +15,17 @@ const Settings: ProLayoutProps & {
   pwa: true,
   logo: '/logo.svg',
   iconfontUrl: '',
-  token: {},
+  token: {
+    colorPrimary: '#1890ff',
+    colorSuccess: '#52c41a',
+    colorWarning: '#faad14',
+    colorError: '#ff4d4f',
+    borderRadius: 6,
+    fontSize: 14,
+    controlHeight: 32,
+    fontFamily:
+      '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
+  },
 };
 
 export default Settings;
