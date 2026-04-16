@@ -20,6 +20,12 @@
     ],
   },
   {
+    path: '/welcome',
+    name: 'welcome',
+    icon: 'smile',
+    component: './welcome',
+  },
+  {
     path: '/dashboard',
     name: 'dashboard',
     icon: 'dashboard',
@@ -77,18 +83,25 @@
     ],
   },
   {
-    path: '/device-groups',
-    name: 'deviceGroups',
-    icon: 'group',
+    path: '/groups',
+    name: 'groups',
+    icon: 'team',
+    access: 'canAdmin',
     routes: [
       {
-        path: '/device-groups',
-        redirect: '/device-groups/list',
+        path: '/groups',
+        redirect: '/groups/user',
       },
       {
-        name: 'list',
-        icon: 'appstore',
-        path: '/device-groups/list',
+        name: 'user',
+        icon: 'user',
+        path: '/groups/user',
+        component: './groups/user',
+      },
+      {
+        name: 'device',
+        icon: 'device',
+        path: '/groups/device',
         component: './device-groups/list',
       },
     ],
@@ -110,6 +123,13 @@
         component: './users/list',
       },
     ],
+  },
+  {
+    path: '/roles',
+    name: 'roles',
+    icon: 'audit',
+    access: 'canAdmin',
+    component: './roles',
   },
   {
     path: '/audits',
@@ -148,8 +168,35 @@
     ],
   },
   {
+    path: '/ab',
+    name: 'addressBooks',
+    icon: 'contacts',
+    component: './address-book/personal',
+  },
+  {
+    path: '/strategy',
+    name: 'strategies',
+    icon: 'solution',
+    access: 'canAdmin',
+    component: './strategy',
+  },
+  {
+    path: '/custom-client',
+    name: 'customClients',
+    icon: 'form',
+    access: 'canAdmin',
+    component: './custom-client',
+  },
+  {
+    path: '/settings',
+    name: 'settings',
+    icon: 'setting',
+    access: 'canAdmin',
+    component: './settings',
+  },
+  {
     path: '/',
-    redirect: '/dashboard/workplace',
+    redirect: '/welcome',
   },
   {
     component: '404',
