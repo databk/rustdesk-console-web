@@ -4,7 +4,6 @@ export async function getDeviceList(
   params: {
     current?: number;
     pageSize?: number;
-    page?: number;
     search?: string;
     status?: string;
     accessible?: string;
@@ -14,11 +13,11 @@ export async function getDeviceList(
   return request<API.PaginatedResult<API.DeviceItem>>('/api/peers', {
     method: 'GET',
     params: {
-      page: params.current || params.page || 1,
+      current: params.current || 1,
       pageSize: params.pageSize || 20,
       search: params.search,
-      status: params.status,
-      accessible: params.accessible,
+      status: params.status || 'all',
+      accessible: params.accessible || 'all',
     },
     ...(options || {}),
   });
