@@ -91,6 +91,14 @@ const FileAudit: React.FC = () => {
           showQuickJumper: true,
         }}
         scroll={{ x: 1200 }}
+        options={{
+          density: true,
+          setting: {
+            listsHeight: 400,
+          },
+          fullScreen: false,
+          reload: true,
+        }}
       />
     </PageContainer>
   );

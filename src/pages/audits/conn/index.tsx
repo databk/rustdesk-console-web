@@ -222,6 +222,14 @@ const ConnectionAudit: React.FC = () => {
             <FormattedMessage id="pages.audits.exportCSV" defaultMessage="Export CSV" />
           </Button>,
         ]}
+        options={{
+          density: true,
+          setting: {
+            listsHeight: 400,
+          },
+          fullScreen: false,
+          reload: true,
+        }}
       />
     </PageContainer>
   );

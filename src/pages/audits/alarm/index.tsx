@@ -78,6 +78,14 @@ const AlarmAudit: React.FC = () => {
           showQuickJumper: true,
         }}
         scroll={{ x: 1000 }}
+        options={{
+          density: true,
+          setting: {
+            listsHeight: 400,
+          },
+          fullScreen: false,
+          reload: true,
+        }}
       />
     </PageContainer>
   );

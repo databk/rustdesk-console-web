@@ -2,6 +2,7 @@ import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl, useRequest } from '@umijs/max';
 import { App, Button, Form, Input, Modal, Popconfirm, Space, Tag } from 'antd';
+import { DeleteOutlined, ImportOutlined, PlusOutlined } from '@ant-design/icons';
 import React, { useRef, useState } from 'react';
 import {
   getPersonalAddressBook,
@@ -240,13 +241,27 @@ const PersonalAddressBook: React.FC = () => {
         }}
         scroll={{ x: 1000 }}
         toolBarRender={() => [
-          <Button key="add" type="primary" onClick={() => setAddPeerModalVisible(true)}>
+          <Button key="add" type="primary" icon={<PlusOutlined />} onClick={() => setAddPeerModalVisible(true)}>
             <FormattedMessage id="pages.addressBook.addPeer" defaultMessage="Add" />
+          </Button>,
+          <Button key="import" icon={<ImportOutlined />}>
+            <FormattedMessage id="pages.addressBook.import" defaultMessage="Import" />
+          </Button>,
+          <Button key="recycle" icon={<DeleteOutlined />}>
+            <FormattedMessage id="pages.addressBook.recycleBin" defaultMessage="Recycle Bin" />
           </Button>,
           <Button key="addTag" onClick={() => setAddTagModalVisible(true)}>
             <FormattedMessage id="pages.addressBook.addTag" defaultMessage="Add Tag" />
           </Button>,
         ]}
+        options={{
+          density: true,
+          setting: {
+            listsHeight: 400,
+          },
+          fullScreen: false,
+          reload: true,
+        }}
       />
 
       <Modal

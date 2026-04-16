@@ -1,7 +1,28 @@
+import {
+  CrownOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  InfoCircleOutlined,
+  MinusCircleOutlined,
+  PlusCircleOutlined,
+  PlusOutlined,
+} from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { FormattedMessage, useIntl } from '@umijs/max';
-import { App, Button, Form, Input, Modal, Popconfirm, Space, Switch, Tag } from 'antd';
+import { useIntl, useModel } from '@umijs/max';
+import {
+  App,
+  Button,
+  Dropdown,
+  Form,
+  Input,
+  Modal,
+  Popconfirm,
+  Space,
+  Switch,
+  Tag,
+  Tooltip,
+} from 'antd';
 import React, { useRef, useState } from 'react';
 import {
   createUser,
@@ -15,6 +36,8 @@ import {
 const UserList: React.FC = () => {
   const intl = useIntl();
   const { message: msgApi } = App.useApp();
+  const { initialState } = useModel('@@initialState');
+  const currentUser = initialState?.currentUser;
   const actionRef = useRef<ActionType>();
   const [createModalVisible, setCreateModalVisible] = useState(false);
   const [inviteModalVisible, setInviteModalVisible] = useState(false);
@@ -106,9 +129,9 @@ const UserList: React.FC = () => {
 
   const columns: ProColumns<API.UserItem>[] = [
     {
-      title: "",
-      dataIndex: "index",
-      valueType: "indexBorder",
+      title: '',
+      dataIndex: 'index',
+      valueType: 'indexBorder',
       width: 50,
     },
     {
@@ -116,6 +139,19 @@ const UserList: React.FC = () => {
       dataIndex: 'name',
       width: 150,
       ellipsis: true,
+      render: (_: unknown, record: API.UserItem) => (
+        <Space>
+          <span>{record.name}</span>
+          {record.is_admin && (
+            <Tooltip title="Admin">
+              <CrownOutlined style={{ color: '#faad14' }} />
+            </Tooltip>
+          )}
+          {record.name === currentUser?.name && (
+            <Tag color="blue">Me</Tag>
+          )}
+        </Space>
+      ),
     },
     {
       title: <FormattedMessage id="pages.users.email" defaultMessage="Email" />,
@@ -125,17 +161,39 @@ const UserList: React.FC = () => {
       render: (_: unknown, record: API.UserItem) => record.email || '-',
     },
     {
-      title: <FormattedMessage id="pages.users.status" defaultMessage="Status" />,
+      title: (
+        <span>
+          <FormattedMessage id="pages.users.status" defaultMessage="Status" />
+          <Tooltip title={intl.formatMessage({ id: 'pages.users.statusInfo', defaultMessage: 'User account status' })}>
+            <InfoCircleOutlined style={{ marginLeft: 4 }} />
+          </Tooltip>
+        </span>
+      ),
       dataIndex: 'status',
       width: 80,
       search: false,
       render: (_: unknown, record: API.UserItem) => {
         const isActive = record.status === 1;
-        return <Tag color={isActive ? 'green' : 'red'}>{isActive ? 'Active' : 'Disabled'}</Tag>;
+        return isActive ? (
+          <Tag icon={<PlusCircleOutlined />} color="green">
+            <FormattedMessage id="pages.users.active" defaultMessage="Active" />
+          </Tag>
+        ) : (
+          <Tag icon={<MinusCircleOutlined />} color="red">
+            <FormattedMessage id="pages.users.disabled" defaultMessage="Disabled" />
+          </Tag>
+        );
       },
     },
     {
-      title: <FormattedMessage id="pages.users.role" defaultMessage="Role" />,
+      title: (
+        <span>
+          <FormattedMessage id="pages.users.roles" defaultMessage="Roles" />
+          <Tooltip title={intl.formatMessage({ id: 'pages.users.rolesInfo', defaultMessage: 'User roles and permissions' })}>
+            <InfoCircleOutlined style={{ marginLeft: 4 }} />
+          </Tooltip>
+        </span>
+      ),
       dataIndex: 'is_admin',
       width: 100,
       search: false,
@@ -143,8 +201,36 @@ const UserList: React.FC = () => {
         record.is_admin ? (
           <Tag color="blue">Admin</Tag>
         ) : (
-          <Tag>User</Tag>
+          <span>-</span>
         ),
+    },
+    {
+      title: (
+        <span>
+          <FormattedMessage id="pages.users.strategy" defaultMessage="Strategy" />
+          <Tooltip title={intl.formatMessage({ id: 'pages.users.strategyInfo', defaultMessage: 'Connection strategy for user' })}>
+            <InfoCircleOutlined style={{ marginLeft: 4 }} />
+          </Tooltip>
+        </span>
+      ),
+      dataIndex: 'strategy_name' as keyof API.UserItem,
+      width: 100,
+      search: false,
+      render: () => '-',
+    },
+    {
+      title: (
+        <span>
+          <FormattedMessage id="pages.users.group" defaultMessage="Group" />
+          <Tooltip title={intl.formatMessage({ id: 'pages.users.groupInfo', defaultMessage: 'User group assignment' })}>
+            <InfoCircleOutlined style={{ marginLeft: 4 }} />
+          </Tooltip>
+        </span>
+      ),
+      dataIndex: 'group_name' as keyof API.UserItem,
+      width: 120,
+      search: false,
+      render: () => '-',
     },
     {
       title: <FormattedMessage id="pages.users.note" defaultMessage="Note" />,
@@ -161,29 +247,53 @@ const UserList: React.FC = () => {
       fixed: 'right',
       render: (_: unknown, record: API.UserItem) => (
         <Space size="small">
-          {record.status === 1 ? (
-            <Button key="disable" type="link" size="small" onClick={() => handleDisable(record.guid)}>
-              <FormattedMessage id="pages.users.disable" defaultMessage="Disable" />
-            </Button>
-          ) : (
-            <Button key="enable" type="link" size="small" onClick={() => handleEnable(record.guid)}>
-              <FormattedMessage id="pages.users.enable" defaultMessage="Enable" />
-            </Button>
-          )}
-          <Popconfirm
-            key="delete"
-            title={
-              <FormattedMessage
-                id="pages.users.deleteConfirm"
-                defaultMessage="Are you sure to delete this user?"
-              />
-            }
-            onConfirm={() => handleDelete(record.guid)}
+          <Button
+            key="edit"
+            type="link"
+            size="small"
+            icon={<EditOutlined />}
           >
-            <Button type="link" size="small" danger>
-              <FormattedMessage id="pages.common.delete" defaultMessage="Delete" />
+            <FormattedMessage id="pages.common.edit" defaultMessage="Edit" />
+          </Button>
+          <Dropdown
+            menu={{
+              items: [
+                ...(record.status === 1
+                  ? [
+                      {
+                        key: 'disable',
+                        label: intl.formatMessage({ id: 'pages.users.disable', defaultMessage: 'Disable' }),
+                        onClick: () => handleDisable(record.guid),
+                      },
+                    ]
+                  : [
+                      {
+                        key: 'enable',
+                        label: intl.formatMessage({ id: 'pages.users.enable', defaultMessage: 'Enable' }),
+                        onClick: () => handleEnable(record.guid),
+                      },
+                    ]),
+                {
+                  key: 'divider-1',
+                  type: 'divider',
+                },
+                {
+                  key: 'delete',
+                  label: (
+                    <span style={{ color: '#ff4d4f' }}>
+                      <FormattedMessage id="pages.common.delete" defaultMessage="Delete" />
+                    </span>
+                  ),
+                  danger: true,
+                  onClick: () => handleDelete(record.guid),
+                },
+              ],
+            }}
+          >
+            <Button type="link" size="small">
+              <FormattedMessage id="pages.common.more" defaultMessage="More" />
             </Button>
-          </Popconfirm>
+          </Dropdown>
         </Space>
       ),
     },
@@ -192,7 +302,12 @@ const UserList: React.FC = () => {
   return (
     <PageContainer>
       <ProTable<API.UserItem>
-        headerTitle={<FormattedMessage id="pages.users.list" defaultMessage="User List" />}
+        headerTitle={
+          <span>
+            <FormattedMessage id="pages.users.list" defaultMessage="User List" /> {' '}
+            {searchParams.search ? '*' : '0'}/-
+          </span>
+        }
         actionRef={actionRef}
         rowKey="guid"
         request={async (params) => {
@@ -231,15 +346,23 @@ const UserList: React.FC = () => {
           showSizeChanger: true,
           showQuickJumper: true,
         }}
-        scroll={{ x: 1000 }}
+        scroll={{ x: 1200 }}
         toolBarRender={() => [
-          <Button key="create" type="primary" onClick={() => setCreateModalVisible(true)}>
+          <Button key="create" type="primary" icon={<PlusOutlined />} onClick={() => setCreateModalVisible(true)}>
             <FormattedMessage id="pages.users.create" defaultMessage="Create" />
           </Button>,
-          <Button key="invite" onClick={() => setInviteModalVisible(true)}>
+          <Button key="invite" icon={<PlusOutlined />} onClick={() => setInviteModalVisible(true)}>
             <FormattedMessage id="pages.users.invite" defaultMessage="Invite" />
           </Button>,
         ]}
+        options={{
+          density: true,
+          setting: {
+            listsHeight: 400,
+          },
+          fullScreen: false,
+          reload: true,
+        }}
       />
 
       <Modal
@@ -309,3 +432,8 @@ const UserList: React.FC = () => {
 };
 
 export default UserList;
+
+function FormattedMessage(props: { id: string; defaultMessage: string }): React.JSX.Element {
+  const intl = useIntl();
+  return <>{intl.formatMessage(props)}</>;
+}

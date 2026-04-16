@@ -2,21 +2,57 @@ import {
   BookOutlined,
   CloudServerOutlined,
   DesktopOutlined,
+  DownloadOutlined,
+  InfoCircleOutlined,
+  QrcodeOutlined,
+  SmileOutlined,
   TeamOutlined,
 } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
 import { useIntl, useRequest } from '@umijs/max';
-import { Card, Col, List, Row, Spin, Statistic, Typography } from 'antd';
+import {
+  Alert,
+  Button,
+  Card,
+  Col,
+  Collapse,
+  Descriptions,
+  List,
+  message,
+  Row,
+  Spin,
+  Statistic,
+  Table,
+  Tag,
+  Typography,
+} from 'antd';
 import React from 'react';
 import { getSharedAddressBooks } from '@/services/rustdesk-console/addressBook';
 import { getDeviceList } from '@/services/rustdesk-console/device';
 import { getDeviceGroupList } from '@/services/rustdesk-console/deviceGroup';
 import { getUserList } from '@/services/rustdesk-console/user';
 
-const { Title, Paragraph } = Typography;
+const { Title, Paragraph, Text } = Typography;
+const { Panel } = Collapse;
+
+interface SystemInfo {
+  version: string;
+  licenseStatus: string;
+  currentDevices: number;
+  maxDevices: number | string;
+  expireTime: string;
+}
 
 const Workplace: React.FC = () => {
   const intl = useIntl();
+
+  const systemInfo: SystemInfo = {
+    version: 'RustDesk Server Pro',
+    licenseStatus: 'active',
+    currentDevices: 0,
+    maxDevices: '-',
+    expireTime: '-',
+  };
 
   const { data: deviceData, loading: deviceLoading } = useRequest(
     () =>
@@ -30,7 +66,7 @@ const Workplace: React.FC = () => {
   );
 
   const { data: userData, loading: userLoading } = useRequest(
-    () => getUserList({ current: 1, pageSize: 1 }),
+    () => getUserList({ current: 1, pageSize: 100 }),
     { manual: false },
   );
 
@@ -44,9 +80,99 @@ const Workplace: React.FC = () => {
     { manual: false },
   );
 
+  const handleDownloadConfig = () => {
+    message.info(intl.formatMessage({
+      id: 'pages.dashboard.config.downloadSuccess',
+      defaultMessage: 'Configuration download feature coming soon!',
+    }));
+  };
+
+  const handleDownloadQRCode = () => {
+    message.info(intl.formatMessage({
+      id: 'pages.dashboard.qrcode.downloadSuccess',
+      defaultMessage: 'QR code download feature coming soon!',
+    }));
+  };
+
+  const userColumns = [
+    {
+      title: intl.formatMessage({ id: 'pages.dashboard.userTable.user', defaultMessage: 'User' }),
+      dataIndex: 'name',
+      key: 'name',
+      render: (text: string) => <Text strong>{text}</Text>,
+    },
+    {
+      title: intl.formatMessage({ id: 'pages.dashboard.userTable.group', defaultMessage: 'Group' }),
+      dataIndex: 'group_name',
+      key: 'group_name',
+      render: (text: string) => text || intl.formatMessage({ id: 'common.default', defaultMessage: 'Default' }),
+    },
+    {
+      title: intl.formatMessage({ id: 'pages.dashboard.userTable.licensed', defaultMessage: 'Licensed devices' }),
+      key: 'licensed_devices',
+      render: () => `${systemInfo.currentDevices}/${systemInfo.maxDevices}`,
+    },
+  ];
+
   return (
     <PageContainer>
-      <Row gutter={[16, 16]}>
+      <Alert
+        message={
+          <span>
+            <SmileOutlined style={{ marginRight: 8 }} />
+            {intl.formatMessage({
+              id: 'pages.dashboard.welcome',
+              defaultMessage: `Welcome to ${systemInfo.version}`,
+            })}
+          </span>
+        }
+        type="success"
+        showIcon={false}
+        style={{ marginBottom: 24 }}
+      />
+
+      <Card>
+        <Descriptions bordered column={{ xs: 1, sm: 2, md: 3 }}>
+          <Descriptions.Item label={intl.formatMessage({ id: 'pages.dashboard.userTable.user', defaultMessage: 'User' })}>
+            {userData?.data?.[0]?.name || '-'}
+          </Descriptions.Item>
+          <Descriptions.Item label={intl.formatMessage({ id: 'pages.dashboard.userTable.group', defaultMessage: 'Group' })}>
+            {userData?.data?.[0]?.group_name || intl.formatMessage({ id: 'common.default', defaultMessage: 'Default' })}
+          </Descriptions.Item>
+          <Descriptions.Item label={intl.formatMessage({ id: 'pages.dashboard.licensedDevices', defaultMessage: 'Licensed devices (Current/Maximum)' })}>
+            {`${systemInfo.currentDevices}/${systemInfo.maxDevices}`}
+          </Descriptions.Item>
+          <Descriptions.Item label={intl.formatMessage({ id: 'pages.dashboard.licenseExpire', defaultMessage: 'License Expire Time' })}>
+            {systemInfo.expireTime}
+          </Descriptions.Item>
+        </Descriptions>
+
+        <Collapse ghost style={{ marginTop: 16 }}>
+          <Panel
+            header={
+              <span>
+                <strong>{intl.formatMessage({ id: 'pages.dashboard.config.title', defaultMessage: 'Config & QR code && Windows EXE' })}</strong>
+              </span>
+            }
+            key="config"
+          >
+            <Row gutter={[16, 16]}>
+              <Col>
+                <Button icon={<DownloadOutlined />} onClick={handleDownloadConfig}>
+                  {intl.formatMessage({ id: 'pages.dashboard.config.download', defaultMessage: 'Download Config' })}
+                </Button>
+              </Col>
+              <Col>
+                <Button icon={<QrcodeOutlined />} onClick={handleDownloadQRCode}>
+                  {intl.formatMessage({ id: 'pages.dashboard.config.qrcode', defaultMessage: 'Download QR Code' })}
+                </Button>
+              </Col>
+            </Row>
+          </Panel>
+        </Collapse>
+      </Card>
+
+      <Row gutter={[16, 16]} style={{ marginTop: 24 }}>
         <Col xs={24} sm={12} md={6}>
           <Card hoverable>
             <Spin spinning={deviceLoading}>
@@ -109,7 +235,7 @@ const Workplace: React.FC = () => {
         </Col>
       </Row>
 
-      <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
+      <Row gutter={[16, 16]} style={{ marginTop: 24 }}>
         <Col xs={24} md={12}>
           <Card
             title={intl.formatMessage({

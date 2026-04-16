@@ -1,14 +1,22 @@
 import {
+  DeleteOutlined,
+  EditOutlined,
+  InfoCircleOutlined,
+  MinusCircleOutlined,
+  PlusCircleOutlined,
+  QuestionCircleOutlined,
+} from '@ant-design/icons';
+import {
   deleteDevice,
   disableDevice,
   enableDevice,
   getDeviceList,
-} from "@/services/rustdesk-console/device";
-import type { ActionType, ProColumns } from "@ant-design/pro-components";
-import { PageContainer, ProTable } from "@ant-design/pro-components";
-import { FormattedMessage, useIntl } from "@umijs/max";
-import { App, Button, Popconfirm, Space, Tag } from "antd";
-import React, { useRef, useState } from "react";
+} from '@/services/rustdesk-console/device';
+import type { ActionType, ProColumns } from '@ant-design/pro-components';
+import { PageContainer, ProTable } from '@ant-design/pro-components';
+import { useIntl } from '@umijs/max';
+import { App, Button, Popconfirm, Space, Tag, Tooltip } from 'antd';
+import React, { useRef, useState } from 'react';
 
 const DeviceList: React.FC = () => {
   const intl = useIntl();
@@ -25,17 +33,17 @@ const DeviceList: React.FC = () => {
       await enableDevice(guid);
       msgApi.success(
         intl.formatMessage({
-          id: "pages.devices.enableSuccess",
-          defaultMessage: "Device enabled",
-        })
+          id: 'pages.devices.enableSuccess',
+          defaultMessage: 'Device enabled',
+        }),
       );
       actionRef.current?.reload();
     } catch {
       msgApi.error(
         intl.formatMessage({
-          id: "pages.devices.enableFailed",
-          defaultMessage: "Failed to enable device",
-        })
+          id: 'pages.devices.enableFailed',
+          defaultMessage: 'Failed to enable device',
+        }),
       );
     }
   };
@@ -45,17 +53,17 @@ const DeviceList: React.FC = () => {
       await disableDevice(guid);
       msgApi.success(
         intl.formatMessage({
-          id: "pages.devices.disableSuccess",
-          defaultMessage: "Device disabled",
-        })
+          id: 'pages.devices.disableSuccess',
+          defaultMessage: 'Device disabled',
+        }),
       );
       actionRef.current?.reload();
     } catch {
       msgApi.error(
         intl.formatMessage({
-          id: "pages.devices.disableFailed",
-          defaultMessage: "Failed to disable device",
-        })
+          id: 'pages.devices.disableFailed',
+          defaultMessage: 'Failed to disable device',
+        }),
       );
     }
   };
@@ -65,17 +73,17 @@ const DeviceList: React.FC = () => {
       await deleteDevice(guid);
       msgApi.success(
         intl.formatMessage({
-          id: "pages.devices.deleteSuccess",
-          defaultMessage: "Device deleted",
-        })
+          id: 'pages.devices.deleteSuccess',
+          defaultMessage: 'Device deleted',
+        }),
       );
       actionRef.current?.reload();
     } catch {
       msgApi.error(
         intl.formatMessage({
-          id: "pages.devices.deleteFailed",
-          defaultMessage: "Failed to delete device",
-        })
+          id: 'pages.devices.deleteFailed',
+          defaultMessage: 'Failed to delete device',
+        }),
       );
     }
   };
@@ -87,68 +95,64 @@ const DeviceList: React.FC = () => {
 
   const columns: ProColumns<API.DeviceItem>[] = [
     {
-      title: "",
-      dataIndex: "index",
-      valueType: "indexBorder",
+      title: '',
+      dataIndex: 'index',
+      valueType: 'indexBorder',
       width: 50,
     },
     {
-      title: "ID",
-      dataIndex: "id",
+      title: 'ID',
+      dataIndex: 'id',
       copyable: true,
       width: 150,
       ellipsis: true,
     },
     {
       title: (
-        <FormattedMessage id="pages.devices.device" defaultMessage="Device" />
+        <span>
+          <FormattedMessage id="pages.devices.device" defaultMessage="Device" />
+          <Tooltip title={intl.formatMessage({ id: 'pages.devices.deviceInfo', defaultMessage: 'Device information' })}>
+            <InfoCircleOutlined style={{ marginLeft: 4 }} />
+          </Tooltip>
+        </span>
       ),
-      dataIndex: "device_name",
+      dataIndex: 'device_name',
       width: 150,
       ellipsis: true,
       search: false,
-      render: (_: unknown, record: API.DeviceItem) => record.info?.device_name || "-",
+      render: (_: unknown, record: API.DeviceItem) => record.info?.device_name || '-',
     },
     {
       title: (
-        <FormattedMessage
-          id="pages.devices.deviceGroup"
-          defaultMessage="Group"
-        />
+        <FormattedMessage id="pages.devices.deviceGroup" defaultMessage="Group" />
       ),
-      dataIndex: "device_group_name",
+      dataIndex: 'device_group_name',
       width: 120,
       ellipsis: true,
       search: false,
-      render: (_: unknown, record: API.DeviceItem) => record.device_group_name || "-",
+      render: (_: unknown, record: API.DeviceItem) => record.device_group_name || '-',
     },
     {
       title: <FormattedMessage id="pages.devices.user" defaultMessage="User" />,
-      dataIndex: "user_name",
+      dataIndex: 'user_name',
       width: 120,
       ellipsis: true,
       search: false,
-      render: (_: unknown, record: API.DeviceItem) => record.user_name || "-",
+      render: (_: unknown, record: API.DeviceItem) => record.user_name || '-',
     },
     {
       title: <FormattedMessage id="pages.devices.status" defaultMessage="Status" />,
-      dataIndex: "status",
+      dataIndex: 'status',
       width: 80,
       search: false,
       render: (_: unknown, record: API.DeviceItem) => {
-        const isOnline = record.status === "online" || record.status === 1;
+        const isOnline = record.status === 'online' || record.status === 1;
         return (
-          <Tag color={isOnline ? "green" : "default"}>
+          <Tag color={isOnline ? 'green' : 'default'}>
             {isOnline ? (
-              <FormattedMessage
-                id="pages.devices.online"
-                defaultMessage="Online"
-              />
+              <FormattedMessage id="pages.devices.online" defaultMessage="Online" />
             ) : (
-              <FormattedMessage
-                id="pages.devices.offline"
-                defaultMessage="Offline"
-              />
+              <FormattedMessage id="pages.devices.offline" defaultMessage="Offline" />
             )}
           </Tag>
         );
@@ -156,52 +160,66 @@ const DeviceList: React.FC = () => {
     },
     {
       title: (
+        <span>
+          <FormattedMessage id="pages.devices.strategy" defaultMessage="Strategy" />
+          <Tooltip title={intl.formatMessage({ id: 'pages.devices.strategyInfo', defaultMessage: 'Connection strategy' })}>
+            <InfoCircleOutlined style={{ marginLeft: 4 }} />
+          </Tooltip>
+        </span>
+      ),
+      dataIndex: 'strategy_name',
+      width: 100,
+      ellipsis: true,
+      search: false,
+      render: (_: unknown, record: API.DeviceItem) => record.strategy_name || '-',
+    },
+    {
+      title: (
         <FormattedMessage id="pages.devices.info" defaultMessage="Info" />
       ),
-      dataIndex: "info",
+      dataIndex: 'info',
       width: 200,
       ellipsis: true,
       search: false,
-      render: (_: unknown, record: API.DeviceItem) => record.info?.os || "-",
+      render: (_: unknown, record: API.DeviceItem) => {
+        if (!record.info) return '-';
+        return `${record.info.os || ''} ${record.info.hostname || ''}`.trim() || '-';
+      },
     },
     {
       title: <FormattedMessage id="pages.devices.note" defaultMessage="Note" />,
-      dataIndex: "note",
+      dataIndex: 'note',
       width: 150,
       ellipsis: true,
       search: false,
-      render: (_: unknown, record: API.DeviceItem) => record.note || "-",
+      render: (_: unknown, record: API.DeviceItem) => record.note || '-',
     },
     {
       title: (
         <FormattedMessage id="pages.common.action" defaultMessage="Action" />
       ),
-      valueType: "option",
+      valueType: 'option',
       width: 200,
-      fixed: "right",
+      fixed: 'right',
       render: (_: unknown, record: API.DeviceItem) => (
         <Space size="small">
           <Button
             key="enable"
             type="link"
             size="small"
+            icon={<PlusCircleOutlined />}
             onClick={() => handleEnable(record.guid)}
           >
-            <FormattedMessage
-              id="pages.devices.enable"
-              defaultMessage="Enable"
-            />
+            <FormattedMessage id="pages.devices.enable" defaultMessage="Enable" />
           </Button>
           <Button
             key="disable"
             type="link"
             size="small"
+            icon={<MinusCircleOutlined />}
             onClick={() => handleDisable(record.guid)}
           >
-            <FormattedMessage
-              id="pages.devices.disable"
-              defaultMessage="Disable"
-            />
+            <FormattedMessage id="pages.devices.disable" defaultMessage="Disable" />
           </Button>
           <Popconfirm
             key="delete"
@@ -213,11 +231,8 @@ const DeviceList: React.FC = () => {
             }
             onConfirm={() => handleDelete(record.guid)}
           >
-            <Button type="link" size="small" danger>
-              <FormattedMessage
-                id="pages.common.delete"
-                defaultMessage="Delete"
-              />
+            <Button type="link" size="small" danger icon={<DeleteOutlined />}>
+              <FormattedMessage id="pages.common.delete" defaultMessage="Delete" />
             </Button>
           </Popconfirm>
         </Space>
@@ -229,10 +244,11 @@ const DeviceList: React.FC = () => {
     <PageContainer>
       <ProTable<API.DeviceItem>
         headerTitle={
-          <FormattedMessage
-            id="pages.devices.list"
-            defaultMessage="Device List"
-          />
+          <span>
+            <FormattedMessage id="pages.devices.list" defaultMessage="Device List" />
+            {' '}
+            ({searchParams.search ? '*' : '0'}/-)
+          </span>
         }
         actionRef={actionRef}
         rowKey="guid"
@@ -272,10 +288,24 @@ const DeviceList: React.FC = () => {
           showSizeChanger: true,
           showQuickJumper: true,
         }}
-        scroll={{ x: 1200 }}
+        scroll={{ x: 1400 }}
+        toolBarRender={false}
+        options={{
+          density: true,
+          setting: {
+            listsHeight: 400,
+          },
+          fullScreen: false,
+          reload: true,
+        }}
       />
     </PageContainer>
   );
 };
 
 export default DeviceList;
+
+function FormattedMessage(props: { id: string; defaultMessage: string }): React.JSX.Element {
+  const intl = useIntl();
+  return <>{intl.formatMessage(props)}</>;
+}

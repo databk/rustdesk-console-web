@@ -58,6 +58,14 @@ const ConsoleAudit: React.FC = () => {
           showSizeChanger: true,
           showQuickJumper: true,
         }}
+        options={{
+          density: true,
+          setting: {
+            listsHeight: 400,
+          },
+          fullScreen: false,
+          reload: true,
+        }}
       />
     </PageContainer>
   );
