@@ -15,3 +15,5 @@ export async function logout() {
 export async function currentUser() {
   return request<API.CurrentUser>('/api/currentUser', { method: 'POST' });
 }
+
+export const getCurrentUser = currentUser;

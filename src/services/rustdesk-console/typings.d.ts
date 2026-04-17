@@ -228,4 +228,122 @@ declare namespace API {
     max_peer_one_ab?: number;
     [key: string]: any;
   };
+
+  type SystemInfo = {
+    version?: string;
+    latestVersion?: string;
+    releaseUrl?: string;
+    [key: string]: any;
+  };
+
+  type LicenseInfo = {
+    currentDevices?: number;
+    maxDevices?: number | string;
+    expireTime?: string;
+    warning?: string;
+    [key: string]: any;
+  };
+
+  type RoleItem = {
+    guid: string;
+    name: string;
+    note?: string;
+    permission_count?: number;
+    created_at?: string;
+    updated_at?: string;
+    [key: string]: any;
+  };
+
+  type CreateRoleParams = {
+    name: string;
+    note?: string;
+    permissions?: string[];
+  };
+
+  type UpdateRoleParams = {
+    name?: string;
+    note?: string;
+    permissions?: string[];
+  };
+
+  type PermissionItem = {
+    id: string;
+    name: string;
+    description?: string;
+    module?: string;
+    [key: string]: any;
+  };
+
+  type StrategyItem = {
+    guid: string;
+    name: string;
+    note?: string;
+    status?: number;
+    rule_count?: number;
+    created_at?: string;
+    updated_at?: string;
+    [key: string]: any;
+  };
+
+  type CreateStrategyParams = {
+    name: string;
+    note?: string;
+    rules?: RuleItem[];
+  };
+
+  type UpdateStrategyParams = {
+    name?: string;
+    note?: string;
+    rules?: RuleItem[];
+    status?: number;
+  };
+
+  type UserGroupItem = {
+    guid: string;
+    name: string;
+    note?: string;
+    user_count?: number;
+    created_at?: string;
+    updated_at?: string;
+    [key: string]: any;
+  };
+
+  type CreateUserGroupParams = {
+    name: string;
+    note?: string;
+  };
+
+  type UpdateUserGroupParams = {
+    name?: string;
+    note?: string;
+  };
+
+  type CustomClientItem = {
+    guid: string;
+    name: string;
+    config?: Record<string, any>;
+    download_url?: string;
+    created_at?: string;
+    updated_at?: string;
+    [key: string]: any;
+  };
+
+  type CreateCustomClientParams = {
+    name: string;
+    config?: Record<string, any>;
+  };
+
+  type UpdateCustomClientParams = {
+    name?: string;
+    config?: Record<string, any>;
+  };
+
+  type SettingItem = {
+    key: string;
+    value: string | number | boolean;
+    type?: string;
+    description?: string;
+    category?: string;
+    [key: string]: any;
+  };
 }
