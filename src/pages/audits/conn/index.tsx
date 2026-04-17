@@ -1,7 +1,7 @@
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
-import { App, Button, Tag } from 'antd';
+import { Button, message, Tag } from 'antd';
 import React, { useRef, useState } from 'react';
 import { getConnectionAudits } from '@/services/rustdesk-console/audit';
 import { DownloadOutlined } from '@ant-design/icons';
@@ -9,18 +9,12 @@ import dayjs from 'dayjs';
 
 const ConnectionAudit: React.FC = () => {
   const intl = useIntl();
-  const { message: msgApi } = App.useApp();
   const actionRef = useRef<ActionType>();
-  const [searchParams, setSearchParams] = useState<{
-    remote?: string;
-    conn_type?: number;
-    created_at?: string;
-  }>({});
   const [dataSource, setDataSource] = useState<API.ConnectionAuditItem[]>([]);
 
   const handleExportCSV = () => {
     if (dataSource.length === 0) {
-      msgApi.warning(
+      message.warning(
         intl.formatMessage({
           id: 'pages.audits.noDataToExport',
           defaultMessage: 'No data to export',
@@ -31,22 +25,24 @@ const ConnectionAudit: React.FC = () => {
 
     const headers = [
       intl.formatMessage({ id: 'pages.audits.type', defaultMessage: 'Type' }),
-      intl.formatMessage({ id: 'pages.audits.controlledDevice', defaultMessage: 'Controlled Device' }),
-      intl.formatMessage({ id: 'pages.audits.masterDevice', defaultMessage: 'Master Device' }),
-      intl.formatMessage({ id: 'pages.audits.startTime', defaultMessage: 'Start Time' }),
-      intl.formatMessage({ id: 'pages.audits.endTime', defaultMessage: 'End Time' }),
-      intl.formatMessage({ id: 'pages.audits.duration', defaultMessage: 'Duration' }),
-      intl.formatMessage({ id: 'pages.audits.note', defaultMessage: 'Note' }),
+      intl.formatMessage({ id: 'pages.audits.peerName', defaultMessage: 'Peer Name' }),
+      intl.formatMessage({ id: 'pages.audits.peerId', defaultMessage: 'Peer ID' }),
+      intl.formatMessage({ id: 'pages.audits.ip', defaultMessage: 'IP Address' }),
+      intl.formatMessage({ id: 'pages.audits.requestedAt', defaultMessage: 'Requested At' }),
+      intl.formatMessage({ id: 'pages.audits.establishedAt', defaultMessage: 'Established At' }),
+      intl.formatMessage({ id: 'pages.audits.closedAt', defaultMessage: 'Closed At' }),
+      intl.formatMessage({ id: 'pages.audits.deviceId', defaultMessage: 'Device ID' }),
     ];
 
     const rows = dataSource.map((item) => [
       item.action || '',
-      item.to || '',
-      item.from || '',
-      item.start_time || '',
-      item.end_time || '',
-      item.duration || '',
-      item.note || '',
+      item.peerName || '',
+      item.peerId || '',
+      item.ip || '',
+      item.requestedAt || '',
+      item.establishedAt || '',
+      item.closedAt || '',
+      item.deviceId || '',
     ]);
 
     const csvContent = [
@@ -61,7 +57,7 @@ const ConnectionAudit: React.FC = () => {
     link.click();
     URL.revokeObjectURL(link.href);
 
-    msgApi.success(
+    message.success(
       intl.formatMessage({
         id: 'pages.audits.exportSuccess',
         defaultMessage: 'Export successful',
@@ -69,104 +65,84 @@ const ConnectionAudit: React.FC = () => {
     );
   };
 
-  const handleSearch = (values: { remote?: string; conn_type?: number; created_at?: string }) => {
-    setSearchParams(values);
-    actionRef.current?.reload();
-  };
-
   const columns: ProColumns<API.ConnectionAuditItem>[] = [
     {
-      title: "",
-      dataIndex: "index",
-      valueType: "indexBorder",
+      title: '',
+      dataIndex: 'index',
+      valueType: 'indexBorder',
       width: 50,
     },
     {
-      title: (
-        <FormattedMessage id="pages.audits.type" defaultMessage="Type" />
-      ),
-      dataIndex: "action",
-      width: 100,
+      title: <FormattedMessage id="pages.audits.type" defaultMessage="Type" />,
+      dataIndex: 'action',
+      width: 120,
       search: false,
       render: (_: unknown, record: API.ConnectionAuditItem) => {
         const action = record.action || '';
-        if (action === 'connect' || action === 'CONNECT') {
-          return <Tag color="green">{action}</Tag>;
+        if (action === 'established') {
+          return <Tag color="green">Established</Tag>;
         }
-        if (action === 'disconnect' || action === 'DISCONNECT') {
-          return <Tag color="red">{action}</Tag>;
+        if (action === 'close') {
+          return <Tag color="red">Closed</Tag>;
         }
         return <Tag>{action}</Tag>;
       },
     },
     {
-      title: (
-        <FormattedMessage id="pages.audits.controlledDevice" defaultMessage="Controlled Device" />
-      ),
-      dataIndex: "to",
+      title: <FormattedMessage id="pages.audits.peerName" defaultMessage="Peer Name" />,
+      dataIndex: 'peerName',
       width: 150,
       ellipsis: true,
       search: false,
-      render: (_: unknown, record: API.ConnectionAuditItem) => (
-        <span>
-          {record.to}
-          {record.to_name && <span style={{ color: '#999' }}> ({record.to_name})</span>}
-        </span>
-      ),
+      render: (_: unknown, record: API.ConnectionAuditItem) => record.peerName || '-',
     },
     {
-      title: (
-        <FormattedMessage id="pages.audits.masterDevice" defaultMessage="Master Device" />
-      ),
-      dataIndex: "from",
+      title: <FormattedMessage id="pages.audits.peerId" defaultMessage="Peer ID" />,
+      dataIndex: 'peerId',
       width: 150,
       ellipsis: true,
       search: false,
-      render: (_: unknown, record: API.ConnectionAuditItem) => (
-        <span>
-          {record.from}
-          {record.from_name && <span style={{ color: '#999' }}> ({record.from_name})</span>}
-        </span>
-      ),
+      render: (_: unknown, record: API.ConnectionAuditItem) => record.peerId || '-',
     },
     {
-      title: (
-        <FormattedMessage id="pages.audits.startTime" defaultMessage="Start Time" />
-      ),
-      dataIndex: "start_time",
+      title: <FormattedMessage id="pages.audits.ip" defaultMessage="IP Address" />,
+      dataIndex: 'ip',
+      width: 150,
+      ellipsis: true,
+      search: false,
+      render: (_: unknown, record: API.ConnectionAuditItem) => record.ip || '-',
+    },
+    {
+      title: <FormattedMessage id="pages.audits.requestedAt" defaultMessage="Requested At" />,
+      dataIndex: 'requestedAt',
       width: 180,
       search: false,
-      valueType: "dateTime",
-      render: (_: unknown, record: API.ConnectionAuditItem) => record.start_time || '-',
+      valueType: 'dateTime',
+      render: (_: unknown, record: API.ConnectionAuditItem) => record.requestedAt || '-',
     },
     {
-      title: (
-        <FormattedMessage id="pages.audits.endTime" defaultMessage="End Time" />
-      ),
-      dataIndex: "end_time",
+      title: <FormattedMessage id="pages.audits.establishedAt" defaultMessage="Established At" />,
+      dataIndex: 'establishedAt',
       width: 180,
       search: false,
-      valueType: "dateTime",
-      render: (_: unknown, record: API.ConnectionAuditItem) => record.end_time || '-',
+      valueType: 'dateTime',
+      render: (_: unknown, record: API.ConnectionAuditItem) => record.establishedAt || '-',
     },
     {
-      title: (
-        <FormattedMessage id="pages.audits.duration" defaultMessage="Duration" />
-      ),
-      dataIndex: "duration",
-      width: 100,
+      title: <FormattedMessage id="pages.audits.closedAt" defaultMessage="Closed At" />,
+      dataIndex: 'closedAt',
+      width: 180,
       search: false,
-      render: (_: unknown, record: API.ConnectionAuditItem) => record.duration || '-',
+      valueType: 'dateTime',
+      render: (_: unknown, record: API.ConnectionAuditItem) => record.closedAt || '-',
     },
     {
-      title: (
-        <FormattedMessage id="pages.audits.note" defaultMessage="Note" />
-      ),
-      dataIndex: "note",
-      width: 150,
+      title: <FormattedMessage id="pages.audits.deviceId" defaultMessage="Device ID" />,
+      dataIndex: 'deviceId',
+      width: 120,
       ellipsis: true,
       search: false,
-      render: (_: unknown, record: API.ConnectionAuditItem) => record.note || '-',
+      render: (_: unknown, record: API.ConnectionAuditItem) => record.deviceId || '-',
     },
   ];
 
@@ -182,9 +158,6 @@ const ConnectionAudit: React.FC = () => {
           const result = await getConnectionAudits({
             current: params.current || 1,
             pageSize: params.pageSize || 20,
-            remote: searchParams.remote,
-            conn_type: searchParams.conn_type,
-            created_at: searchParams.created_at,
           });
           setDataSource(result.data || []);
           return {
@@ -194,19 +167,7 @@ const ConnectionAudit: React.FC = () => {
           };
         }}
         columns={columns}
-        search={{
-          labelWidth: 'auto',
-          defaultCollapsed: false,
-          optionRender: (searchConfig, formProps, dom) => [
-            ...dom.reverse(),
-          ],
-        }}
-        form={{
-          onSubmit: handleSearch,
-          onReset: () => {
-            setSearchParams({});
-          },
-        }}
+        search={false}
         pagination={{
           defaultPageSize: 20,
           showSizeChanger: true,

@@ -187,26 +187,35 @@ declare namespace API {
   };
 
   type ConnectionAuditItem = {
-    id?: string;
-    conn_id?: string;
-    from?: string;
-    from_name?: string;
-    to?: string;
-    to_name?: string;
+    id?: number;
+    deviceId?: string;
+    deviceUuid?: string;
+    connId?: string;
+    ip?: string;
     action?: string;
-    time?: string;
+    peerId?: string;
+    peerName?: string;
+    type?: number;
+    createdAt?: string;
+    requestedAt?: string;
+    establishedAt?: string;
+    closedAt?: string;
     [key: string]: any;
   };
 
   type FileAuditItem = {
-    id?: string;
-    from?: string;
-    from_name?: string;
-    to?: string;
-    to_name?: string;
-    action?: string;
-    filename?: string;
-    time?: string;
+    id?: number;
+    deviceId?: string;
+    deviceUuid?: string;
+    peerId?: string;
+    type?: number;
+    path?: string;
+    isFile?: boolean;
+    clientIp?: string;
+    clientName?: string;
+    fileCount?: number;
+    files?: Array<[string, number]>;
+    createdAt?: string;
     [key: string]: any;
   };
 
