@@ -31,24 +31,40 @@ const PersonalAddressBook: React.FC = () => {
   const [addPeerError, setAddPeerError] = useState('');
   const [selectedPeerId, setSelectedPeerId] = useState<string>();
 
-  const { data: abData, loading: abLoading } = useRequest(getPersonalAddressBook);
+  const [abGuid, setAbGuid] = useState<string>();
+  const [abLoading, setAbLoading] = useState(true);
+  
+  useEffect(() => {
+    const fetchAbGuid = async () => {
+      setAbLoading(true);
+      try {
+        const result = await getPersonalAddressBook();
+        setAbGuid(result.guid);
+      } catch (error) {
+        console.error('Failed to fetch personal address book:', error);
+      } finally {
+        setAbLoading(false);
+      }
+    };
+    fetchAbGuid();
+  }, []);
+  
   const { data: tags = [] } = useRequest(
-    () => (abData ? getTags(abData) : Promise.resolve([])),
-    { ready: !!abData }
+    () => (abGuid ? getTags(abGuid) : Promise.resolve([])),
+    { ready: !!abGuid }
   );
 
   const fetchAvailablePeers = useCallback(async () => {
-    if (!abData) return;
+    if (!abGuid) return;
     setPeersLoading(true);
     try {
       const res = await getPeers({
         current: 1,
         pageSize: 1000,
-        ab: abData,
-        hide_password: true,
+        ab: abGuid,
       });
       const existingIds = new Set((res.data || []).map((p: API.PeerItem) => p.id));
-      const allDevices = await getDeviceList({ current: 1, pageSize: 1000, status: 'all', accessible: 'all' });
+      const allDevices = await getDeviceList({ current: 1, pageSize: 1000 });
       const notInAb = (allDevices.data || []).filter((d: API.DeviceItem) => !existingIds.has(d.id));
       setAvailablePeers(notInAb);
     } catch {
@@ -56,22 +72,22 @@ const PersonalAddressBook: React.FC = () => {
     } finally {
       setPeersLoading(false);
     }
-  }, [abData]);
+  }, [abGuid]);
 
   useEffect(() => {
-    if (addPeerModalVisible && abData) {
+    if (addPeerModalVisible && abGuid) {
       setAddPeerError('');
       setSelectedPeerId(undefined);
       addPeerForm.resetFields();
       fetchAvailablePeers();
     }
-  }, [addPeerModalVisible, abData, addPeerForm, fetchAvailablePeers]);
+  }, [addPeerModalVisible, abGuid, addPeerForm, fetchAvailablePeers]);
 
   const handleAddPeer = async (values: API.AddPeerParams) => {
-    if (!abData) return;
+    if (!abGuid) return;
     setAddPeerError('');
     try {
-      await addPeer(abData, values);
+      await addPeer(abGuid, values);
       msgApi.success(
         intl.formatMessage({ id: 'pages.addressBook.peerAdded', defaultMessage: 'Peer added' }),
       );
@@ -88,9 +104,9 @@ const PersonalAddressBook: React.FC = () => {
   };
 
   const handleAddTag = async (values: API.AddTagParams) => {
-    if (!abData) return;
+    if (!abGuid) return;
     try {
-      await addTag(abData, values);
+      await addTag(abGuid, values);
       msgApi.success(
         intl.formatMessage({ id: 'pages.addressBook.tagAdded', defaultMessage: 'Tag added' }),
       );
@@ -107,9 +123,9 @@ const PersonalAddressBook: React.FC = () => {
   };
 
   const handleDeletePeer = async (id: string) => {
-    if (!abData) return;
+    if (!abGuid) return;
     try {
-      await deletePeer(abData, { id });
+      await deletePeer(abGuid, { id });
       msgApi.success(
         intl.formatMessage({ id: 'pages.addressBook.peerDeleted', defaultMessage: 'Peer deleted' }),
       );
@@ -238,14 +254,13 @@ const PersonalAddressBook: React.FC = () => {
         rowKey="id"
         loading={abLoading}
         request={async (params) => {
-          if (!abData) {
+          if (!abGuid) {
             return { data: [], total: 0, success: true };
           }
           const result = await getPeers({
             current: params.current || 1,
             pageSize: params.pageSize || 20,
-            ab: abData,
-            hide_password: true,
+            ab: abGuid,
             search: searchParams.search,
           });
           return {

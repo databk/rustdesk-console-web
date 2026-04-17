@@ -5,19 +5,15 @@ export async function getDeviceList(
     current?: number;
     pageSize?: number;
     search?: string;
-    status?: string;
-    accessible?: string;
   },
   options?: { [key: string]: any },
 ) {
-  return request<API.PaginatedResult<API.DeviceItem>>('/api/peers', {
+  return request<API.PaginatedResult<API.DeviceItem>>('/api/devices', {
     method: 'GET',
     params: {
       current: params.current || 1,
       pageSize: params.pageSize || 20,
       search: params.search,
-      status: params.status || 'all',
-      accessible: params.accessible || 'all',
     },
     ...(options || {}),
   });

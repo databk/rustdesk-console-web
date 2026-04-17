@@ -13,7 +13,7 @@ export async function getAddressBookSettings() {
 }
 
 export async function getPersonalAddressBook() {
-  return request<string>('/api/ab/personal', { method: 'GET' });
+  return request<{ guid: string }>('/api/ab/personal', { method: 'GET' });
 }
 
 export async function getSharedAddressBooks(
@@ -44,7 +44,6 @@ export async function getPeers(
     current?: number;
     pageSize?: number;
     ab?: string;
-    hide_password?: boolean;
     search?: string;
   },
 ) {
