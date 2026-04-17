@@ -18,9 +18,15 @@ declare namespace API {
   };
 
   type LoginResult = {
-    access_token: string;
-    type: string;
-    user: CurrentUser;
+    access_token?: string;
+    type?: string;
+    user?: CurrentUser;
+    data?: {
+      access_token?: string;
+      type?: string;
+      user?: CurrentUser;
+    };
+    [key: string]: any;
   };
 
   type PageParams = {

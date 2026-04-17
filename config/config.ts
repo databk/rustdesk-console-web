@@ -47,9 +47,7 @@ export default defineConfig({
   access: {},
   headScripts: [{ src: join(PUBLIC_PATH, 'scripts/loading.js'), async: true }],
   presets: ['umi-presets-pro'],
-  mock: {
-    include: ['mock/**/*', 'src/pages/**/_mock.ts'],
-  },
+  mock: false,
   mako: {},
   esbuildMinifyIIFE: true,
   requestRecord: {},

@@ -106,8 +106,25 @@ const Login: React.FC = () => {
   const handleSubmit = async (values: API.LoginParams & { rememberMe?: boolean }) => {
     try {
       const msg = await login(values);
-      if (msg.access_token) {
-        setToken(msg.access_token, values.rememberMe);
+      console.log('=== LOGIN DEBUG ===');
+      console.log('Full login response (msg):', JSON.stringify(msg));
+      console.log('msg type:', typeof msg);
+      console.log('msg keys:', msg ? Object.keys(msg) : 'null');
+      console.log('msg.access_token:', msg?.access_token);
+      console.log('msg.data:', msg?.data);
+      console.log('msg.data?.access_token:', msg?.data?.access_token);
+      
+      // 尝试不同的token提取方式
+      const token = msg?.access_token || msg?.data?.access_token;
+      console.log('Extracted token:', token ? 'YES (length: ' + token.length + ')' : 'NO');
+      
+      if (token) {
+        console.log('Setting token...');
+        setToken(token, values.rememberMe);
+        // 验证token是否保存成功
+        const storedToken = sessionStorage.getItem('rustdesk_access_token') || localStorage.getItem('rustdesk_access_token');
+        console.log('Token stored?', storedToken ? 'YES' : 'NO');
+        
         const defaultLoginSuccessMessage = intl.formatMessage({
           id: 'pages.login.success',
           defaultMessage: 'Login successful!',
@@ -224,16 +241,21 @@ const Login: React.FC = () => {
           />
 
           <div className={styles.loginFormExtra}>
-            <ProFormCheckbox
-              name="rememberMe"
+            <Checkbox
               checked={rememberMe}
               onChange={(e) => setRememberMe(e.target.checked)}
             >
-              <FormattedMessage id="pages.login.rememberMe" defaultValue="Remember me" />
-            </ProFormCheckbox>
+              {intl.formatMessage({
+                id: 'pages.login.rememberMe',
+                defaultMessage: 'Remember me',
+              })}
+            </Checkbox>
 
             <a className={styles.forgotPassword} onClick={handleForgotPassword}>
-              <FormattedMessage id="pages.login.forgotPassword" defaultValue="Forgot Password?" />
+              {intl.formatMessage({
+                id: 'pages.login.forgotPassword',
+                defaultMessage: 'Forgot Password?',
+              })}
             </a>
           </div>
         </LoginForm>
@@ -244,8 +266,3 @@ const Login: React.FC = () => {
 };
 
 export default Login;
-
-function FormattedMessage(props: { id: string; defaultMessage?: string }): React.JSX.Element {
-  const intl = useIntl();
-  return <>{intl.formatMessage(props)}</>;
-}

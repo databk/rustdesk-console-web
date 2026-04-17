@@ -16,4 +16,13 @@ export default {
   'menu.audits.alarm': 'Alarm',
   'menu.audits.console': 'Console',
   'menu.login': 'Login',
+  'menu.welcome': 'Welcome',
+  'menu.roles': 'Roles',
+  'menu.strategies': 'Strategies',
+  'menu.groups': 'Groups',
+  'menu.groups.user': 'User Groups',
+  'menu.groups.device': 'Device Groups',
+  'menu.settings': 'Settings',
+  'menu.customClients': 'Custom Clients',
+  'menu.addressBooks': 'Address Books',
 };

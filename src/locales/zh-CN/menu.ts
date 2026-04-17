@@ -16,4 +16,13 @@ export default {
   'menu.audits.alarm': '告警审计',
   'menu.audits.console': '控制台审计',
   'menu.login': '登录',
+  'menu.welcome': '欢迎',
+  'menu.roles': '角色管理',
+  'menu.strategies': '策略管理',
+  'menu.groups': '组管理',
+  'menu.groups.user': '用户组',
+  'menu.groups.device': '设备组',
+  'menu.settings': '系统设置',
+  'menu.customClients': '自定义客户端',
+  'menu.addressBooks': '地址簿',
 };
