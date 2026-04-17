@@ -168,12 +168,6 @@
     ],
   },
   {
-    path: '/ab',
-    name: 'addressBooks',
-    icon: 'contacts',
-    component: './address-book/personal',
-  },
-  {
     path: '/strategy',
     name: 'strategies',
     icon: 'solution',
