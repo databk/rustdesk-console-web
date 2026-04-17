@@ -1,6 +1,0 @@
-- generic [ref=e5]:
-  - heading [level=3] [ref=e6]
-  - list [ref=e7]:
-    - listitem [ref=e8]
-    - listitem [ref=e9]
-    - listitem [ref=e10]
