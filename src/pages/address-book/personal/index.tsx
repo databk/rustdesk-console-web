@@ -20,9 +20,16 @@ import { getDeviceList } from '@/services/rustdesk-console/device';
 
 const { Text } = Typography;
 
-const argbToHex = (color: number | undefined): string => {
+const argbToRgba = (color: number | undefined): string => {
   if (!color) return '#1677ff';
-  return `#${color.toString(16).padStart(8, '0').slice(-6)}`;
+  const hex = color.toString(16).padStart(8, '0');
+  const alpha = parseInt(hex.slice(0, 2), 16) / 255;
+  const rgb = `#${hex.slice(2)}`;
+  if (alpha === 1) return rgb;
+  const r = parseInt(hex.slice(2, 4), 16);
+  const g = parseInt(hex.slice(4, 6), 16);
+  const b = parseInt(hex.slice(6, 8), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 };
 
 const PersonalAddressBook: React.FC = () => {
@@ -186,16 +193,17 @@ const PersonalAddressBook: React.FC = () => {
     }
   };
 
-  const handleAddTag = async (values: { name: string; color?: { toHexString: () => string } }) => {
+  const handleAddTag = async (values: { name: string; color?: { toRgb: () => { r: number; g: number; b: number; a: number } } }) => {
     if (!abGuid) return;
     try {
       const tagData: API.AddTagParams = {
         name: values.name,
       };
-      
-      if (values.color?.toHexString) {
-        const hex = values.color.toHexString();
-        tagData.color = parseInt(hex.slice(1), 16);
+
+      if (values.color?.toRgb) {
+        const rgb = values.color.toRgb();
+        const alpha = Math.round(rgb.a * 255);
+        tagData.color = (alpha << 24) + (rgb.r << 16) + (rgb.g << 8) + rgb.b;
       }
       
       await addTag(abGuid, tagData);
@@ -327,7 +335,7 @@ const PersonalAddressBook: React.FC = () => {
             {peerTags.map((tag: string) => {
               const tagInfo = (tags as API.TagItem[]).find((t: API.TagItem) => t.name === tag);
               return (
-                <Tag key={tag} color={argbToHex(tagInfo?.color)}>
+                <Tag key={tag} color={argbToRgba(tagInfo?.color)}>
                   {tag}
                 </Tag>
               );
@@ -390,7 +398,7 @@ const PersonalAddressBook: React.FC = () => {
       key: 'name',
       width: 200,
       render: (text: string, record: API.TagItem) => (
-        <Tag color={argbToHex(record.color)} style={{ marginRight: 8 }}>
+        <Tag color={argbToRgba(record.color)} style={{ marginRight: 8 }}>
           {text}
         </Tag>
       ),
@@ -403,10 +411,11 @@ const PersonalAddressBook: React.FC = () => {
       render: (color: number, record: API.TagItem) => (
         <ColorPicker
           size="small"
-          value={color ? `#${color.toString(16).padStart(6, '0')}` : '#1677ff'}
+          value={argbToRgba(color)}
           onChangeComplete={(colorValue) => {
-            const hex = colorValue.toHexString();
-            const argb = parseInt(hex.slice(1), 16);
+            const rgb = colorValue.toRgb();
+            const alpha = Math.round(rgb.a * 255);
+            const argb = (alpha << 24) + (rgb.r << 16) + (rgb.g << 8) + rgb.b;
             handleUpdateTagColor(record.name, argb);
           }}
         />
