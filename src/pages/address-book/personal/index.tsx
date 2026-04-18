@@ -1,6 +1,6 @@
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { FormattedMessage, useIntl, useRequest } from '@umijs/max';
+import { FormattedMessage, useIntl } from '@umijs/max';
 import { Alert, App, Button, ColorPicker, Form, Input, Modal, Popconfirm, Select, Space, Spin, Tag, Table, Typography } from 'antd';
 import { DeleteOutlined, EditOutlined, ImportOutlined, PlusOutlined, TagOutlined } from '@ant-design/icons';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
@@ -46,6 +46,7 @@ const PersonalAddressBook: React.FC = () => {
 
   const [abGuid, setAbGuid] = useState<string>();
   const [abLoading, setAbLoading] = useState(true);
+  const [tags, setTags] = useState<API.TagItem[]>([]);
   
   useEffect(() => {
     const fetchAbGuid = async () => {
@@ -62,10 +63,22 @@ const PersonalAddressBook: React.FC = () => {
     fetchAbGuid();
   }, []);
   
-  const { data: tags = [], refresh: refreshTags } = useRequest(
-    () => (abGuid ? getTags(abGuid) : Promise.resolve([])),
-    { ready: !!abGuid }
-  );
+  const fetchTags = useCallback(async () => {
+    if (!abGuid) return;
+    try {
+      const result = await getTags(abGuid);
+      setTags(result || []);
+    } catch (error) {
+      console.error('Failed to fetch tags:', error);
+      setTags([]);
+    }
+  }, [abGuid]);
+  
+  useEffect(() => {
+    if (abGuid) {
+      fetchTags();
+    }
+  }, [abGuid, fetchTags]);
 
   const fetchAvailablePeers = useCallback(async () => {
     if (!abGuid) return;
@@ -158,6 +171,7 @@ const PersonalAddressBook: React.FC = () => {
       msgApi.success(
         intl.formatMessage({ id: 'pages.addressBook.peerDeleted', defaultMessage: 'Peer deleted' }),
       );
+      setSearchParams({});
       actionRef.current?.reload();
     } catch {
       msgApi.error(
@@ -178,7 +192,7 @@ const PersonalAddressBook: React.FC = () => {
       );
       setAddTagModalVisible(false);
       addTagForm.resetFields();
-      refreshTags();
+      fetchTags();
     } catch {
       msgApi.error(
         intl.formatMessage({
@@ -197,7 +211,7 @@ const PersonalAddressBook: React.FC = () => {
         intl.formatMessage({ id: 'pages.addressBook.tagRenamed', defaultMessage: 'Tag renamed' }),
       );
       renameTagForm.resetFields();
-      refreshTags();
+      fetchTags();
     } catch {
       msgApi.error(
         intl.formatMessage({
@@ -211,11 +225,11 @@ const PersonalAddressBook: React.FC = () => {
   const handleUpdateTagColor = async (tagName: string, color: number) => {
     if (!abGuid) return;
     try {
-      await updateTagColor(abGuid, { name: tagName, color });
+      await updateTagColor(abGuid, { name: tagName, color: color.toString() });
       msgApi.success(
         intl.formatMessage({ id: 'pages.addressBook.tagColorUpdated', defaultMessage: 'Tag color updated' }),
       );
-      refreshTags();
+      fetchTags();
     } catch {
       msgApi.error(
         intl.formatMessage({
@@ -233,7 +247,7 @@ const PersonalAddressBook: React.FC = () => {
       msgApi.success(
         intl.formatMessage({ id: 'pages.addressBook.tagDeleted', defaultMessage: 'Tag deleted' }),
       );
-      refreshTags();
+      fetchTags();
     } catch {
       msgApi.error(
         intl.formatMessage({
@@ -374,10 +388,10 @@ const PersonalAddressBook: React.FC = () => {
       dataIndex: 'color',
       key: 'color',
       width: 120,
-      render: (color: string, record: API.TagItem) => (
+      render: (color: number, record: API.TagItem) => (
         <ColorPicker
           size="small"
-          value={color || '#1677ff'}
+          value={color ? `#${color.toString(16).padStart(6, '0')}` : '#1677ff'}
           onChange={(colorValue) => {
             const hex = colorValue.toHexString();
             const argb = parseInt(hex.slice(1), 16);
@@ -451,7 +465,7 @@ const PersonalAddressBook: React.FC = () => {
             current: params.current || 1,
             pageSize: params.pageSize || 20,
             ab: abGuid,
-            search: searchParams.search,
+            search: params.id || searchParams.search,
           });
           return {
             data: result.data || [],
