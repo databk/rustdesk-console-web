@@ -83,11 +83,12 @@ const PersonalAddressBook: React.FC = () => {
     }
   }, [addPeerModalVisible, abGuid, addPeerForm, fetchAvailablePeers]);
 
-  const handleAddPeer = async (values: API.AddPeerParams) => {
+  const handleAddPeer = async (values: API.AddPeerParams & { peerSelect?: string }) => {
     if (!abGuid) return;
     setAddPeerError('');
     try {
-      await addPeer(abGuid, values);
+      const { peerSelect, ...peerData } = values;
+      await addPeer(abGuid, peerData);
       msgApi.success(
         intl.formatMessage({ id: 'pages.addressBook.peerAdded', defaultMessage: 'Peer added' }),
       );
@@ -341,7 +342,9 @@ const PersonalAddressBook: React.FC = () => {
               allowClear
               showSearch
               optionFilterProp="label"
-              options={availablePeers.map((p: API.DeviceItem) => ({
+              options={Array.from(
+                new Map(availablePeers.map((p: API.DeviceItem) => [p.id, p])).values(),
+              ).map((p: API.DeviceItem) => ({
                 label: `${p.hostname || p.id} (${p.id})`,
                 value: p.id,
               }))}
