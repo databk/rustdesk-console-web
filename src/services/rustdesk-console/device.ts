@@ -5,15 +5,17 @@ export async function getDeviceList(
     current?: number;
     pageSize?: number;
     search?: string;
+    status?: string;
   },
   options?: { [key: string]: any },
 ) {
   return request<API.PaginatedResult<API.DeviceItem>>('/api/devices', {
     method: 'GET',
     params: {
-      current: params.current || 1,
+      page: params.current || 1,
       pageSize: params.pageSize || 20,
       search: params.search,
+      status: params.status,
     },
     ...(options || {}),
   });

@@ -70,6 +70,8 @@ export default {
   'pages.devices.device': 'Device',
   'pages.devices.strategy': 'Strategy',
   'pages.devices.info': 'Info',
+  'pages.devices.search': 'Search',
+  'pages.devices.searchPlaceholder': 'Search by ID, hostname, username...',
   'pages.addressBook.name': 'Name',
   'pages.addressBook.note': 'Note',
   'pages.addressBook.peerCount': 'Peer Count',
