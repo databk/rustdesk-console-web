@@ -361,6 +361,9 @@ const PersonalAddressBook: React.FC = () => {
           <Form.Item name="hostname" label={<FormattedMessage id="pages.addressBook.device" defaultMessage="Device" />}>
             <Input disabled={!!selectedPeerId} />
           </Form.Item>
+          <Form.Item name="alias" label={<FormattedMessage id="pages.addressBook.alias" defaultMessage="Alias" />}>
+            <Input />
+          </Form.Item>
           <Form.Item name="note" label={<FormattedMessage id="pages.addressBook.note" defaultMessage="Note" />}>
             <Input.TextArea />
           </Form.Item>

@@ -137,16 +137,22 @@ declare namespace API {
 
   type AddPeerParams = {
     id: string;
+    alias?: string;
+    hash?: string;
+    password?: string;
     hostname?: string;
-    os?: string;
+    platform?: string;
     note?: string;
     tags?: string[];
   };
 
   type UpdatePeerParams = {
     id?: string;
+    alias?: string;
+    hash?: string;
+    password?: string;
     hostname?: string;
-    os?: string;
+    platform?: string;
     note?: string;
     tags?: string[];
   };
@@ -162,8 +168,8 @@ declare namespace API {
   };
 
   type RenameTagParams = {
-    name: string;
-    newName: string;
+    old: string;
+    new: string;
   };
 
   type UpdateTagParams = {
@@ -178,12 +184,15 @@ declare namespace API {
   };
 
   type CreateRuleParams = {
-    name: string;
-    [key: string]: any;
+    guid: string;
+    user?: string;
+    group?: string;
+    rule?: number;
   };
 
   type UpdateRuleParams = {
-    [key: string]: any;
+    guid: string;
+    rule: number;
   };
 
   type ConnectionAuditItem = {
