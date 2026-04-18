@@ -82,7 +82,7 @@ const Settings: React.FC = () => {
                   <Input placeholder="Enter admin email" />
                 </Form.Item>
                 <Form.Item name="language" label={<FormattedMessage id="pages.settings.language" defaultValue="Default Language" />}>
-                  <Select options={[{ value: 'en', label: 'English' }, { value: 'zh', label: '中文' }]} />
+                  <Select options={[{ value: 'en', label: 'English' }, { value: 'zh', label: 'Chinese' }]} />
                 </Form.Item>
               </Form>
             ),
