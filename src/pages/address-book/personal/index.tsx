@@ -404,7 +404,7 @@ const PersonalAddressBook: React.FC = () => {
         <ColorPicker
           size="small"
           value={color ? `#${color.toString(16).padStart(6, '0')}` : '#1677ff'}
-          onChange={(colorValue) => {
+          onChangeComplete={(colorValue) => {
             const hex = colorValue.toHexString();
             const argb = parseInt(hex.slice(1), 16);
             handleUpdateTagColor(record.name, argb);
