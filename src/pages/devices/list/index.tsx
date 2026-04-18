@@ -89,7 +89,10 @@ const DeviceList: React.FC = () => {
   };
 
   const handleSearch = (values: { search?: string; status?: string }) => {
-    setSearchParams(values);
+    setSearchParams({
+      search: values.search,
+      status: values.status,
+    });
     actionRef.current?.reload();
   };
 
@@ -106,6 +109,33 @@ const DeviceList: React.FC = () => {
       copyable: true,
       width: 150,
       ellipsis: true,
+    },
+    {
+      title: <FormattedMessage id="pages.devices.search" defaultMessage="Search" />,
+      dataIndex: 'search',
+      hideInTable: true,
+      fieldProps: {
+        placeholder: intl.formatMessage({
+          id: 'pages.devices.searchPlaceholder',
+          defaultMessage: 'Search by ID, hostname, username...',
+        }),
+      },
+    },
+    {
+      title: <FormattedMessage id="pages.devices.status" defaultMessage="Status" />,
+      dataIndex: 'status',
+      hideInTable: true,
+      valueType: 'select',
+      valueEnum: {
+        '0': {
+          text: <FormattedMessage id="pages.devices.disabled" defaultMessage="Disabled" />,
+          status: 'Default',
+        },
+        '1': {
+          text: <FormattedMessage id="pages.devices.normal" defaultMessage="Normal" />,
+          status: 'Success',
+        },
+      },
     },
     {
       title: (
@@ -246,13 +276,11 @@ const DeviceList: React.FC = () => {
         headerTitle={
           <span>
             <FormattedMessage id="pages.devices.list" defaultMessage="Device List" />
-            {' '}
-            ({searchParams.search ? '*' : '0'}/-)
           </span>
         }
         actionRef={actionRef}
         rowKey="guid"
-        request={async (params) => {
+        request={async (params, sort, filter) => {
           const result = await getDeviceList({
             current: params.current || 1,
             pageSize: params.pageSize || 20,
