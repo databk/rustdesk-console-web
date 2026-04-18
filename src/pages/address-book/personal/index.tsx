@@ -1,35 +1,48 @@
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl, useRequest } from '@umijs/max';
-import { Alert, App, Button, Form, Input, Modal, Popconfirm, Select, Space, Spin, Tag } from 'antd';
-import { DeleteOutlined, ImportOutlined, PlusOutlined } from '@ant-design/icons';
+import { Alert, App, Button, ColorPicker, Form, Input, Modal, Popconfirm, Select, Space, Spin, Tag, Table, Typography } from 'antd';
+import { DeleteOutlined, EditOutlined, ImportOutlined, PlusOutlined, TagOutlined } from '@ant-design/icons';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   getPersonalAddressBook,
   getPeers,
   addPeer,
+  updatePeer,
   deletePeer,
   getTags,
   addTag,
+  renameTag,
+  updateTagColor,
+  deleteTag,
 } from '@/services/rustdesk-console/addressBook';
 import { getDeviceList } from '@/services/rustdesk-console/device';
+
+const { Text } = Typography;
 
 const PersonalAddressBook: React.FC = () => {
   const intl = useIntl();
   const { message: msgApi } = App.useApp();
   const actionRef = useRef<ActionType>(null);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  
   const [addPeerModalVisible, setAddPeerModalVisible] = useState(false);
+  const [editPeerModalVisible, setEditPeerModalVisible] = useState(false);
   const [addTagModalVisible, setAddTagModalVisible] = useState(false);
+  const [tagManagementVisible, setTagManagementVisible] = useState(false);
+  
   const [addPeerForm] = Form.useForm();
+  const [editPeerForm] = Form.useForm();
   const [addTagForm] = Form.useForm();
-  const [searchParams, setSearchParams] = useState<{
-    search?: string;
-  }>({});
+  const [renameTagForm] = Form.useForm();
+  
+  const [searchParams, setSearchParams] = useState<{ search?: string }>({});
   const [availablePeers, setAvailablePeers] = useState<API.DeviceItem[]>([]);
   const [peersLoading, setPeersLoading] = useState(false);
   const [addPeerError, setAddPeerError] = useState('');
+  const [editPeerError, setEditPeerError] = useState('');
   const [selectedPeerId, setSelectedPeerId] = useState<string>();
+  const [editingPeer, setEditingPeer] = useState<API.PeerItem | null>(null);
 
   const [abGuid, setAbGuid] = useState<string>();
   const [abLoading, setAbLoading] = useState(true);
@@ -49,7 +62,7 @@ const PersonalAddressBook: React.FC = () => {
     fetchAbGuid();
   }, []);
   
-  const { data: tags = [] } = useRequest(
+  const { data: tags = [], refresh: refreshTags } = useRequest(
     () => (abGuid ? getTags(abGuid) : Promise.resolve([])),
     { ready: !!abGuid }
   );
@@ -104,22 +117,37 @@ const PersonalAddressBook: React.FC = () => {
     }
   };
 
-  const handleAddTag = async (values: API.AddTagParams) => {
-    if (!abGuid) return;
+  const handleEditPeer = (record: API.PeerItem) => {
+    setEditingPeer(record);
+    setEditPeerError('');
+    editPeerForm.setFieldsValue({
+      id: record.id,
+      alias: record.alias || '',
+      hostname: record.hostname || '',
+      note: record.note || '',
+      tags: record.tags || [],
+    });
+    setEditPeerModalVisible(true);
+  };
+
+  const handleUpdatePeer = async (values: API.UpdatePeerParams) => {
+    if (!abGuid || !editingPeer) return;
+    setEditPeerError('');
     try {
-      await addTag(abGuid, values);
+      await updatePeer(abGuid, { id: editingPeer.id, ...values });
       msgApi.success(
-        intl.formatMessage({ id: 'pages.addressBook.tagAdded', defaultMessage: 'Tag added' }),
+        intl.formatMessage({ id: 'pages.addressBook.peerUpdated', defaultMessage: 'Peer updated' }),
       );
-      setAddTagModalVisible(false);
-      addTagForm.resetFields();
-    } catch {
-      msgApi.error(
-        intl.formatMessage({
-          id: 'pages.addressBook.tagAddFailed',
-          defaultMessage: 'Failed to add tag',
-        }),
-      );
+      setEditPeerModalVisible(false);
+      setEditingPeer(null);
+      editPeerForm.resetFields();
+      actionRef.current?.reload();
+    } catch (error: any) {
+      const errMsg = error?.response?.data?.error || error?.message || '';
+      setEditPeerError(errMsg || intl.formatMessage({
+        id: 'pages.addressBook.peerUpdateFailed',
+        defaultMessage: 'Failed to update peer',
+      }));
     }
   };
 
@@ -136,6 +164,81 @@ const PersonalAddressBook: React.FC = () => {
         intl.formatMessage({
           id: 'pages.addressBook.peerDeleteFailed',
           defaultMessage: 'Failed to delete peer',
+        }),
+      );
+    }
+  };
+
+  const handleAddTag = async (values: API.AddTagParams) => {
+    if (!abGuid) return;
+    try {
+      await addTag(abGuid, values);
+      msgApi.success(
+        intl.formatMessage({ id: 'pages.addressBook.tagAdded', defaultMessage: 'Tag added' }),
+      );
+      setAddTagModalVisible(false);
+      addTagForm.resetFields();
+      refreshTags();
+    } catch {
+      msgApi.error(
+        intl.formatMessage({
+          id: 'pages.addressBook.tagAddFailed',
+          defaultMessage: 'Failed to add tag',
+        }),
+      );
+    }
+  };
+
+  const handleRenameTag = async (values: API.RenameTagParams) => {
+    if (!abGuid) return;
+    try {
+      await renameTag(abGuid, values);
+      msgApi.success(
+        intl.formatMessage({ id: 'pages.addressBook.tagRenamed', defaultMessage: 'Tag renamed' }),
+      );
+      renameTagForm.resetFields();
+      refreshTags();
+    } catch {
+      msgApi.error(
+        intl.formatMessage({
+          id: 'pages.addressBook.tagRenameFailed',
+          defaultMessage: 'Failed to rename tag',
+        }),
+      );
+    }
+  };
+
+  const handleUpdateTagColor = async (tagName: string, color: number) => {
+    if (!abGuid) return;
+    try {
+      await updateTagColor(abGuid, { name: tagName, color });
+      msgApi.success(
+        intl.formatMessage({ id: 'pages.addressBook.tagColorUpdated', defaultMessage: 'Tag color updated' }),
+      );
+      refreshTags();
+    } catch {
+      msgApi.error(
+        intl.formatMessage({
+          id: 'pages.addressBook.tagColorUpdateFailed',
+          defaultMessage: 'Failed to update tag color',
+        }),
+      );
+    }
+  };
+
+  const handleDeleteTag = async (tagName: string) => {
+    if (!abGuid) return;
+    try {
+      await deleteTag(abGuid, { name: tagName });
+      msgApi.success(
+        intl.formatMessage({ id: 'pages.addressBook.tagDeleted', defaultMessage: 'Tag deleted' }),
+      );
+      refreshTags();
+    } catch {
+      msgApi.error(
+        intl.formatMessage({
+          id: 'pages.addressBook.tagDeleteFailed',
+          defaultMessage: 'Failed to delete tag',
         }),
       );
     }
@@ -222,10 +325,19 @@ const PersonalAddressBook: React.FC = () => {
         <FormattedMessage id="pages.common.action" defaultMessage="Action" />
       ),
       valueType: "option",
-      width: 120,
+      width: 160,
       fixed: "right",
       render: (_: unknown, record: API.PeerItem) => (
         <Space size="small">
+          <Button
+            key="edit"
+            type="link"
+            size="small"
+            icon={<EditOutlined />}
+            onClick={() => handleEditPeer(record)}
+          >
+            <FormattedMessage id="pages.common.edit" defaultMessage="Edit" />
+          </Button>
           <Popconfirm
             key="delete"
             title={
@@ -235,6 +347,83 @@ const PersonalAddressBook: React.FC = () => {
               />
             }
             onConfirm={() => handleDeletePeer(record.id)}
+          >
+            <Button type="link" size="small" danger>
+              <FormattedMessage id="pages.common.delete" defaultMessage="Delete" />
+            </Button>
+          </Popconfirm>
+        </Space>
+      ),
+    },
+  ];
+
+  const tagColumns = [
+    {
+      title: intl.formatMessage({ id: 'pages.addressBook.tagName', defaultMessage: 'Tag Name' }),
+      dataIndex: 'name',
+      key: 'name',
+      width: 200,
+      render: (text: string, record: API.TagItem) => (
+        <Tag color={record.color || 'blue'} style={{ marginRight: 8 }}>
+          {text}
+        </Tag>
+      ),
+    },
+    {
+      title: intl.formatMessage({ id: 'pages.addressBook.color', defaultMessage: 'Color' }),
+      dataIndex: 'color',
+      key: 'color',
+      width: 120,
+      render: (color: string, record: API.TagItem) => (
+        <ColorPicker
+          size="small"
+          value={color || '#1677ff'}
+          onChange={(colorValue) => {
+            const hex = colorValue.toHexString();
+            const argb = parseInt(hex.slice(1), 16);
+            handleUpdateTagColor(record.name, argb);
+          }}
+        />
+      ),
+    },
+    {
+      title: intl.formatMessage({ id: 'pages.common.action', defaultMessage: 'Action' }),
+      key: 'action',
+      width: 180,
+      render: (_: unknown, record: API.TagItem) => (
+        <Space size="small">
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              Modal.confirm({
+                title: intl.formatMessage({ id: 'pages.addressBook.renameTag', defaultMessage: 'Rename Tag' }),
+                content: (
+                  <Form form={renameTagForm} initialValues={{ old: record.name, new: '' }}>
+                    <Form.Item name="old" hidden><Input /></Form.Item>
+                    <Form.Item
+                      name="new"
+                      label={intl.formatMessage({ id: 'pages.addressBook.newTagName', defaultMessage: 'New Tag Name' })}
+                      rules={[{ required: true }]}
+                    >
+                      <Input />
+                    </Form.Item>
+                  </Form>
+                ),
+                onOk: () => renameTagForm.validateFields().then(handleRenameTag),
+              });
+            }}
+          >
+            <FormattedMessage id="pages.common.rename" defaultMessage="Rename" />
+          </Button>
+          <Popconfirm
+            title={
+              <FormattedMessage
+                id="pages.addressBook.deleteTagConfirm"
+                defaultMessage="Are you sure to delete this tag?"
+              />
+            }
+            onConfirm={() => handleDeleteTag(record.name)}
           >
             <Button type="link" size="small" danger>
               <FormattedMessage id="pages.common.delete" defaultMessage="Delete" />
@@ -288,7 +477,7 @@ const PersonalAddressBook: React.FC = () => {
           showSizeChanger: true,
           showQuickJumper: true,
         }}
-        scroll={{ x: 1000 }}
+        scroll={{ x: 1100 }}
         toolBarRender={() => [
           <Button key="add" type="primary" icon={<PlusOutlined />} onClick={() => setAddPeerModalVisible(true)}>
             <FormattedMessage id="pages.addressBook.addPeer" defaultMessage="Add" />
@@ -299,8 +488,11 @@ const PersonalAddressBook: React.FC = () => {
           <Button key="recycle" icon={<DeleteOutlined />}>
             <FormattedMessage id="pages.addressBook.recycleBin" defaultMessage="Recycle Bin" />
           </Button>,
-          <Button key="addTag" onClick={() => setAddTagModalVisible(true)}>
+          <Button key="addTag" icon={<TagOutlined />} onClick={() => setAddTagModalVisible(true)}>
             <FormattedMessage id="pages.addressBook.addTag" defaultMessage="Add Tag" />
+          </Button>,
+          <Button key="manageTags" icon={<TagOutlined />} onClick={() => setTagManagementVisible(true)}>
+            <FormattedMessage id="pages.addressBook.manageTags" defaultMessage="Manage Tags" />
           </Button>,
         ]}
         options={{
@@ -313,6 +505,7 @@ const PersonalAddressBook: React.FC = () => {
         }}
       />
 
+      {/* Add Peer Modal */}
       <Modal
         title={<FormattedMessage id="pages.addressBook.addPeer" defaultMessage="Add Peer" />}
         open={addPeerModalVisible}
@@ -373,6 +566,55 @@ const PersonalAddressBook: React.FC = () => {
         </Form>
       </Modal>
 
+      {/* Edit Peer Modal */}
+      <Modal
+        title={<FormattedMessage id="pages.addressBook.editPeer" defaultMessage="Edit Peer" />}
+        open={editPeerModalVisible}
+        onCancel={() => {
+          setEditPeerModalVisible(false);
+          setEditingPeer(null);
+          editPeerForm.resetFields();
+        }}
+        onOk={() => editPeerForm.submit()}
+      >
+        {editPeerError && (
+          <Alert
+            message={editPeerError}
+            type="error"
+            showIcon
+            style={{ marginBottom: 16 }}
+          />
+        )}
+        <Form form={editPeerForm} onFinish={handleUpdatePeer} layout="vertical">
+          <Form.Item name="id" label="ID">
+            <Input disabled />
+          </Form.Item>
+          <Form.Item name="hostname" label={<FormattedMessage id="pages.addressBook.device" defaultMessage="Device" />}>
+            <Input disabled />
+          </Form.Item>
+          <Form.Item name="alias" label={<FormattedMessage id="pages.addressBook.alias" defaultMessage="Alias" />}>
+            <Input />
+          </Form.Item>
+          <Form.Item name="note" label={<FormattedMessage id="pages.addressBook.note" defaultMessage="Note" />}>
+            <Input.TextArea />
+          </Form.Item>
+          <Form.Item name="tags" label={<FormattedMessage id="pages.addressBook.tags" defaultMessage="Tags" />}>
+            <Select
+              mode="multiple"
+              placeholder={intl.formatMessage({
+                id: 'pages.addressBook.selectTags',
+                defaultMessage: 'Select tags',
+              })}
+              options={(tags as API.TagItem[]).map(tag => ({
+                label: tag.name,
+                value: tag.name,
+              }))}
+            />
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      {/* Add Tag Modal */}
       <Modal
         title={<FormattedMessage id="pages.addressBook.addTag" defaultMessage="Add Tag" />}
         open={addTagModalVisible}
@@ -388,6 +630,23 @@ const PersonalAddressBook: React.FC = () => {
             <Input />
           </Form.Item>
         </Form>
+      </Modal>
+
+      {/* Tag Management Modal */}
+      <Modal
+        title={<FormattedMessage id="pages.addressBook.manageTags" defaultMessage="Manage Tags" />}
+        open={tagManagementVisible}
+        onCancel={() => setTagManagementVisible(false)}
+        footer={null}
+        width={700}
+      >
+        <Table
+          dataSource={tags as API.TagItem[]}
+          columns={tagColumns}
+          rowKey="name"
+          pagination={false}
+          size="middle"
+        />
       </Modal>
     </PageContainer>
   );
