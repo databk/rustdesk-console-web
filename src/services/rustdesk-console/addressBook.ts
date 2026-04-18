@@ -44,7 +44,8 @@ export async function getPeers(
     current?: number;
     pageSize?: number;
     ab?: string;
-    search?: string;
+    id?: string;
+    alias?: string;
   },
 ) {
   return request<API.PaginatedResult<API.PeerItem>>('/api/ab/peers', {
@@ -61,7 +62,7 @@ export async function updatePeer(guid: string, data: API.UpdatePeerParams) {
   return request(`/api/ab/peer/update/${guid}`, { method: 'PUT', data });
 }
 
-export async function deletePeer(guid: string, data: { id: string }) {
+export async function deletePeer(guid: string, data: string[]) {
   return request(`/api/ab/peer/${guid}`, { method: 'DELETE', data });
 }
 

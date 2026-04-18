@@ -35,8 +35,7 @@ const PersonalAddressBook: React.FC = () => {
   const [editPeerForm] = Form.useForm();
   const [addTagForm] = Form.useForm();
   const [renameTagForm] = Form.useForm();
-  
-  const [searchParams, setSearchParams] = useState<{ search?: string }>({});
+
   const [availablePeers, setAvailablePeers] = useState<API.DeviceItem[]>([]);
   const [peersLoading, setPeersLoading] = useState(false);
   const [addPeerError, setAddPeerError] = useState('');
@@ -167,11 +166,10 @@ const PersonalAddressBook: React.FC = () => {
   const handleDeletePeer = async (id: string) => {
     if (!abGuid) return;
     try {
-      await deletePeer(abGuid, { id });
+      await deletePeer(abGuid, [id]);
       msgApi.success(
         intl.formatMessage({ id: 'pages.addressBook.peerDeleted', defaultMessage: 'Peer deleted' }),
       );
-      setSearchParams({});
       actionRef.current?.reload();
     } catch {
       msgApi.error(
@@ -465,7 +463,7 @@ const PersonalAddressBook: React.FC = () => {
             current: params.current || 1,
             pageSize: params.pageSize || 20,
             ab: abGuid,
-            search: params.id || searchParams.search,
+            id: params.id,
           });
           return {
             data: result.data || [],
@@ -485,7 +483,6 @@ const PersonalAddressBook: React.FC = () => {
             ...dom.reverse(),
           ],
         }}
-        params={{ search: searchParams.search }}
         pagination={{
           defaultPageSize: 20,
           showSizeChanger: true,
