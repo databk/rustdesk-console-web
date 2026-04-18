@@ -159,12 +159,13 @@ declare namespace API {
 
   type TagItem = {
     name: string;
-    color?: string;
+    color?: number;
+    peer_count?: number;
   };
 
   type AddTagParams = {
     name: string;
-    color?: string;
+    color?: number;
   };
 
   type RenameTagParams = {
@@ -174,7 +175,7 @@ declare namespace API {
 
   type UpdateTagParams = {
     name: string;
-    color: string;
+    color: number;
   };
 
   type RuleItem = {

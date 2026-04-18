@@ -82,7 +82,7 @@ export async function updateTagColor(guid: string, data: API.UpdateTagParams) {
   return request(`/api/ab/tag/update/${guid}`, { method: 'PUT', data });
 }
 
-export async function deleteTag(guid: string, data: { name: string }) {
+export async function deleteTag(guid: string, data: string[]) {
   return request(`/api/ab/tag/${guid}`, { method: 'DELETE', data });
 }
 

@@ -20,6 +20,11 @@ import { getDeviceList } from '@/services/rustdesk-console/device';
 
 const { Text } = Typography;
 
+const argbToHex = (color: number | undefined): string => {
+  if (!color) return '#1677ff';
+  return `#${color.toString(16).padStart(8, '0').slice(-6)}`;
+};
+
 const PersonalAddressBook: React.FC = () => {
   const intl = useIntl();
   const { message: msgApi } = App.useApp();
@@ -181,10 +186,19 @@ const PersonalAddressBook: React.FC = () => {
     }
   };
 
-  const handleAddTag = async (values: API.AddTagParams) => {
+  const handleAddTag = async (values: { name: string; color?: { toHexString: () => string } }) => {
     if (!abGuid) return;
     try {
-      await addTag(abGuid, values);
+      const tagData: API.AddTagParams = {
+        name: values.name,
+      };
+      
+      if (values.color?.toHexString) {
+        const hex = values.color.toHexString();
+        tagData.color = parseInt(hex.slice(1), 16);
+      }
+      
+      await addTag(abGuid, tagData);
       msgApi.success(
         intl.formatMessage({ id: 'pages.addressBook.tagAdded', defaultMessage: 'Tag added' }),
       );
@@ -223,7 +237,7 @@ const PersonalAddressBook: React.FC = () => {
   const handleUpdateTagColor = async (tagName: string, color: number) => {
     if (!abGuid) return;
     try {
-      await updateTagColor(abGuid, { name: tagName, color: color.toString() });
+      await updateTagColor(abGuid, { name: tagName, color });
       msgApi.success(
         intl.formatMessage({ id: 'pages.addressBook.tagColorUpdated', defaultMessage: 'Tag color updated' }),
       );
@@ -241,7 +255,7 @@ const PersonalAddressBook: React.FC = () => {
   const handleDeleteTag = async (tagName: string) => {
     if (!abGuid) return;
     try {
-      await deleteTag(abGuid, { name: tagName });
+      await deleteTag(abGuid, [tagName]);
       msgApi.success(
         intl.formatMessage({ id: 'pages.addressBook.tagDeleted', defaultMessage: 'Tag deleted' }),
       );
@@ -313,7 +327,7 @@ const PersonalAddressBook: React.FC = () => {
             {peerTags.map((tag: string) => {
               const tagInfo = (tags as API.TagItem[]).find((t: API.TagItem) => t.name === tag);
               return (
-                <Tag key={tag} color={tagInfo?.color || "blue"}>
+                <Tag key={tag} color={argbToHex(tagInfo?.color)}>
                   {tag}
                 </Tag>
               );
@@ -376,7 +390,7 @@ const PersonalAddressBook: React.FC = () => {
       key: 'name',
       width: 200,
       render: (text: string, record: API.TagItem) => (
-        <Tag color={record.color || 'blue'} style={{ marginRight: 8 }}>
+        <Tag color={argbToHex(record.color)} style={{ marginRight: 8 }}>
           {text}
         </Tag>
       ),
@@ -639,6 +653,12 @@ const PersonalAddressBook: React.FC = () => {
             rules={[{ required: true, message: 'Please enter tag name' }]}
           >
             <Input />
+          </Form.Item>
+          <Form.Item
+            name="color"
+            label={<FormattedMessage id="pages.addressBook.color" defaultMessage="Color" />}
+          >
+            <ColorPicker />
           </Form.Item>
         </Form>
       </Modal>
