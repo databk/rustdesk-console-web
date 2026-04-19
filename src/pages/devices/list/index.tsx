@@ -1,10 +1,8 @@
 import {
   DeleteOutlined,
-  EditOutlined,
   InfoCircleOutlined,
   MinusCircleOutlined,
   PlusCircleOutlined,
-  QuestionCircleOutlined,
 } from '@ant-design/icons';
 import {
   deleteDevice,
@@ -14,7 +12,7 @@ import {
 } from '@/services/rustdesk-console/device';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { useIntl } from '@umijs/max';
+import { useIntl, FormattedMessage } from '@umijs/max';
 import { App, Button, Popconfirm, Space, Tag, Tooltip } from 'antd';
 import React, { useRef, useState } from 'react';
 
@@ -116,29 +114,29 @@ const DeviceList: React.FC = () => {
           </Tooltip>
         </span>
       ),
-      dataIndex: 'device_name',
+      dataIndex: 'hostname',
       width: 150,
       ellipsis: true,
       search: false,
-      render: (_: unknown, record: API.DeviceItem) => record.info?.device_name || '-',
+      render: (_: unknown, record: API.DeviceItem) => record.hostname || '-',
     },
     {
       title: (
         <FormattedMessage id="pages.devices.deviceGroup" defaultMessage="Group" />
       ),
-      dataIndex: 'device_group_name',
+      dataIndex: 'group_name',
       width: 120,
       ellipsis: true,
       search: false,
-      render: (_: unknown, record: API.DeviceItem) => record.device_group_name || '-',
+      render: (_: unknown, record: API.DeviceItem) => record.group_name || '-',
     },
     {
       title: <FormattedMessage id="pages.devices.user" defaultMessage="User" />,
-      dataIndex: 'user_name',
+      dataIndex: 'username',
       width: 120,
       ellipsis: true,
       search: false,
-      render: (_: unknown, record: API.DeviceItem) => record.user_name || '-',
+      render: (_: unknown, record: API.DeviceItem) => record.username || '-',
     },
     {
       title: <FormattedMessage id="pages.devices.status" defaultMessage="Status" />,
@@ -146,7 +144,7 @@ const DeviceList: React.FC = () => {
       width: 80,
       search: false,
       render: (_: unknown, record: API.DeviceItem) => {
-        const isOnline = record.status === 'online' || record.status === 1;
+        const isOnline = record.status === 1;
         return (
           <Tag color={isOnline ? 'green' : 'default'}>
             {isOnline ? (
@@ -160,30 +158,14 @@ const DeviceList: React.FC = () => {
     },
     {
       title: (
-        <span>
-          <FormattedMessage id="pages.devices.strategy" defaultMessage="Strategy" />
-          <Tooltip title={intl.formatMessage({ id: 'pages.devices.strategyInfo', defaultMessage: 'Connection strategy' })}>
-            <InfoCircleOutlined style={{ marginLeft: 4 }} />
-          </Tooltip>
-        </span>
-      ),
-      dataIndex: 'strategy_name',
-      width: 100,
-      ellipsis: true,
-      search: false,
-      render: (_: unknown, record: API.DeviceItem) => record.strategy_name || '-',
-    },
-    {
-      title: (
         <FormattedMessage id="pages.devices.info" defaultMessage="Info" />
       ),
-      dataIndex: 'info',
+      dataIndex: 'platform',
       width: 200,
       ellipsis: true,
       search: false,
       render: (_: unknown, record: API.DeviceItem) => {
-        if (!record.info) return '-';
-        return `${record.info.os || ''} ${record.info.hostname || ''}`.trim() || '-';
+        return `${record.platform || ''} ${record.ip || ''}`.trim() || '-';
       },
     },
     {
@@ -208,7 +190,7 @@ const DeviceList: React.FC = () => {
             type="link"
             size="small"
             icon={<PlusCircleOutlined />}
-            onClick={() => handleEnable(record.guid)}
+            onClick={() => handleEnable(record.uuid)}
           >
             <FormattedMessage id="pages.devices.enable" defaultMessage="Enable" />
           </Button>
@@ -217,7 +199,7 @@ const DeviceList: React.FC = () => {
             type="link"
             size="small"
             icon={<MinusCircleOutlined />}
-            onClick={() => handleDisable(record.guid)}
+            onClick={() => handleDisable(record.uuid)}
           >
             <FormattedMessage id="pages.devices.disable" defaultMessage="Disable" />
           </Button>
@@ -229,7 +211,7 @@ const DeviceList: React.FC = () => {
                 defaultMessage="Are you sure to delete this device?"
               />
             }
-            onConfirm={() => handleDelete(record.guid)}
+            onConfirm={() => handleDelete(record.uuid)}
           >
             <Button type="link" size="small" danger icon={<DeleteOutlined />}>
               <FormattedMessage id="pages.common.delete" defaultMessage="Delete" />
@@ -251,7 +233,7 @@ const DeviceList: React.FC = () => {
           </span>
         }
         actionRef={actionRef}
-        rowKey="guid"
+        rowKey="uuid"
         request={async (params) => {
           const result = await getDeviceList({
             current: params.current || 1,
@@ -304,8 +286,3 @@ const DeviceList: React.FC = () => {
 };
 
 export default DeviceList;
-
-function FormattedMessage(props: { id: string; defaultMessage: string }): React.JSX.Element {
-  const intl = useIntl();
-  return <>{intl.formatMessage(props)}</>;
-}
