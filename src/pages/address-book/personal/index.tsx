@@ -246,12 +246,12 @@ const PersonalAddressBook: React.FC = () => {
     if (!abGuid) return;
     try {
       await updateTagColor(abGuid, { name: tagName, color });
+      setTags(prev => prev.map(tag => tag.name === tagName ? { ...tag, color } : tag));
       setPendingColorUpdates(prev => {
         const next = { ...prev };
         delete next[tagName];
         return next;
       });
-      fetchTags();
     } catch {
       setPendingColorUpdates(prev => {
         const next = { ...prev };
