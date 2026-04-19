@@ -51,6 +51,8 @@ const PersonalAddressBook: React.FC = () => {
   const [abGuid, setAbGuid] = useState<string>();
   const [abLoading, setAbLoading] = useState(true);
   const [tags, setTags] = useState<API.TagItem[]>([]);
+  const [pendingColorUpdates, setPendingColorUpdates] = useState<Record<string, number>>({});
+  
   
   useEffect(() => {
     const fetchAbGuid = async () => {
@@ -244,11 +246,18 @@ const PersonalAddressBook: React.FC = () => {
     if (!abGuid) return;
     try {
       await updateTagColor(abGuid, { name: tagName, color });
-      msgApi.success(
-        intl.formatMessage({ id: 'pages.addressBook.tagColorUpdated', defaultMessage: 'Tag color updated' }),
-      );
+      setPendingColorUpdates(prev => {
+        const next = { ...prev };
+        delete next[tagName];
+        return next;
+      });
       fetchTags();
     } catch {
+      setPendingColorUpdates(prev => {
+        const next = { ...prev };
+        delete next[tagName];
+        return next;
+      });
       msgApi.error(
         intl.formatMessage({
           id: 'pages.addressBook.tagColorUpdateFailed',
@@ -406,18 +415,22 @@ const PersonalAddressBook: React.FC = () => {
       dataIndex: 'color',
       key: 'color',
       width: 120,
-      render: (color: number, record: API.TagItem) => (
-        <ColorPicker
-          size="small"
-          panels={['picker']}
-          value={argbToHex(color)}
-          onChangeComplete={(colorValue) => {
-            const rgb = colorValue.toRgb();
-            const argb = 0xFF000000 + (rgb.r << 16) + (rgb.g << 8) + rgb.b;
-            handleUpdateTagColor(record.name, argb);
-          }}
-        />
-      ),
+      render: (color: number, record: API.TagItem) => {
+        const displayColor = pendingColorUpdates[record.name] ?? color;
+        return (
+          <ColorPicker
+            size="small"
+            disabledAlpha
+            value={argbToHex(displayColor)}
+            onChangeComplete={(colorValue) => {
+              const rgb = colorValue.toRgb();
+              const newArgb = 0xFF000000 + (rgb.r << 16) + (rgb.g << 8) + rgb.b;
+              setPendingColorUpdates(prev => ({ ...prev, [record.name]: newArgb }));
+              handleUpdateTagColor(record.name, newArgb);
+            }}
+          />
+        );
+      },
     },
     {
       title: intl.formatMessage({ id: 'pages.common.action', defaultMessage: 'Action' }),
@@ -665,7 +678,7 @@ const PersonalAddressBook: React.FC = () => {
             name="color"
             label={<FormattedMessage id="pages.addressBook.color" defaultMessage="Color" />}
           >
-            <ColorPicker panels={['picker']} />
+            <ColorPicker disabledAlpha />
           </Form.Item>
         </Form>
       </Modal>
