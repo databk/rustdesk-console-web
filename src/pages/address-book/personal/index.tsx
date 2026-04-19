@@ -91,6 +91,12 @@ const PersonalAddressBook: React.FC = () => {
     }
   }, [abGuid, fetchTags]);
 
+  useEffect(() => {
+    if (abGuid) {
+      actionRef.current?.reload();
+    }
+  }, [abGuid]);
+
   const fetchAvailablePeers = useCallback(async () => {
     if (!abGuid) return;
     setPeersLoading(true);
