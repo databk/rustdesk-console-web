@@ -663,7 +663,7 @@ const PersonalAddressBook: React.FC = () => {
           </Form.Item>
           <Form.Item
             name="color"
-            label={<FormattedMessage id="pages.addressBook.color" defaultMessage: "Color" />}
+            label={<FormattedMessage id="pages.addressBook.color" defaultMessage="Color" />}
           >
             <ColorPicker panels={['picker']} />
           </Form.Item>
