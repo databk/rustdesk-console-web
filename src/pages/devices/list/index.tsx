@@ -10,11 +10,16 @@ import {
   enableDevice,
   getDeviceList,
 } from '@/services/rustdesk-console/device';
+import { getPersonalAddressBook, getPeers } from '@/services/rustdesk-console/addressBook';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { useIntl, FormattedMessage } from '@umijs/max';
 import { App, Button, Popconfirm, Space, Tag, Tooltip } from 'antd';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+
+interface DeviceWithDetails extends API.DeviceItem {
+  peerInfo?: API.PeerItem;
+}
 
 const DeviceList: React.FC = () => {
   const intl = useIntl();
@@ -25,10 +30,33 @@ const DeviceList: React.FC = () => {
     search?: string;
     status?: string;
   }>({});
+  const [abGuid, setAbGuid] = useState<string>();
+  const [abLoading, setAbLoading] = useState(true);
 
-  const handleEnable = async (guid: string) => {
+  useEffect(() => {
+    const fetchAbGuid = async () => {
+      setAbLoading(true);
+      try {
+        const result = await getPersonalAddressBook();
+        setAbGuid(result.guid);
+      } catch (error) {
+        console.error('Failed to fetch personal address book:', error);
+      } finally {
+        setAbLoading(false);
+      }
+    };
+    fetchAbGuid();
+  }, []);
+
+  useEffect(() => {
+    if (abGuid && !abLoading) {
+      actionRef.current?.reload();
+    }
+  }, [abGuid, abLoading]);
+
+  const handleEnable = async (uuid: string) => {
     try {
-      await enableDevice(guid);
+      await enableDevice(uuid);
       msgApi.success(
         intl.formatMessage({
           id: 'pages.devices.enableSuccess',
@@ -46,9 +74,9 @@ const DeviceList: React.FC = () => {
     }
   };
 
-  const handleDisable = async (guid: string) => {
+  const handleDisable = async (uuid: string) => {
     try {
-      await disableDevice(guid);
+      await disableDevice(uuid);
       msgApi.success(
         intl.formatMessage({
           id: 'pages.devices.disableSuccess',
@@ -66,9 +94,9 @@ const DeviceList: React.FC = () => {
     }
   };
 
-  const handleDelete = async (guid: string) => {
+  const handleDelete = async (uuid: string) => {
     try {
-      await deleteDevice(guid);
+      await deleteDevice(uuid);
       msgApi.success(
         intl.formatMessage({
           id: 'pages.devices.deleteSuccess',
@@ -91,7 +119,7 @@ const DeviceList: React.FC = () => {
     actionRef.current?.reload();
   };
 
-  const columns: ProColumns<API.DeviceItem>[] = [
+  const columns: ProColumns<DeviceWithDetails>[] = [
     {
       title: '',
       dataIndex: 'index',
@@ -118,7 +146,8 @@ const DeviceList: React.FC = () => {
       width: 150,
       ellipsis: true,
       search: false,
-      render: (_: unknown, record: API.DeviceItem) => record.hostname || '-',
+      render: (_: unknown, record: DeviceWithDetails) =>
+        record.peerInfo?.alias || record.hostname || record.id || '-',
     },
     {
       title: (
@@ -128,7 +157,7 @@ const DeviceList: React.FC = () => {
       width: 120,
       ellipsis: true,
       search: false,
-      render: (_: unknown, record: API.DeviceItem) => record.group_name || '-',
+      render: (_: unknown, record: DeviceWithDetails) => record.group_name || '-',
     },
     {
       title: <FormattedMessage id="pages.devices.user" defaultMessage="User" />,
@@ -136,14 +165,15 @@ const DeviceList: React.FC = () => {
       width: 120,
       ellipsis: true,
       search: false,
-      render: (_: unknown, record: API.DeviceItem) => record.username || '-',
+      render: (_: unknown, record: DeviceWithDetails) =>
+        record.peerInfo?.username || record.username || '-',
     },
     {
       title: <FormattedMessage id="pages.devices.status" defaultMessage="Status" />,
       dataIndex: 'status',
       width: 80,
       search: false,
-      render: (_: unknown, record: API.DeviceItem) => {
+      render: (_: unknown, record: DeviceWithDetails) => {
         const isOnline = record.status === 1;
         return (
           <Tag color={isOnline ? 'green' : 'default'}>
@@ -164,8 +194,10 @@ const DeviceList: React.FC = () => {
       width: 200,
       ellipsis: true,
       search: false,
-      render: (_: unknown, record: API.DeviceItem) => {
-        return `${record.platform || ''} ${record.ip || ''}`.trim() || '-';
+      render: (_: unknown, record: DeviceWithDetails) => {
+        const platform = record.peerInfo?.platform || record.platform || '';
+        const hostname = record.peerInfo?.hostname || '';
+        return `${platform} ${hostname}`.trim() || '-';
       },
     },
     {
@@ -174,7 +206,8 @@ const DeviceList: React.FC = () => {
       width: 150,
       ellipsis: true,
       search: false,
-      render: (_: unknown, record: API.DeviceItem) => record.note || '-',
+      render: (_: unknown, record: DeviceWithDetails) =>
+        record.peerInfo?.note || record.note || '-',
     },
     {
       title: (
@@ -183,7 +216,7 @@ const DeviceList: React.FC = () => {
       valueType: 'option',
       width: 200,
       fixed: 'right',
-      render: (_: unknown, record: API.DeviceItem) => (
+      render: (_: unknown, record: DeviceWithDetails) => (
         <Space size="small">
           <Button
             key="enable"
@@ -224,7 +257,7 @@ const DeviceList: React.FC = () => {
 
   return (
     <PageContainer>
-      <ProTable<API.DeviceItem>
+      <ProTable<DeviceWithDetails>
         headerTitle={
           <span>
             <FormattedMessage id="pages.devices.list" defaultMessage="Device List" />
@@ -234,16 +267,33 @@ const DeviceList: React.FC = () => {
         }
         actionRef={actionRef}
         rowKey="uuid"
+        loading={abLoading}
         request={async (params) => {
-          const result = await getDeviceList({
-            current: params.current || 1,
-            pageSize: params.pageSize || 20,
-            search: searchParams.search,
-            status: searchParams.status,
-          });
+          const [deviceResult, peerResult] = await Promise.all([
+            getDeviceList({
+              current: params.current || 1,
+              pageSize: params.pageSize || 20,
+              search: searchParams.search,
+              status: searchParams.status,
+            }),
+            abGuid ? getPeers({ current: 1, pageSize: 10000, ab: abGuid }) : Promise.resolve({ data: [], total: 0 }),
+          ]);
+
+          const peerMap = new Map<string, API.PeerItem>();
+          if (peerResult.data) {
+            peerResult.data.forEach((peer: API.PeerItem) => {
+              peerMap.set(peer.id, peer);
+            });
+          }
+
+          const mergedData = (deviceResult.data || []).map((device: API.DeviceItem) => ({
+            ...device,
+            peerInfo: peerMap.get(device.id),
+          }));
+
           return {
-            data: result.data || [],
-            total: result.total || 0,
+            data: mergedData,
+            total: deviceResult.total || 0,
             success: true,
           };
         }}
