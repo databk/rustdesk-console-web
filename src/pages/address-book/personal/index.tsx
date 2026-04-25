@@ -596,7 +596,7 @@ const PersonalAddressBook: React.FC = () => {
 
       {/* Edit Peer Modal */}
       <Modal
-        title={<FormattedMessage id="pages.addressBook.editPeer" defaultMessage="Edit Peer" />}
+        title={<FormattedMessage id="pages.common.edit" defaultMessage="Edit" />}
         open={editPeerModalVisible}
         onCancel={() => {
           setEditPeerModalVisible(false);
@@ -615,10 +615,7 @@ const PersonalAddressBook: React.FC = () => {
         )}
         <Form form={editPeerForm} onFinish={handleUpdatePeer} layout="vertical">
           <Form.Item name="id" label="ID">
-            <Input disabled />
-          </Form.Item>
-          <Form.Item name="hostname" label={<FormattedMessage id="pages.addressBook.device" defaultMessage="Device" />}>
-            <Input disabled />
+            <Text>{editingPeer?.id}</Text>
           </Form.Item>
           <Form.Item name="alias" label={<FormattedMessage id="pages.addressBook.alias" defaultMessage="Alias" />}>
             <Input />
