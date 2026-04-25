@@ -296,12 +296,6 @@ const PersonalAddressBook: React.FC = () => {
 
   const columns: ProColumns<API.PeerItem>[] = [
     {
-      title: "",
-      dataIndex: "index",
-      valueType: "indexBorder",
-      width: 50,
-    },
-    {
       title: "ID",
       dataIndex: "id",
       copyable: true,
