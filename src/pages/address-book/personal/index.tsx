@@ -519,7 +519,8 @@ const PersonalAddressBook: React.FC = () => {
           labelWidth: 'auto',
           defaultCollapsed: false,
           optionRender: (searchConfig, formProps, dom) => [
-            ...dom.reverse(),
+            dom[1],
+            dom[0],
           ],
         }}
         pagination={{
