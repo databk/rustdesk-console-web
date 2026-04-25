@@ -2,7 +2,7 @@ import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
 import { Alert, App, Button, ColorPicker, Form, Input, Modal, Popconfirm, Select, Space, Tag, Table, Typography } from 'antd';
-import { CloseOutlined, DeleteOutlined, EditOutlined, ImportOutlined, InfoCircleOutlined, PlusOutlined, SelectOutlined, TagOutlined } from '@ant-design/icons';
+import { CloseOutlined, DeleteOutlined, EditOutlined, InfoCircleOutlined, PlusOutlined, SelectOutlined, TagOutlined } from '@ant-design/icons';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   getPersonalAddressBook,
@@ -533,7 +533,7 @@ const PersonalAddressBook: React.FC = () => {
           <Button key="add" type="primary" icon={<PlusOutlined />} onClick={() => setAddPeerModalVisible(true)}>
             <FormattedMessage id="pages.addressBook.addPeer" defaultMessage="Add" />
           </Button>,
-          <Button key="import" icon={<ImportOutlined />}>
+          <Button key="import" icon={<SelectOutlined />}>
             <FormattedMessage id="pages.addressBook.import" defaultMessage="Import" />
           </Button>,
           <Button key="recycle" icon={<DeleteOutlined />}>
