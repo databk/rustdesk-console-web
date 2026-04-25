@@ -62,7 +62,7 @@
   {
     path: '/address-book',
     name: 'addressBook',
-    icon: 'book',
+    icon: 'contacts',
     routes: [
       {
         path: '/address-book',

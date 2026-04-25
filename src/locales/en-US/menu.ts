@@ -3,7 +3,7 @@ export default {
   'menu.dashboard.workplace': 'Workplace',
   'menu.devices': 'Devices',
   'menu.devices.list': 'Device List',
-  'menu.addressBook': 'Address Book',
+  'menu.addressBook': 'Address Books',
   'menu.addressBook.personal': 'Personal',
   'menu.addressBook.shared': 'Shared',
   'menu.deviceGroups': 'Device Groups',
