@@ -1,7 +1,7 @@
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
-import { Alert, App, Button, ColorPicker, Form, Input, Modal, Popconfirm, Select, Space, Spin, Tag, Table, Typography } from 'antd';
+import { Alert, App, Button, ColorPicker, Form, Input, Modal, Popconfirm, Select, Space, Tag, Table, Typography } from 'antd';
 import { CloseOutlined, DeleteOutlined, EditOutlined, ImportOutlined, InfoCircleOutlined, PlusOutlined, SelectOutlined, TagOutlined } from '@ant-design/icons';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
@@ -16,7 +16,6 @@ import {
   updateTagColor,
   deleteTag,
 } from '@/services/rustdesk-console/addressBook';
-import { getDeviceList } from '@/services/rustdesk-console/device';
 
 const { Text } = Typography;
 
@@ -41,11 +40,8 @@ const PersonalAddressBook: React.FC = () => {
   const [addTagForm] = Form.useForm();
   const [renameTagForm] = Form.useForm();
 
-  const [availablePeers, setAvailablePeers] = useState<API.DeviceItem[]>([]);
-  const [peersLoading, setPeersLoading] = useState(false);
   const [addPeerError, setAddPeerError] = useState('');
   const [editPeerError, setEditPeerError] = useState('');
-  const [selectedPeerId, setSelectedPeerId] = useState<string>();
   const [editingPeer, setEditingPeer] = useState<API.PeerItem | null>(null);
 
   const [abGuid, setAbGuid] = useState<string>();
@@ -93,41 +89,18 @@ const PersonalAddressBook: React.FC = () => {
     }
   }, [abGuid]);
 
-  const fetchAvailablePeers = useCallback(async () => {
-    if (!abGuid) return;
-    setPeersLoading(true);
-    try {
-      const res = await getPeers({
-        current: 1,
-        pageSize: 1000,
-        ab: abGuid,
-      });
-      const existingIds = new Set((res.data || []).map((p: API.PeerItem) => p.id));
-      const allDevices = await getDeviceList({ current: 1, pageSize: 1000 });
-      const notInAb = (allDevices.data || []).filter((d: API.DeviceItem) => !existingIds.has(d.id));
-      setAvailablePeers(notInAb);
-    } catch {
-      setAvailablePeers([]);
-    } finally {
-      setPeersLoading(false);
-    }
-  }, [abGuid]);
-
   useEffect(() => {
-    if (addPeerModalVisible && abGuid) {
+    if (addPeerModalVisible) {
       setAddPeerError('');
-      setSelectedPeerId(undefined);
       addPeerForm.resetFields();
-      fetchAvailablePeers();
     }
-  }, [addPeerModalVisible, abGuid, addPeerForm, fetchAvailablePeers]);
+  }, [addPeerModalVisible, addPeerForm]);
 
-  const handleAddPeer = async (values: API.AddPeerParams & { peerSelect?: string }) => {
+  const handleAddPeer = async (values: API.AddPeerParams) => {
     if (!abGuid) return;
     setAddPeerError('');
     try {
-      const { peerSelect, ...peerData } = values;
-      await addPeer(abGuid, peerData);
+      await addPeer(abGuid, values);
       msgApi.success(
         intl.formatMessage({ id: 'pages.addressBook.peerAdded', defaultMessage: 'Peer added' }),
       );
@@ -283,14 +256,6 @@ const PersonalAddressBook: React.FC = () => {
           defaultMessage: 'Failed to delete tag',
         }),
       );
-    }
-  };
-
-  const handlePeerSelect = (peerId: string) => {
-    setSelectedPeerId(peerId);
-    const peer = availablePeers.find((p: API.DeviceItem) => p.id === peerId);
-    if (peer) {
-      addPeerForm.setFieldsValue({ id: peer.id, hostname: peer.hostname || '' });
     }
   };
 
@@ -601,46 +566,30 @@ const PersonalAddressBook: React.FC = () => {
         )}
         <Form form={addPeerForm} onFinish={handleAddPeer} layout="vertical">
           <Form.Item
-            name="peerSelect"
-            label={<FormattedMessage id="pages.addressBook.selectDevice" defaultMessage="Select Device" />}
-          >
-            <Select
-              placeholder={intl.formatMessage({
-                id: 'pages.addressBook.selectDevicePlaceholder',
-                defaultMessage: 'Select a device from the system',
-              })}
-              loading={peersLoading}
-              onChange={handlePeerSelect}
-              allowClear
-              showSearch
-              optionFilterProp="label"
-              options={Array.from(
-                new Map(availablePeers.map((p: API.DeviceItem) => [p.id, p])).values(),
-              ).map((p: API.DeviceItem) => ({
-                label: `${p.hostname || p.id} (${p.id})`,
-                value: p.id,
-              }))}
-              notFoundContent={peersLoading ? <Spin size="small" /> : intl.formatMessage({
-                id: 'pages.addressBook.noAvailableDevices',
-                defaultMessage: 'No available devices. Devices must connect to the server first.',
-              })}
-            />
-          </Form.Item>
-          <Form.Item
             name="id"
             label="ID"
             rules={[{ required: true, message: 'Please enter peer ID' }]}
           >
-            <Input disabled={!!selectedPeerId} />
-          </Form.Item>
-          <Form.Item name="hostname" label={<FormattedMessage id="pages.addressBook.device" defaultMessage="Device" />}>
-            <Input disabled={!!selectedPeerId} />
+            <Input />
           </Form.Item>
           <Form.Item name="alias" label={<FormattedMessage id="pages.addressBook.alias" defaultMessage="Alias" />}>
             <Input />
           </Form.Item>
           <Form.Item name="note" label={<FormattedMessage id="pages.addressBook.note" defaultMessage="Note" />}>
             <Input.TextArea />
+          </Form.Item>
+          <Form.Item name="tags" label={<FormattedMessage id="pages.addressBook.tags" defaultMessage="Tags" />}>
+            <Select
+              mode="multiple"
+              placeholder={intl.formatMessage({
+                id: 'pages.addressBook.selectTags',
+                defaultMessage: 'Select tags',
+              })}
+              options={(tags as API.TagItem[]).map(tag => ({
+                label: tag.name,
+                value: tag.name,
+              }))}
+            />
           </Form.Item>
         </Form>
       </Modal>
