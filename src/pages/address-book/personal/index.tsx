@@ -2,7 +2,7 @@ import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
 import { Alert, App, Button, ColorPicker, Form, Input, Modal, Popconfirm, Select, Space, Spin, Tag, Table, Typography } from 'antd';
-import { CloseOutlined, DeleteOutlined, EditOutlined, ImportOutlined, PlusOutlined, SelectOutlined, TagOutlined } from '@ant-design/icons';
+import { CloseOutlined, DeleteOutlined, EditOutlined, ImportOutlined, InfoCircleOutlined, PlusOutlined, SelectOutlined, TagOutlined } from '@ant-design/icons';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   getPersonalAddressBook,
@@ -304,12 +304,16 @@ const PersonalAddressBook: React.FC = () => {
     },
     {
       title: (
-        <FormattedMessage id="pages.addressBook.device" defaultMessage="Device" />
+        <Space size={4}>
+          <FormattedMessage id="pages.addressBook.device" defaultMessage="Device" />
+          <InfoCircleOutlined style={{ color: '#999', fontSize: 12 }} />
+        </Space>
       ),
       dataIndex: "hostname",
       width: 150,
       ellipsis: true,
       search: false,
+      sorter: true,
       render: (_: unknown, record: API.PeerItem) => record.hostname || "-",
     },
     {
