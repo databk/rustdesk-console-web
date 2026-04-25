@@ -324,6 +324,7 @@ const PersonalAddressBook: React.FC = () => {
       width: 150,
       ellipsis: true,
       search: false,
+      sorter: true,
       render: (_: unknown, record: API.PeerItem) => (record as API.PeerItem & { alias?: string }).alias || "-",
     },
     {
@@ -358,6 +359,7 @@ const PersonalAddressBook: React.FC = () => {
       width: 150,
       ellipsis: true,
       search: false,
+      sorter: true,
       render: (_: unknown, record: API.PeerItem) => record.note || "-",
     },
     {
