@@ -298,9 +298,9 @@ const PersonalAddressBook: React.FC = () => {
     {
       title: "ID",
       dataIndex: "id",
-      copyable: true,
       width: 150,
       ellipsis: true,
+      sorter: true,
     },
     {
       title: (
