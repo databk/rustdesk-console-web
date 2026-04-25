@@ -370,12 +370,11 @@ const PersonalAddressBook: React.FC = () => {
       width: 160,
       fixed: "right",
       render: (_: unknown, record: API.PeerItem) => (
-        <Space size="small">
+        <Space size="small" split={<span style={{ color: '#ccc' }}>|</span>}>
           <Button
             key="edit"
             type="link"
             size="small"
-            icon={<EditOutlined />}
             onClick={() => handleEditPeer(record)}
           >
             <FormattedMessage id="pages.common.edit" defaultMessage="Edit" />
