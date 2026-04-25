@@ -2,7 +2,7 @@ import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
 import { Alert, App, Button, ColorPicker, Form, Input, Modal, Popconfirm, Select, Space, Spin, Tag, Table, Typography } from 'antd';
-import { DeleteOutlined, EditOutlined, ImportOutlined, PlusOutlined, TagOutlined } from '@ant-design/icons';
+import { CloseOutlined, DeleteOutlined, EditOutlined, ImportOutlined, PlusOutlined, SelectOutlined, TagOutlined } from '@ant-design/icons';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   getPersonalAddressBook,
@@ -52,6 +52,7 @@ const PersonalAddressBook: React.FC = () => {
   const [abLoading, setAbLoading] = useState(true);
   const [tags, setTags] = useState<API.TagItem[]>([]);
   const [pendingColorUpdates, setPendingColorUpdates] = useState<Record<string, number>>({});
+  const [selectedTag, setSelectedTag] = useState<string | null>(null);
   
   
   useEffect(() => {
@@ -482,6 +483,45 @@ const PersonalAddressBook: React.FC = () => {
 
   return (
     <PageContainer>
+      {/* Tags Area */}
+      <div style={{ marginBottom: 16, display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
+        <span style={{ fontWeight: 500, marginRight: 4 }}>
+          <FormattedMessage id="pages.addressBook.tags" defaultMessage="Tags" />
+        </span>
+        <Tag
+          style={{ cursor: 'pointer', padding: '2px 8px' }}
+          color={selectedTag === null ? 'blue' : undefined}
+          onClick={() => { setSelectedTag(null); actionRef.current?.reload(); }}
+        >
+          Untagged
+        </Tag>
+        {(tags as API.TagItem[]).map((tag: API.TagItem) => (
+          <Tag
+            key={tag.name}
+            color={selectedTag === tag.name ? argbToHex(tag.color) : undefined}
+            style={{ cursor: 'pointer', padding: '2px 8px' }}
+            closeIcon={<CloseOutlined style={{ fontSize: 10, marginLeft: 2 }} />}
+            closable
+            onClose={(e) => {
+              e.preventDefault();
+              handleDeleteTag(tag.name);
+            }}
+            onClick={() => {
+              setSelectedTag(selectedTag === tag.name ? null : tag.name);
+              actionRef.current?.reload();
+            }}
+          >
+            {tag.name}
+          </Tag>
+        ))}
+        <Button
+          size="small"
+          type="dashed"
+          icon={<PlusOutlined />}
+          onClick={() => setAddTagModalVisible(true)}
+        />
+      </div>
+
       <ProTable<API.PeerItem>
         headerTitle={
           <FormattedMessage id="pages.addressBook.personal" defaultMessage="Personal Address Book" />
@@ -498,6 +538,7 @@ const PersonalAddressBook: React.FC = () => {
             pageSize: params.pageSize || 20,
             ab: abGuid,
             id: params.id,
+            tags: selectedTag ? [selectedTag] : undefined,
           });
           return {
             data: result.data || [],
