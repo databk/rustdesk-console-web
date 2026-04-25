@@ -574,12 +574,6 @@ const PersonalAddressBook: React.FC = () => {
           <Button key="recycle" icon={<DeleteOutlined />}>
             <FormattedMessage id="pages.addressBook.recycleBin" defaultMessage="Recycle Bin" />
           </Button>,
-          <Button key="addTag" icon={<TagOutlined />} onClick={() => setAddTagModalVisible(true)}>
-            <FormattedMessage id="pages.addressBook.addTag" defaultMessage="Add Tag" />
-          </Button>,
-          <Button key="manageTags" icon={<TagOutlined />} onClick={() => setTagManagementVisible(true)}>
-            <FormattedMessage id="pages.addressBook.manageTags" defaultMessage="Manage Tags" />
-          </Button>,
         ]}
         options={{
           density: true,
