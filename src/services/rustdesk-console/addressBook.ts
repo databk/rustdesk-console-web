@@ -50,9 +50,25 @@ export async function getPeers(
     tagMode?: 'union' | 'intersection';
   },
 ) {
-  return request<API.PaginatedResult<API.PeerItem>>('/api/ab/peers', {
+  const { tags, tagMode, ...restParams } = params;
+  let url = '/api/ab/peers';
+  const searchParams = new URLSearchParams();
+
+  if (tags && tags.length > 0) {
+    tags.forEach(tag => searchParams.append('tags', tag));
+  }
+  if (tags && tags.length > 1 && tagMode) {
+    searchParams.set('tagMode', tagMode);
+  }
+
+  const queryString = searchParams.toString();
+  if (queryString) {
+    url += `?${queryString}`;
+  }
+
+  return request<API.PaginatedResult<API.PeerItem>>(url, {
     method: 'GET',
-    params,
+    params: restParams,
   });
 }
 
