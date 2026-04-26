@@ -511,7 +511,9 @@ const PersonalAddressBook: React.FC = () => {
                   value={tagColor}
                   open={hoveredColorDot === tag.name}
                   onOpenChange={(open) => {
-                    setHoveredColorDot(open ? tag.name : null);
+                    if (!open) {
+                      setHoveredColorDot(null);
+                    }
                   }}
                   onChangeComplete={(colorValue) => {
                     const rgb = colorValue.toRgb();
@@ -521,7 +523,6 @@ const PersonalAddressBook: React.FC = () => {
                 >
                   <span
                     onMouseEnter={() => setHoveredColorDot(tag.name)}
-                    onMouseLeave={() => setHoveredColorDot(null)}
                     style={{
                       display: 'inline-block',
                       width: 8,
