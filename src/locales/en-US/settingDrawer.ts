@@ -14,7 +14,7 @@ export default {
   'app.setting.themecolor.daybreak': 'Daybreak Blue (default)',
   'app.setting.themecolor.geekblue': 'Geek Glue',
   'app.setting.themecolor.purple': 'Golden Purple',
-  'app.setting.navigationmode': 'Navigation Mode',
+  'app.setting.navigationmode': 'Mix Menu Layout',
   'app.setting.sidemenu': 'Side Menu Layout',
   'app.setting.topmenu': 'Top Menu Layout',
   'app.setting.fixedheader': 'Fixed Header',
