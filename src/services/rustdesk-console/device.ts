@@ -4,35 +4,47 @@ export async function getDeviceList(
   params: {
     current?: number;
     pageSize?: number;
-    search?: string;
+    id?: string;
+    status?: string;
+    is_online?: string;
+    user_name?: string;
+    device_group_name?: string;
+    os?: string;
+    accessible?: string;
   },
   options?: { [key: string]: any },
 ) {
-  return request<API.PaginatedResult<API.DeviceItem>>('/api/devices', {
+  return request<API.PaginatedResult<API.DeviceItem>>('/api/peers', {
     method: 'GET',
     params: {
       current: params.current || 1,
       pageSize: params.pageSize || 20,
-      search: params.search,
+      id: params.id,
+      status: params.status,
+      is_online: params.is_online,
+      user_name: params.user_name,
+      device_group_name: params.device_group_name,
+      os: params.os,
+      accessible: params.accessible,
     },
     ...(options || {}),
   });
 }
 
 export async function enableDevice(guid: string) {
-  return request(`/api/devices/${guid}/enable`, { method: 'POST' });
+  return request(`/api/peers/${guid}/enable`, { method: 'POST' });
 }
 
 export async function disableDevice(guid: string) {
-  return request(`/api/devices/${guid}/disable`, { method: 'POST' });
+  return request(`/api/peers/${guid}/disable`, { method: 'POST' });
 }
 
 export async function deleteDevice(guid: string) {
-  return request(`/api/devices/${guid}`, { method: 'DELETE' });
+  return request(`/api/peers/${guid}`, { method: 'DELETE' });
 }
 
 export async function assignDevice(guid: string, data: Record<string, any>) {
-  return request(`/api/devices/${guid}/assign`, {
+  return request(`/api/peers/${guid}/assign`, {
     method: 'POST',
     data,
   });

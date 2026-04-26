@@ -1,10 +1,11 @@
 import {
+  CheckCircleOutlined,
+  CloseCircleOutlined,
   DeleteOutlined,
   EditOutlined,
   InfoCircleOutlined,
   MinusCircleOutlined,
   PlusCircleOutlined,
-  QuestionCircleOutlined,
 } from '@ant-design/icons';
 import {
   deleteDevice,
@@ -15,7 +16,7 @@ import {
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { useIntl } from '@umijs/max';
-import { App, Button, Popconfirm, Space, Tag, Tooltip } from 'antd';
+import { App, Button, Popconfirm, Space, Tooltip } from 'antd';
 import React, { useRef, useState } from 'react';
 
 const DeviceList: React.FC = () => {
@@ -23,10 +24,7 @@ const DeviceList: React.FC = () => {
   const { message: msgApi } = App.useApp();
   const actionRef = useRef<ActionType>();
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const [searchParams, setSearchParams] = useState<{
-    search?: string;
-    status?: string;
-  }>({});
+  const [totalDevices, setTotalDevices] = useState<number>(0);
 
   const handleEnable = async (guid: string) => {
     try {
@@ -88,30 +86,24 @@ const DeviceList: React.FC = () => {
     }
   };
 
-  const handleSearch = (values: { search?: string; status?: string }) => {
-    setSearchParams(values);
-    actionRef.current?.reload();
-  };
-
   const columns: ProColumns<API.DeviceItem>[] = [
-    {
-      title: '',
-      dataIndex: 'index',
-      valueType: 'indexBorder',
-      width: 50,
-    },
     {
       title: 'ID',
       dataIndex: 'id',
-      copyable: true,
-      width: 150,
+      width: '15%',
       ellipsis: true,
+      sorter: true,
     },
     {
       title: (
         <span>
           <FormattedMessage id="pages.devices.device" defaultMessage="Device" />
-          <Tooltip title={intl.formatMessage({ id: 'pages.devices.deviceInfo', defaultMessage: 'Device information' })}>
+          <Tooltip
+            title={intl.formatMessage({
+              id: 'pages.devices.deviceInfo',
+              defaultMessage: 'Device information',
+            })}
+          >
             <InfoCircleOutlined style={{ marginLeft: 4 }} />
           </Tooltip>
         </span>
@@ -120,49 +112,133 @@ const DeviceList: React.FC = () => {
       width: 150,
       ellipsis: true,
       search: false,
-      render: (_: unknown, record: API.DeviceItem) => record.info?.device_name || '-',
+      sorter: true,
+      render: (_: unknown, record: API.DeviceItem) =>
+        record.info?.device_name || '-',
     },
     {
       title: (
-        <FormattedMessage id="pages.devices.deviceGroup" defaultMessage="Group" />
+        <FormattedMessage
+          id="pages.devices.deviceGroup"
+          defaultMessage="Group"
+        />
       ),
       dataIndex: 'device_group_name',
       width: 120,
       ellipsis: true,
-      search: false,
-      render: (_: unknown, record: API.DeviceItem) => record.device_group_name || '-',
+      hideInSearch: true,
+      sorter: true,
+      render: (_: unknown, record: API.DeviceItem) =>
+        record.device_group_name || '-',
     },
     {
       title: <FormattedMessage id="pages.devices.user" defaultMessage="User" />,
       dataIndex: 'user_name',
       width: 120,
       ellipsis: true,
-      search: false,
+      sorter: true,
       render: (_: unknown, record: API.DeviceItem) => record.user_name || '-',
     },
     {
-      title: <FormattedMessage id="pages.devices.status" defaultMessage="Status" />,
+      title: (
+        <FormattedMessage id="pages.devices.status" defaultMessage="Status" />
+      ),
       dataIndex: 'status',
       width: 80,
+      valueType: 'select',
+      valueEnum: {
+        '1': {
+          text: intl.formatMessage({
+            id: 'pages.devices.statusNormal',
+            defaultMessage: 'Normal',
+          }),
+        },
+        '0': {
+          text: intl.formatMessage({
+            id: 'pages.devices.statusDisabled',
+            defaultMessage: 'Disabled',
+          }),
+        },
+      },
+      hideInTable: true,
+    },
+    {
+      title: (
+        <FormattedMessage
+          id="pages.devices.onlineStatus"
+          defaultMessage="Online Status"
+        />
+      ),
+      dataIndex: 'is_online',
+      width: 80,
+      valueType: 'select',
+      valueEnum: {
+        '1': {
+          text: intl.formatMessage({
+            id: 'pages.devices.online',
+            defaultMessage: 'Online',
+          }),
+        },
+        '0': {
+          text: intl.formatMessage({
+            id: 'pages.devices.offline',
+            defaultMessage: 'Offline',
+          }),
+        },
+      },
+      hideInTable: true,
+    },
+    {
+      title: (
+        <FormattedMessage id="pages.devices.os" defaultMessage="OS" />
+      ),
+      dataIndex: 'os',
+      hideInTable: true,
+    },
+    {
+      title: (
+        <FormattedMessage
+          id="pages.devices.deviceGroup"
+          defaultMessage="Group"
+        />
+      ),
+      dataIndex: 'device_group_name_search',
+      hideInTable: true,
+      tooltip: intl.formatMessage({
+        id: 'pages.devices.deviceGroupSearchTip',
+        defaultMessage: 'Filter by device group name',
+      }),
+    },
+    {
+      title: (
+        <FormattedMessage id="pages.devices.status" defaultMessage="Status" />
+      ),
+      dataIndex: 'status_display',
+      width: 80,
       search: false,
+      sorter: true,
       render: (_: unknown, record: API.DeviceItem) => {
-        const isOnline = record.status === 'online' || record.status === 1;
-        return (
-          <Tag color={isOnline ? 'green' : 'default'}>
-            {isOnline ? (
-              <FormattedMessage id="pages.devices.online" defaultMessage="Online" />
-            ) : (
-              <FormattedMessage id="pages.devices.offline" defaultMessage="Offline" />
-            )}
-          </Tag>
+        const isOnline = record.is_online === true;
+        return isOnline ? (
+          <CheckCircleOutlined style={{ color: '#52c41a', fontSize: 16 }} />
+        ) : (
+          <CloseCircleOutlined style={{ color: '#ff4d4f', fontSize: 16 }} />
         );
       },
     },
     {
       title: (
         <span>
-          <FormattedMessage id="pages.devices.strategy" defaultMessage="Strategy" />
-          <Tooltip title={intl.formatMessage({ id: 'pages.devices.strategyInfo', defaultMessage: 'Connection strategy' })}>
+          <FormattedMessage
+            id="pages.devices.strategy"
+            defaultMessage="Strategy"
+          />
+          <Tooltip
+            title={intl.formatMessage({
+              id: 'pages.devices.strategyInfo',
+              defaultMessage: 'Connection strategy',
+            })}
+          >
             <InfoCircleOutlined style={{ marginLeft: 4 }} />
           </Tooltip>
         </span>
@@ -171,7 +247,8 @@ const DeviceList: React.FC = () => {
       width: 100,
       ellipsis: true,
       search: false,
-      render: (_: unknown, record: API.DeviceItem) => record.strategy_name || '-',
+      render: (_: unknown, record: API.DeviceItem) =>
+        record.strategy_name || '-',
     },
     {
       title: (
@@ -183,7 +260,7 @@ const DeviceList: React.FC = () => {
       search: false,
       render: (_: unknown, record: API.DeviceItem) => {
         if (!record.info) return '-';
-        return `${record.info.os || ''} ${record.info.hostname || ''}`.trim() || '-';
+        return `${record.info.os || ''} ${record.info.ip || ''}`.trim() || '-';
       },
     },
     {
@@ -192,6 +269,7 @@ const DeviceList: React.FC = () => {
       width: 150,
       ellipsis: true,
       search: false,
+      sorter: true,
       render: (_: unknown, record: API.DeviceItem) => record.note || '-',
     },
     {
@@ -199,44 +277,69 @@ const DeviceList: React.FC = () => {
         <FormattedMessage id="pages.common.action" defaultMessage="Action" />
       ),
       valueType: 'option',
-      width: 200,
+      width: '15%',
       fixed: 'right',
-      render: (_: unknown, record: API.DeviceItem) => (
-        <Space size="small">
-          <Button
-            key="enable"
-            type="link"
-            size="small"
-            icon={<PlusCircleOutlined />}
-            onClick={() => handleEnable(record.guid)}
-          >
-            <FormattedMessage id="pages.devices.enable" defaultMessage="Enable" />
-          </Button>
-          <Button
-            key="disable"
-            type="link"
-            size="small"
-            icon={<MinusCircleOutlined />}
-            onClick={() => handleDisable(record.guid)}
-          >
-            <FormattedMessage id="pages.devices.disable" defaultMessage="Disable" />
-          </Button>
-          <Popconfirm
-            key="delete"
-            title={
-              <FormattedMessage
-                id="pages.devices.deleteConfirm"
-                defaultMessage="Are you sure to delete this device?"
-              />
-            }
-            onConfirm={() => handleDelete(record.guid)}
-          >
-            <Button type="link" size="small" danger icon={<DeleteOutlined />}>
-              <FormattedMessage id="pages.common.delete" defaultMessage="Delete" />
+      render: (_: unknown, record: API.DeviceItem) => {
+        const isDisabled = record.status === 0;
+        return (
+          <Space size="small" split={<span style={{ color: '#ccc' }}>|</span>}>
+            <Button key="edit" type="link" size="small" icon={<EditOutlined />}>
+              <FormattedMessage id="pages.common.edit" defaultMessage="Edit" />
             </Button>
-          </Popconfirm>
-        </Space>
-      ),
+            {isDisabled ? (
+              <Button
+                key="enable"
+                type="link"
+                size="small"
+                icon={<PlusCircleOutlined />}
+                onClick={() => handleEnable(record.guid)}
+              >
+                <FormattedMessage
+                  id="pages.devices.enable"
+                  defaultMessage="Enable"
+                />
+              </Button>
+            ) : (
+              <Button
+                key="disable"
+                type="link"
+                size="small"
+                icon={<MinusCircleOutlined />}
+                onClick={() => handleDisable(record.guid)}
+              >
+                <FormattedMessage
+                  id="pages.devices.disable"
+                  defaultMessage="Disable"
+                />
+              </Button>
+            )}
+            {isDisabled && (
+              <Popconfirm
+                key="delete"
+                title={
+                  <FormattedMessage
+                    id="pages.devices.deleteConfirm"
+                    defaultMessage="Are you sure to delete this device?"
+                  />
+                }
+                onConfirm={() => handleDelete(record.guid)}
+              >
+                <Button
+                  type="link"
+                  size="small"
+                  danger
+                  icon={<DeleteOutlined />}
+                >
+                  <FormattedMessage
+                    id="pages.common.delete"
+                    defaultMessage="Delete"
+                  />
+                </Button>
+              </Popconfirm>
+            )}
+          </Space>
+        );
+      },
     },
   ];
 
@@ -245,9 +348,11 @@ const DeviceList: React.FC = () => {
       <ProTable<API.DeviceItem>
         headerTitle={
           <span>
-            <FormattedMessage id="pages.devices.list" defaultMessage="Device List" />
-            {' '}
-            ({searchParams.search ? '*' : '0'}/-)
+            <FormattedMessage
+              id="pages.devices.list"
+              defaultMessage="Device List"
+            />{' '}
+            ({totalDevices}/-)
           </span>
         }
         actionRef={actionRef}
@@ -256,9 +361,14 @@ const DeviceList: React.FC = () => {
           const result = await getDeviceList({
             current: params.current || 1,
             pageSize: params.pageSize || 20,
-            search: searchParams.search,
-            status: searchParams.status,
+            id: params.id,
+            status: params.status,
+            is_online: params.is_online,
+            user_name: params.user_name,
+            device_group_name: params.device_group_name_search,
+            os: params.os,
           });
+          setTotalDevices(result.total || 0);
           return {
             data: result.data || [],
             total: result.total || 0,
@@ -272,16 +382,8 @@ const DeviceList: React.FC = () => {
         }}
         search={{
           labelWidth: 'auto',
-          defaultCollapsed: false,
-          optionRender: (searchConfig, formProps, dom) => [
-            ...dom.reverse(),
-          ],
-        }}
-        form={{
-          onSubmit: handleSearch,
-          onReset: () => {
-            setSearchParams({});
-          },
+          defaultCollapsed: true,
+          optionRender: (_searchConfig, _formProps, dom) => [...dom.reverse()],
         }}
         pagination={{
           defaultPageSize: 20,
@@ -305,7 +407,10 @@ const DeviceList: React.FC = () => {
 
 export default DeviceList;
 
-function FormattedMessage(props: { id: string; defaultMessage: string }): React.JSX.Element {
+function FormattedMessage(props: {
+  id: string;
+  defaultMessage: string;
+}): React.JSX.Element {
   const intl = useIntl();
   return <>{intl.formatMessage(props)}</>;
 }

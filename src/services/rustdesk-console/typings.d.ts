@@ -65,17 +65,23 @@ declare namespace API {
     id: string;
     guid: string;
     info?: {
+      device_name?: string;
       username?: string;
       os?: string;
-      device_name?: string;
+      version?: string;
+      cpu?: string;
+      memory?: string;
+      ip?: string;
     };
     status?: number;
+    is_online?: boolean;
+    last_online?: string;
     user?: string;
     user_name?: string;
     device_group?: string;
     device_group_name?: string;
+    strategy_name?: string;
     note?: string;
-    last_online_time?: string;
     created_at?: string;
     updated_at?: string;
     [key: string]: any;
