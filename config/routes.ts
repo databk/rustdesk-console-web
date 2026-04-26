@@ -46,18 +46,7 @@
     path: '/devices',
     name: 'devices',
     icon: 'desktop',
-    routes: [
-      {
-        path: '/devices',
-        redirect: '/devices/list',
-      },
-      {
-        name: 'list',
-        icon: 'unordered-list',
-        path: '/devices/list',
-        component: './devices/list',
-      },
-    ],
+    component: './devices/list',
   },
   {
     path: '/address-book',
