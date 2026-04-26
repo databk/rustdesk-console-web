@@ -49,6 +49,7 @@ const PersonalAddressBook: React.FC = () => {
   const [tags, setTags] = useState<API.TagItem[]>([]);
   const [pendingColorUpdates, setPendingColorUpdates] = useState<Record<string, number>>({});
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
+  const [hoveredColorDot, setHoveredColorDot] = useState<string | null>(null);
   
   
   useEffect(() => {
@@ -508,6 +509,10 @@ const PersonalAddressBook: React.FC = () => {
                 <ColorPicker
                   disabledAlpha
                   value={tagColor}
+                  open={hoveredColorDot === tag.name}
+                  onOpenChange={(open) => {
+                    setHoveredColorDot(open ? tag.name : null);
+                  }}
                   onChangeComplete={(colorValue) => {
                     const rgb = colorValue.toRgb();
                     const newArgb = 0xFF000000 + (rgb.r << 16) + (rgb.g << 8) + rgb.b;
@@ -515,14 +520,15 @@ const PersonalAddressBook: React.FC = () => {
                   }}
                 >
                   <span
+                    onMouseEnter={() => setHoveredColorDot(tag.name)}
+                    onMouseLeave={() => setHoveredColorDot(null)}
                     style={{
                       display: 'inline-block',
                       width: 8,
                       height: 8,
                       borderRadius: '50%',
-                      backgroundColor: tagColor,
+                      backgroundColor: isSelected ? '#fff' : tagColor,
                       cursor: 'pointer',
-                      border: isSelected ? '1px solid rgba(255,255,255,0.5)' : undefined,
                     }}
                   />
                 </ColorPicker>
