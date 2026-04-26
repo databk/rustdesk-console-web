@@ -10,7 +10,6 @@ export async function getDeviceList(
     user_name?: string;
     device_group_name?: string;
     os?: string;
-    accessible?: string;
   },
   options?: { [key: string]: any },
 ) {
@@ -25,7 +24,6 @@ export async function getDeviceList(
       user_name: params.user_name,
       device_group_name: params.device_group_name,
       os: params.os,
-      accessible: params.accessible,
     },
     ...(options || {}),
   });
