@@ -1,8 +1,8 @@
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
-import { Alert, App, Button, ColorPicker, Form, Input, Modal, Popconfirm, Select, Space, Tag, Table, Typography } from 'antd';
-import { CloseOutlined, DeleteOutlined, EditOutlined, InfoCircleOutlined, PlusOutlined, SelectOutlined, TagOutlined } from '@ant-design/icons';
+import { Alert, App, Button, ColorPicker, Form, Input, Modal, Popconfirm, Select, Space, Tag, Table, Tooltip, Typography } from 'antd';
+import { DeleteOutlined, EditOutlined, InfoCircleOutlined, PlusOutlined, SelectOutlined } from '@ant-design/icons';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   getPersonalAddressBook,
@@ -459,25 +459,82 @@ const PersonalAddressBook: React.FC = () => {
         >
           Untagged
         </Tag>
-        {(tags as API.TagItem[]).map((tag: API.TagItem) => (
-          <Tag
-            key={tag.name}
-            color={selectedTag === tag.name ? argbToHex(tag.color) : undefined}
-            style={{ cursor: 'pointer', padding: '2px 8px' }}
-            closeIcon={<CloseOutlined style={{ fontSize: 10, marginLeft: 2 }} />}
-            closable
-            onClose={(e) => {
-              e.preventDefault();
-              handleDeleteTag(tag.name);
-            }}
-            onClick={() => {
-              setSelectedTag(selectedTag === tag.name ? null : tag.name);
-              actionRef.current?.reload();
-            }}
-          >
-            {tag.name}
-          </Tag>
-        ))}
+        {(tags as API.TagItem[]).map((tag: API.TagItem) => {
+          const tagColor = argbToHex(tag.color);
+          return (
+            <Tag
+              key={tag.name}
+              color={selectedTag === tag.name ? tagColor : undefined}
+              style={{ cursor: 'pointer', padding: '2px 8px', paddingLeft: 0 }}
+              closable
+              closeIcon={
+                <Popconfirm
+                  title={
+                    <FormattedMessage
+                      id="pages.addressBook.deleteTagConfirm"
+                      defaultMessage="Are you sure to delete this tag?"
+                    />
+                  }
+                  onConfirm={(e) => {
+                    e?.stopPropagation();
+                    handleDeleteTag(tag.name);
+                  }}
+                  onCancel={(e) => {
+                    e?.stopPropagation();
+                  }}
+                >
+                  <span
+                    onClick={(e) => e.stopPropagation()}
+                    style={{ marginLeft: 4, cursor: 'pointer' }}
+                  >
+                    ×
+                  </span>
+                </Popconfirm>
+              }
+              onClose={(e) => {
+                e.preventDefault();
+              }}
+              onClick={() => {
+                setSelectedTag(selectedTag === tag.name ? null : tag.name);
+                actionRef.current?.reload();
+              }}
+            >
+              <span style={{ paddingLeft: 6, display: 'inline-flex', alignItems: 'center' }}>
+                <Tooltip
+                  trigger="hover"
+                  color="transparent"
+                  styles={{ inner: { padding: 0 } }}
+                  title={
+                    <div style={{ background: '#fff', borderRadius: 8, boxShadow: '0 6px 16px 0 rgba(0,0,0,.08), 0 3px 6px -4px rgba(0,0,0,.12), 0 9px 28px 8px rgba(0,0,0,.05)' }}>
+                      <ColorPicker
+                        disabledAlpha
+                        value={tagColor}
+                        onChangeComplete={(colorValue) => {
+                          const rgb = colorValue.toRgb();
+                          const newArgb = 0xFF000000 + (rgb.r << 16) + (rgb.g << 8) + rgb.b;
+                          handleUpdateTagColor(tag.name, newArgb);
+                        }}
+                      />
+                    </div>
+                  }
+                >
+                  <span
+                    style={{
+                      display: 'inline-block',
+                      width: 8,
+                      height: 8,
+                      borderRadius: '50%',
+                      backgroundColor: tagColor,
+                      cursor: 'pointer',
+                    }}
+                  />
+                </Tooltip>
+                <span style={{ display: 'inline-block', width: 8 }} />
+              </span>
+              {tag.name}
+            </Tag>
+          );
+        })}
         <Button
           size="small"
           type="dashed"

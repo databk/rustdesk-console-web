@@ -89,6 +89,7 @@ export default {
   'pages.addressBook.tagAddFailed': '添加标签失败',
   'pages.addressBook.tagDeleted': '标签已删除',
   'pages.addressBook.tagDeleteFailed': '删除标签失败',
+  'pages.addressBook.deleteTagConfirm': '确定要删除此标签吗？',
   'pages.addressBook.createSuccess': '地址簿已创建',
   'pages.addressBook.createFailed': '创建地址簿失败',
   'pages.addressBook.updateSuccess': '地址簿已更新',
