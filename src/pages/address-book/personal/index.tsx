@@ -461,12 +461,12 @@ const PersonalAddressBook: React.FC = () => {
           Untagged
         </Tag>
         {(tags as API.TagItem[]).map((tag: API.TagItem) => {
-          const tagColor = argbToHex(tag.color);
+          const displayColor = argbToHex(pendingColorUpdates[tag.name] ?? tag.color);
           const isSelected = selectedTag === tag.name;
           return (
             <Tag
               key={tag.name}
-              color={isSelected ? tagColor : undefined}
+              color={isSelected ? displayColor : undefined}
               style={{ cursor: 'pointer', padding: '2px 8px', paddingLeft: 0 }}
               closable
               closeIcon={
@@ -508,12 +508,17 @@ const PersonalAddressBook: React.FC = () => {
               <span style={{ paddingLeft: 6, display: 'inline-flex', alignItems: 'center' }}>
                 <ColorPicker
                   disabledAlpha
-                  value={tagColor}
+                  value={displayColor}
                   open={hoveredColorDot === tag.name}
                   onOpenChange={(open) => {
                     if (!open) {
                       setHoveredColorDot(null);
                     }
+                  }}
+                  onChange={(colorValue) => {
+                    const rgb = colorValue.toRgb();
+                    const newArgb = 0xFF000000 + (rgb.r << 16) + (rgb.g << 8) + rgb.b;
+                    setPendingColorUpdates(prev => ({ ...prev, [tag.name]: newArgb }));
                   }}
                   onChangeComplete={(colorValue) => {
                     const rgb = colorValue.toRgb();
@@ -528,7 +533,7 @@ const PersonalAddressBook: React.FC = () => {
                       width: 8,
                       height: 8,
                       borderRadius: '50%',
-                      backgroundColor: isSelected ? '#fff' : tagColor,
+                      backgroundColor: isSelected ? '#fff' : displayColor,
                       cursor: 'pointer',
                     }}
                   />
