@@ -64,7 +64,7 @@ export default {
   'pages.devices.allStatus': '全部状态',
   'pages.devices.allDevices': '全部设备',
   'pages.devices.myDevices': '我的设备',
-  'pages.devices.deviceInfo': '设备信息',
+  'pages.devices.deviceInfo': '用户名@设备名',
   'pages.devices.strategyInfo': '策略信息',
   'pages.devices.device': '设备',
   'pages.devices.strategy': '策略',

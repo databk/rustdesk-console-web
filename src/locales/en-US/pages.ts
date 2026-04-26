@@ -65,7 +65,7 @@ export default {
   'pages.devices.allStatus': 'All Status',
   'pages.devices.allDevices': 'All Devices',
   'pages.devices.myDevices': 'My Devices',
-  'pages.devices.deviceInfo': 'Device Info',
+  'pages.devices.deviceInfo': 'username@device_name',
   'pages.devices.strategyInfo': 'Strategy Info',
   'pages.devices.device': 'Device',
   'pages.devices.strategy': 'Strategy',

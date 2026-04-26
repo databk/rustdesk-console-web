@@ -16,7 +16,7 @@ import {
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { useIntl } from '@umijs/max';
-import { App, Button, Popconfirm, Space, Tooltip } from 'antd';
+import { App, Badge, Button, Popconfirm, Space, Tooltip } from 'antd';
 import React, { useRef, useState } from 'react';
 
 const DeviceList: React.FC = () => {
@@ -93,6 +93,15 @@ const DeviceList: React.FC = () => {
       width: '15%',
       ellipsis: true,
       sorter: true,
+      render: (_: unknown, record: API.DeviceItem) => (
+        <span>
+          <Badge
+            status={record.is_online ? 'success' : 'error'}
+          />
+          &nbsp;&nbsp;
+          <a>{record.id}</a>
+        </span>
+      ),
     },
     {
       title: (
@@ -101,7 +110,7 @@ const DeviceList: React.FC = () => {
           <Tooltip
             title={intl.formatMessage({
               id: 'pages.devices.deviceInfo',
-              defaultMessage: 'Device information',
+              defaultMessage: 'username@device_name',
             })}
           >
             <InfoCircleOutlined style={{ marginLeft: 4 }} />
@@ -113,8 +122,14 @@ const DeviceList: React.FC = () => {
       ellipsis: true,
       search: false,
       sorter: true,
-      render: (_: unknown, record: API.DeviceItem) =>
-        record.info?.device_name || '-',
+      render: (_: unknown, record: API.DeviceItem) => {
+        const username = record.info?.username;
+        const hostname = record.info?.device_name;
+        if (username && hostname) {
+          return `${username}@${hostname}`;
+        }
+        return hostname || username || '-';
+      },
     },
     {
       title: (
@@ -218,11 +233,11 @@ const DeviceList: React.FC = () => {
       search: false,
       sorter: true,
       render: (_: unknown, record: API.DeviceItem) => {
-        const isOnline = record.is_online === true;
-        return isOnline ? (
+        const isNormal = record.status === 1;
+        return isNormal ? (
           <CheckCircleOutlined style={{ color: '#52c41a', fontSize: 16 }} />
         ) : (
-          <CloseCircleOutlined style={{ color: '#ff4d4f', fontSize: 16 }} />
+          <CloseCircleOutlined style={{ color: '#f5222d', fontSize: 16 }} />
         );
       },
     },
