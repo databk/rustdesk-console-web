@@ -91,6 +91,8 @@ export default {
   'pages.addressBook.tagDeleted': 'Tag deleted',
   'pages.addressBook.tagDeleteFailed': 'Failed to delete tag',
   'pages.addressBook.deleteTagConfirm': 'Are you sure to delete this tag?',
+  'pages.addressBook.tagModeUnion': 'Any',
+  'pages.addressBook.tagModeIntersection': 'All',
   'pages.addressBook.createSuccess': 'Address book created',
   'pages.addressBook.createFailed': 'Failed to create address book',
   'pages.addressBook.updateSuccess': 'Address book updated',

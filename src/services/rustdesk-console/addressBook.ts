@@ -46,6 +46,8 @@ export async function getPeers(
     ab?: string;
     id?: string;
     alias?: string;
+    tags?: string[];
+    tagMode?: 'union' | 'intersection';
   },
 ) {
   return request<API.PaginatedResult<API.PeerItem>>('/api/ab/peers', {

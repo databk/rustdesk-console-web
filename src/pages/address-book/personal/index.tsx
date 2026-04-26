@@ -1,7 +1,7 @@
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
-import { Alert, App, Button, ColorPicker, Form, Input, Modal, Popconfirm, Select, Space, Tag, Table, Typography } from 'antd';
+import { Alert, App, Button, ColorPicker, Form, Input, Modal, Popconfirm, Radio, Select, Space, Tag, Table, Typography } from 'antd';
 import { DeleteOutlined, EditOutlined, InfoCircleOutlined, PlusOutlined, SelectOutlined } from '@ant-design/icons';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
@@ -48,7 +48,8 @@ const PersonalAddressBook: React.FC = () => {
   const [abLoading, setAbLoading] = useState(true);
   const [tags, setTags] = useState<API.TagItem[]>([]);
   const [pendingColorUpdates, setPendingColorUpdates] = useState<Record<string, number>>({});
-  const [selectedTag, setSelectedTag] = useState<string | null>(null);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [tagMode, setTagMode] = useState<'union' | 'intersection'>('union');
   const [hoveredColorDot, setHoveredColorDot] = useState<string | null>(null);
   
   
@@ -455,14 +456,14 @@ const PersonalAddressBook: React.FC = () => {
         </span>
         <Tag
           style={{ cursor: 'pointer', padding: '2px 8px' }}
-          color={selectedTag === null ? 'blue' : undefined}
-          onClick={() => { setSelectedTag(null); actionRef.current?.reload(); }}
+          color={selectedTags.length === 0 ? 'blue' : undefined}
+          onClick={() => { setSelectedTags([]); actionRef.current?.reload(); }}
         >
           Untagged
         </Tag>
         {(tags as API.TagItem[]).map((tag: API.TagItem) => {
           const displayColor = argbToHex(pendingColorUpdates[tag.name] ?? tag.color);
-          const isSelected = selectedTag === tag.name;
+          const isSelected = selectedTags.includes(tag.name);
           return (
             <Tag
               key={tag.name}
@@ -501,7 +502,9 @@ const PersonalAddressBook: React.FC = () => {
                 e.preventDefault();
               }}
               onClick={() => {
-                setSelectedTag(isSelected ? null : tag.name);
+                setSelectedTags(prev =>
+                  isSelected ? prev.filter(t => t !== tag.name) : [...prev, tag.name]
+                );
                 actionRef.current?.reload();
               }}
             >
@@ -550,6 +553,25 @@ const PersonalAddressBook: React.FC = () => {
           icon={<PlusOutlined />}
           onClick={() => setAddTagModalVisible(true)}
         />
+        {selectedTags.length > 1 && (
+          <Radio.Group
+            size="small"
+            value={tagMode}
+            onChange={(e) => {
+              setTagMode(e.target.value);
+              actionRef.current?.reload();
+            }}
+            optionType="button"
+            buttonStyle="solid"
+          >
+            <Radio.Button value="union">
+              <FormattedMessage id="pages.addressBook.tagModeUnion" defaultMessage="Any" />
+            </Radio.Button>
+            <Radio.Button value="intersection">
+              <FormattedMessage id="pages.addressBook.tagModeIntersection" defaultMessage="All" />
+            </Radio.Button>
+          </Radio.Group>
+        )}
       </div>
 
       <ProTable<API.PeerItem>
@@ -568,7 +590,8 @@ const PersonalAddressBook: React.FC = () => {
             pageSize: params.pageSize || 20,
             ab: abGuid,
             id: params.id,
-            tags: selectedTag ? [selectedTag] : undefined,
+            tags: selectedTags.length > 0 ? selectedTags : undefined,
+            tagMode: selectedTags.length > 1 ? tagMode : undefined,
           });
           return {
             data: result.data || [],
