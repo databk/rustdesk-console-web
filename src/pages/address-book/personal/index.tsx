@@ -51,6 +51,7 @@ const PersonalAddressBook: React.FC = () => {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [tagMode, setTagMode] = useState<'union' | 'intersection'>('union');
   const [hoveredColorDot, setHoveredColorDot] = useState<string | null>(null);
+  const colorPickerCloseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   
   
   useEffect(() => {
@@ -514,7 +515,12 @@ const PersonalAddressBook: React.FC = () => {
                   value={displayColor}
                   open={hoveredColorDot === tag.name}
                   onOpenChange={(open) => {
-                    if (!open) {
+                    if (open) {
+                      if (colorPickerCloseTimerRef.current) {
+                        clearTimeout(colorPickerCloseTimerRef.current);
+                        colorPickerCloseTimerRef.current = null;
+                      }
+                    } else {
                       setHoveredColorDot(null);
                     }
                   }}
@@ -530,7 +536,18 @@ const PersonalAddressBook: React.FC = () => {
                   }}
                 >
                   <span
-                    onMouseEnter={() => setHoveredColorDot(tag.name)}
+                    onMouseEnter={() => {
+                      if (colorPickerCloseTimerRef.current) {
+                        clearTimeout(colorPickerCloseTimerRef.current);
+                        colorPickerCloseTimerRef.current = null;
+                      }
+                      setHoveredColorDot(tag.name);
+                    }}
+                    onMouseLeave={() => {
+                      colorPickerCloseTimerRef.current = setTimeout(() => {
+                        setHoveredColorDot(null);
+                      }, 100);
+                    }}
                     style={{
                       display: 'inline-block',
                       width: 8,
