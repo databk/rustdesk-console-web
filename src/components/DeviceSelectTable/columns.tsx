@@ -8,6 +8,7 @@ import {
   WindowsFilled,
   AndroidFilled,
   AppleFilled,
+  QqCircleFilled,
 } from '@ant-design/icons';
 import React from 'react';
 
@@ -58,8 +59,7 @@ const getOSIcon = (os: string): React.ReactNode => {
     return <AppleFilled />;
   }
   if (osLower.includes('linux')) {
-    // Using a generic icon for Linux since there's no specific Linux icon
-    return <span style={{ fontSize: '14px' }}>🐧</span>;
+    return <QqCircleFilled />;
   }
   
   return null;
@@ -95,14 +95,17 @@ export const getDeviceColumns = (options?: { hideAction?: boolean }): ProColumns
           onlineTooltip = `${intl.formatMessage({ id: 'pages.devices.offline', defaultMessage: 'Offline' })}${offlineDuration}`;
         }
         
+        // Build OS tooltip - show full OS info in one line
+        const osTooltip = osParts[1] || osParts[0] || '';
+        
         return (
           <span>
             <Tooltip title={onlineTooltip}>
               <Badge status={record.is_online ? 'success' : 'error'} />
             </Tooltip>
             &nbsp;&nbsp;
-            {osIcon && (
-              <Tooltip title={osParts[1] || osParts[0]}>
+            {osIcon && osTooltip && (
+              <Tooltip title={osTooltip}>
                 {osIcon}
               </Tooltip>
             )}
