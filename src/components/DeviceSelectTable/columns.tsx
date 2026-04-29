@@ -101,7 +101,9 @@ export const getDeviceColumns = (options?: { hideAction?: boolean }): ProColumns
         return (
           <span>
             <Tooltip title={onlineTooltip}>
-              <Badge status={record.is_online ? 'success' : 'error'} />
+              <span>
+                <Badge status={record.is_online ? 'success' : 'error'} />
+              </span>
             </Tooltip>
             &nbsp;&nbsp;
             {osIcon && osTooltip && (
@@ -116,7 +118,7 @@ export const getDeviceColumns = (options?: { hideAction?: boolean }): ProColumns
                   whiteSpace: 'nowrap',
                 }}
               >
-                {osIcon}
+                <span>{osIcon}</span>
               </Tooltip>
             )}
             {osIcon && <>&nbsp;&nbsp;</>}
