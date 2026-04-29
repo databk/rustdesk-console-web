@@ -48,7 +48,7 @@ export default {
   'pages.devices.os': 'OS',
   'pages.devices.status': 'Status',
   'pages.devices.user': 'User',
-  'pages.devices.deviceGroup': 'Device Group',
+  'pages.devices.deviceGroup': 'Group',
   'pages.devices.lastOnline': 'Last Online',
   'pages.devices.note': 'Note',
   'pages.devices.online': 'Online',
