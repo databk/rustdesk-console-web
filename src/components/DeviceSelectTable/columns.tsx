@@ -105,7 +105,17 @@ export const getDeviceColumns = (options?: { hideAction?: boolean }): ProColumns
             </Tooltip>
             &nbsp;&nbsp;
             {osIcon && osTooltip && (
-              <Tooltip title={osTooltip}>
+              <Tooltip 
+                title={osTooltip}
+                styles={{
+                  root: {
+                    maxWidth: 'none',
+                  },
+                }}
+                overlayStyle={{
+                  whiteSpace: 'nowrap',
+                }}
+              >
                 {osIcon}
               </Tooltip>
             )}
