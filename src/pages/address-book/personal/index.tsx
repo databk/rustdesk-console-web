@@ -515,12 +515,7 @@ const PersonalAddressBook: React.FC = () => {
                   value={displayColor}
                   open={hoveredColorDot === tag.name}
                   onOpenChange={(open) => {
-                    if (open) {
-                      if (colorPickerCloseTimerRef.current) {
-                        clearTimeout(colorPickerCloseTimerRef.current);
-                        colorPickerCloseTimerRef.current = null;
-                      }
-                    } else {
+                    if (!open) {
                       setHoveredColorDot(null);
                     }
                   }}
@@ -534,6 +529,23 @@ const PersonalAddressBook: React.FC = () => {
                     const newArgb = 0xFF000000 + (rgb.r << 16) + (rgb.g << 8) + rgb.b;
                     handleUpdateTagColor(tag.name, newArgb);
                   }}
+                  panelRender={(panel) => (
+                    <div
+                      onMouseEnter={() => {
+                        if (colorPickerCloseTimerRef.current) {
+                          clearTimeout(colorPickerCloseTimerRef.current);
+                          colorPickerCloseTimerRef.current = null;
+                        }
+                      }}
+                      onMouseLeave={() => {
+                        colorPickerCloseTimerRef.current = setTimeout(() => {
+                          setHoveredColorDot(null);
+                        }, 100);
+                      }}
+                    >
+                      {panel}
+                    </div>
+                  )}
                 >
                   <span
                     onMouseEnter={() => {
