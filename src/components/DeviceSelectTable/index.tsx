@@ -108,7 +108,7 @@ const DeviceSelectTable: React.FC<DeviceSelectTableProps> = ({
     {
       title: <FormattedMessage id="pages.devices.status" defaultMessage="Status" />,
       dataIndex: 'status_display',
-      width: 60,
+      width: 80,
       search: false,
       sorter: true,
       render: (_: unknown, record: API.DeviceItem) => {
@@ -119,15 +119,39 @@ const DeviceSelectTable: React.FC<DeviceSelectTableProps> = ({
       },
     },
     {
+      title: (
+        <span>
+          <FormattedMessage id="pages.devices.strategy" defaultMessage="Strategy" />
+          <Tooltip title={intl.formatMessage({ id: 'pages.devices.strategyInfo', defaultMessage: 'Connection strategy' })}>
+            <InfoCircleOutlined style={{ marginLeft: 4 }} />
+          </Tooltip>
+        </span>
+      ),
+      dataIndex: 'strategy_name',
+      width: 100,
+      ellipsis: true,
+      search: false,
+      render: (_: unknown, record: API.DeviceItem) => record.strategy_name || '-',
+    },
+    {
       title: <FormattedMessage id="pages.devices.info" defaultMessage="Info" />,
       dataIndex: 'info',
-      width: 150,
+      width: 200,
       ellipsis: true,
       search: false,
       render: (_: unknown, record: API.DeviceItem) => {
         if (!record.info) return '-';
         return `${record.info.os || ''} ${record.info.ip || ''}`.trim() || '-';
       },
+    },
+    {
+      title: <FormattedMessage id="pages.devices.note" defaultMessage="Note" />,
+      dataIndex: 'note',
+      width: 150,
+      ellipsis: true,
+      search: false,
+      sorter: true,
+      render: (_: unknown, record: API.DeviceItem) => record.note || '-',
     },
   ];
 
