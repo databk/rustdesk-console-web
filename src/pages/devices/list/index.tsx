@@ -188,7 +188,8 @@ const DeviceList: React.FC = () => {
           showSizeChanger: true,
           showQuickJumper: true,
         }}
-        scroll={{ x: 1400 }}
+        resizable
+        scroll={{ x: '100%' }}
         toolBarRender={false}
         options={{
           density: true,

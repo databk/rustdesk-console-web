@@ -18,7 +18,7 @@ export const getDeviceColumns = (options?: { hideAction?: boolean }): ProColumns
     {
       title: 'ID',
       dataIndex: 'id',
-      width: '15%',
+      width: '12%',
       ellipsis: true,
       sorter: true,
       render: (_: unknown, record: API.DeviceItem) => (
@@ -39,7 +39,7 @@ export const getDeviceColumns = (options?: { hideAction?: boolean }): ProColumns
         </span>
       ),
       dataIndex: 'device_name',
-      width: 150,
+      width: '18%',
       ellipsis: true,
       search: false,
       sorter: true,
@@ -53,7 +53,7 @@ export const getDeviceColumns = (options?: { hideAction?: boolean }): ProColumns
     {
       title: <FormattedMessage id="pages.devices.deviceGroup" defaultMessage="Group" />,
       dataIndex: 'device_group_name',
-      width: 120,
+      width: '10%',
       ellipsis: true,
       hideInSearch: true,
       sorter: true,
@@ -62,7 +62,7 @@ export const getDeviceColumns = (options?: { hideAction?: boolean }): ProColumns
     {
       title: <FormattedMessage id="pages.devices.user" defaultMessage="User" />,
       dataIndex: 'user_name',
-      width: 120,
+      width: '10%',
       ellipsis: true,
       sorter: true,
       render: (_: unknown, record: API.DeviceItem) => record.user_name || '-',
@@ -103,7 +103,7 @@ export const getDeviceColumns = (options?: { hideAction?: boolean }): ProColumns
     {
       title: <FormattedMessage id="pages.devices.status" defaultMessage="Status" />,
       dataIndex: 'status_display',
-      width: 80,
+      width: '6%',
       search: false,
       sorter: true,
       render: (_: unknown, record: API.DeviceItem) => {
@@ -123,7 +123,7 @@ export const getDeviceColumns = (options?: { hideAction?: boolean }): ProColumns
         </span>
       ),
       dataIndex: 'strategy_name',
-      width: 100,
+      width: '10%',
       ellipsis: true,
       search: false,
       render: (_: unknown, record: API.DeviceItem) => record.strategy_name || '-',
@@ -131,7 +131,7 @@ export const getDeviceColumns = (options?: { hideAction?: boolean }): ProColumns
     {
       title: <FormattedMessage id="pages.devices.info" defaultMessage="Info" />,
       dataIndex: 'info',
-      width: 200,
+      width: '18%',
       ellipsis: true,
       search: false,
       render: (_: unknown, record: API.DeviceItem) => {
@@ -142,7 +142,7 @@ export const getDeviceColumns = (options?: { hideAction?: boolean }): ProColumns
     {
       title: <FormattedMessage id="pages.devices.note" defaultMessage="Note" />,
       dataIndex: 'note',
-      width: 150,
+      width: '16%',
       ellipsis: true,
       search: false,
       sorter: true,
