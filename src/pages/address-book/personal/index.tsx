@@ -16,6 +16,7 @@ import {
   updateTagColor,
   deleteTag,
 } from '@/services/rustdesk-console/addressBook';
+import { getDeviceList } from '@/services/rustdesk-console/device';
 
 const { Text } = Typography;
 
@@ -34,6 +35,9 @@ const PersonalAddressBook: React.FC = () => {
   const [editPeerModalVisible, setEditPeerModalVisible] = useState(false);
   const [addTagModalVisible, setAddTagModalVisible] = useState(false);
   const [tagManagementVisible, setTagManagementVisible] = useState(false);
+  const [importDevicesModalVisible, setImportDevicesModalVisible] = useState(false);
+  const [selectedDeviceKeys, setSelectedDeviceKeys] = useState<React.Key[]>([]);
+  const [importing, setImporting] = useState(false);
   
   const [addPeerForm] = Form.useForm();
   const [editPeerForm] = Form.useForm();
@@ -258,6 +262,41 @@ const PersonalAddressBook: React.FC = () => {
           id: 'pages.addressBook.tagDeleteFailed',
           defaultMessage: 'Failed to delete tag',
         }),
+      );
+    }
+  };
+
+  const handleImportDevices = async () => {
+    if (!abGuid || selectedDeviceKeys.length === 0) return;
+    setImporting(true);
+    let successCount = 0;
+    let failCount = 0;
+    for (const deviceId of selectedDeviceKeys) {
+      try {
+        await addPeer(abGuid, { id: deviceId as string });
+        successCount++;
+      } catch {
+        failCount++;
+      }
+    }
+    setImporting(false);
+    setImportDevicesModalVisible(false);
+    setSelectedDeviceKeys([]);
+    if (successCount > 0) {
+      msgApi.success(
+        intl.formatMessage(
+          { id: 'pages.addressBook.importSuccess', defaultMessage: 'Successfully imported {count} device(s)' },
+          { count: successCount }
+        )
+      );
+      actionRef.current?.reload();
+    }
+    if (failCount > 0) {
+      msgApi.warning(
+        intl.formatMessage(
+          { id: 'pages.addressBook.importPartialFailed', defaultMessage: '{count} device(s) failed to import' },
+          { count: failCount }
+        )
       );
     }
   };
@@ -651,7 +690,7 @@ const PersonalAddressBook: React.FC = () => {
           <Button key="add" type="primary" icon={<PlusOutlined />} onClick={() => setAddPeerModalVisible(true)}>
             <FormattedMessage id="pages.addressBook.addPeer" defaultMessage="Add" />
           </Button>,
-          <Button key="import" icon={<SelectOutlined />}>
+          <Button key="import" icon={<SelectOutlined />} onClick={() => setImportDevicesModalVisible(true)}>
             <FormattedMessage id="pages.addressBook.import" defaultMessage="Import" />
           </Button>,
           <Button key="recycle" icon={<DeleteOutlined />}>
@@ -796,6 +835,76 @@ const PersonalAddressBook: React.FC = () => {
           rowKey="name"
           pagination={false}
           size="middle"
+        />
+      </Modal>
+
+      {/* Import Devices Modal */}
+      <Modal
+        title={<FormattedMessage id="pages.addressBook.importDevices" defaultMessage="Import Devices" />}
+        open={importDevicesModalVisible}
+        onCancel={() => {
+          setImportDevicesModalVisible(false);
+          setSelectedDeviceKeys([]);
+        }}
+        onOk={handleImportDevices}
+        okButtonProps={{ loading: importing, disabled: selectedDeviceKeys.length === 0 }}
+        width={800}
+      >
+        <ProTable<API.DeviceItem>
+          rowKey="id"
+          search={{
+            labelWidth: 'auto',
+            defaultCollapsed: false,
+          }}
+          pagination={{
+            defaultPageSize: 10,
+            showSizeChanger: true,
+          }}
+          request={async (params) => {
+            const result = await getDeviceList({
+              current: params.current || 1,
+              pageSize: params.pageSize || 10,
+              id: params.id,
+            });
+            return {
+              data: result.data || [],
+              total: result.total || 0,
+              success: true,
+            };
+          }}
+          columns={[
+            {
+              title: 'ID',
+              dataIndex: 'id',
+              width: 200,
+              ellipsis: true,
+            },
+            {
+              title: <FormattedMessage id="pages.addressBook.device" defaultMessage="Device" />,
+              dataIndex: ['info', 'device_name'],
+              width: 150,
+              ellipsis: true,
+              render: (_: unknown, record: API.DeviceItem) => record.info?.device_name || '-',
+            },
+            {
+              title: 'OS',
+              dataIndex: ['info', 'os'],
+              width: 100,
+              ellipsis: true,
+              render: (_: unknown, record: API.DeviceItem) => record.info?.os || '-',
+            },
+            {
+              title: <FormattedMessage id="pages.addressBook.alias" defaultMessage="Alias" />,
+              dataIndex: 'user_name',
+              width: 120,
+              ellipsis: true,
+            },
+          ]}
+          rowSelection={{
+            selectedRowKeys: selectedDeviceKeys,
+            onChange: setSelectedDeviceKeys,
+          }}
+          options={false}
         />
       </Modal>
     </PageContainer>
