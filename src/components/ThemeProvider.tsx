@@ -67,11 +67,20 @@ function storeThemeMode(mode: ThemeMode) {
   }
 }
 
-const ThemeProvider: React.FC<ThemeProviderProps> = ({ mode = 'light', children }) => {
-  const [currentMode, setCurrentMode] = useState<ThemeMode>(mode);
+const ThemeProvider: React.FC<ThemeProviderProps> = ({ mode, children }) => {
+  // 初始化时从 localStorage 读取主题设置，如果没有则使用传入的 mode 或默认 light
+  const getInitialMode = (): ThemeMode => {
+    const storedMode = getStoredThemeMode();
+    return mode || storedMode;
+  };
+  
+  const [currentMode, setCurrentMode] = useState<ThemeMode>(getInitialMode());
 
+  // 当传入的 mode 变化时更新当前模式
   useEffect(() => {
-    setCurrentMode(mode);
+    if (mode) {
+      setCurrentMode(mode);
+    }
   }, [mode]);
 
   const setMode = (newMode: ThemeMode) => {
