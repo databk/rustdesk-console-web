@@ -5,6 +5,7 @@ import type { RequestConfig, RunTimeLayoutConfig } from '@umijs/max';
 import { history, Link } from '@umijs/max';
 import React from 'react';
 import { AvatarDropdown, AvatarName, Footer, SelectLang, ThemeSwitcher } from '@/components';
+import ThemeProvider from '@/components/ThemeProvider';
 import { currentUser as queryCurrentUser } from '@/services/rustdesk-console/auth';
 import { getToken } from '@/utils/auth';
 import defaultSettings from '../config/defaultSettings';
@@ -93,11 +94,7 @@ export const layout: RunTimeLayoutConfig = ({
 
   return {
     actionsRender: () => [
-      <ThemeSwitcher
-        key="ThemeSwitcher"
-        mode={initialState?.themeMode || 'light'}
-        onChange={handleThemeChange}
-      />,
+      <ThemeSwitcher key="ThemeSwitcher" />,
       <SelectLang key="SelectLang" />,
     ],
     avatarProps: {
@@ -154,3 +151,21 @@ export const layout: RunTimeLayoutConfig = ({
 export const request: RequestConfig = {
   ...errorConfig,
 };
+
+export function rootContainer(container: React.ReactNode) {
+  const storedTheme = getStoredThemeSettings();
+  const storedMode = storedTheme?.navTheme === 'dark' || storedTheme?.navTheme === 'realDark' ? 'dark' : 'light';
+  
+  // 应用初始主题类名
+  if (typeof document !== 'undefined') {
+    const root = document.documentElement;
+    if (storedMode === 'dark') {
+      root.classList.add('dark');
+    }
+  }
+
+  return React.createElement(
+    ThemeProvider,
+    { mode: storedMode, children: container }
+  );
+}

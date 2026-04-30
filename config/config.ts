@@ -37,6 +37,7 @@ export default defineConfig({
     configProvider: {
       theme: {
         cssVar: true,
+        dynamic: true,
         token: {
           fontFamily:
             "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",

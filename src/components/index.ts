@@ -6,7 +6,7 @@
  * 布局组件
  */
 import Footer from './Footer';
-import { Question, SelectLang, ThemeSwitcher, type ThemeMode } from './RightContent';
+import { Question, SelectLang, ThemeSwitcher, ThemeProvider, useTheme, type ThemeMode } from './RightContent';
 import { AvatarDropdown, AvatarName } from './RightContent/AvatarDropdown';
 
-export { AvatarDropdown, AvatarName, Footer, Question, SelectLang, ThemeSwitcher, type ThemeMode };
+export { AvatarDropdown, AvatarName, Footer, Question, SelectLang, ThemeSwitcher, ThemeProvider, useTheme, type ThemeMode };

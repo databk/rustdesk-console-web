@@ -1,6 +1,7 @@
 import { MoonOutlined, SunOutlined } from '@ant-design/icons';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { createStyles } from 'antd-style';
+import { useTheme } from '@/components/ThemeProvider';
 
 const useStyles = createStyles(({ token, css }) => ({
   wrapper: css`
@@ -18,33 +19,20 @@ const useStyles = createStyles(({ token, css }) => ({
   `,
 }));
 
-export type ThemeMode = 'light' | 'dark';
+export interface ThemeSwitcherProps {}
 
-export interface ThemeSwitcherProps {
-  mode?: ThemeMode;
-  onChange?: (mode: ThemeMode) => void;
-}
-
-const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({
-  mode = 'light',
-  onChange,
-}) => {
+const ThemeSwitcher: React.FC<ThemeSwitcherProps> = () => {
   const { styles } = useStyles();
-  const [currentMode, setCurrentMode] = useState<ThemeMode>(mode);
-
-  useEffect(() => {
-    setCurrentMode(mode);
-  }, [mode]);
+  const { mode, setMode } = useTheme();
 
   const toggleTheme = () => {
-    const newMode: ThemeMode = currentMode === 'light' ? 'dark' : 'light';
-    setCurrentMode(newMode);
-    onChange?.(newMode);
+    const newMode = mode === 'light' ? 'dark' : 'light';
+    setMode(newMode);
   };
 
   return (
-    <div className={styles.wrapper} onClick={toggleTheme} title={currentMode === 'light' ? '切换到深色模式' : '切换到浅色模式'}>
-      {currentMode === 'light' ? (
+    <div className={styles.wrapper} onClick={toggleTheme} title={mode === 'light' ? '切换到深色模式' : '切换到浅色模式'}>
+      {mode === 'light' ? (
         <MoonOutlined style={{ fontSize: 16 }} />
       ) : (
         <SunOutlined style={{ fontSize: 16 }} />
