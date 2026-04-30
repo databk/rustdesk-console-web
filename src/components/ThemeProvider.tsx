@@ -2,6 +2,8 @@ import React, { useEffect, useState, createContext, useContext } from 'react';
 import { ConfigProvider, theme } from 'antd';
 import type { ThemeConfig } from 'antd';
 
+const THEME_KEY = 'rustdesk_theme_settings';
+
 const darkTheme: ThemeConfig = {
   algorithm: [theme.darkAlgorithm],
   token: {
@@ -39,6 +41,32 @@ export const useTheme = () => {
   return context;
 };
 
+function getStoredThemeMode(): ThemeMode {
+  try {
+    const stored = localStorage.getItem(THEME_KEY);
+    if (stored) {
+      const settings = JSON.parse(stored);
+      if (settings.navTheme === 'dark' || settings.navTheme === 'realDark') {
+        return 'dark';
+      }
+    }
+  } catch {
+    // ignore
+  }
+  return 'light';
+}
+
+function storeThemeMode(mode: ThemeMode) {
+  try {
+    const stored = localStorage.getItem(THEME_KEY);
+    const settings = stored ? JSON.parse(stored) : {};
+    settings.navTheme = mode === 'dark' ? 'dark' : 'light';
+    localStorage.setItem(THEME_KEY, JSON.stringify(settings));
+  } catch {
+    // ignore
+  }
+}
+
 const ThemeProvider: React.FC<ThemeProviderProps> = ({ mode = 'light', children }) => {
   const [currentMode, setCurrentMode] = useState<ThemeMode>(mode);
 
@@ -48,6 +76,7 @@ const ThemeProvider: React.FC<ThemeProviderProps> = ({ mode = 'light', children 
 
   const setMode = (newMode: ThemeMode) => {
     setCurrentMode(newMode);
+    storeThemeMode(newMode);
   };
 
   useEffect(() => {
