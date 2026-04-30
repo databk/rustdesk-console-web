@@ -18,6 +18,7 @@ export default defineConfig({
   model: {},
   initialState: {},
   title: 'RustDesk Console',
+  favicons: ['/logo.svg'],
   layout: {
     locale: true,
     ...defaultSettings,
