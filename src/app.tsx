@@ -4,7 +4,7 @@ import { SettingDrawer } from '@ant-design/pro-components';
 import type { RequestConfig, RunTimeLayoutConfig } from '@umijs/max';
 import { history, Link } from '@umijs/max';
 import React from 'react';
-import { AvatarDropdown, AvatarName, Footer, SelectLang } from '@/components';
+import { AvatarDropdown, AvatarName, Footer, SelectLang, ThemeSwitcher } from '@/components';
 import { currentUser as queryCurrentUser } from '@/services/rustdesk-console/auth';
 import { getToken } from '@/utils/auth';
 import defaultSettings from '../config/defaultSettings';
@@ -16,7 +16,7 @@ const loginPath = '/user/login';
 
 const THEME_KEY = 'rustdesk_theme_settings';
 
-function getStoredThemeSettings(): Partial<LayoutSettings> | undefined {
+function getStoredThemeSettings(): any {
   try {
     const stored = localStorage.getItem(THEME_KEY);
     if (stored) {
@@ -28,7 +28,7 @@ function getStoredThemeSettings(): Partial<LayoutSettings> | undefined {
   return undefined;
 }
 
-function storeThemeSettings(settings: Partial<LayoutSettings>) {
+function storeThemeSettings(settings: any) {
   try {
     localStorage.setItem(THEME_KEY, JSON.stringify(settings));
   } catch {
@@ -41,6 +41,7 @@ export async function getInitialState(): Promise<{
   currentUser?: API.CurrentUser;
   loading?: boolean;
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
+  themeMode?: 'light' | 'dark';
 }> {
   const fetchUserInfo = async () => {
     try {
@@ -57,6 +58,8 @@ export async function getInitialState(): Promise<{
     ...storedTheme,
   };
 
+  const storedMode = storedTheme?.navTheme === 'dark' || storedTheme?.navTheme === 'realDark' ? 'dark' : 'light';
+
   const { location } = history;
   if (![loginPath].includes(location.pathname) && getToken()) {
     const currentUser = await fetchUserInfo();
@@ -64,11 +67,13 @@ export async function getInitialState(): Promise<{
       fetchUserInfo,
       currentUser,
       settings: initialSettings,
+      themeMode: storedMode,
     };
   }
   return {
     fetchUserInfo,
     settings: initialSettings,
+    themeMode: storedMode,
   };
 }
 
@@ -76,8 +81,25 @@ export const layout: RunTimeLayoutConfig = ({
   initialState,
   setInitialState,
 }) => {
+  const handleThemeChange = (mode: 'light' | 'dark') => {
+    const newNavTheme = mode === 'dark' ? 'dark' : 'light';
+    storeThemeSettings({ ...initialState?.settings, navTheme: newNavTheme });
+    setInitialState((pre: any) => ({
+      ...pre,
+      settings: { ...pre?.settings, navTheme: newNavTheme },
+      themeMode: mode,
+    }));
+  };
+
   return {
-    actionsRender: () => [<SelectLang key="SelectLang" />],
+    actionsRender: () => [
+      <ThemeSwitcher
+        key="ThemeSwitcher"
+        mode={initialState?.themeMode || 'light'}
+        onChange={handleThemeChange}
+      />,
+      <SelectLang key="SelectLang" />,
+    ],
     avatarProps: {
       src: undefined,
       title: <AvatarName />,
@@ -113,11 +135,12 @@ export const layout: RunTimeLayoutConfig = ({
             disableUrlParams
             enableDarkTheme
             settings={initialState?.settings}
-            onSettingChange={(settings) => {
+            onSettingChange={(settings: any) => {
               storeThemeSettings(settings);
-              setInitialState((preInitialState) => ({
+              setInitialState((preInitialState: any) => ({
                 ...preInitialState,
                 settings,
+                themeMode: settings.navTheme === 'dark' ? 'dark' : 'light',
               }));
             }}
           />
