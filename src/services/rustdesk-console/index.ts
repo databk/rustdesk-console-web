@@ -49,3 +49,9 @@ export {
   getAlarmAudits,
   getConsoleAudits,
 } from './audit';
+export {
+  getDashboardOverview,
+  getDashboardStatistics,
+  getDashboardTrends,
+  getDashboardRealtime,
+} from './dashboard';

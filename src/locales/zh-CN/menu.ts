@@ -1,4 +1,5 @@
 export default {
+  'menu.dashboard': '仪表盘',
   'menu.devices': '设备管理',
   'menu.devices.list': '设备列表',
   'menu.addressBook': '地址簿',

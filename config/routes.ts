@@ -20,6 +20,12 @@
     ],
   },
   {
+    path: '/dashboard',
+    name: 'dashboard',
+    icon: 'dashboard',
+    component: './dashboard',
+  },
+  {
     path: '/devices',
     name: 'devices',
     icon: 'desktop',
@@ -156,7 +162,7 @@
   },
   {
     path: '/',
-    redirect: '/devices',
+    redirect: '/dashboard',
   },
   {
     component: '404',
