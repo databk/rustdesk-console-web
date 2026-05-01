@@ -297,4 +297,6 @@ export default {
   'pages.dashboard.30days': '30 天',
   'pages.dashboard.90days': '90 天',
   'pages.dashboard.noData': '暂无数据',
+  'pages.dashboard.resourceDistribution': '资源分布',
+  'pages.dashboard.operationAnalysis': '运营分析',
 };

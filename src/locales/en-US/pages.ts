@@ -297,4 +297,6 @@ export default {
   'pages.dashboard.30days': '30 Days',
   'pages.dashboard.90days': '90 Days',
   'pages.dashboard.noData': 'No data',
+  'pages.dashboard.resourceDistribution': 'Resource Distribution',
+  'pages.dashboard.operationAnalysis': 'Operation Analysis',
 };
