@@ -377,4 +377,116 @@ declare namespace API {
     category?: string;
     [key: string]: any;
   };
+
+  type DashboardOverview = {
+    users: {
+      total: number;
+      active: number;
+      online: number;
+      newToday: number;
+    };
+    devices: {
+      total: number;
+      online: number;
+      offline: number;
+      groups: number;
+    };
+    connections: {
+      active: number;
+      today: number;
+      avgDuration: number;
+    };
+    audits: {
+      alarms: number;
+      unreadAlarms: number;
+      criticalAlarms: number;
+    };
+    files: {
+      transferred: number;
+      totalSize: string;
+    };
+  };
+
+  type DashboardStatistics = {
+    userDistribution: {
+      byRole: {
+        admin: number;
+        user: number;
+      };
+      byStatus: {
+        active: number;
+        inactive: number;
+        disabled: number;
+        unverified: number;
+      };
+    };
+    deviceDistribution: {
+      byGroup: Array<{
+        groupId: string;
+        groupName: string;
+        count: number;
+      }>;
+      byStatus: {
+        online: number;
+        offline: number;
+      };
+    };
+    connectionAnalysis: {
+      avgDuration: number;
+      totalDuration: number;
+      successRate: number;
+      failureCount: number;
+    };
+    fileTransfer: {
+      totalFiles: number;
+      totalSize: number;
+      uploadCount: number;
+      downloadCount: number;
+    };
+  };
+
+  type DashboardTrends = {
+    connectionTrend?: Array<{
+      date: string;
+      count: number;
+      avgDuration: number;
+    }>;
+    userActiveTrend?: Array<{
+      date: string;
+      newUsers: number;
+      activeUsers: number;
+    }>;
+    alarmTrend?: Array<{
+      date: string;
+      critical: number;
+      warning: number;
+      info: number;
+    }>;
+  };
+
+  type DashboardRealtime = {
+    activeConnections: Array<{
+      id: string;
+      userId: string;
+      userName: string;
+      deviceId: string;
+      deviceName: string;
+      startTime: string;
+      duration: number;
+    }>;
+    recentEvents: Array<{
+      type: 'connection' | 'file' | 'alarm';
+      action: string;
+      user: string;
+      target: string;
+      timestamp: string;
+      status: 'success' | 'failed' | 'warning';
+    }>;
+    systemStatus: {
+      cpu: number;
+      memory: number;
+      disk: number;
+      uptime: number;
+    };
+  };
 }

@@ -1,4 +1,5 @@
 export default {
+  'menu.dashboard': 'Dashboard',
   'menu.devices': 'Devices',
   'menu.devices.list': 'Device List',
   'menu.addressBook': 'Address Books',
