@@ -11,6 +11,7 @@ export default {
   'layout.user.link.help': 'Help',
   'layout.user.link.privacy': 'Privacy',
   'layout.user.link.terms': 'Terms',
+  'layout.user.logout': 'Logout',
   ...globalHeader,
   ...menu,
   ...settingDrawer,

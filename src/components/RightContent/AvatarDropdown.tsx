@@ -5,6 +5,7 @@ import { Spin } from 'antd';
 import { createStyles } from 'antd-style';
 import React from 'react';
 import { flushSync } from 'react-dom';
+import { FormattedMessage } from '@umijs/max';
 import { removeToken } from '@/utils/auth';
 import { logout } from '@/services/rustdesk-console/auth';
 import HeaderDropdown from '../HeaderDropdown';
@@ -109,7 +110,7 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({
     {
       key: 'logout',
       icon: <LogoutOutlined />,
-      label: 'Logout',
+      label: <FormattedMessage id="layout.user.logout" defaultMessage="Logout" />,
     },
   ];
 

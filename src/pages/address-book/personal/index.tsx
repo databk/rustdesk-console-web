@@ -303,7 +303,7 @@ const PersonalAddressBook: React.FC = () => {
 
   const columns: ProColumns<API.PeerItem>[] = [
     {
-      title: "ID",
+      title: <FormattedMessage id="pages.common.id" defaultMessage="ID" />,
       dataIndex: "id",
       width: 150,
       ellipsis: true,
@@ -725,8 +725,8 @@ const PersonalAddressBook: React.FC = () => {
         <Form form={addPeerForm} onFinish={handleAddPeer} layout="vertical">
           <Form.Item
             name="id"
-            label="ID"
-            rules={[{ required: true, message: 'Please enter peer ID' }]}
+            label={<FormattedMessage id="pages.common.id" defaultMessage="ID" />}
+            rules={[{ required: true, message: intl.formatMessage({ id: 'pages.common.pleaseEnterPeerId', defaultMessage: 'Please enter peer ID' }) }]}
           >
             <Input />
           </Form.Item>
@@ -808,7 +808,7 @@ const PersonalAddressBook: React.FC = () => {
           <Form.Item
             name="name"
             label={<FormattedMessage id="pages.addressBook.tagName" defaultMessage="Tag Name" />}
-            rules={[{ required: true, message: 'Please enter tag name' }]}
+            rules={[{ required: true, message: intl.formatMessage({ id: 'pages.common.pleaseEnterTagName', defaultMessage: 'Please enter tag name' }) }]}
           >
             <Input />
           </Form.Item>

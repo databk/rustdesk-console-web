@@ -375,7 +375,7 @@ const UserList: React.FC = () => {
           <Form.Item
             name="name"
             label={<FormattedMessage id="pages.users.name" defaultMessage="Username" />}
-            rules={[{ required: true, message: 'Please enter username' }]}
+            rules={[{ required: true, message: intl.formatMessage({ id: 'pages.common.pleaseEnterUsername', defaultMessage: 'Please enter username' }) }]}
           >
             <Input />
           </Form.Item>
@@ -383,8 +383,8 @@ const UserList: React.FC = () => {
             name="email"
             label={<FormattedMessage id="pages.users.email" defaultMessage="Email" />}
             rules={[
-              { required: true, message: 'Please enter email' },
-              { type: 'email', message: 'Please enter valid email' },
+              { required: true, message: intl.formatMessage({ id: 'pages.common.pleaseEnterEmail', defaultMessage: 'Please enter email' }) },
+              { type: 'email', message: intl.formatMessage({ id: 'pages.common.pleaseEnterValidEmail', defaultMessage: 'Please enter valid email' }) },
             ]}
           >
             <Input />
@@ -392,7 +392,7 @@ const UserList: React.FC = () => {
           <Form.Item
             name="password"
             label={<FormattedMessage id="pages.users.password" defaultMessage="Password" />}
-            rules={[{ required: true, message: 'Please enter password' }]}
+            rules={[{ required: true, message: intl.formatMessage({ id: 'pages.common.pleaseEnterPassword', defaultMessage: 'Please enter password' }) }]}
           >
             <Input.Password />
           </Form.Item>
@@ -416,8 +416,8 @@ const UserList: React.FC = () => {
             name="email"
             label={<FormattedMessage id="pages.users.email" defaultMessage="Email" />}
             rules={[
-              { required: true, message: 'Please enter email' },
-              { type: 'email', message: 'Please enter valid email' },
+              { required: true, message: intl.formatMessage({ id: 'pages.common.pleaseEnterEmail', defaultMessage: 'Please enter email' }) },
+              { type: 'email', message: intl.formatMessage({ id: 'pages.common.pleaseEnterValidEmail', defaultMessage: 'Please enter valid email' }) },
             ]}
           >
             <Input />

@@ -197,15 +197,15 @@ const SharedAddressBook: React.FC = () => {
         <Form form={createForm} onFinish={handleCreate}>
           <Form.Item
             name="name"
-            label="Name"
-            rules={[{ required: true, message: 'Please enter name' }]}
+            label={<FormattedMessage id="pages.addressBook.name" defaultMessage="Name" />}
+            rules={[{ required: true, message: intl.formatMessage({ id: 'pages.common.pleaseEnterName', defaultMessage: 'Please enter name' }) }]}
           >
             <Input />
           </Form.Item>
-          <Form.Item name="note" label="Note">
+          <Form.Item name="note" label={<FormattedMessage id="pages.addressBook.note" defaultMessage="Note" />}>
             <Input.TextArea />
           </Form.Item>
-          <Form.Item name="password" label="Password">
+          <Form.Item name="password" label={<FormattedMessage id="pages.users.password" defaultMessage="Password" />}>
             <Input.Password />
           </Form.Item>
         </Form>
@@ -228,12 +228,12 @@ const SharedAddressBook: React.FC = () => {
           </Form.Item>
           <Form.Item
             name="name"
-            label="Name"
-            rules={[{ required: true, message: 'Please enter name' }]}
+            label={<FormattedMessage id="pages.addressBook.name" defaultMessage="Name" />}
+            rules={[{ required: true, message: intl.formatMessage({ id: 'pages.common.pleaseEnterName', defaultMessage: 'Please enter name' }) }]}
           >
             <Input />
           </Form.Item>
-          <Form.Item name="note" label="Note">
+          <Form.Item name="note" label={<FormattedMessage id="pages.addressBook.note" defaultMessage="Note" />}>
             <Input.TextArea />
           </Form.Item>
         </Form>

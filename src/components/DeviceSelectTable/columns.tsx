@@ -77,7 +77,7 @@ export const getDeviceColumns = (options?: { hideAction?: boolean }): ProColumns
 
   const baseColumns: ProColumns<API.DeviceItem>[] = [
     {
-      title: 'ID',
+      title: <FormattedMessage id="pages.common.id" defaultMessage="ID" />,
       dataIndex: 'id',
       width: '15%',
       ellipsis: true,

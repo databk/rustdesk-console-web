@@ -268,9 +268,9 @@ const RoleList: React.FC = () => {
         <Form.Item
           name="name"
           label={<FormattedMessage id="pages.roles.name" defaultMessage="Role Name" />}
-          rules={[{ required: true, message: 'Please enter role name' }]}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'pages.common.pleaseEnterRoleName', defaultMessage: 'Please enter role name' }) }]}
         >
-          <Input placeholder="Please enter role name" />
+          <Input placeholder={intl.formatMessage({ id: 'pages.common.pleaseEnterRoleName', defaultMessage: 'Please enter role name' })} />
         </Form.Item>
         <Form.Item name="note" label={<FormattedMessage id="pages.roles.note" defaultMessage="Note" />}>
           <Input.TextArea rows={3} placeholder="Enter role description" />
@@ -307,9 +307,9 @@ const RoleList: React.FC = () => {
         <Form.Item
           name="name"
           label={<FormattedMessage id="pages.roles.name" defaultMessage="Role Name" />}
-          rules={[{ required: true, message: 'Please enter role name' }]}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'pages.common.pleaseEnterRoleName', defaultMessage: 'Please enter role name' }) }]}
         >
-          <Input placeholder="Please enter role name" />
+          <Input placeholder={intl.formatMessage({ id: 'pages.common.pleaseEnterRoleName', defaultMessage: 'Please enter role name' })} />
         </Form.Item>
         <Form.Item name="note" label={<FormattedMessage id="pages.roles.note" defaultMessage="Note" />}>
           <Input.TextArea rows={3} placeholder="Enter role description" />
