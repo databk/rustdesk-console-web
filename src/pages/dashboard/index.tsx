@@ -32,8 +32,17 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     fetchAllData();
-    const interval = setInterval(fetchRealtimeData, 10000);
-    return () => clearInterval(interval);
+    // Realtime data refresh every 10 seconds
+    const realtimeInterval = setInterval(fetchRealtimeData, 10000);
+    // Overview data refresh every 3 minutes
+    const overviewInterval = setInterval(fetchOverviewData, 180000);
+    // Statistics data refresh every 8 minutes
+    const statisticsInterval = setInterval(fetchStatisticsData, 480000);
+    return () => {
+      clearInterval(realtimeInterval);
+      clearInterval(overviewInterval);
+      clearInterval(statisticsInterval);
+    };
   }, []);
 
   useEffect(() => {
@@ -73,6 +82,24 @@ const Dashboard: React.FC = () => {
       setRealtime(realtimeData);
     } catch (error) {
       console.error('Failed to fetch realtime data:', error);
+    }
+  };
+
+  const fetchOverviewData = async () => {
+    try {
+      const overviewData = await getDashboardOverview();
+      setOverview(overviewData);
+    } catch (error) {
+      console.error('Failed to fetch overview data:', error);
+    }
+  };
+
+  const fetchStatisticsData = async () => {
+    try {
+      const statisticsData = await getDashboardStatistics();
+      setStatistics(statisticsData);
+    } catch (error) {
+      console.error('Failed to fetch statistics data:', error);
     }
   };
 
@@ -209,8 +236,8 @@ const Dashboard: React.FC = () => {
                     valueStyle={{ fontSize: 14, color: '#52c41a' }}
                   />
                   <Statistic
-                    title={<FormattedMessage id="pages.dashboard.offlineDevices" defaultMessage="Offline" />}
-                    value={overview?.devices.offline || 0}
+                    title={<FormattedMessage id="pages.dashboard.deviceGroups" defaultMessage="Groups" />}
+                    value={overview?.devices.groups || 0}
                     valueStyle={{ fontSize: 14 }}
                   />
                 </Space>
@@ -363,6 +390,29 @@ const Dashboard: React.FC = () => {
                 format={(percent) => `Online Rate: ${percent}%`}
               />
             </div>
+            {statistics?.deviceDistribution.byGroup && statistics.deviceDistribution.byGroup.length > 0 && (
+              <div style={{ marginTop: 24 }}>
+                <h4 style={{ marginBottom: 12 }}><FormattedMessage id="pages.dashboard.deviceGroupDistribution" defaultMessage="Device Groups" /></h4>
+                <Table
+                  dataSource={statistics.deviceDistribution.byGroup}
+                  rowKey="groupId"
+                  size="small"
+                  pagination={false}
+                  columns={[
+                    {
+                      title: 'Group Name',
+                      dataIndex: 'groupName',
+                      key: 'groupName',
+                    },
+                    {
+                      title: 'Device Count',
+                      dataIndex: 'count',
+                      key: 'count',
+                    },
+                  ]}
+                />
+              </div>
+            )}
           </Card>
         </Col>
       </Row>
@@ -412,8 +462,8 @@ const Dashboard: React.FC = () => {
             <Row gutter={[16, 16]}>
               <Col span={12}>
                 <Statistic
-                  title={<FormattedMessage id="pages.dashboard.totalFiles" defaultMessage="Total Files" />}
-                  value={statistics?.fileTransfer.totalFiles || 0}
+                  title={<FormattedMessage id="pages.dashboard.transferredToday" defaultMessage="Transferred Today" />}
+                  value={overview?.files.transferred || 0}
                   icon={<FileOutlined />}
                 />
               </Col>
@@ -518,7 +568,7 @@ const Dashboard: React.FC = () => {
             }
           >
             {trends?.connectionTrend && (
-              <div>
+              <div style={{ marginBottom: 24 }}>
                 <h4><FormattedMessage id="pages.dashboard.connectionTrend" defaultMessage="Connection Trend" /></h4>
                 <Table
                   dataSource={trends.connectionTrend}
@@ -541,6 +591,67 @@ const Dashboard: React.FC = () => {
                       dataIndex: 'avgDuration',
                       key: 'avgDuration',
                       render: (val: number) => `${val.toFixed(1)} min`,
+                    },
+                  ]}
+                />
+              </div>
+            )}
+            {trends?.userActiveTrend && (
+              <div style={{ marginBottom: 24 }}>
+                <h4><FormattedMessage id="pages.dashboard.userActiveTrend" defaultMessage="User Active Trend" /></h4>
+                <Table
+                  dataSource={trends.userActiveTrend}
+                  rowKey="date"
+                  size="small"
+                  pagination={false}
+                  columns={[
+                    {
+                      title: 'Date',
+                      dataIndex: 'date',
+                      key: 'date',
+                    },
+                    {
+                      title: 'New Users',
+                      dataIndex: 'newUsers',
+                      key: 'newUsers',
+                    },
+                    {
+                      title: 'Active Users',
+                      dataIndex: 'activeUsers',
+                      key: 'activeUsers',
+                    },
+                  ]}
+                />
+              </div>
+            )}
+            {trends?.alarmTrend && (
+              <div>
+                <h4><FormattedMessage id="pages.dashboard.alarmTrend" defaultMessage="Alarm Trend" /></h4>
+                <Table
+                  dataSource={trends.alarmTrend}
+                  rowKey="date"
+                  size="small"
+                  pagination={false}
+                  columns={[
+                    {
+                      title: 'Date',
+                      dataIndex: 'date',
+                      key: 'date',
+                    },
+                    {
+                      title: 'Critical',
+                      dataIndex: 'critical',
+                      key: 'critical',
+                    },
+                    {
+                      title: 'Warning',
+                      dataIndex: 'warning',
+                      key: 'warning',
+                    },
+                    {
+                      title: 'Info',
+                      dataIndex: 'info',
+                      key: 'info',
                     },
                   ]}
                 />
