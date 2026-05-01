@@ -2,11 +2,10 @@ import { QuestionCircleOutlined } from '@ant-design/icons';
 import { SelectLang as UmiSelectLang } from '@umijs/max';
 import React from 'react';
 import { ThemeSwitcher } from './ThemeSwitcher';
-import ThemeProvider, { type ThemeMode, useTheme } from '../ThemeProvider';
 
 export type SiderTheme = 'light' | 'dark';
 
-export { ThemeSwitcher, ThemeProvider, useTheme, type ThemeMode };
+export { ThemeSwitcher };
 
 export const SelectLang: React.FC = () => {
   return (

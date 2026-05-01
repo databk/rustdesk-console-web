@@ -1,8 +1,7 @@
 import React, { useEffect, useState, createContext, useContext } from 'react';
 import { ConfigProvider, theme } from 'antd';
 import type { ThemeConfig } from 'antd';
-
-const THEME_KEY = 'rustdesk_theme_settings';
+import { getStoredThemeMode, storeThemeMode, type ThemeMode } from '@/utils/theme';
 
 const darkTheme: ThemeConfig = {
   algorithm: [theme.darkAlgorithm],
@@ -18,8 +17,6 @@ const lightTheme: ThemeConfig = {
     colorTextBase: '#000000',
   },
 };
-
-export type ThemeMode = 'light' | 'dark';
 
 export interface ThemeProviderProps {
   mode?: ThemeMode;
@@ -41,40 +38,14 @@ export const useTheme = () => {
   return context;
 };
 
-function getStoredThemeMode(): ThemeMode {
-  try {
-    const stored = localStorage.getItem(THEME_KEY);
-    if (stored) {
-      const settings = JSON.parse(stored);
-      if (settings.navTheme === 'dark' || settings.navTheme === 'realDark') {
-        return 'dark';
-      }
-    }
-  } catch {
-    // ignore
-  }
-  return 'light';
-}
-
-function storeThemeMode(mode: ThemeMode) {
-  try {
-    const stored = localStorage.getItem(THEME_KEY);
-    const settings = stored ? JSON.parse(stored) : {};
-    settings.navTheme = mode === 'dark' ? 'dark' : 'light';
-    localStorage.setItem(THEME_KEY, JSON.stringify(settings));
-  } catch {
-    // ignore
-  }
-}
-
 const ThemeProvider: React.FC<ThemeProviderProps> = ({ mode, children }) => {
   // 初始化时从 localStorage 读取主题设置，如果没有则使用传入的 mode 或默认 light
   const getInitialMode = (): ThemeMode => {
     const storedMode = getStoredThemeMode();
     return mode || storedMode;
   };
-  
-  const [currentMode, setCurrentMode] = useState<ThemeMode>(getInitialMode());
+
+  const [currentMode, setCurrentMode] = useState<ThemeMode>(getInitialMode);
 
   // 当传入的 mode 变化时更新当前模式
   useEffect(() => {
