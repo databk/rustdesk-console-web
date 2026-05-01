@@ -29,41 +29,40 @@ function storeThemeSettings(settings: Partial<LayoutSettings>) {
 const ThemeToggle: React.FC = () => {
   const intl = useIntl();
   const { initialState, setInitialState } = useModel('@@initialState');
-  
+
   const isDark = initialState?.settings?.navTheme === 'realDark';
 
   const toggleTheme = () => {
     const currentSettings = initialState?.settings || {};
     const newNavTheme: 'light' | 'realDark' = isDark ? 'light' : 'realDark';
-    
+
     const newSettings: Partial<LayoutSettings> = {
       ...currentSettings,
       navTheme: newNavTheme,
     };
-    
+
     storeThemeSettings(newSettings);
-    
+
     setInitialState((preInitialState) => ({
       ...preInitialState,
       settings: newSettings,
     }));
   };
 
-  const tooltipTitle = isDark
-    ? intl.formatMessage({ id: 'component.themeToggle.switchToLight' })
-    : intl.formatMessage({ id: 'component.themeToggle.switchToDark' });
-
   return (
-    <Tooltip title={tooltipTitle}>
+    <Tooltip
+      title={intl.formatMessage({
+        id: isDark ? 'component.themeToggle.switchToLight' : 'component.themeToggle.switchToDark',
+      })}
+    >
       <span
         onClick={toggleTheme}
         style={{
           display: 'inline-flex',
           alignItems: 'center',
           justifyContent: 'center',
-          padding: '4px',
-          fontSize: '18px',
-          color: 'inherit',
+          padding: 4,
+          fontSize: 18,
           cursor: 'pointer',
         }}
       >
