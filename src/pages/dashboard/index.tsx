@@ -4,7 +4,6 @@ import {
   ApiOutlined,
   AlertOutlined,
   FileOutlined,
-  SyncOutlined,
   ArrowUpOutlined,
   CloudUploadOutlined,
   CloudDownloadOutlined,
@@ -29,7 +28,6 @@ import {
   Tabs,
   Typography,
   Divider,
-  Tooltip,
 } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import React, { CSSProperties, useEffect, useMemo, useState } from 'react';
@@ -865,21 +863,15 @@ const Dashboard: React.FC = () => {
         }
         extra={
           <Space size={12}>
-            <Tooltip title={`CPU: ${realtime?.systemStatus.cpu || 0}%`}>
-              <Tag icon={<SyncOutlined spin />} color={getProgressColor(realtime?.systemStatus.cpu || 0) === '#52c41a' ? 'success' : getProgressColor(realtime?.systemStatus.cpu || 0) === '#faad14' ? 'warning' : 'error'}>
-                CPU {realtime?.systemStatus.cpu || 0}%
-              </Tag>
-            </Tooltip>
-            <Tooltip title={`Memory: ${realtime?.systemStatus.memory || 0}%`}>
-              <Tag color={getProgressColor(realtime?.systemStatus.memory || 0) === '#52c41a' ? 'success' : getProgressColor(realtime?.systemStatus.memory || 0) === '#faad14' ? 'warning' : 'error'}>
-                <FormattedMessage id="pages.dashboard.memory" defaultMessage="Mem" /> {realtime?.systemStatus.memory || 0}%
-              </Tag>
-            </Tooltip>
-            <Tooltip title={`Disk: ${realtime?.systemStatus.disk || 0}%`}>
-              <Tag color={getProgressColor(realtime?.systemStatus.disk || 0) === '#52c41a' ? 'success' : getProgressColor(realtime?.systemStatus.disk || 0) === '#faad14' ? 'warning' : 'error'}>
-                <FormattedMessage id="pages.dashboard.disk" defaultMessage="Disk" /> {realtime?.systemStatus.disk || 0}%
-              </Tag>
-            </Tooltip>
+            <Tag color={getProgressColor(realtime?.systemStatus.cpu || 0) === '#52c41a' ? 'success' : getProgressColor(realtime?.systemStatus.cpu || 0) === '#faad14' ? 'warning' : 'error'}>
+              <FormattedMessage id="pages.dashboard.cpu" defaultMessage="CPU" /> {realtime?.systemStatus.cpu || 0}%
+            </Tag>
+            <Tag color={getProgressColor(realtime?.systemStatus.memory || 0) === '#52c41a' ? 'success' : getProgressColor(realtime?.systemStatus.memory || 0) === '#faad14' ? 'warning' : 'error'}>
+              <FormattedMessage id="pages.dashboard.memory" defaultMessage="Mem" /> {realtime?.systemStatus.memory || 0}%
+            </Tag>
+            <Tag color={getProgressColor(realtime?.systemStatus.disk || 0) === '#52c41a' ? 'success' : getProgressColor(realtime?.systemStatus.disk || 0) === '#faad14' ? 'warning' : 'error'}>
+              <FormattedMessage id="pages.dashboard.disk" defaultMessage="Disk" /> {realtime?.systemStatus.disk || 0}%
+            </Tag>
             <Text type="secondary" style={{ fontSize: 12 }}>
               <FormattedMessage id="pages.dashboard.uptime" defaultMessage="Uptime" />: {formatUptime(realtime?.systemStatus.uptime || 0)}
             </Text>
