@@ -4,7 +4,7 @@ import { SettingDrawer } from '@ant-design/pro-components';
 import type { RequestConfig, RunTimeLayoutConfig } from '@umijs/max';
 import { history, Link } from '@umijs/max';
 import React from 'react';
-import { AvatarDropdown, AvatarName, Footer, SelectLang } from '@/components';
+import { AvatarDropdown, AvatarName, Footer, SelectLang, ThemeToggle } from '@/components';
 import { currentUser as queryCurrentUser } from '@/services/rustdesk-console/auth';
 import { getToken } from '@/utils/auth';
 import defaultSettings from '../config/defaultSettings';
@@ -77,7 +77,7 @@ export const layout: RunTimeLayoutConfig = ({
   setInitialState,
 }) => {
   return {
-    actionsRender: () => [<SelectLang key="SelectLang" />],
+    actionsRender: () => [<ThemeToggle key="ThemeToggle" />, <SelectLang key="SelectLang" />],
     avatarProps: {
       src: undefined,
       title: <AvatarName />,
