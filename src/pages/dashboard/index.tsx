@@ -29,6 +29,7 @@ import {
   Tabs,
   Typography,
   Divider,
+  Tooltip,
 } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import React, { CSSProperties, useEffect, useMemo, useState } from 'react';
@@ -152,12 +153,6 @@ const Dashboard: React.FC = () => {
         return 'default';
     }
   };
-
-  const onlineRate = overview
-    ? overview.devices.total > 0
-      ? Math.round((overview.devices.online / overview.devices.total) * 100)
-      : 0
-    : 0;
 
   const connectionChartData = useMemo(() => {
     if (!trends?.connectionTrend) return [];
@@ -434,31 +429,6 @@ const Dashboard: React.FC = () => {
                 </Space>
               ),
             }}
-            chart={
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  paddingTop: 4,
-                }}
-              >
-                <Progress
-                  type="circle"
-                  percent={onlineRate}
-                  size={52}
-                  strokeColor={{
-                    '0%': '#52c41a',
-                    '100%': '#73d13d',
-                  }}
-                  format={(percent) => (
-                    <span style={{ fontSize: 12, fontWeight: 600 }}>
-                      {percent}%
-                    </span>
-                  )}
-                />
-              </div>
-            }
-            chartPlacement="left"
           />
         </Col>
         <Col xs={24} sm={12} lg={6}>
@@ -852,119 +822,68 @@ const Dashboard: React.FC = () => {
         </Row>
       </Card>
 
-      {/* Row 3: Trend Data with System Status embedded in header */}
+      {/* Row 3: Trend Data with System Status */}
       <Card
         style={{ marginTop: 16 }}
         size="small"
         title={
-          <Row justify="space-between" align="middle" wrap={false}>
-            <Col>
-              <Space>
-                <FormattedMessage
-                  id="pages.dashboard.trendData"
-                  defaultMessage="Trend Data"
-                />
-                <Select
-                  value={trendRange}
-                  onChange={setTrendRange}
-                  size="small"
-                  options={[
-                    {
-                      value: '7d',
-                      label: intl.formatMessage({
-                        id: 'pages.dashboard.7days',
-                        defaultMessage: '7 Days',
-                      }),
-                    },
-                    {
-                      value: '30d',
-                      label: intl.formatMessage({
-                        id: 'pages.dashboard.30days',
-                        defaultMessage: '30 Days',
-                      }),
-                    },
-                    {
-                      value: '90d',
-                      label: intl.formatMessage({
-                        id: 'pages.dashboard.90days',
-                        defaultMessage: '90 Days',
-                      }),
-                    },
-                  ]}
-                  style={{ width: 100 }}
-                />
-              </Space>
-            </Col>
-            <Col>
-              <Space size={16}>
-                <Space size={4}>
-                  <SyncOutlined spin style={{ color: '#1890ff', fontSize: 12 }} />
-                  <Text type="secondary" style={{ fontSize: 12 }}>
-                    <FormattedMessage
-                      id="pages.dashboard.cpu"
-                      defaultMessage="CPU"
-                    />
-                  </Text>
-                  <Progress
-                    type="circle"
-                    percent={realtime?.systemStatus.cpu || 0}
-                    size={28}
-                    format={(percent) => (
-                      <span style={{ fontSize: 10 }}>{percent}</span>
-                    )}
-                    strokeColor={getProgressColor(
-                      realtime?.systemStatus.cpu || 0,
-                    )}
-                  />
-                </Space>
-                <Space size={4}>
-                  <Text type="secondary" style={{ fontSize: 12 }}>
-                    <FormattedMessage
-                      id="pages.dashboard.memory"
-                      defaultMessage="Mem"
-                    />
-                  </Text>
-                  <Progress
-                    type="circle"
-                    percent={realtime?.systemStatus.memory || 0}
-                    size={28}
-                    format={(percent) => (
-                      <span style={{ fontSize: 10 }}>{percent}</span>
-                    )}
-                    strokeColor={getProgressColor(
-                      realtime?.systemStatus.memory || 0,
-                    )}
-                  />
-                </Space>
-                <Space size={4}>
-                  <Text type="secondary" style={{ fontSize: 12 }}>
-                    <FormattedMessage
-                      id="pages.dashboard.disk"
-                      defaultMessage="Disk"
-                    />
-                  </Text>
-                  <Progress
-                    type="circle"
-                    percent={realtime?.systemStatus.disk || 0}
-                    size={28}
-                    format={(percent) => (
-                      <span style={{ fontSize: 10 }}>{percent}</span>
-                    )}
-                    strokeColor={getProgressColor(
-                      realtime?.systemStatus.disk || 0,
-                    )}
-                  />
-                </Space>
-                <Text type="secondary" style={{ fontSize: 11 }}>
-                  <FormattedMessage
-                    id="pages.dashboard.uptime"
-                    defaultMessage="Uptime"
-                  />
-                  : {formatUptime(realtime?.systemStatus.uptime || 0)}
-                </Text>
-              </Space>
-            </Col>
-          </Row>
+          <Space>
+            <FormattedMessage
+              id="pages.dashboard.trendData"
+              defaultMessage="Trend Data"
+            />
+            <Select
+              value={trendRange}
+              onChange={setTrendRange}
+              size="small"
+              options={[
+                {
+                  value: '7d',
+                  label: intl.formatMessage({
+                    id: 'pages.dashboard.7days',
+                    defaultMessage: '7 Days',
+                  }),
+                },
+                {
+                  value: '30d',
+                  label: intl.formatMessage({
+                    id: 'pages.dashboard.30days',
+                    defaultMessage: '30 Days',
+                  }),
+                },
+                {
+                  value: '90d',
+                  label: intl.formatMessage({
+                    id: 'pages.dashboard.90days',
+                    defaultMessage: '90 Days',
+                  }),
+                },
+              ]}
+              style={{ width: 100 }}
+            />
+          </Space>
+        }
+        extra={
+          <Space size={12}>
+            <Tooltip title={`CPU: ${realtime?.systemStatus.cpu || 0}%`}>
+              <Tag icon={<SyncOutlined spin />} color={getProgressColor(realtime?.systemStatus.cpu || 0) === '#52c41a' ? 'success' : getProgressColor(realtime?.systemStatus.cpu || 0) === '#faad14' ? 'warning' : 'error'}>
+                CPU {realtime?.systemStatus.cpu || 0}%
+              </Tag>
+            </Tooltip>
+            <Tooltip title={`Memory: ${realtime?.systemStatus.memory || 0}%`}>
+              <Tag color={getProgressColor(realtime?.systemStatus.memory || 0) === '#52c41a' ? 'success' : getProgressColor(realtime?.systemStatus.memory || 0) === '#faad14' ? 'warning' : 'error'}>
+                <FormattedMessage id="pages.dashboard.memory" defaultMessage="Mem" /> {realtime?.systemStatus.memory || 0}%
+              </Tag>
+            </Tooltip>
+            <Tooltip title={`Disk: ${realtime?.systemStatus.disk || 0}%`}>
+              <Tag color={getProgressColor(realtime?.systemStatus.disk || 0) === '#52c41a' ? 'success' : getProgressColor(realtime?.systemStatus.disk || 0) === '#faad14' ? 'warning' : 'error'}>
+                <FormattedMessage id="pages.dashboard.disk" defaultMessage="Disk" /> {realtime?.systemStatus.disk || 0}%
+              </Tag>
+            </Tooltip>
+            <Text type="secondary" style={{ fontSize: 12 }}>
+              <FormattedMessage id="pages.dashboard.uptime" defaultMessage="Uptime" />: {formatUptime(realtime?.systemStatus.uptime || 0)}
+            </Text>
+          </Space>
         }
       >
         <Tabs
