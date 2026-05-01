@@ -110,24 +110,25 @@ const Dashboard: React.FC = () => {
 
       {/* Area 2: Resource Distribution + Operation Analysis */}
       <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
-        <Col xs={24} lg={12}>
-          <ResourceDistribution statistics={statistics} />
+        <Col xs={24} lg={12} style={{ display: 'flex' }}>
+          <ResourceDistribution statistics={statistics} style={{ flex: 1 }} />
         </Col>
-        <Col xs={24} lg={12}>
-          <OperationAnalysis statistics={statistics} overview={overview} />
+        <Col xs={24} lg={12} style={{ display: 'flex' }}>
+          <OperationAnalysis statistics={statistics} overview={overview} style={{ flex: 1 }} />
         </Col>
       </Row>
 
       {/* Area 3: System Status + Trend Charts */}
       <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
-        <Col xs={24} lg={6}>
-          <SystemStatus systemStatus={realtime?.systemStatus} />
+        <Col xs={24} lg={6} style={{ display: 'flex' }}>
+          <SystemStatus systemStatus={realtime?.systemStatus} style={{ flex: 1 }} />
         </Col>
-        <Col xs={24} lg={18}>
+        <Col xs={24} lg={18} style={{ display: 'flex' }}>
           <TrendCharts
             trends={trends}
             trendRange={trendRange}
             onTrendRangeChange={setTrendRange}
+            style={{ flex: 1 }}
           />
         </Col>
       </Row>

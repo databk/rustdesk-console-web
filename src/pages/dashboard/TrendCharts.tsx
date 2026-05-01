@@ -2,7 +2,7 @@ import { ApiOutlined, UserOutlined, AlertOutlined } from '@ant-design/icons';
 import { Area, Column } from '@ant-design/plots';
 import { FormattedMessage, useIntl } from '@umijs/max';
 import { Card, Select, Space, Tabs, Typography } from 'antd';
-import React, { useMemo, useState } from 'react';
+import React, { CSSProperties, useMemo, useState } from 'react';
 
 const { Text } = Typography;
 
@@ -10,6 +10,7 @@ interface TrendChartsProps {
   trends?: API.DashboardTrends;
   trendRange: '7d' | '30d' | '90d';
   onTrendRangeChange: (range: '7d' | '30d' | '90d') => void;
+  style?: CSSProperties;
 }
 
 const noDataPlaceholder = (
@@ -31,6 +32,7 @@ const TrendCharts: React.FC<TrendChartsProps> = ({
   trends,
   trendRange,
   onTrendRangeChange,
+  style,
 }) => {
   const intl = useIntl();
 
@@ -95,6 +97,7 @@ const TrendCharts: React.FC<TrendChartsProps> = ({
 
   return (
     <Card
+      style={style}
       size="small"
       title={
         <Space>

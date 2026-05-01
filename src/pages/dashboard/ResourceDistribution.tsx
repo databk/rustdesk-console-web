@@ -20,15 +20,18 @@ const sectionTitleStyle: CSSProperties = {
 
 interface ResourceDistributionProps {
   statistics?: API.DashboardStatistics;
+  style?: CSSProperties;
 }
 
 const ResourceDistribution: React.FC<ResourceDistributionProps> = ({
   statistics,
+  style,
 }) => {
   const intl = useIntl();
 
   return (
     <Card
+      style={style}
       title={
         <Space>
           <TeamOutlined style={{ color: '#1890ff' }} />

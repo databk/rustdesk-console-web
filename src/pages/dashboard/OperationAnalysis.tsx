@@ -28,14 +28,17 @@ const sectionTitleStyle: CSSProperties = {
 interface OperationAnalysisProps {
   statistics?: API.DashboardStatistics;
   overview?: API.DashboardOverview;
+  style?: CSSProperties;
 }
 
 const OperationAnalysis: React.FC<OperationAnalysisProps> = ({
   statistics,
   overview,
+  style,
 }) => {
   return (
     <Card
+      style={style}
       title={
         <Space>
           <ApiOutlined style={{ color: '#722ed1' }} />

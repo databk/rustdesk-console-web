@@ -1,6 +1,6 @@
 import { FormattedMessage } from '@umijs/max';
 import { Card, Progress, Space, Typography } from 'antd';
-import React from 'react';
+import React, { CSSProperties } from 'react';
 
 const { Text } = Typography;
 
@@ -16,9 +16,10 @@ const formatUptime = (seconds: number) => {
 
 interface SystemStatusProps {
   systemStatus?: API.DashboardRealtime['systemStatus'];
+  style?: CSSProperties;
 }
 
-const SystemStatus: React.FC<SystemStatusProps> = ({ systemStatus }) => {
+const SystemStatus: React.FC<SystemStatusProps> = ({ systemStatus, style }) => {
   const cpu = systemStatus?.cpu || 0;
   const memory = systemStatus?.memory || 0;
   const disk = systemStatus?.disk || 0;
@@ -26,6 +27,7 @@ const SystemStatus: React.FC<SystemStatusProps> = ({ systemStatus }) => {
 
   return (
     <Card
+      style={style}
       title={
         <FormattedMessage
           id="pages.dashboard.systemStatus"

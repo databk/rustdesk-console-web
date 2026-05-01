@@ -140,8 +140,9 @@ const RealtimeTables: React.FC<RealtimeTablesProps> = ({ realtime }) => {
 
   return (
     <Row gutter={[16, 16]}>
-      <Col xs={24} lg={14}>
+      <Col xs={24} lg={14} style={{ display: 'flex' }}>
         <Card
+          style={{ flex: 1 }}
           title={
             <Space>
               <ApiOutlined style={{ color: '#722ed1' }} />
@@ -166,8 +167,9 @@ const RealtimeTables: React.FC<RealtimeTablesProps> = ({ realtime }) => {
           />
         </Card>
       </Col>
-      <Col xs={24} lg={10}>
+      <Col xs={24} lg={10} style={{ display: 'flex' }}>
         <Card
+          style={{ flex: 1 }}
           title={
             <Space>
               <AlertOutlined style={{ color: '#faad14' }} />
