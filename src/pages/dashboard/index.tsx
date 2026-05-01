@@ -9,7 +9,7 @@ import {
 } from '@ant-design/icons';
 import { PageContainer, StatisticCard } from '@ant-design/pro-components';
 import { useIntl, FormattedMessage } from '@umijs/max';
-import { Card, Col, Row, Spin, Statistic, Progress, Tag, Table, Select, Space } from 'antd';
+import { Card, Col, Row, Spin, Statistic, Progress, Tag, Table, Select, Space, Tooltip, Tabs } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import React, { useEffect, useState } from 'react';
 import {
@@ -223,27 +223,49 @@ const Dashboard: React.FC = () => {
           />
         </Col>
         <Col xs={24} sm={12} lg={6}>
-          <StatisticCard
-            statistic={{
-              title: <FormattedMessage id="pages.dashboard.totalDevices" defaultMessage="Total Devices" />,
-              value: overview?.devices.total || 0,
-              icon: <DesktopOutlined style={{ color: '#52c41a' }} />,
-              description: (
-                <Space direction="vertical" size={0}>
-                  <Statistic
-                    title={<FormattedMessage id="pages.dashboard.onlineDevices" defaultMessage="Online" />}
-                    value={overview?.devices.online || 0}
-                    valueStyle={{ fontSize: 14, color: '#52c41a' }}
-                  />
-                  <Statistic
-                    title={<FormattedMessage id="pages.dashboard.deviceGroups" defaultMessage="Groups" />}
-                    value={overview?.devices.groups || 0}
-                    valueStyle={{ fontSize: 14 }}
-                  />
-                </Space>
-              ),
-            }}
-          />
+          <Card>
+            <Row gutter={16} align="middle">
+              <Col span={12}>
+                <Statistic
+                  title={<FormattedMessage id="pages.dashboard.totalDevices" defaultMessage="Total Devices" />}
+                  value={overview?.devices.total || 0}
+                  prefix={<DesktopOutlined />}
+                />
+                <div style={{ marginTop: 8 }}>
+                  <Space size="small">
+                    <Tooltip title="Online Devices">
+                      <Tag color="success">{overview?.devices.online || 0} Online</Tag>
+                    </Tooltip>
+                    <Tooltip title="Device Groups">
+                      <Tag color="blue">{overview?.devices.groups || 0} Groups</Tag>
+                    </Tooltip>
+                  </Space>
+                </div>
+              </Col>
+              <Col span={12} style={{ textAlign: 'center' }}>
+                <Progress
+                  type="circle"
+                  percent={
+                    overview
+                      ? Math.round((overview.devices.online / overview.devices.total) * 100)
+                      : 0
+                  }
+                  format={(percent) => (
+                    <span style={{ fontSize: 14 }}>
+                      {percent}%
+                      <br />
+                      <span style={{ fontSize: 12, color: '#8c8c8c' }}>Online</span>
+                    </span>
+                  )}
+                  strokeColor={{
+                    '0%': '#52c41a',
+                    '100%': '#73d13d',
+                  }}
+                  width={80}
+                />
+              </Col>
+            </Row>
+          </Card>
         </Col>
         <Col xs={24} sm={12} lg={6}>
           <StatisticCard
@@ -270,27 +292,33 @@ const Dashboard: React.FC = () => {
           />
         </Col>
         <Col xs={24} sm={12} lg={6}>
-          <StatisticCard
-            statistic={{
-              title: <FormattedMessage id="pages.dashboard.totalAlarms" defaultMessage="Total Alarms" />,
-              value: overview?.audits.alarms || 0,
-              icon: <AlertOutlined style={{ color: '#faad14' }} />,
-              description: (
-                <Space direction="vertical" size={0}>
-                  <Statistic
-                    title={<FormattedMessage id="pages.dashboard.unreadAlarms" defaultMessage="Unread" />}
-                    value={overview?.audits.unreadAlarms || 0}
-                    valueStyle={{ fontSize: 14, color: '#faad14' }}
-                  />
-                  <Statistic
-                    title={<FormattedMessage id="pages.dashboard.criticalAlarms" defaultMessage="Critical" />}
-                    value={overview?.audits.criticalAlarms || 0}
-                    valueStyle={{ fontSize: 14, color: '#f5222d' }}
-                  />
-                </Space>
-              ),
-            }}
-          />
+          <Card>
+            <Statistic
+              title={<FormattedMessage id="pages.dashboard.totalAlarms" defaultMessage="Total Alarms" />}
+              value={overview?.audits.alarms || 0}
+              prefix={<AlertOutlined style={{ color: '#faad14' }} />}
+            />
+            <div style={{ marginTop: 12 }}>
+              <Space direction="vertical" size="small" style={{ width: '100%' }}>
+                <Row gutter={8}>
+                  <Col span={12}>
+                    <Tooltip title="Critical Alarms">
+                      <Tag color="error" style={{ width: '100%', textAlign: 'center' }}>
+                        {overview?.audits.criticalAlarms || 0} Critical
+                      </Tag>
+                    </Tooltip>
+                  </Col>
+                  <Col span={12}>
+                    <Tooltip title="Unread Alarms">
+                      <Tag color="warning" style={{ width: '100%', textAlign: 'center' }}>
+                        {overview?.audits.unreadAlarms || 0} Unread
+                      </Tag>
+                    </Tooltip>
+                  </Col>
+                </Row>
+              </Space>
+            </div>
+          </Card>
         </Col>
       </Row>
 
@@ -567,96 +595,148 @@ const Dashboard: React.FC = () => {
               </Space>
             }
           >
-            {trends?.connectionTrend && (
-              <div style={{ marginBottom: 24 }}>
-                <h4><FormattedMessage id="pages.dashboard.connectionTrend" defaultMessage="Connection Trend" /></h4>
-                <Table
-                  dataSource={trends.connectionTrend}
-                  rowKey="date"
-                  size="small"
-                  pagination={false}
-                  columns={[
-                    {
-                      title: 'Date',
-                      dataIndex: 'date',
-                      key: 'date',
-                    },
-                    {
-                      title: 'Count',
-                      dataIndex: 'count',
-                      key: 'count',
-                    },
-                    {
-                      title: 'Avg Duration',
-                      dataIndex: 'avgDuration',
-                      key: 'avgDuration',
-                      render: (val: number) => `${val.toFixed(1)} min`,
-                    },
-                  ]}
-                />
-              </div>
-            )}
-            {trends?.userActiveTrend && (
-              <div style={{ marginBottom: 24 }}>
-                <h4><FormattedMessage id="pages.dashboard.userActiveTrend" defaultMessage="User Active Trend" /></h4>
-                <Table
-                  dataSource={trends.userActiveTrend}
-                  rowKey="date"
-                  size="small"
-                  pagination={false}
-                  columns={[
-                    {
-                      title: 'Date',
-                      dataIndex: 'date',
-                      key: 'date',
-                    },
-                    {
-                      title: 'New Users',
-                      dataIndex: 'newUsers',
-                      key: 'newUsers',
-                    },
-                    {
-                      title: 'Active Users',
-                      dataIndex: 'activeUsers',
-                      key: 'activeUsers',
-                    },
-                  ]}
-                />
-              </div>
-            )}
-            {trends?.alarmTrend && (
-              <div>
-                <h4><FormattedMessage id="pages.dashboard.alarmTrend" defaultMessage="Alarm Trend" /></h4>
-                <Table
-                  dataSource={trends.alarmTrend}
-                  rowKey="date"
-                  size="small"
-                  pagination={false}
-                  columns={[
-                    {
-                      title: 'Date',
-                      dataIndex: 'date',
-                      key: 'date',
-                    },
-                    {
-                      title: 'Critical',
-                      dataIndex: 'critical',
-                      key: 'critical',
-                    },
-                    {
-                      title: 'Warning',
-                      dataIndex: 'warning',
-                      key: 'warning',
-                    },
-                    {
-                      title: 'Info',
-                      dataIndex: 'info',
-                      key: 'info',
-                    },
-                  ]}
-                />
-              </div>
-            )}
+            <Tabs
+              defaultActiveKey="connection"
+              items={[
+                {
+                  key: 'connection',
+                  label: (
+                    <span>
+                      <ApiOutlined />
+                      <FormattedMessage id="pages.dashboard.connectionTrend" defaultMessage="Connection" />
+                    </span>
+                  ),
+                  children: trends?.connectionTrend ? (
+                    <Table
+                      dataSource={trends.connectionTrend}
+                      rowKey="date"
+                      size="small"
+                      pagination={false}
+                      columns={[
+                        {
+                          title: 'Date',
+                          dataIndex: 'date',
+                          key: 'date',
+                          render: (date: string) => (
+                            <Tag color="blue">{date}</Tag>
+                          ),
+                        },
+                        {
+                          title: 'Count',
+                          dataIndex: 'count',
+                          key: 'count',
+                          render: (count: number) => (
+                            <span style={{ fontWeight: 'bold', color: '#1890ff' }}>{count}</span>
+                          ),
+                        },
+                        {
+                          title: 'Avg Duration',
+                          dataIndex: 'avgDuration',
+                          key: 'avgDuration',
+                          render: (val: number) => (
+                            <Tag color="green">{val.toFixed(1)} min</Tag>
+                          ),
+                        },
+                      ]}
+                    />
+                  ) : null,
+                },
+                {
+                  key: 'user',
+                  label: (
+                    <span>
+                      <UserOutlined />
+                      <FormattedMessage id="pages.dashboard.userActiveTrend" defaultMessage="User Active" />
+                    </span>
+                  ),
+                  children: trends?.userActiveTrend ? (
+                    <Table
+                      dataSource={trends.userActiveTrend}
+                      rowKey="date"
+                      size="small"
+                      pagination={false}
+                      columns={[
+                        {
+                          title: 'Date',
+                          dataIndex: 'date',
+                          key: 'date',
+                          render: (date: string) => (
+                            <Tag color="blue">{date}</Tag>
+                          ),
+                        },
+                        {
+                          title: 'New Users',
+                          dataIndex: 'newUsers',
+                          key: 'newUsers',
+                          render: (count: number) => (
+                            <span style={{ fontWeight: 'bold', color: '#52c41a' }}>+{count}</span>
+                          ),
+                        },
+                        {
+                          title: 'Active Users',
+                          dataIndex: 'activeUsers',
+                          key: 'activeUsers',
+                          render: (count: number) => (
+                            <span style={{ fontWeight: 'bold', color: '#1890ff' }}>{count}</span>
+                          ),
+                        },
+                      ]}
+                    />
+                  ) : null,
+                },
+                {
+                  key: 'alarm',
+                  label: (
+                    <span>
+                      <AlertOutlined />
+                      <FormattedMessage id="pages.dashboard.alarmTrend" defaultMessage="Alarm" />
+                    </span>
+                  ),
+                  children: trends?.alarmTrend ? (
+                    <Table
+                      dataSource={trends.alarmTrend}
+                      rowKey="date"
+                      size="small"
+                      pagination={false}
+                      columns={[
+                        {
+                          title: 'Date',
+                          dataIndex: 'date',
+                          key: 'date',
+                          render: (date: string) => (
+                            <Tag color="blue">{date}</Tag>
+                          ),
+                        },
+                        {
+                          title: 'Critical',
+                          dataIndex: 'critical',
+                          key: 'critical',
+                          render: (val: number) => (
+                            <Tag color={val > 0 ? 'error' : 'default'}>{val}</Tag>
+                          ),
+                        },
+                        {
+                          title: 'Warning',
+                          dataIndex: 'warning',
+                          key: 'warning',
+                          render: (val: number) => (
+                            <Tag color={val > 0 ? 'warning' : 'default'}>{val}</Tag>
+                          ),
+                        },
+                        {
+                          title: 'Info',
+                          dataIndex: 'info',
+                          key: 'info',
+                          render: (val: number) => (
+                            <Tag color="blue">{val}</Tag>
+                          ),
+                        },
+                      ]}
+                    />
+                  ) : null,
+                },
+              ]}
+            />
           </Card>
         </Col>
       </Row>
