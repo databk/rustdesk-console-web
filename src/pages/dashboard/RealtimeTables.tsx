@@ -140,7 +140,7 @@ const RealtimeTables: React.FC<RealtimeTablesProps> = ({ realtime }) => {
 
   return (
     <Row gutter={[16, 16]}>
-      <Col xs={24} lg={14} style={{ display: 'flex' }}>
+      <Col xs={24} lg={12} style={{ display: 'flex' }}>
         <Card
           style={{ flex: 1 }}
           title={
@@ -167,7 +167,7 @@ const RealtimeTables: React.FC<RealtimeTablesProps> = ({ realtime }) => {
           />
         </Card>
       </Col>
-      <Col xs={24} lg={10} style={{ display: 'flex' }}>
+      <Col xs={24} lg={12} style={{ display: 'flex' }}>
         <Card
           style={{ flex: 1 }}
           title={
