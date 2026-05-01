@@ -1,5 +1,5 @@
-import { BulbOutlined, MoonOutlined } from '@ant-design/icons';
-import { useModel } from '@umijs/max';
+import { MoonOutlined, SunOutlined } from '@ant-design/icons';
+import { useIntl, useModel } from '@umijs/max';
 import { Tooltip } from 'antd';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import React from 'react';
@@ -27,6 +27,7 @@ function storeThemeSettings(settings: Partial<LayoutSettings>) {
 }
 
 const ThemeToggle: React.FC = () => {
+  const intl = useIntl();
   const { initialState, setInitialState } = useModel('@@initialState');
   
   const isDark = initialState?.settings?.navTheme === 'realDark';
@@ -48,8 +49,12 @@ const ThemeToggle: React.FC = () => {
     }));
   };
 
+  const tooltipTitle = isDark
+    ? intl.formatMessage({ id: 'component.themeToggle.switchToLight' })
+    : intl.formatMessage({ id: 'component.themeToggle.switchToDark' });
+
   return (
-    <Tooltip title={isDark ? '切换到亮色模式' : '切换到深色模式'}>
+    <Tooltip title={tooltipTitle}>
       <span
         onClick={toggleTheme}
         style={{
@@ -62,7 +67,7 @@ const ThemeToggle: React.FC = () => {
           cursor: 'pointer',
         }}
       >
-        {isDark ? <BulbOutlined /> : <MoonOutlined />}
+        {isDark ? <SunOutlined /> : <MoonOutlined />}
       </span>
     </Tooltip>
   );
