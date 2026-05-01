@@ -1,6 +1,4 @@
 export default {
-  'menu.dashboard': 'Dashboard',
-  'menu.dashboard.workplace': 'Workplace',
   'menu.devices': 'Devices',
   'menu.devices.list': 'Device List',
   'menu.addressBook': 'Address Books',
@@ -16,7 +14,6 @@ export default {
   'menu.audits.alarm': 'Alarm',
   'menu.audits.console': 'Console',
   'menu.login': 'Login',
-  'menu.welcome': 'Welcome',
   'menu.roles': 'Roles',
   'menu.strategies': 'Strategies',
   'menu.groups': 'Groups',

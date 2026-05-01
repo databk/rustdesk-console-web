@@ -1,6 +1,4 @@
 export default {
-  'menu.dashboard': '仪表盘',
-  'menu.dashboard.workplace': '工作台',
   'menu.devices': '设备管理',
   'menu.devices.list': '设备列表',
   'menu.addressBook': '地址簿',
@@ -16,7 +14,6 @@ export default {
   'menu.audits.alarm': '告警审计',
   'menu.audits.console': '控制台审计',
   'menu.login': '登录',
-  'menu.welcome': '欢迎',
   'menu.roles': '角色管理',
   'menu.strategies': '策略管理',
   'menu.groups': '组管理',

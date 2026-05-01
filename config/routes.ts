@@ -20,29 +20,6 @@
     ],
   },
   {
-    path: '/welcome',
-    name: 'welcome',
-    icon: 'smile',
-    component: './welcome',
-  },
-  {
-    path: '/dashboard',
-    name: 'dashboard',
-    icon: 'dashboard',
-    routes: [
-      {
-        path: '/dashboard',
-        redirect: '/dashboard/workplace',
-      },
-      {
-        name: 'workplace',
-        icon: 'home',
-        path: '/dashboard/workplace',
-        component: './dashboard/workplace',
-      },
-    ],
-  },
-  {
     path: '/devices',
     name: 'devices',
     icon: 'desktop',
@@ -179,7 +156,7 @@
   },
   {
     path: '/',
-    redirect: '/welcome',
+    redirect: '/devices',
   },
   {
     component: '404',
