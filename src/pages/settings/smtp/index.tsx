@@ -1,4 +1,4 @@
-import { MailOutlined, SaveOutlined, TestTubeOutlined } from '@ant-design/icons';
+import { MailOutlined, SaveOutlined, ApiOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
 import { useIntl, FormattedMessage } from '@umijs/max';
 import {
@@ -194,7 +194,7 @@ const SMTPSettings: React.FC = () => {
         extra={
           <Space>
             <Button
-              icon={<TestTubeOutlined />}
+              icon={<ApiOutlined />}
               onClick={handleTest}
               loading={testing}
               disabled={loading}
