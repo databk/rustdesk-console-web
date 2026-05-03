@@ -489,4 +489,40 @@ declare namespace API {
       uptime: number;
     };
   };
+
+  type SMTPConfig = {
+    host: string;
+    port: number;
+    secure: boolean;
+    user: string;
+    pass: string;
+    from: string;
+    enabled: boolean;
+    createdAt?: string;
+    updatedAt?: string;
+  };
+
+  type UpdateSMTPConfigParams = {
+    host?: string;
+    port?: number;
+    secure?: boolean;
+    user?: string;
+    pass?: string;
+    from?: string;
+    enabled?: boolean;
+  };
+
+  type TestSMTPConfigParams = {
+    host?: string;
+    port?: number;
+    secure?: boolean;
+    user?: string;
+    pass?: string;
+    from?: string;
+  };
+
+  type TestSMTPResult = {
+    success: boolean;
+    message: string;
+  };
 }

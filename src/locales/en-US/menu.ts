@@ -21,6 +21,8 @@ export default {
   'menu.groups.user': 'User Groups',
   'menu.groups.device': 'Device Groups',
   'menu.settings': 'Settings',
+  'menu.settings.general': 'General',
+  'menu.settings.smtp': 'SMTP Configuration',
   'menu.customClients': 'Custom Clients',
   'menu.addressBooks': 'Address Books',
 };

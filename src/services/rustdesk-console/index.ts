@@ -55,3 +55,4 @@ export {
   getDashboardTrends,
   getDashboardRealtime,
 } from './dashboard';
+export { getSMTPConfig, updateSMTPConfig, testSMTPConfig } from './smtp';

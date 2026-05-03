@@ -158,7 +158,24 @@
     name: 'settings',
     icon: 'setting',
     access: 'canAdmin',
-    component: './settings',
+    routes: [
+      {
+        path: '/settings',
+        redirect: '/settings/general',
+      },
+      {
+        name: 'general',
+        icon: 'setting',
+        path: '/settings/general',
+        component: './settings',
+      },
+      {
+        name: 'smtp',
+        icon: 'mail',
+        path: '/settings/smtp',
+        component: './settings/smtp',
+      },
+    ],
   },
   {
     path: '/',
