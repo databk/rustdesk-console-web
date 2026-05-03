@@ -130,7 +130,41 @@ declare namespace API {
     note?: string;
   };
 
-  type PeerItem = {
+  type SharedAbProfile = {
+    guid: string;
+    name: string;
+    note?: string;
+    password?: string;
+    rule?: number;
+    [key: string]: any;
+  };
+
+  type AbPeer = {
+    guid: string;
+    id: string;
+    hostname?: string;
+    username?: string;
+    alias?: string;
+    platform?: string;
+    os?: string;
+    note?: string;
+    tags?: string[];
+    password?: boolean;
+    [key: string]: any;
+  };
+
+  type AbTag = {
+    name: string;
+    color?: number;
+    peer_count?: number;
+  };
+
+  type SortState = {
+    columnKey?: string;
+    order?: 'ascend' | 'descend' | null;
+  };
+
+  type PageParams = {
     id: string;
     hostname?: string;
     os?: string;

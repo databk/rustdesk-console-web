@@ -119,3 +119,47 @@ export async function addRule(data: API.CreateRuleParams) {
 export async function updateRule(data: API.UpdateRuleParams) {
   return request('/api/ab/rule', { method: 'PATCH', data });
 }
+
+export async function getAbPeers(
+  params: {
+    current?: number;
+    pageSize?: number;
+    ab?: string;
+    id?: string;
+    device_name?: string;
+    device_username?: string;
+    tags?: string;
+    intersection?: boolean;
+    hide_password?: boolean;
+  },
+) {
+  return request<API.PaginatedResult<API.AbPeer>>('/api/ab/peers', {
+    method: 'GET',
+    params,
+  });
+}
+
+export async function deleteAbPeersByGuid(
+  abGuid: string,
+  data: { data: string[] },
+) {
+  return request(`/api/ab/peers/${abGuid}`, { method: 'DELETE', data });
+}
+
+export async function setAbPeersNote(
+  data: { guids: string[]; note: string; ab: string },
+) {
+  return request('/api/ab/peers/note', { method: 'PUT', data });
+}
+
+export async function setAbPeersPassword(
+  data: { guids: string[]; password: string; ab: string },
+) {
+  return request('/api/ab/peers/password', { method: 'PUT', data });
+}
+
+export async function setAbPeersTags(
+  data: { guids: string[]; tags: string[]; ab: string },
+) {
+  return request('/api/ab/peers/tags', { method: 'PUT', data });
+}

@@ -1,25 +1,46 @@
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { FormattedMessage, useIntl } from '@umijs/max';
-import { App, Button, Form, Input, Modal, Popconfirm } from 'antd';
-import React, { useRef, useState } from 'react';
+import { FormattedMessage, useIntl, history, useLocation } from '@umijs/max';
+import { App, Button, Card, Form, Input, Modal, Popconfirm, Space, Tag, ColorPicker, Radio } from 'antd';
+import { DeleteOutlined, EditOutlined, PlusOutlined, RightOutlined } from '@ant-design/icons';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   addSharedAddressBook,
   deleteSharedAddressBooks,
   getSharedAddressBooks,
   updateSharedAddressBook,
+  getTags,
+  addTag,
+  renameTag,
+  updateTagColor,
+  deleteTag,
 } from '@/services/rustdesk-console/addressBook';
+import DetailTable from '../components/DetailTable';
+
+const argbToHex = (color: number | undefined): string => {
+  if (!color) return '#1677ff';
+  return `#${color.toString(16).padStart(8, '0').slice(-6)}`;
+};
 
 const SharedAddressBook: React.FC = () => {
   const intl = useIntl();
   const { message: msgApi } = App.useApp();
   const actionRef = useRef<ActionType>();
+  const deviceTableActionRef = useRef<ActionType>();
+  const location = useLocation();
+
   const [createModalVisible, setCreateModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [editingRecord, setEditingRecord] = useState<API.SharedAddressBook | null>(null);
   const [createForm] = Form.useForm();
   const [editForm] = Form.useForm();
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+
+  const [selectedAddressBook, setSelectedAddressBook] = useState<API.SharedAbProfile | null>(null);
+  const [abTags, setAbTags] = useState<API.AbTag[]>([]);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [tagMode, setTagMode] = useState<'union' | 'intersection'>('union');
+  const [pendingColorUpdates, setPendingColorUpdates] = useState<Record<string, number>>({});
 
   const handleCreate = async (values: API.AddSharedAddressBookParams) => {
     try {
@@ -77,6 +98,9 @@ const SharedAddressBook: React.FC = () => {
       );
       setSelectedRowKeys([]);
       actionRef.current?.reload();
+      if (selectedAddressBook && guids.includes(selectedAddressBook.guid)) {
+        setSelectedAddressBook(null);
+      }
     } catch {
       msgApi.error(
         intl.formatMessage({
@@ -87,10 +111,111 @@ const SharedAddressBook: React.FC = () => {
     }
   };
 
+  const handleViewAddressBook = (record: API.SharedAddressBook) => {
+    setSelectedAddressBook({
+      guid: record.guid,
+      name: record.name,
+      note: record.note,
+      password: record.password,
+      rule: 1,
+    });
+  };
+
+  const fetchTags = useCallback(async () => {
+    if (!selectedAddressBook) return;
+    try {
+      const result = await getTags(selectedAddressBook.guid);
+      setAbTags(result || []);
+    } catch (error) {
+      console.error('Failed to fetch tags:', error);
+      setAbTags([]);
+    }
+  }, [selectedAddressBook]);
+
+  useEffect(() => {
+    if (selectedAddressBook) {
+      fetchTags();
+    }
+  }, [selectedAddressBook, fetchTags]);
+
+  const handleAddTag = async (tagName: string, color?: number) => {
+    if (!selectedAddressBook) return;
+    try {
+      await addTag(selectedAddressBook.guid, { name: tagName, color });
+      msgApi.success(
+        intl.formatMessage({ id: 'pages.addressBook.tagAdded', defaultMessage: 'Tag added' }),
+      );
+      fetchTags();
+    } catch {
+      msgApi.error(
+        intl.formatMessage({
+          id: 'pages.addressBook.tagAddFailed',
+          defaultMessage: 'Failed to add tag',
+        }),
+      );
+    }
+  };
+
+  const handleDeleteTag = async (tagName: string) => {
+    if (!selectedAddressBook) return;
+    try {
+      await deleteTag(selectedAddressBook.guid, [tagName]);
+      msgApi.success(
+        intl.formatMessage({ id: 'pages.addressBook.tagDeleted', defaultMessage: 'Tag deleted' }),
+      );
+      fetchTags();
+    } catch {
+      msgApi.error(
+        intl.formatMessage({
+          id: 'pages.addressBook.tagDeleteFailed',
+          defaultMessage: 'Failed to delete tag',
+        }),
+      );
+    }
+  };
+
+  const handleUpdateTagColor = async (tagName: string, color: number) => {
+    if (!selectedAddressBook) return;
+    try {
+      await updateTagColor(selectedAddressBook.guid, { name: tagName, color });
+      setAbTags(prev => prev.map(tag => tag.name === tagName ? { ...tag, color } : tag));
+      setPendingColorUpdates(prev => {
+        const next = { ...prev };
+        delete next[tagName];
+        return next;
+      });
+    } catch {
+      setPendingColorUpdates(prev => {
+        const next = { ...prev };
+        delete next[tagName];
+        return next;
+      });
+      msgApi.error(
+        intl.formatMessage({
+          id: 'pages.addressBook.tagColorUpdateFailed',
+          defaultMessage: 'Failed to update tag color',
+        }),
+      );
+    }
+  };
+
   const columns: ProColumns<API.SharedAddressBook>[] = [
     {
       title: <FormattedMessage id="pages.addressBook.name" defaultMessage="Name" />,
       dataIndex: 'name',
+      render: (text, record) => (
+        <Space>
+          <span>{text}</span>
+          <Button
+            type="link"
+            size="small"
+            icon={<RightOutlined />}
+            onClick={() => handleViewAddressBook(record)}
+          >
+            <FormattedMessage id="pages.addressBook.view" defaultMessage="View" />
+          </Button>
+        </Space>
+      ),
     },
     {
       title: <FormattedMessage id="pages.addressBook.note" defaultMessage="Note" />,
@@ -138,6 +263,160 @@ const SharedAddressBook: React.FC = () => {
       ),
     },
   ];
+
+  if (selectedAddressBook) {
+    return (
+      <PageContainer
+        title={
+          <Space>
+            <Button
+              type="link"
+              onClick={() => {
+                setSelectedAddressBook(null);
+                setSelectedTags([]);
+              }}
+            >
+              <FormattedMessage id="pages.addressBook.shared" defaultMessage="Shared Address Books" />
+            </Button>
+            <span>/</span>
+            <span>{selectedAddressBook.name}</span>
+          </Space>
+        }
+      >
+        <Card
+          style={{ marginBottom: 16 }}
+          bodyStyle={{ padding: '12px 24px' }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
+            <span style={{ fontWeight: 500, marginRight: 4 }}>
+              <FormattedMessage id="pages.addressBook.tags" defaultMessage="Tags" />
+            </span>
+            <Tag
+              style={{ cursor: 'pointer', padding: '2px 8px' }}
+              color={selectedTags.length === 0 ? 'blue' : undefined}
+              onClick={() => {
+                setSelectedTags([]);
+                deviceTableActionRef.current?.reload();
+              }}
+            >
+              <FormattedMessage id="pages.addressBook.untagged" defaultMessage="Untagged" />
+            </Tag>
+            {abTags.map((tag) => {
+              const displayColor = argbToHex(pendingColorUpdates[tag.name] ?? tag.color);
+              const isSelected = selectedTags.includes(tag.name);
+              return (
+                <Tag
+                  key={tag.name}
+                  color={isSelected ? displayColor : undefined}
+                  style={{ cursor: 'pointer', padding: '2px 8px' }}
+                  closable
+                  onClose={(e) => {
+                    e.preventDefault();
+                    handleDeleteTag(tag.name);
+                  }}
+                  onClick={() => {
+                    setSelectedTags(prev =>
+                      isSelected ? prev.filter(t => t !== tag.name) : [...prev, tag.name]
+                    );
+                    deviceTableActionRef.current?.reload();
+                  }}
+                >
+                  <span style={{ display: 'inline-flex', alignItems: 'center' }}>
+                    <ColorPicker
+                      disabledAlpha
+                      value={displayColor}
+                      onChange={(colorValue) => {
+                        const rgb = colorValue.toRgb();
+                        const newArgb = 0xFF000000 + (rgb.r << 16) + (rgb.g << 8) + rgb.b;
+                        setPendingColorUpdates(prev => ({ ...prev, [tag.name]: newArgb }));
+                      }}
+                      onChangeComplete={(colorValue) => {
+                        const rgb = colorValue.toRgb();
+                        const newArgb = 0xFF000000 + (rgb.r << 16) + (rgb.g << 8) + rgb.b;
+                        handleUpdateTagColor(tag.name, newArgb);
+                      }}
+                    >
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: 8,
+                          height: 8,
+                          borderRadius: '50%',
+                          backgroundColor: isSelected ? '#fff' : displayColor,
+                          cursor: 'pointer',
+                          marginRight: 4,
+                        }}
+                      />
+                    </ColorPicker>
+                    {tag.name}
+                  </span>
+                </Tag>
+              );
+            })}
+            <Button
+              size="small"
+              type="dashed"
+              icon={<PlusOutlined />}
+              onClick={() => {
+                Modal.confirm({
+                  title: intl.formatMessage({ id: 'pages.addressBook.addTag', defaultMessage: 'Add Tag' }),
+                  content: (
+                    <Form
+                      onFinish={(values) => {
+                        handleAddTag(values.name);
+                        Modal.destroyAll();
+                      }}
+                    >
+                      <Form.Item
+                        name="name"
+                        rules={[{ required: true }]}
+                      >
+                        <Input
+                          placeholder={intl.formatMessage({
+                            id: 'pages.addressBook.tagName',
+                            defaultMessage: 'Tag Name',
+                          })}
+                        />
+                      </Form.Item>
+                    </Form>
+                  ),
+                  onOk: () => {},
+                });
+              }}
+            />
+            {selectedTags.length > 1 && (
+              <Radio.Group
+                size="small"
+                value={tagMode}
+                onChange={(e) => {
+                  setTagMode(e.target.value);
+                  deviceTableActionRef.current?.reload();
+                }}
+                optionType="button"
+                buttonStyle="solid"
+              >
+                <Radio.Button value="union">
+                  <FormattedMessage id="pages.addressBook.tagModeUnion" defaultMessage="Any" />
+                </Radio.Button>
+                <Radio.Button value="intersection">
+                  <FormattedMessage id="pages.addressBook.tagModeIntersection" defaultMessage="All" />
+                </Radio.Button>
+              </Radio.Group>
+            )}
+          </div>
+        </Card>
+
+        <DetailTable
+          personal={false}
+          profile={selectedAddressBook}
+          abTags={abTags}
+          deviceTableActionRef={deviceTableActionRef}
+          selectedTags={selectedTags}
+          intersection={tagMode === 'intersection'}
+        />
+      </PageContainer>
+    );
+  }
 
   return (
     <PageContainer>
