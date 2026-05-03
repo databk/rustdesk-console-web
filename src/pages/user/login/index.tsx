@@ -12,7 +12,7 @@ import { createStyles } from 'antd-style';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
 import { setToken } from '@/utils/auth';
-import { Footer } from '@/components';
+import { Footer, ThemeToggle } from '@/components';
 import { login } from '@/services/rustdesk-console/auth';
 import Settings from '../../../../config/defaultSettings';
 
@@ -20,12 +20,20 @@ const { Link, Text } = Typography;
 
 const useStyles = createStyles(({ token }) => {
   return {
-    lang: {
-      width: 42,
-      height: 42,
-      lineHeight: '42px',
+    actionButtons: {
       position: 'fixed',
       right: 16,
+      top: 16,
+      display: 'flex',
+      gap: 8,
+      zIndex: 100,
+    },
+    actionButton: {
+      width: 42,
+      height: 42,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
       borderRadius: token.borderRadius,
       ':hover': {
         backgroundColor: token.colorBgTextHover,
@@ -58,12 +66,17 @@ const useStyles = createStyles(({ token }) => {
   };
 });
 
-const Lang = () => {
+const ActionButtons = () => {
   const { styles } = useStyles();
 
   return (
-    <div className={styles.lang} data-lang>
-      {SelectLang && <SelectLang />}
+    <div className={styles.actionButtons}>
+      <div className={styles.actionButton}>
+        <ThemeToggle />
+      </div>
+      <div className={styles.actionButton} data-lang>
+        {SelectLang && <SelectLang />}
+      </div>
     </div>
   );
 };
@@ -171,7 +184,7 @@ const Login: React.FC = () => {
           {Settings.title && ` - ${Settings.title}`}
         </title>
       </Helmet>
-      <Lang />
+      <ActionButtons />
       <div
         style={{
           flex: '1',
