@@ -6,6 +6,7 @@ import { request } from '@umijs/max';
 export async function getSMTPConfig() {
   return request<API.SMTPConfig>('/api/settings/smtp', {
     method: 'GET',
+    skipErrorHandler: true,
   });
 }
 

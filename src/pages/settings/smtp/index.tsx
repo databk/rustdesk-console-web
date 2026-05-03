@@ -60,13 +60,8 @@ const SMTPSettings: React.FC = () => {
     } catch (error: any) {
       console.error('Failed to fetch SMTP config:', error);
       if (error?.response?.status === 404) {
+        // 404 表示配置不存在，这是正常情况，不需要显示错误提示
         setConfigExists(false);
-        messageApi.info(
-          intl.formatMessage({
-            id: 'pages.smtp.configNotFound',
-            defaultMessage: 'SMTP configuration not found, please configure first',
-          }),
-        );
       } else {
         messageApi.error(
           intl.formatMessage({
