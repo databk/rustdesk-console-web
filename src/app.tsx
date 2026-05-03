@@ -4,7 +4,7 @@ import { SettingDrawer } from '@ant-design/pro-components';
 import type { RequestConfig, RunTimeLayoutConfig } from '@umijs/max';
 import { history, Link } from '@umijs/max';
 import React from 'react';
-import { AvatarDropdown, AvatarName, Footer, SelectLang, ThemeToggle } from '@/components';
+import { AvatarDropdown, AvatarName, Footer, SelectLang, ThemeProvider, ThemeToggle } from '@/components';
 import { currentUser as queryCurrentUser } from '@/services/rustdesk-console/auth';
 import { getToken } from '@/utils/auth';
 import defaultSettings from '../config/defaultSettings';
@@ -107,7 +107,7 @@ export const layout: RunTimeLayoutConfig = ({
     menuHeaderRender: undefined,
     childrenRender: (children) => {
       return (
-        <>
+        <ThemeProvider>
           {children}
           <SettingDrawer
             disableUrlParams
@@ -121,7 +121,7 @@ export const layout: RunTimeLayoutConfig = ({
               }));
             }}
           />
-        </>
+        </ThemeProvider>
       );
     },
     ...initialState?.settings,
