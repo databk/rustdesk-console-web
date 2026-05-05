@@ -63,12 +63,8 @@ const SMTPSettings: React.FC = () => {
         // 404 表示配置不存在，这是正常情况，不需要显示错误提示
         setConfigExists(false);
       } else {
-        messageApi.error(
-          intl.formatMessage({
-            id: 'pages.smtp.loadFailed',
-            defaultMessage: 'Failed to load SMTP configuration',
-          }),
-        );
+        // 其他错误重新抛出，让全局错误处理器处理
+        throw error;
       }
     } finally {
       setLoading(false);
