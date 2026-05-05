@@ -1,4 +1,4 @@
-﻿export default [
+export default [
   {
     path: '/user',
     layout: false,
@@ -161,13 +161,7 @@
     routes: [
       {
         path: '/settings',
-        redirect: '/settings/general',
-      },
-      {
-        name: 'general',
-        icon: 'setting',
-        path: '/settings/general',
-        component: './settings',
+        redirect: '/settings/smtp',
       },
       {
         name: 'smtp',
