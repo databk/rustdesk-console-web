@@ -13,7 +13,7 @@ import {
 const SharedAddressBook: React.FC = () => {
   const intl = useIntl();
   const { message: msgApi } = App.useApp();
-  const actionRef = useRef<ActionType>();
+  const actionRef = useRef<ActionType>(null);
   const [createModalVisible, setCreateModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [editingRecord, setEditingRecord] = useState<API.SharedAddressBook | null>(null);

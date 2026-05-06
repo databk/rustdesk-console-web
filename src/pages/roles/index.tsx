@@ -31,7 +31,7 @@ import {
 
 const RoleList: React.FC = () => {
   const intl = useIntl();
-  const actionRef = useRef<ActionType>();
+  const actionRef = useRef<ActionType>(null);
   const [createModalVisible, setCreateModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [currentRole, setCurrentRole] = useState<API.RoleItem | null>(null);

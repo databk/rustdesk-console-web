@@ -158,7 +158,6 @@ const TrendCharts: React.FC<TrendChartsProps> = ({
                   xField="date"
                   yField="value"
                   colorField="type"
-                  smooth
                   height={280}
                   legend={{ position: 'top-right' }}
                   axis={{

@@ -9,7 +9,7 @@ import dayjs from 'dayjs';
 
 const ConnectionAudit: React.FC = () => {
   const intl = useIntl();
-  const actionRef = useRef<ActionType>();
+  const actionRef = useRef<ActionType>(null);
   const [dataSource, setDataSource] = useState<API.ConnectionAuditItem[]>([]);
 
   const handleExportCSV = () => {

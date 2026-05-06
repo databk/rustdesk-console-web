@@ -25,7 +25,7 @@ import {
 
 const UserGroupList: React.FC = () => {
   const intl = useIntl();
-  const actionRef = useRef<ActionType>();
+  const actionRef = useRef<ActionType>(null);
   const [createModalVisible, setCreateModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [currentGroup, setCurrentGroup] = useState<API.UserGroupItem | null>(null);
@@ -75,7 +75,7 @@ const UserGroupList: React.FC = () => {
       width: 50,
     },
     {
-      title: <FormattedMessage id="pages.userGroups.name" defaultValue="Group Name" />,
+      title: <FormattedMessage id="pages.userGroups.name" defaultMessage="Group Name" />,
       dataIndex: 'name',
       width: 200,
       render: (_, record) => (
@@ -86,20 +86,20 @@ const UserGroupList: React.FC = () => {
       ),
     },
     {
-      title: <FormattedMessage id="pages.userGroups.note" defaultValue="Note" />,
+      title: <FormattedMessage id="pages.userGroups.note" defaultMessage="Note" />,
       dataIndex: 'note',
       width: 250,
       ellipsis: true,
       render: (_, record) => record.note || '-',
     },
     {
-      title: <FormattedMessage id="pages.userGroups.userCount" defaultValue="User Count" />,
+      title: <FormattedMessage id="pages.userGroups.userCount" defaultMessage="User Count" />,
       dataIndex: 'user_count',
       width: 120,
       search: false,
     },
     {
-      title: <FormattedMessage id="pages.common.action" defaultValue="Action" />,
+      title: <FormattedMessage id="pages.common.action" defaultMessage="Action" />,
       valueType: 'option',
       width: 180,
       fixed: 'right',
@@ -110,7 +110,7 @@ const UserGroupList: React.FC = () => {
             form.setFieldsValue(record);
             setEditModalVisible(true);
           }}>
-            <FormattedMessage id="pages.common.edit" defaultValue="Edit" />
+            <FormattedMessage id="pages.common.edit" defaultMessage="Edit" />
           </Button>
           <Popconfirm
             title={intl.formatMessage({ id: 'pages.userGroups.deleteConfirm', defaultMessage: 'Delete this user group?' })}
@@ -119,7 +119,7 @@ const UserGroupList: React.FC = () => {
             cancelText="No"
           >
             <Button type="link" size="small" danger icon={<DeleteOutlined />}>
-              <FormattedMessage id="pages.common.delete" defaultValue="Delete" />
+              <FormattedMessage id="pages.common.delete" defaultMessage="Delete" />
             </Button>
           </Popconfirm>
         </Space>
@@ -130,7 +130,7 @@ const UserGroupList: React.FC = () => {
   return (
     <>
       <ProTable<API.UserGroupItem>
-        headerTitle={<FormattedMessage id="pages.userGroups.list" defaultValue="User Group List" />}
+        headerTitle={<FormattedMessage id="pages.userGroups.list" defaultMessage="User Group List" />}
         actionRef={actionRef}
         rowKey="guid"
         request={async (params) => {
@@ -146,14 +146,14 @@ const UserGroupList: React.FC = () => {
         scroll={{ x: 800 }}
         toolBarRender={() => [
           <Button key="create" type="primary" icon={<PlusOutlined />} onClick={() => setCreateModalVisible(true)}>
-            <FormattedMessage id="pages.userGroups.create" defaultValue="Create User Group" />
+            <FormattedMessage id="pages.userGroups.create" defaultMessage="Create User Group" />
           </Button>,
         ]}
         options={{ density: true, setting: { listsHeight: 400 }, fullScreen: false, reload: true }}
       />
 
       <ModalForm
-        title={<FormattedMessage id="pages.userGroups.create" defaultValue="Create User Group" />}
+        title={<FormattedMessage id="pages.userGroups.create" defaultMessage="Create User Group" />}
         open={createModalVisible}
         onOpenChange={setCreateModalVisible}
         onFinish={handleCreate}
@@ -161,16 +161,16 @@ const UserGroupList: React.FC = () => {
         layout="vertical"
         modalProps={{ destroyOnClose: true }}
       >
-        <Form.Item name="name" label={<FormattedMessage id="pages.userGroups.name" defaultValue="Name" />} rules={[{ required: true }]}>
+        <Form.Item name="name" label={<FormattedMessage id="pages.userGroups.name" defaultMessage="Name" />} rules={[{ required: true }]}>
           <Input placeholder="Enter group name" />
         </Form.Item>
-        <Form.Item name="note" label={<FormattedMessage id="pages.userGroups.note" defaultValue="Note" />}>
+        <Form.Item name="note" label={<FormattedMessage id="pages.userGroups.note" defaultMessage="Note" />}>
           <Input.TextArea rows={3} placeholder="Enter description" />
         </Form.Item>
       </ModalForm>
 
       <ModalForm
-        title={<FormattedMessage id="pages.userGroups.edit" defaultValue="Edit User Group" />}
+        title={<FormattedMessage id="pages.userGroups.edit" defaultMessage="Edit User Group" />}
         open={editModalVisible}
         onOpenChange={setEditModalVisible}
         onFinish={handleUpdate}
@@ -178,10 +178,10 @@ const UserGroupList: React.FC = () => {
         layout="vertical"
         modalProps={{ destroyOnClose: true }}
       >
-        <Form.Item name="name" label={<FormattedMessage id="pages.userGroups.name" defaultValue="Name" />} rules={[{ required: true }]}>
+        <Form.Item name="name" label={<FormattedMessage id="pages.userGroups.name" defaultMessage="Name" />} rules={[{ required: true }]}>
           <Input placeholder="Enter group name" />
         </Form.Item>
-        <Form.Item name="note" label={<FormattedMessage id="pages.userGroups.note" defaultValue="Note" />}>
+        <Form.Item name="note" label={<FormattedMessage id="pages.userGroups.note" defaultMessage="Note" />}>
           <Input.TextArea rows={3} placeholder="Enter description" />
         </Form.Item>
       </ModalForm>

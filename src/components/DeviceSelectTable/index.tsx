@@ -15,7 +15,7 @@ const DeviceSelectTable: React.FC<DeviceSelectTableProps> = ({
   onSelectionChange,
   pageSize = 10,
 }) => {
-  const actionRef = useRef<ActionType>();
+  const actionRef = useRef<ActionType>(null);
 
   // Use shared columns definition, hide action column for selection mode
   const columns = getDeviceColumns({ hideAction: true });

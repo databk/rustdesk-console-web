@@ -2,6 +2,7 @@ import { SaveOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
 import { useIntl } from '@umijs/max';
 import {
+  Button,
   Card,
   Form,
   Input,
@@ -48,7 +49,7 @@ const Settings: React.FC = () => {
       const values = form.getFieldsValue();
       await Promise.all(
         Object.entries(values).map(([key, value]) =>
-          updateSetting(key, value)
+          updateSetting(key, value as string | number | boolean)
         )
       );
       messageApi.success(intl.formatMessage({ id: 'pages.settings.saveSuccess', defaultMessage: 'Settings saved successfully' }));
@@ -60,11 +61,11 @@ const Settings: React.FC = () => {
   return (
     <PageContainer>
       <Card
-        title={<FormattedMessage id="pages.settings.title" defaultValue="System Settings" />}
+        title={<FormattedMessage id="pages.settings.title" defaultMessage="System Settings" />}
         extra={
           <Space>
             <Button icon={<SaveOutlined />} type="primary" onClick={handleSave} loading={loading}>
-              <FormattedMessage id="pages.settings.save" defaultValue="Save Settings" />
+              <FormattedMessage id="pages.settings.save" defaultMessage="Save Settings" />
             </Button>
           </Space>
         }
@@ -72,16 +73,16 @@ const Settings: React.FC = () => {
         <Tabs activeKey={activeTab} onChange={setActiveTab} items={[
           {
             key: 'general',
-            label: <FormattedMessage id="pages.settings.general" defaultValue="General Settings" />,
+            label: <FormattedMessage id="pages.settings.general" defaultMessage="General Settings" />,
             children: (
               <Form form={form} layout="vertical" style={{ marginTop: 24 }}>
-                <Form.Item name="site_name" label={<FormattedMessage id="pages.settings.siteName" defaultValue="Site Name" />}>
+                <Form.Item name="site_name" label={<FormattedMessage id="pages.settings.siteName" defaultMessage="Site Name" />}>
                   <Input placeholder="Enter site name" />
                 </Form.Item>
-                <Form.Item name="admin_email" label={<FormattedMessage id="pages.settings.adminEmail" defaultValue="Admin Email" />}>
+                <Form.Item name="admin_email" label={<FormattedMessage id="pages.settings.adminEmail" defaultMessage="Admin Email" />}>
                   <Input placeholder="Enter admin email" />
                 </Form.Item>
-                <Form.Item name="language" label={<FormattedMessage id="pages.settings.language" defaultValue="Default Language" />}>
+                <Form.Item name="language" label={<FormattedMessage id="pages.settings.language" defaultMessage="Default Language" />}>
                   <Select options={[{ value: 'en', label: 'English' }, { value: 'zh', label: 'Chinese' }]} />
                 </Form.Item>
               </Form>
@@ -89,16 +90,16 @@ const Settings: React.FC = () => {
           },
           {
             key: 'security',
-            label: <FormattedMessage id="pages.settings.security" defaultValue="Security Settings" />,
+            label: <FormattedMessage id="pages.settings.security" defaultMessage="Security Settings" />,
             children: (
               <Form form={form} layout="vertical" style={{ marginTop: 24 }}>
-                <Form.Item name="enable_2fa" label={<FormattedMessage id="pages.settings.enable2FA" defaultValue="Enable Two-Factor Authentication" />} valuePropName="checked">
+                <Form.Item name="enable_2fa" label={<FormattedMessage id="pages.settings.enable2FA" defaultMessage="Enable Two-Factor Authentication" />} valuePropName="checked">
                   <Switch />
                 </Form.Item>
-                <Form.Item name="session_timeout" label={<FormattedMessage id="pages.settings.sessionTimeout" defaultValue="Session Timeout (minutes)" />}>
+                <Form.Item name="session_timeout" label={<FormattedMessage id="pages.settings.sessionTimeout" defaultMessage="Session Timeout (minutes)" />}>
                   <Input type="number" placeholder="30" />
                 </Form.Item>
-                <Form.Item name="max_login_attempts" label={<FormattedMessage id="pages.settings.maxLoginAttempts" defaultValue="Max Login Attempts" />}>
+                <Form.Item name="max_login_attempts" label={<FormattedMessage id="pages.settings.maxLoginAttempts" defaultMessage="Max Login Attempts" />}>
                   <Input type="number" placeholder="5" />
                 </Form.Item>
               </Form>
@@ -106,13 +107,13 @@ const Settings: React.FC = () => {
           },
           {
             key: 'advanced',
-            label: <FormattedMessage id="pages.settings.advanced" defaultValue="Advanced Settings" />,
+            label: <FormattedMessage id="pages.settings.advanced" defaultMessage="Advanced Settings" />,
             children: (
               <Form form={form} layout="vertical" style={{ marginTop: 24 }}>
-                <Form.Item name="log_level" label={<FormattedMessage id="pages.settings.logLevel" defaultValue="Log Level" />}>
+                <Form.Item name="log_level" label={<FormattedMessage id="pages.settings.logLevel" defaultMessage="Log Level" />}>
                   <Select options={[{ value: 'info', label: 'Info' }, { value: 'warn', label: 'Warning' }, { value: 'error', label: 'Error' }]} />
                 </Form.Item>
-                <Form.Item name="enable_debug_mode" label={<FormattedMessage id="pages.settings.enableDebugMode" defaultValue="Enable Debug Mode" />} valuePropName="checked">
+                <Form.Item name="enable_debug_mode" label={<FormattedMessage id="pages.settings.enableDebugMode" defaultMessage="Enable Debug Mode" />} valuePropName="checked">
                   <Switch />
                 </Form.Item>
               </Form>

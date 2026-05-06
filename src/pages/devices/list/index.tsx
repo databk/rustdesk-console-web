@@ -20,7 +20,7 @@ import { getDeviceColumns } from '@/components/DeviceSelectTable/columns';
 const DeviceList: React.FC = () => {
   const intl = useIntl();
   const { message: msgApi } = App.useApp();
-  const actionRef = useRef<ActionType>();
+  const actionRef = useRef<ActionType>(null);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [totalDevices, setTotalDevices] = useState<number>(0);
 
@@ -188,7 +188,6 @@ const DeviceList: React.FC = () => {
           showSizeChanger: true,
           showQuickJumper: true,
         }}
-        resizable
         scroll={{ x: '100%' }}
         toolBarRender={false}
         options={{

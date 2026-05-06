@@ -38,7 +38,7 @@ const UserList: React.FC = () => {
   const { message: msgApi } = App.useApp();
   const { initialState } = useModel('@@initialState');
   const currentUser = initialState?.currentUser;
-  const actionRef = useRef<ActionType>();
+  const actionRef = useRef<ActionType>(null);
   const [createModalVisible, setCreateModalVisible] = useState(false);
   const [inviteModalVisible, setInviteModalVisible] = useState(false);
   const [createForm] = Form.useForm();
@@ -336,7 +336,7 @@ const UserList: React.FC = () => {
           ],
         }}
         form={{
-          onSubmit: handleSearch,
+          onFinish: handleSearch,
           onReset: () => {
             setSearchParams({});
           },

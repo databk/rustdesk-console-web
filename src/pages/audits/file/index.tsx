@@ -9,7 +9,7 @@ import dayjs from 'dayjs';
 
 const FileAudit: React.FC = () => {
   const intl = useIntl();
-  const actionRef = useRef<ActionType>();
+  const actionRef = useRef<ActionType>(null);
   const [dataSource, setDataSource] = useState<API.FileAuditItem[]>([]);
 
   const handleExportCSV = () => {

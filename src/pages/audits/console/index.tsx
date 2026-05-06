@@ -6,7 +6,7 @@ import { getConsoleAudits } from '@/services/rustdesk-console/audit';
 
 const ConsoleAudit: React.FC = () => {
   const intl = useIntl();
-  const actionRef = useRef<ActionType>();
+  const actionRef = useRef<ActionType>(null);
 
   const columns: ProColumns<API.ConsoleAuditItem>[] = [
     {

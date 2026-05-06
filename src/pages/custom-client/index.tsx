@@ -27,7 +27,7 @@ import {
 
 const CustomClientList: React.FC = () => {
   const intl = useIntl();
-  const actionRef = useRef<ActionType>();
+  const actionRef = useRef<ActionType>(null);
   const [createModalVisible, setCreateModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [currentClient, setCurrentClient] = useState<API.CustomClientItem | null>(null);
@@ -93,7 +93,7 @@ const CustomClientList: React.FC = () => {
       width: 50,
     },
     {
-      title: <FormattedMessage id="pages.customClients.name" defaultValue="Client Name" />,
+      title: <FormattedMessage id="pages.customClients.name" defaultMessage="Client Name" />,
       dataIndex: 'name',
       width: 200,
       render: (_, record) => (
@@ -104,28 +104,28 @@ const CustomClientList: React.FC = () => {
       ),
     },
     {
-      title: <FormattedMessage id="pages.customClients.createdAt" defaultValue="Created At" />,
+      title: <FormattedMessage id="pages.customClients.createdAt" defaultMessage="Created At" />,
       dataIndex: 'created_at',
       width: 180,
       search: false,
       render: (_, record) => record.created_at || '-',
     },
     {
-      title: <FormattedMessage id="pages.common.action" defaultValue="Action" />,
+      title: <FormattedMessage id="pages.common.action" defaultMessage="Action" />,
       valueType: 'option',
       width: 250,
       fixed: 'right',
       render: (_, record) => (
         <Space size="small">
           <Button type="link" size="small" icon={<DownloadOutlined />} onClick={() => handleDownload(record.guid, record.name)}>
-            <FormattedMessage id="pages.common.download" defaultValue="Download" />
+            <FormattedMessage id="pages.common.download" defaultMessage="Download" />
           </Button>
           <Button type="link" size="small" icon={<EditOutlined />} onClick={() => {
             setCurrentClient(record);
             form.setFieldsValue(record);
             setEditModalVisible(true);
           }}>
-            <FormattedMessage id="pages.common.edit" defaultValue="Edit" />
+            <FormattedMessage id="pages.common.edit" defaultMessage="Edit" />
           </Button>
           <Popconfirm
             title={intl.formatMessage({ id: 'pages.customClients.deleteConfirm', defaultMessage: 'Delete this custom client?' })}
@@ -134,7 +134,7 @@ const CustomClientList: React.FC = () => {
             cancelText="No"
           >
             <Button type="link" size="small" danger icon={<DeleteOutlined />}>
-              <FormattedMessage id="pages.common.delete" defaultValue="Delete" />
+              <FormattedMessage id="pages.common.delete" defaultMessage="Delete" />
             </Button>
           </Popconfirm>
         </Space>
@@ -145,7 +145,7 @@ const CustomClientList: React.FC = () => {
   return (
     <>
       <ProTable<API.CustomClientItem>
-        headerTitle={<FormattedMessage id="pages.customClients.list" defaultValue="Custom Client List" />}
+        headerTitle={<FormattedMessage id="pages.customClients.list" defaultMessage="Custom Client List" />}
         actionRef={actionRef}
         rowKey="guid"
         request={async (params) => {
@@ -161,14 +161,14 @@ const CustomClientList: React.FC = () => {
         scroll={{ x: 800 }}
         toolBarRender={() => [
           <Button key="create" type="primary" icon={<PlusOutlined />} onClick={() => setCreateModalVisible(true)}>
-            <FormattedMessage id="pages.customClients.create" defaultValue="Create Custom Client" />
+            <FormattedMessage id="pages.customClients.create" defaultMessage="Create Custom Client" />
           </Button>,
         ]}
         options={{ density: true, setting: { listsHeight: 400 }, fullScreen: false, reload: true }}
       />
 
       <ModalForm
-        title={<FormattedMessage id="pages.customClients.create" defaultValue="Create Custom Client" />}
+        title={<FormattedMessage id="pages.customClients.create" defaultMessage="Create Custom Client" />}
         open={createModalVisible}
         onOpenChange={setCreateModalVisible}
         onFinish={handleCreate}
@@ -176,13 +176,13 @@ const CustomClientList: React.FC = () => {
         layout="vertical"
         modalProps={{ destroyOnClose: true }}
       >
-        <Form.Item name="name" label={<FormattedMessage id="pages.customClients.name" defaultValue="Name" />} rules={[{ required: true }]}>
+        <Form.Item name="name" label={<FormattedMessage id="pages.customClients.name" defaultMessage="Name" />} rules={[{ required: true }]}>
           <Input placeholder="Enter client name" />
         </Form.Item>
       </ModalForm>
 
       <ModalForm
-        title={<FormattedMessage id="pages.customClients.edit" defaultValue="Edit Custom Client" />}
+        title={<FormattedMessage id="pages.customClients.edit" defaultMessage="Edit Custom Client" />}
         open={editModalVisible}
         onOpenChange={setEditModalVisible}
         onFinish={handleUpdate}
@@ -190,7 +190,7 @@ const CustomClientList: React.FC = () => {
         layout="vertical"
         modalProps={{ destroyOnClose: true }}
       >
-        <Form.Item name="name" label={<FormattedMessage id="pages.customClients.name" defaultValue="Name" />} rules={[{ required: true }]}>
+        <Form.Item name="name" label={<FormattedMessage id="pages.customClients.name" defaultMessage="Name" />} rules={[{ required: true }]}>
           <Input placeholder="Enter client name" />
         </Form.Item>
       </ModalForm>

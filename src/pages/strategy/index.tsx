@@ -26,7 +26,7 @@ import {
 
 const StrategyList: React.FC = () => {
   const intl = useIntl();
-  const actionRef = useRef<ActionType>();
+  const actionRef = useRef<ActionType>(null);
   const [createModalVisible, setCreateModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [currentStrategy, setCurrentStrategy] = useState<API.StrategyItem | null>(null);
@@ -87,14 +87,14 @@ const StrategyList: React.FC = () => {
       ),
     },
     {
-      title: <FormattedMessage id="pages.strategies.note" defaultValue="Note" />,
+      title: <FormattedMessage id="pages.strategies.note" defaultMessage="Note" />,
       dataIndex: 'note',
       width: 250,
       ellipsis: true,
       render: (_, record) => record.note || '-',
     },
     {
-      title: <FormattedMessage id="pages.strategies.status" defaultValue="Status" />,
+      title: <FormattedMessage id="pages.strategies.status" defaultMessage="Status" />,
       dataIndex: 'status',
       width: 100,
       search: false,
@@ -103,7 +103,7 @@ const StrategyList: React.FC = () => {
       ),
     },
     {
-      title: <FormattedMessage id="pages.common.action" defaultValue="Action" />,
+      title: <FormattedMessage id="pages.common.action" defaultMessage="Action" />,
       valueType: 'option',
       width: 180,
       fixed: 'right',
@@ -114,7 +114,7 @@ const StrategyList: React.FC = () => {
             form.setFieldsValue(record);
             setEditModalVisible(true);
           }}>
-            <FormattedMessage id="pages.common.edit" defaultValue="Edit" />
+            <FormattedMessage id="pages.common.edit" defaultMessage="Edit" />
           </Button>
           <Popconfirm
             title={intl.formatMessage({ id: 'pages.strategies.deleteConfirm', defaultMessage: 'Delete this strategy?' })}
@@ -123,7 +123,7 @@ const StrategyList: React.FC = () => {
             cancelText="No"
           >
             <Button type="link" size="small" danger icon={<DeleteOutlined />}>
-              <FormattedMessage id="pages.common.delete" defaultValue="Delete" />
+              <FormattedMessage id="pages.common.delete" defaultMessage="Delete" />
             </Button>
           </Popconfirm>
         </Space>
@@ -134,7 +134,7 @@ const StrategyList: React.FC = () => {
   return (
     <>
       <ProTable<API.StrategyItem>
-        headerTitle={<FormattedMessage id="pages.strategies.list" defaultValue="Strategy List" />}
+        headerTitle={<FormattedMessage id="pages.strategies.list" defaultMessage="Strategy List" />}
         actionRef={actionRef}
         rowKey="guid"
         request={async (params) => {
@@ -150,14 +150,14 @@ const StrategyList: React.FC = () => {
         scroll={{ x: 800 }}
         toolBarRender={() => [
           <Button key="create" type="primary" icon={<PlusOutlined />} onClick={() => setCreateModalVisible(true)}>
-            <FormattedMessage id="pages.strategies.create" defaultValue="Create Strategy" />
+            <FormattedMessage id="pages.strategies.create" defaultMessage="Create Strategy" />
           </Button>,
         ]}
         options={{ density: true, setting: { listsHeight: 400 }, fullScreen: false, reload: true }}
       />
 
       <ModalForm
-        title={<FormattedMessage id="pages.strategies.create" defaultValue="Create Strategy" />}
+        title={<FormattedMessage id="pages.strategies.create" defaultMessage="Create Strategy" />}
         open={createModalVisible}
         onOpenChange={setCreateModalVisible}
         onFinish={handleCreate}
@@ -165,16 +165,16 @@ const StrategyList: React.FC = () => {
         layout="vertical"
         modalProps={{ destroyOnClose: true }}
       >
-        <Form.Item name="name" label={<FormattedMessage id="pages.strategies.name" defaultValue="Name" />} rules={[{ required: true }]}>
+        <Form.Item name="name" label={<FormattedMessage id="pages.strategies.name" defaultMessage="Name" />} rules={[{ required: true }]}>
           <Input placeholder="Enter strategy name" />
         </Form.Item>
-        <Form.Item name="note" label={<FormattedMessage id="pages.strategies.note" defaultValue="Note" />}>
+        <Form.Item name="note" label={<FormattedMessage id="pages.strategies.note" defaultMessage="Note" />}>
           <Input.TextArea rows={3} placeholder="Enter description" />
         </Form.Item>
       </ModalForm>
 
       <ModalForm
-        title={<FormattedMessage id="pages.strategies.edit" defaultValue="Edit Strategy" />}
+        title={<FormattedMessage id="pages.strategies.edit" defaultMessage="Edit Strategy" />}
         open={editModalVisible}
         onOpenChange={setEditModalVisible}
         onFinish={handleUpdate}
@@ -182,10 +182,10 @@ const StrategyList: React.FC = () => {
         layout="vertical"
         modalProps={{ destroyOnClose: true }}
       >
-        <Form.Item name="name" label={<FormattedMessage id="pages.strategies.name" defaultValue="Name" />} rules={[{ required: true }]}>
+        <Form.Item name="name" label={<FormattedMessage id="pages.strategies.name" defaultMessage="Name" />} rules={[{ required: true }]}>
           <Input placeholder="Enter strategy name" />
         </Form.Item>
-        <Form.Item name="note" label={<FormattedMessage id="pages.strategies.note" defaultValue="Note" />}>
+        <Form.Item name="note" label={<FormattedMessage id="pages.strategies.note" defaultMessage="Note" />}>
           <Input.TextArea rows={3} placeholder="Enter description" />
         </Form.Item>
       </ModalForm>
