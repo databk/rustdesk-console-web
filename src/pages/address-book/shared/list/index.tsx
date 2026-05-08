@@ -95,7 +95,7 @@ const SharedAddressBookList: React.FC = () => {
       dataIndex: 'name',
       render: (_, record) => (
         <a
-          onClick={() => navigate(`/address-book/shared/${record.guid}`)}
+          onClick={() => navigate(`/address-book/shared/${record.guid}`, { state: { addressBookName: record.name } })}
           style={{ color: '#1677ff', cursor: 'pointer' }}
         >
           {record.name}

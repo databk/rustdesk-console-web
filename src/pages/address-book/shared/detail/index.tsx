@@ -1,48 +1,22 @@
 import { PageContainer } from '@ant-design/pro-components';
-import { useParams } from '@umijs/max';
-import React, { useEffect, useState } from 'react';
-import { Button, Spin } from 'antd';
+import { useParams, useLocation } from '@umijs/max';
+import React from 'react';
+import { Button } from 'antd';
 import { useNavigate } from '@umijs/max';
 import { ArrowLeftOutlined } from '@ant-design/icons';
-import { getSharedAddressBook } from '@/services/rustdesk-console/addressBook';
 import AddressBookContent from '../../components/AddressBookContent';
 
 const SharedAddressBookDetail: React.FC = () => {
   const { guid } = useParams<{ guid: string }>();
+  const location = useLocation();
   const navigate = useNavigate();
-  const [addressBookName, setAddressBookName] = useState<string>('');
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchAddressBookInfo = async () => {
-      if (!guid) return;
-      setLoading(true);
-      try {
-        const result = await getSharedAddressBook(guid);
-        setAddressBookName(result.name || '');
-      } catch (error) {
-        console.error('Failed to fetch shared address book info:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchAddressBookInfo();
-  }, [guid]);
-
-  if (loading) {
-    return (
-      <PageContainer>
-        <div style={{ textAlign: 'center', padding: '50px' }}>
-          <Spin size="large" />
-        </div>
-      </PageContainer>
-    );
-  }
+  
+  const addressBookName = (location.state as { addressBookName?: string })?.addressBookName || 'Shared Address Book';
 
   return (
     <PageContainer
       header={{
-        title: addressBookName || 'Shared Address Book',
+        title: addressBookName,
         extra: [
           <Button
             key="back"
