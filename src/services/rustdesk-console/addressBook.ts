@@ -27,6 +27,10 @@ export async function getSharedAddressBooks(
   });
 }
 
+export async function getSharedAddressBook(guid: string) {
+  return request<API.SharedAddressBook>(`/api/ab/shared/profile/${guid}`, { method: 'GET' });
+}
+
 export async function addSharedAddressBook(data: API.AddSharedAddressBookParams) {
   return request('/api/ab/shared/add', { method: 'POST', data });
 }

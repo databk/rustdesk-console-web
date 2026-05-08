@@ -59,11 +59,13 @@ export default [
             name: 'sharedList',
             path: '/address-book/shared/list',
             component: './address-book/shared/list',
+            hideInMenu: true,
           },
           {
             name: 'sharedDetail',
             path: '/address-book/shared/:guid',
             component: './address-book/shared/detail',
+            hideInMenu: true,
           },
         ],
       },
