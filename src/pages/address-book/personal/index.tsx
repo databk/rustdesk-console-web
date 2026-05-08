@@ -1,7 +1,7 @@
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
-import { Alert, App, Button, ColorPicker, Form, Input, Modal, Popconfirm, Radio, Select, Space, Tag, Table, Typography } from 'antd';
+import { Alert, App, Button, ColorPicker, Form, Input, Modal, Popconfirm, Radio, Select, Space, Tag, Table, Tooltip, Typography } from 'antd';
 import { DeleteOutlined, EditOutlined, InfoCircleOutlined, PlusOutlined, SelectOutlined } from '@ant-design/icons';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
@@ -311,17 +311,24 @@ const PersonalAddressBook: React.FC = () => {
     },
     {
       title: (
-        <Space size={4}>
+        <span>
           <FormattedMessage id="pages.addressBook.device" defaultMessage="Device" />
-          <InfoCircleOutlined style={{ color: '#999', fontSize: 12 }} />
-        </Space>
+          <Tooltip title={intl.formatMessage({ id: "pages.addressBook.deviceInfo", defaultMessage: "username@device_name" })}>
+            <InfoCircleOutlined style={{ marginLeft: 4 }} />
+          </Tooltip>
+        </span>
       ),
       dataIndex: "hostname",
       width: 150,
       ellipsis: true,
       search: false,
       sorter: true,
-      render: (_: unknown, record: API.PeerItem) => record.hostname || "-",
+      render: (_: unknown, record: API.PeerItem) => {
+        const username = (record as API.PeerItem & { username?: string }).username;
+        const hostname = record.hostname;
+        if (username && hostname) return `${username}@${hostname}`;
+        return hostname || username || "-";
+      },
     },
     {
       title: (
