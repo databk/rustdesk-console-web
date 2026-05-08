@@ -153,7 +153,7 @@ const SharedAddressBookList: React.FC = () => {
     <PageContainer>
       <ProTable<API.SharedAddressBook>
         headerTitle={
-          <FormattedMessage id="pages.addressBook.shared" defaultMessage="Shared Address Books" />
+          <FormattedMessage id="pages.addressBook.shared" defaultMessage="共享地址簿" />
         }
         actionRef={actionRef}
         rowKey="guid"
