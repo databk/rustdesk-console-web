@@ -328,10 +328,10 @@ const PersonalAddressBook: React.FC = () => {
       ellipsis: true,
       sorter: true,
       render: (_: unknown, record: API.PeerItem) => {
-        const peerRecord = record as API.PeerItem & { os?: string };
-        const osParts = (peerRecord.os || '').split(' / ');
-        const osIcon = getOSIcon(peerRecord.os || '');
-        const osTooltip = osParts[1] || osParts[0] || '';
+        const peerRecord = record as API.PeerItem & { platform?: string };
+        const platformParts = (peerRecord.platform || '').split(' / ');
+        const osIcon = getOSIcon(peerRecord.platform || '');
+        const osTooltip = platformParts[1] || platformParts[0] || '';
 
         return (
           <span>
