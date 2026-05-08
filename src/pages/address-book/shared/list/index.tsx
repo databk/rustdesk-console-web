@@ -3,6 +3,7 @@ import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
 import { App, Button, Form, Input, Modal, Popconfirm } from 'antd';
 import React, { useRef, useState } from 'react';
+import { useNavigate } from '@umijs/max';
 import {
   addSharedAddressBook,
   deleteSharedAddressBooks,
@@ -10,8 +11,9 @@ import {
   updateSharedAddressBook,
 } from '@/services/rustdesk-console/addressBook';
 
-const SharedAddressBook: React.FC = () => {
+const SharedAddressBookList: React.FC = () => {
   const intl = useIntl();
+  const navigate = useNavigate();
   const { message: msgApi } = App.useApp();
   const actionRef = useRef<ActionType>(null);
   const [createModalVisible, setCreateModalVisible] = useState(false);
@@ -91,6 +93,14 @@ const SharedAddressBook: React.FC = () => {
     {
       title: <FormattedMessage id="pages.addressBook.name" defaultMessage="Name" />,
       dataIndex: 'name',
+      render: (_, record) => (
+        <a
+          onClick={() => navigate(`/address-book/shared/${record.guid}`)}
+          style={{ color: '#1677ff', cursor: 'pointer' }}
+        >
+          {record.name}
+        </a>
+      ),
     },
     {
       title: <FormattedMessage id="pages.addressBook.note" defaultMessage="Note" />,
@@ -242,4 +252,4 @@ const SharedAddressBook: React.FC = () => {
   );
 };
 
-export default SharedAddressBook;
+export default SharedAddressBookList;

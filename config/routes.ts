@@ -50,7 +50,22 @@ export default [
         name: 'shared',
         icon: 'team',
         path: '/address-book/shared',
-        component: './address-book/shared',
+        routes: [
+          {
+            path: '/address-book/shared',
+            redirect: '/address-book/shared/list',
+          },
+          {
+            name: 'sharedList',
+            path: '/address-book/shared/list',
+            component: './address-book/shared/list',
+          },
+          {
+            name: 'sharedDetail',
+            path: '/address-book/shared/:guid',
+            component: './address-book/shared/detail',
+          },
+        ],
       },
     ],
   },
