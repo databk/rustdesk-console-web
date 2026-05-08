@@ -1,7 +1,7 @@
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
-import { Alert, App, Badge, Button, ColorPicker, Form, Input, Modal, Popconfirm, Radio, Select, Space, Tag, Table, Tooltip, Typography } from 'antd';
+import { Alert, App, Button, ColorPicker, Form, Input, Modal, Popconfirm, Radio, Select, Space, Tag, Table, Tooltip, Typography } from 'antd';
 import { DeleteOutlined, EditOutlined, InfoCircleOutlined, PlusOutlined, SelectOutlined, WindowsFilled, AndroidFilled, AppleFilled, QqCircleFilled } from '@ant-design/icons';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
@@ -23,34 +23,6 @@ const { Text } = Typography;
 const argbToHex = (color: number | undefined): string => {
   if (!color) return '#1677ff';
   return `#${color.toString(16).padStart(8, '0').slice(-6)}`;
-};
-
-const getOfflineDuration = (lastOnlineTime: string, intl: any): string => {
-  try {
-    const lastOnline = new Date(lastOnlineTime + (lastOnlineTime.endsWith('Z') ? '' : 'Z'));
-    const now = new Date();
-    const diffMs = now.getTime() - lastOnline.getTime();
-
-    if (diffMs > 0) {
-      const diffMinutes = Math.floor(diffMs / (1000 * 60));
-      const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-      const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-
-      if (diffDays > 0) {
-        return ` (${diffDays} ${intl.formatMessage({ id: 'pages.devices.days', defaultMessage: 'days' })})`;
-      } else if (diffHours > 0) {
-        return ` (${diffHours} ${intl.formatMessage({ id: 'pages.devices.hours', defaultMessage: 'hours' })})`;
-      } else if (diffMinutes > 0) {
-        return ` (${diffMinutes} ${intl.formatMessage({ id: 'pages.devices.minutes', defaultMessage: 'minutes' })})`;
-      } else {
-        return ` (${intl.formatMessage({ id: 'pages.devices.justNow', defaultMessage: 'just now' })})`;
-      }
-    } else {
-      return '';
-    }
-  } catch (error) {
-    return '';
-  }
 };
 
 const getOSIcon = (os: string): React.ReactNode => {
@@ -356,28 +328,13 @@ const PersonalAddressBook: React.FC = () => {
       ellipsis: true,
       sorter: true,
       render: (_: unknown, record: API.PeerItem) => {
-        const peerRecord = record as API.PeerItem & { os?: string; is_online?: boolean; last_online?: string };
+        const peerRecord = record as API.PeerItem & { os?: string };
         const osParts = (peerRecord.os || '').split(' / ');
         const osIcon = getOSIcon(peerRecord.os || '');
-
-        let onlineTooltip: string;
-        if (peerRecord.is_online) {
-          onlineTooltip = intl.formatMessage({ id: 'pages.devices.online', defaultMessage: 'Online' });
-        } else {
-          const offlineDuration = peerRecord.last_online ? getOfflineDuration(peerRecord.last_online, intl) : '';
-          onlineTooltip = `${intl.formatMessage({ id: 'pages.devices.offline', defaultMessage: 'Offline' })}${offlineDuration}`;
-        }
-
         const osTooltip = osParts[1] || osParts[0] || '';
 
         return (
           <span>
-            <Tooltip title={onlineTooltip}>
-              <span>
-                <Badge status={peerRecord.is_online ? 'success' : 'error'} />
-              </span>
-            </Tooltip>
-            &nbsp;&nbsp;
             {osIcon && osTooltip && (
               <Tooltip
                 title={osTooltip}
@@ -394,7 +351,7 @@ const PersonalAddressBook: React.FC = () => {
               </Tooltip>
             )}
             {osIcon && <>&nbsp;&nbsp;</>}
-            <a>{record.id}</a>
+            {record.id}
           </span>
         );
       },
