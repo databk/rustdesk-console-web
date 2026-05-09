@@ -43,7 +43,7 @@ const ConsoleAudit: React.FC = () => {
         request={async (params) => {
           const result = await getConsoleAudits({
             current: params.current || 1,
-            pageSize: params.pageSize || 10,
+            pageSize: params.pageSize || 20,
           });
           return {
             data: result.data || [],
@@ -54,7 +54,7 @@ const ConsoleAudit: React.FC = () => {
         columns={columns}
         search={false}
         pagination={{
-          defaultPageSize: 10,
+          defaultPageSize: 20,
           showSizeChanger: true,
           showQuickJumper: true,
         }}
@@ -66,6 +66,7 @@ const ConsoleAudit: React.FC = () => {
           fullScreen: false,
           reload: true,
         }}
+        scroll={{ x: 800 }}
       />
     </PageContainer>
   );

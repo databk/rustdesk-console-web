@@ -9,7 +9,7 @@ import {
 } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { useIntl, useModel } from '@umijs/max';
+import { FormattedMessage, useIntl, useModel } from '@umijs/max';
 import {
   App,
   Button,
@@ -43,7 +43,6 @@ const UserList: React.FC = () => {
   const [inviteModalVisible, setInviteModalVisible] = useState(false);
   const [createForm] = Form.useForm();
   const [inviteForm] = Form.useForm();
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [searchParams, setSearchParams] = useState<{
     search?: string;
     status?: string;
@@ -303,10 +302,7 @@ const UserList: React.FC = () => {
     <PageContainer>
       <ProTable<API.UserItem>
         headerTitle={
-          <span>
-            <FormattedMessage id="pages.users.list" defaultMessage="User List" /> {' '}
-            {searchParams.search ? '*' : '0'}/-
-          </span>
+          <FormattedMessage id="pages.users.list" defaultMessage="User List" />
         }
         actionRef={actionRef}
         rowKey="guid"
@@ -324,10 +320,6 @@ const UserList: React.FC = () => {
           };
         }}
         columns={columns}
-        rowSelection={{
-          selectedRowKeys,
-          onChange: setSelectedRowKeys,
-        }}
         search={{
           labelWidth: 'auto',
           defaultCollapsed: false,
@@ -432,8 +424,3 @@ const UserList: React.FC = () => {
 };
 
 export default UserList;
-
-function FormattedMessage(props: { id: string; defaultMessage: string }): React.JSX.Element {
-  const intl = useIntl();
-  return <>{intl.formatMessage(props)}</>;
-}

@@ -6,13 +6,13 @@ import {
   PlusOutlined,
 } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
-import { ModalForm, ProTable } from '@ant-design/pro-components';
-import { useIntl } from '@umijs/max';
+import { ModalForm, PageContainer, ProTable } from '@ant-design/pro-components';
+import { FormattedMessage, useIntl } from '@umijs/max';
 import {
+  App,
   Button,
   Form,
   Input,
-  message as messageApi,
   Popconfirm,
   Space,
 } from 'antd';
@@ -27,6 +27,7 @@ import {
 
 const CustomClientList: React.FC = () => {
   const intl = useIntl();
+  const { message: msgApi } = App.useApp();
   const actionRef = useRef<ActionType>(null);
   const [createModalVisible, setCreateModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
@@ -36,12 +37,12 @@ const CustomClientList: React.FC = () => {
   const handleCreate = async (values: API.CreateCustomClientParams) => {
     try {
       await createCustomClient(values);
-      messageApi.success(intl.formatMessage({ id: 'pages.customClients.createSuccess', defaultMessage: 'Custom client created' }));
+      msgApi.success(intl.formatMessage({ id: 'pages.customClients.createSuccess', defaultMessage: 'Custom client created' }));
       setCreateModalVisible(false);
       form.resetFields();
       actionRef.current?.reload();
     } catch (error) {
-      messageApi.error(intl.formatMessage({ id: 'pages.customClients.createFailed', defaultMessage: 'Failed to create custom client' }));
+      msgApi.error(intl.formatMessage({ id: 'pages.customClients.createFailed', defaultMessage: 'Failed to create custom client' }));
     }
   };
 
@@ -49,23 +50,23 @@ const CustomClientList: React.FC = () => {
     if (!currentClient) return;
     try {
       await updateCustomClient(currentClient.guid, values);
-      messageApi.success(intl.formatMessage({ id: 'pages.customClients.updateSuccess', defaultMessage: 'Custom client updated' }));
+      msgApi.success(intl.formatMessage({ id: 'pages.customClients.updateSuccess', defaultMessage: 'Custom client updated' }));
       setEditModalVisible(false);
       setCurrentClient(null);
       form.resetFields();
       actionRef.current?.reload();
     } catch (error) {
-      messageApi.error(intl.formatMessage({ id: 'pages.customClients.updateFailed', defaultMessage: 'Failed to update custom client' }));
+      msgApi.error(intl.formatMessage({ id: 'pages.customClients.updateFailed', defaultMessage: 'Failed to update custom client' }));
     }
   };
 
   const handleDelete = async (guid: string) => {
     try {
       await deleteCustomClient(guid);
-      messageApi.success(intl.formatMessage({ id: 'pages.customClients.deleteSuccess', defaultMessage: 'Custom client deleted' }));
+      msgApi.success(intl.formatMessage({ id: 'pages.customClients.deleteSuccess', defaultMessage: 'Custom client deleted' }));
       actionRef.current?.reload();
     } catch (error) {
-      messageApi.error(intl.formatMessage({ id: 'pages.customClients.deleteFailed', defaultMessage: 'Failed to delete custom client' }));
+      msgApi.error(intl.formatMessage({ id: 'pages.customClients.deleteFailed', defaultMessage: 'Failed to delete custom client' }));
     }
   };
 
@@ -81,7 +82,7 @@ const CustomClientList: React.FC = () => {
       link.remove();
       window.URL.revokeObjectURL(url);
     } catch (error) {
-      messageApi.error(intl.formatMessage({ id: 'pages.customClients.downloadFailed', defaultMessage: 'Failed to download client' }));
+      msgApi.error(intl.formatMessage({ id: 'pages.customClients.downloadFailed', defaultMessage: 'Failed to download client' }));
     }
   };
 
@@ -130,8 +131,8 @@ const CustomClientList: React.FC = () => {
           <Popconfirm
             title={intl.formatMessage({ id: 'pages.customClients.deleteConfirm', defaultMessage: 'Delete this custom client?' })}
             onConfirm={() => handleDelete(record.guid)}
-            okText="Yes"
-            cancelText="No"
+            okText={intl.formatMessage({ id: 'pages.common.confirm', defaultMessage: 'Yes' })}
+            cancelText={intl.formatMessage({ id: 'pages.common.cancel', defaultMessage: 'No' })}
           >
             <Button type="link" size="small" danger icon={<DeleteOutlined />}>
               <FormattedMessage id="pages.common.delete" defaultMessage="Delete" />
@@ -143,7 +144,7 @@ const CustomClientList: React.FC = () => {
   ];
 
   return (
-    <>
+    <PageContainer>
       <ProTable<API.CustomClientItem>
         headerTitle={<FormattedMessage id="pages.customClients.list" defaultMessage="Custom Client List" />}
         actionRef={actionRef}
@@ -194,13 +195,8 @@ const CustomClientList: React.FC = () => {
           <Input placeholder="Enter client name" />
         </Form.Item>
       </ModalForm>
-    </>
+    </PageContainer>
   );
 };
 
 export default CustomClientList;
-
-function FormattedMessage(props: { id: string; defaultMessage?: string }): React.JSX.Element {
-  const intl = useIntl();
-  return <>{intl.formatMessage(props)}</>;
-}

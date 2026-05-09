@@ -1,7 +1,7 @@
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
-import { Alert, App, Button, ColorPicker, Form, Input, Modal, Popconfirm, Radio, Select, Space, Tag, Table, Tooltip, Typography } from 'antd';
+import { Alert, App, Button, ColorPicker, Divider, Form, Input, Modal, Popconfirm, Radio, Select, Space, Tag, Table, Tooltip, Typography } from 'antd';
 import { DeleteOutlined, EditOutlined, InfoCircleOutlined, PlusOutlined, SelectOutlined, WindowsFilled, AndroidFilled, AppleFilled, QqCircleFilled } from '@ant-design/icons';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
@@ -56,7 +56,6 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({ guid: propGui
   const intl = useIntl();
   const { message: msgApi } = App.useApp();
   const actionRef = useRef<ActionType>(null);
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   
   const [addPeerModalVisible, setAddPeerModalVisible] = useState(false);
   const [editPeerModalVisible, setEditPeerModalVisible] = useState(false);
@@ -444,7 +443,7 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({ guid: propGui
       width: 160,
       fixed: "right",
       render: (_: unknown, record: API.PeerItem) => (
-        <Space size="small" split={<span style={{ color: '#ccc' }}>|</span>}>
+        <Space size={0} split={<Divider type="vertical" />}>
           <Button
             key="edit"
             type="link"
@@ -747,10 +746,6 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({ guid: propGui
           };
         }}
         columns={columns}
-        rowSelection={{
-          selectedRowKeys,
-          onChange: setSelectedRowKeys,
-        }}
         search={{
           labelWidth: 'auto',
           defaultCollapsed: false,

@@ -1,7 +1,7 @@
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
-import { Button, message, Tag } from 'antd';
+import { App, Button, Tag } from 'antd';
 import React, { useRef, useState } from 'react';
 import { getFileAudits } from '@/services/rustdesk-console/audit';
 import { DownloadOutlined } from '@ant-design/icons';
@@ -9,12 +9,13 @@ import dayjs from 'dayjs';
 
 const FileAudit: React.FC = () => {
   const intl = useIntl();
+  const { message: msgApi } = App.useApp();
   const actionRef = useRef<ActionType>(null);
   const [dataSource, setDataSource] = useState<API.FileAuditItem[]>([]);
 
   const handleExportCSV = () => {
     if (dataSource.length === 0) {
-      message.warning(
+      msgApi.warning(
         intl.formatMessage({
           id: 'pages.audits.noDataToExport',
           defaultMessage: 'No data to export',
@@ -58,7 +59,7 @@ const FileAudit: React.FC = () => {
     link.click();
     URL.revokeObjectURL(link.href);
 
-    message.success(
+    msgApi.success(
       intl.formatMessage({
         id: 'pages.audits.exportSuccess',
         defaultMessage: 'Export successful',

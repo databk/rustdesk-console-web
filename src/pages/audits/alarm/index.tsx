@@ -62,7 +62,7 @@ const AlarmAudit: React.FC = () => {
         request={async (params) => {
           const result = await getAlarmAudits({
             current: params.current || 1,
-            pageSize: params.pageSize || 10,
+            pageSize: params.pageSize || 20,
           });
           return {
             data: result.data || [],
@@ -73,7 +73,7 @@ const AlarmAudit: React.FC = () => {
         columns={columns}
         search={false}
         pagination={{
-          defaultPageSize: 10,
+          defaultPageSize: 20,
           showSizeChanger: true,
           showQuickJumper: true,
         }}

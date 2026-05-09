@@ -6,14 +6,14 @@ import {
   SafetyCertificateOutlined,
 } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
-import { ModalForm, ProTable } from '@ant-design/pro-components';
-import { useIntl } from '@umijs/max';
+import { ModalForm, PageContainer, ProTable } from '@ant-design/pro-components';
+import { FormattedMessage, useIntl } from '@umijs/max';
 import {
+  App,
   Button,
   Checkbox,
   Form,
   Input,
-  message as messageApi,
   Popconfirm,
   Space,
   Tag,
@@ -31,6 +31,7 @@ import {
 
 const RoleList: React.FC = () => {
   const intl = useIntl();
+  const { message: msgApi } = App.useApp();
   const actionRef = useRef<ActionType>(null);
   const [createModalVisible, setCreateModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
@@ -50,14 +51,14 @@ const RoleList: React.FC = () => {
   const handleCreate = async (values: API.CreateRoleParams) => {
     try {
       await createRole(values);
-      messageApi.success(
+      msgApi.success(
         intl.formatMessage({ id: 'pages.roles.createSuccess', defaultMessage: 'Role created successfully' }),
       );
       setCreateModalVisible(false);
       form.resetFields();
       actionRef.current?.reload();
     } catch (error) {
-      messageApi.error(
+      msgApi.error(
         intl.formatMessage({ id: 'pages.roles.createFailed', defaultMessage: 'Failed to create role' }),
       );
     }
@@ -67,7 +68,7 @@ const RoleList: React.FC = () => {
     if (!currentRole) return;
     try {
       await updateRole(currentRole.guid, values);
-      messageApi.success(
+      msgApi.success(
         intl.formatMessage({ id: 'pages.roles.updateSuccess', defaultMessage: 'Role updated successfully' }),
       );
       setEditModalVisible(false);
@@ -75,7 +76,7 @@ const RoleList: React.FC = () => {
       form.resetFields();
       actionRef.current?.reload();
     } catch (error) {
-      messageApi.error(
+      msgApi.error(
         intl.formatMessage({ id: 'pages.roles.updateFailed', defaultMessage: 'Failed to update role' }),
       );
     }
@@ -84,12 +85,12 @@ const RoleList: React.FC = () => {
   const handleDelete = async (guid: string) => {
     try {
       await deleteRole(guid);
-      messageApi.success(
+      msgApi.success(
         intl.formatMessage({ id: 'pages.roles.deleteSuccess', defaultMessage: 'Role deleted successfully' }),
       );
       actionRef.current?.reload();
     } catch (error) {
-      messageApi.error(
+      msgApi.error(
         intl.formatMessage({ id: 'pages.roles.deleteFailed', defaultMessage: 'Failed to delete role' }),
       );
     }
@@ -118,7 +119,7 @@ const RoleList: React.FC = () => {
       width: 200,
       render: (_, record) => (
         <Space>
-          <SafetyCertificateOutlined style={{ color: '#1890ff' }} />
+          <SafetyCertificateOutlined style={{ color: '#1677ff' }} />
           <span>{record.name}</span>
         </Space>
       ),
@@ -203,7 +204,7 @@ const RoleList: React.FC = () => {
   };
 
   return (
-    <>
+    <PageContainer>
       <ProTable<API.RoleItem>
         headerTitle={
           <FormattedMessage id="pages.roles.list" defaultMessage="Role List" />
@@ -329,13 +330,8 @@ const RoleList: React.FC = () => {
           </Checkbox.Group>
         </Form.Item>
       </ModalForm>
-    </>
+    </PageContainer>
   );
 };
 
 export default RoleList;
-
-function FormattedMessage(props: { id: string; defaultMessage?: string }): React.JSX.Element {
-  const intl = useIntl();
-  return <>{intl.formatMessage(props)}</>;
-}

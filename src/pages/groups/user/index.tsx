@@ -5,13 +5,13 @@ import {
   TeamOutlined,
 } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
-import { ModalForm, ProTable } from '@ant-design/pro-components';
-import { useIntl } from '@umijs/max';
+import { ModalForm, PageContainer, ProTable } from '@ant-design/pro-components';
+import { FormattedMessage, useIntl } from '@umijs/max';
 import {
+  App,
   Button,
   Form,
   Input,
-  message as messageApi,
   Popconfirm,
   Space,
 } from 'antd';
@@ -25,6 +25,7 @@ import {
 
 const UserGroupList: React.FC = () => {
   const intl = useIntl();
+  const { message: msgApi } = App.useApp();
   const actionRef = useRef<ActionType>(null);
   const [createModalVisible, setCreateModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
@@ -34,12 +35,12 @@ const UserGroupList: React.FC = () => {
   const handleCreate = async (values: API.CreateUserGroupParams) => {
     try {
       await createUserGroup(values);
-      messageApi.success(intl.formatMessage({ id: 'pages.userGroups.createSuccess', defaultMessage: 'User group created' }));
+      msgApi.success(intl.formatMessage({ id: 'pages.userGroups.createSuccess', defaultMessage: 'User group created' }));
       setCreateModalVisible(false);
       form.resetFields();
       actionRef.current?.reload();
     } catch (error) {
-      messageApi.error(intl.formatMessage({ id: 'pages.userGroups.createFailed', defaultMessage: 'Failed to create user group' }));
+      msgApi.error(intl.formatMessage({ id: 'pages.userGroups.createFailed', defaultMessage: 'Failed to create user group' }));
     }
   };
 
@@ -47,23 +48,23 @@ const UserGroupList: React.FC = () => {
     if (!currentGroup) return;
     try {
       await updateUserGroup(currentGroup.guid, values);
-      messageApi.success(intl.formatMessage({ id: 'pages.userGroups.updateSuccess', defaultMessage: 'User group updated' }));
+      msgApi.success(intl.formatMessage({ id: 'pages.userGroups.updateSuccess', defaultMessage: 'User group updated' }));
       setEditModalVisible(false);
       setCurrentGroup(null);
       form.resetFields();
       actionRef.current?.reload();
     } catch (error) {
-      messageApi.error(intl.formatMessage({ id: 'pages.userGroups.updateFailed', defaultMessage: 'Failed to update user group' }));
+      msgApi.error(intl.formatMessage({ id: 'pages.userGroups.updateFailed', defaultMessage: 'Failed to update user group' }));
     }
   };
 
   const handleDelete = async (guid: string) => {
     try {
       await deleteUserGroup(guid);
-      messageApi.success(intl.formatMessage({ id: 'pages.userGroups.deleteSuccess', defaultMessage: 'User group deleted' }));
+      msgApi.success(intl.formatMessage({ id: 'pages.userGroups.deleteSuccess', defaultMessage: 'User group deleted' }));
       actionRef.current?.reload();
     } catch (error) {
-      messageApi.error(intl.formatMessage({ id: 'pages.userGroups.deleteFailed', defaultMessage: 'Failed to delete user group' }));
+      msgApi.error(intl.formatMessage({ id: 'pages.userGroups.deleteFailed', defaultMessage: 'Failed to delete user group' }));
     }
   };
 
@@ -115,8 +116,8 @@ const UserGroupList: React.FC = () => {
           <Popconfirm
             title={intl.formatMessage({ id: 'pages.userGroups.deleteConfirm', defaultMessage: 'Delete this user group?' })}
             onConfirm={() => handleDelete(record.guid)}
-            okText="Yes"
-            cancelText="No"
+            okText={intl.formatMessage({ id: 'pages.common.confirm', defaultMessage: 'Yes' })}
+            cancelText={intl.formatMessage({ id: 'pages.common.cancel', defaultMessage: 'No' })}
           >
             <Button type="link" size="small" danger icon={<DeleteOutlined />}>
               <FormattedMessage id="pages.common.delete" defaultMessage="Delete" />
@@ -128,7 +129,7 @@ const UserGroupList: React.FC = () => {
   ];
 
   return (
-    <>
+    <PageContainer>
       <ProTable<API.UserGroupItem>
         headerTitle={<FormattedMessage id="pages.userGroups.list" defaultMessage="User Group List" />}
         actionRef={actionRef}
@@ -185,13 +186,8 @@ const UserGroupList: React.FC = () => {
           <Input.TextArea rows={3} placeholder="Enter description" />
         </Form.Item>
       </ModalForm>
-    </>
+    </PageContainer>
   );
 };
 
 export default UserGroupList;
-
-function FormattedMessage(props: { id: string; defaultMessage?: string }): React.JSX.Element {
-  const intl = useIntl();
-  return <>{intl.formatMessage(props)}</>;
-}
