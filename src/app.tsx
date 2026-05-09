@@ -2,11 +2,11 @@ import { LinkOutlined } from '@ant-design/icons';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { SettingDrawer } from '@ant-design/pro-components';
 import type { RequestConfig, RunTimeLayoutConfig } from '@umijs/max';
-import { history, Link } from '@umijs/max';
-import React from 'react';
+import { history, Link, useModel } from '@umijs/max';
+import React, { useEffect } from 'react';
 import { AvatarDropdown, AvatarName, Footer, SelectLang, ThemeToggle } from '@/components';
 import { currentUser as queryCurrentUser } from '@/services/rustdesk-console/auth';
-import { getToken } from '@/utils/auth';
+import { getToken, TOKEN_KEY } from '@/utils/auth';
 import defaultSettings from '../config/defaultSettings';
 import { errorConfig } from './requestErrorConfig';
 import '@ant-design/v5-patch-for-react-19';
@@ -46,8 +46,11 @@ export async function getInitialState(): Promise<{
     try {
       const msg = await queryCurrentUser();
       return msg;
-    } catch (_error) {
-      history.push(loginPath);
+    } catch (error: any) {
+      const status = error?.response?.status;
+      if (status === 401) {
+        history.push(loginPath);
+      }
     }
     return undefined;
   };
@@ -71,6 +74,38 @@ export async function getInitialState(): Promise<{
     settings: initialSettings,
   };
 }
+
+const AuthSync: React.FC = () => {
+  const { initialState, setInitialState, refresh } = useModel('@@initialState');
+
+  useEffect(() => {
+    const handleSessionExpired = () => {
+      setInitialState((s) => ({ ...s, currentUser: undefined }));
+    };
+
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === TOKEN_KEY) {
+        if (!e.newValue) {
+          setInitialState((s) => ({ ...s, currentUser: undefined }));
+          if (history.location.pathname !== loginPath) {
+            history.push(loginPath);
+          }
+        } else if (e.newValue && !initialState?.currentUser) {
+          refresh();
+        }
+      }
+    };
+
+    window.addEventListener('auth:session-expired', handleSessionExpired);
+    window.addEventListener('storage', handleStorageChange);
+    return () => {
+      window.removeEventListener('auth:session-expired', handleSessionExpired);
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, [initialState?.currentUser, setInitialState, refresh]);
+
+  return null;
+};
 
 export const layout: RunTimeLayoutConfig = ({
   initialState,
@@ -108,6 +143,7 @@ export const layout: RunTimeLayoutConfig = ({
     childrenRender: (children) => {
       return (
         <>
+          <AuthSync />
           {children}
           <SettingDrawer
             disableUrlParams

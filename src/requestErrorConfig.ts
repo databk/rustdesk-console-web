@@ -65,6 +65,7 @@ export const errorConfig: RequestConfig = {
         const status = error.response.status;
         if (status === 401) {
           removeToken();
+          window.dispatchEvent(new CustomEvent('auth:session-expired'));
           history.push(loginPath);
           message.error('Login expired, please login again');
           return;

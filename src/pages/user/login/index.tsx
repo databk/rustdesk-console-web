@@ -1,13 +1,14 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { LoginForm, ProFormCheckbox, ProFormText } from '@ant-design/pro-components';
+import { LoginForm, ProFormText } from '@ant-design/pro-components';
 import {
   FormattedMessage,
   Helmet,
   SelectLang,
   useIntl,
   useModel,
+  history,
 } from '@umijs/max';
-import { Alert, App, Checkbox, Space, Typography } from 'antd';
+import { Alert, App, Checkbox } from 'antd';
 import { createStyles } from 'antd-style';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
@@ -15,8 +16,6 @@ import { setToken } from '@/utils/auth';
 import { Footer } from '@/components';
 import { login } from '@/services/rustdesk-console/auth';
 import Settings from '../../../../config/defaultSettings';
-
-const { Link, Text } = Typography;
 
 const useStyles = createStyles(({ token }) => {
   return {
@@ -106,25 +105,11 @@ const Login: React.FC = () => {
   const handleSubmit = async (values: API.LoginParams & { rememberMe?: boolean }) => {
     try {
       const msg = await login(values);
-      console.log('=== LOGIN DEBUG ===');
-      console.log('Full login response (msg):', JSON.stringify(msg));
-      console.log('msg type:', typeof msg);
-      console.log('msg keys:', msg ? Object.keys(msg) : 'null');
-      console.log('msg.access_token:', msg?.access_token);
-      console.log('msg.data:', msg?.data);
-      console.log('msg.data?.access_token:', msg?.data?.access_token);
-      
-      // 尝试不同的token提取方式
       const token = msg?.access_token || msg?.data?.access_token;
-      console.log('Extracted token:', token ? 'YES (length: ' + token.length + ')' : 'NO');
-      
+
       if (token) {
-        console.log('Setting token...');
         setToken(token, values.rememberMe);
-        // 验证token是否保存成功
-        const storedToken = sessionStorage.getItem('rustdesk_access_token') || localStorage.getItem('rustdesk_access_token');
-        console.log('Token stored?', storedToken ? 'YES' : 'NO');
-        
+
         const defaultLoginSuccessMessage = intl.formatMessage({
           id: 'pages.login.success',
           defaultMessage: 'Login successful!',
@@ -132,7 +117,7 @@ const Login: React.FC = () => {
         message.success(defaultLoginSuccessMessage);
         await fetchUserInfo();
         const urlParams = new URL(window.location.href).searchParams;
-        window.location.href = urlParams.get('redirect') || '/';
+        history.push(urlParams.get('redirect') || '/');
         return;
       }
       setLoginError(
