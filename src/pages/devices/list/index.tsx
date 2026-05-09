@@ -10,6 +10,7 @@ import {
   enableDevice,
   getDeviceList,
 } from '@/services/rustdesk-console/device';
+import { removeDeviceFromGroup } from '@/services/rustdesk-console/deviceGroup';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
@@ -92,6 +93,27 @@ const DeviceList: React.FC<DeviceListProps> = ({ deviceGroupGuid, title, onBack 
     }
   };
 
+  const handleRemoveFromGroup = async (deviceId: string) => {
+    if (!deviceGroupGuid) return;
+    try {
+      await removeDeviceFromGroup(deviceGroupGuid, { deviceIds: [deviceId] });
+      msgApi.success(
+        intl.formatMessage({
+          id: 'pages.devices.removeFromGroupSuccess',
+          defaultMessage: 'Device removed from group',
+        }),
+      );
+      actionRef.current?.reload();
+    } catch {
+      msgApi.error(
+        intl.formatMessage({
+          id: 'pages.devices.removeFromGroupFailed',
+          defaultMessage: 'Failed to remove device from group',
+        }),
+      );
+    }
+  };
+
   // Use shared columns definition and add action column
   const baseColumns = getDeviceColumns();
   
@@ -107,6 +129,54 @@ const DeviceList: React.FC<DeviceListProps> = ({ deviceGroupGuid, title, onBack 
     fixed: 'right',
     render: (_: unknown, record: API.DeviceItem) => {
       const isDisabled = record.status === 0;
+      
+      // When in device group context, show remove button instead of delete
+      if (deviceGroupGuid) {
+        return (
+          <Space size="small" split={<span style={{ color: '#ccc' }}>|</span>}>
+            <Button key="edit" type="link" size="small" icon={<EditOutlined />}>
+              <FormattedMessage id="pages.common.edit" defaultMessage="Edit" />
+            </Button>
+            {isDisabled ? (
+              <Button
+                key="enable"
+                type="link"
+                size="small"
+                icon={<PlusCircleOutlined />}
+                onClick={() => handleEnable(record.guid)}
+              >
+                <FormattedMessage id="pages.devices.enable" defaultMessage="Enable" />
+              </Button>
+            ) : (
+              <Button
+                key="disable"
+                type="link"
+                size="small"
+                icon={<MinusCircleOutlined />}
+                onClick={() => handleDisable(record.guid)}
+              >
+                <FormattedMessage id="pages.devices.disable" defaultMessage="Disable" />
+              </Button>
+            )}
+            <Popconfirm
+              key="remove"
+              title={
+                <FormattedMessage
+                  id="pages.devices.removeFromGroupConfirm"
+                  defaultMessage="Are you sure to remove this device from the group?"
+                />
+              }
+              onConfirm={() => handleRemoveFromGroup(record.id)}
+            >
+              <Button type="link" size="small" danger icon={<DeleteOutlined />}>
+                <FormattedMessage id="pages.devices.remove" defaultMessage="Remove" />
+              </Button>
+            </Popconfirm>
+          </Space>
+        );
+      }
+      
+      // Normal device list (not in device group context)
       return (
         <Space size="small" split={<span style={{ color: '#ccc' }}>|</span>}>
           <Button key="edit" type="link" size="small" icon={<EditOutlined />}>
