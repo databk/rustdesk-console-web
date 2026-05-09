@@ -3,7 +3,7 @@ import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { SettingDrawer } from '@ant-design/pro-components';
 import type { RequestConfig, RunTimeLayoutConfig } from '@umijs/max';
 import { history, Link } from '@umijs/max';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { AvatarDropdown, AvatarName, Footer, SelectLang, ThemeToggle } from '@/components';
 import { currentUser as queryCurrentUser } from '@/services/rustdesk-console/auth';
 import { getToken } from '@/utils/auth';
@@ -15,6 +15,7 @@ const isDev = process.env.NODE_ENV === 'development' || process.env.CI;
 const loginPath = '/user/login';
 
 const THEME_KEY = 'rustdesk_theme_settings';
+const TOKEN_KEY = 'rustdesk_access_token';
 
 function getStoredThemeSettings(): Partial<LayoutSettings> | undefined {
   try {
@@ -76,6 +77,74 @@ export const layout: RunTimeLayoutConfig = ({
   initialState,
   setInitialState,
 }) => {
+  
+  useEffect(() => {
+    let isMounted = true;
+    
+    const syncAuthState = async () => {
+      if (!isMounted) return;
+      
+      const token = getToken();
+      
+      try {
+        if (token) {
+          const userInfo = await queryCurrentUser();
+          if (isMounted && userInfo) {
+            setInitialState((s) => ({
+              ...s,
+              currentUser: userInfo,
+            }));
+          } else if (isMounted) {
+            setInitialState((s) => ({
+              ...s,
+              currentUser: undefined,
+            }));
+            
+            const { pathname } = window.location;
+            if (pathname !== loginPath && isMounted) {
+              history.push(loginPath);
+            }
+          }
+        } else {
+          if (isMounted) {
+            setInitialState((s) => ({
+              ...s,
+              currentUser: undefined,
+            }));
+            
+            const { pathname } = window.location;
+            if (pathname !== loginPath && isMounted) {
+              history.push(loginPath);
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Failed to sync auth state:', error);
+      }
+    };
+
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === TOKEN_KEY || e.key === null) {
+        syncAuthState();
+      }
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        syncAuthState();
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      isMounted = false;
+      window.removeEventListener('storage', handleStorageChange);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [setInitialState]);
+
   return {
     actionsRender: () => [<ThemeToggle key="ThemeToggle" />, <SelectLang key="SelectLang" />],
     avatarProps: {
@@ -91,8 +160,25 @@ export const layout: RunTimeLayoutConfig = ({
     footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;
-      if (!initialState?.currentUser && location.pathname !== loginPath) {
+      const token = getToken();
+      
+      if (!token && location.pathname !== loginPath) {
         history.push(loginPath);
+      } else if (token && !initialState?.currentUser && location.pathname !== loginPath) {
+        queryCurrentUser()
+          .then((userInfo) => {
+            if (userInfo) {
+              setInitialState((s) => ({
+                ...s,
+                currentUser: userInfo,
+              }));
+            } else {
+              history.push(loginPath);
+            }
+          })
+          .catch(() => {
+            history.push(loginPath);
+          });
       }
     },
     bgLayoutImgList: [],
