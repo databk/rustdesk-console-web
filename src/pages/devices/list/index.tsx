@@ -17,7 +17,13 @@ import { App, Button, Popconfirm, Space } from 'antd';
 import React, { useRef, useState } from 'react';
 import { getDeviceColumns } from '@/components/DeviceSelectTable/columns';
 
-const DeviceList: React.FC = () => {
+export interface DeviceListProps {
+  deviceGroupGuid?: string;
+  title?: string;
+  onBack?: () => void;
+}
+
+const DeviceList: React.FC<DeviceListProps> = ({ deviceGroupGuid, title, onBack }) => {
   const intl = useIntl();
   const { message: msgApi } = App.useApp();
   const actionRef = useRef<ActionType>(null);
@@ -86,6 +92,12 @@ const DeviceList: React.FC = () => {
 
   // Use shared columns definition and add action column
   const baseColumns = getDeviceColumns();
+  
+  // Filter out device group column if deviceGroupGuid is provided
+  const filteredColumns = deviceGroupGuid 
+    ? baseColumns.filter(col => col.dataIndex !== 'device_group_name' && col.dataIndex !== 'device_group_name_search')
+    : baseColumns;
+  
   const actionColumn: ProColumns<API.DeviceItem> = {
     title: <FormattedMessage id="pages.common.action" defaultMessage="Action" />,
     valueType: 'option',
@@ -139,10 +151,13 @@ const DeviceList: React.FC = () => {
       );
     },
   };
-  const columns = [...baseColumns, actionColumn];
+  const columns = [...filteredColumns, actionColumn];
 
   return (
-    <PageContainer>
+    <PageContainer
+      title={title || <FormattedMessage id="pages.devices.list" defaultMessage="Device List" />}
+      onBack={onBack}
+    >
       <ProTable<API.DeviceItem>
         headerTitle={
           <span>
@@ -164,6 +179,7 @@ const DeviceList: React.FC = () => {
             is_online: params.is_online,
             user_name: params.user_name,
             device_group_name: params.device_group_name_search,
+            device_group_guid: deviceGroupGuid,
             os: params.os,
           });
           setTotalDevices(result.total || 0);

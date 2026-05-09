@@ -9,6 +9,7 @@ export async function getDeviceList(
     is_online?: string;
     user_name?: string;
     device_group_name?: string;
+    device_group_guid?: string;
     os?: string;
   },
   options?: { [key: string]: any },
@@ -23,6 +24,7 @@ export async function getDeviceList(
       is_online: params.is_online,
       user_name: params.user_name,
       device_group_name: params.device_group_name,
+      device_group_guid: params.device_group_guid,
       os: params.os,
     },
     ...(options || {}),

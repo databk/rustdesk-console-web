@@ -81,6 +81,11 @@ export default [
         path: '/groups/device',
         component: './device-groups/list',
       },
+      {
+        path: '/groups/device/:guid',
+        component: './device-groups/detail',
+        hideInMenu: true,
+      },
     ],
   },
   {

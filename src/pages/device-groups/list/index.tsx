@@ -1,6 +1,6 @@
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { FormattedMessage, useIntl } from '@umijs/max';
+import { FormattedMessage, history, useIntl } from '@umijs/max';
 import { App, Button, Form, Input, Modal, Popconfirm } from 'antd';
 import React, { useRef, useState } from 'react';
 import {
@@ -89,18 +89,21 @@ const DeviceGroupList: React.FC = () => {
     {
       title: <FormattedMessage id="pages.deviceGroups.name" defaultMessage="Name" />,
       dataIndex: 'name',
+      render: (_, record: API.DeviceGroupItem) => (
+        <a
+          onClick={() => {
+            history.push(`/groups/device/${record.guid}`, { name: record.name });
+          }}
+          style={{ cursor: 'pointer' }}
+        >
+          {record.name}
+        </a>
+      ),
     },
     {
       title: <FormattedMessage id="pages.deviceGroups.note" defaultMessage="Note" />,
       dataIndex: 'note',
       ellipsis: true,
-    },
-    {
-      title: (
-        <FormattedMessage id="pages.deviceGroups.deviceCount" defaultMessage="Device Count" />
-      ),
-      dataIndex: 'device_count',
-      width: 120,
     },
     {
       title: <FormattedMessage id="pages.common.action" defaultMessage="Action" />,
