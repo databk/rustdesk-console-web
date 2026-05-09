@@ -130,49 +130,23 @@ const DeviceList: React.FC<DeviceListProps> = ({ deviceGroupGuid, title, onBack 
     render: (_: unknown, record: API.DeviceItem) => {
       const isDisabled = record.status === 0;
       
-      // When in device group context, show remove button instead of delete
+      // When in device group context, only show remove button
       if (deviceGroupGuid) {
         return (
-          <Space size="small" split={<span style={{ color: '#ccc' }}>|</span>}>
-            <Button key="edit" type="link" size="small" icon={<EditOutlined />}>
-              <FormattedMessage id="pages.common.edit" defaultMessage="Edit" />
+          <Popconfirm
+            key="remove"
+            title={
+              <FormattedMessage
+                id="pages.devices.removeFromGroupConfirm"
+                defaultMessage="Are you sure to remove this device from the group?"
+              />
+            }
+            onConfirm={() => handleRemoveFromGroup(record.id)}
+          >
+            <Button type="link" size="small" danger icon={<DeleteOutlined />}>
+              <FormattedMessage id="pages.devices.remove" defaultMessage="Remove" />
             </Button>
-            {isDisabled ? (
-              <Button
-                key="enable"
-                type="link"
-                size="small"
-                icon={<PlusCircleOutlined />}
-                onClick={() => handleEnable(record.guid)}
-              >
-                <FormattedMessage id="pages.devices.enable" defaultMessage="Enable" />
-              </Button>
-            ) : (
-              <Button
-                key="disable"
-                type="link"
-                size="small"
-                icon={<MinusCircleOutlined />}
-                onClick={() => handleDisable(record.guid)}
-              >
-                <FormattedMessage id="pages.devices.disable" defaultMessage="Disable" />
-              </Button>
-            )}
-            <Popconfirm
-              key="remove"
-              title={
-                <FormattedMessage
-                  id="pages.devices.removeFromGroupConfirm"
-                  defaultMessage="Are you sure to remove this device from the group?"
-                />
-              }
-              onConfirm={() => handleRemoveFromGroup(record.id)}
-            >
-              <Button type="link" size="small" danger icon={<DeleteOutlined />}>
-                <FormattedMessage id="pages.devices.remove" defaultMessage="Remove" />
-              </Button>
-            </Popconfirm>
-          </Space>
+          </Popconfirm>
         );
       }
       
