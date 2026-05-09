@@ -108,11 +108,6 @@ const SharedAddressBook: React.FC = () => {
       ellipsis: true,
     },
     {
-      title: <FormattedMessage id="pages.addressBook.peerCount" defaultMessage="Peer Count" />,
-      dataIndex: 'peer_count',
-      width: 100,
-    },
-    {
       title: <FormattedMessage id="pages.common.action" defaultMessage="Action" />,
       valueType: 'option',
       width: 180,

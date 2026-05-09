@@ -4,6 +4,8 @@ import { FormattedMessage, useIntl } from '@umijs/max';
 import { Alert, App, Button, ColorPicker, Form, Input, Modal, Popconfirm, Radio, Select, Space, Tag, Table, Tooltip, Typography } from 'antd';
 import { DeleteOutlined, EditOutlined, InfoCircleOutlined, PlusOutlined, SelectOutlined, WindowsFilled, AndroidFilled, AppleFilled, QqCircleFilled } from '@ant-design/icons';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
+import Settings from '../../../../config/defaultSettings';
 import {
   getPersonalAddressBook,
   getPeers,
@@ -102,12 +104,6 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({ guid: propGui
     };
     fetchAbGuid();
   }, [propGuid]);
-
-  useEffect(() => {
-    if (propTitle) {
-      document.title = `${intl.formatMessage({ id: 'pages.addressBook.shared', defaultMessage: 'Shared Address Books' })} - RustDesk Console`;
-    }
-  }, [propTitle, intl]);
 
   const fetchTags = useCallback(async () => {
     if (!abGuid) return;
@@ -559,10 +555,19 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({ guid: propGui
   ];
 
   return (
-    <PageContainer
-      title={propTitle}
-      onBack={onBack}
-    >
+    <>
+      {propTitle && (
+        <Helmet>
+          <title>
+            {propTitle}
+            {Settings.title && ` - ${Settings.title}`}
+          </title>
+        </Helmet>
+      )}
+      <PageContainer
+        title={propTitle}
+        onBack={onBack}
+      >
       {/* Tags Area */}
       <div style={{ marginBottom: 16, display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
         <span style={{ fontWeight: 500, marginRight: 4 }}>
@@ -930,6 +935,7 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({ guid: propGui
         />
       </Modal>
     </PageContainer>
+    </>
   );
 };
 

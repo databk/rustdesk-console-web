@@ -5,7 +5,6 @@ export default {
   'menu.addressBook': '地址簿',
   'menu.addressBook.personal': '个人地址簿',
   'menu.addressBook.shared': '共享地址簿',
-  'menu.addressBook.shared.detail': '共享地址簿详情',
   'menu.deviceGroups': '设备组',
   'menu.deviceGroups.list': '设备组列表',
   'menu.users': '用户管理',
