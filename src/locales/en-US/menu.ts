@@ -5,6 +5,7 @@ export default {
   'menu.addressBook': 'Address Books',
   'menu.addressBook.personal': 'Personal',
   'menu.addressBook.shared': 'Shared',
+  'menu.addressBook.shared.detail': 'Shared Address Book Detail',
   'menu.deviceGroups': 'Device Groups',
   'menu.deviceGroups.list': 'Device Groups',
   'menu.users': 'Users',

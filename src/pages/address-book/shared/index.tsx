@@ -1,6 +1,6 @@
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { FormattedMessage, useIntl } from '@umijs/max';
+import { FormattedMessage, history, useIntl } from '@umijs/max';
 import { App, Button, Form, Input, Modal, Popconfirm } from 'antd';
 import React, { useRef, useState } from 'react';
 import {
@@ -91,6 +91,16 @@ const SharedAddressBook: React.FC = () => {
     {
       title: <FormattedMessage id="pages.addressBook.name" defaultMessage="Name" />,
       dataIndex: 'name',
+      render: (_, record: API.SharedAddressBook) => (
+        <a
+          onClick={() => {
+            history.push(`/address-book/shared/${record.guid}`, { name: record.name });
+          }}
+          style={{ cursor: 'pointer' }}
+        >
+          {record.name}
+        </a>
+      ),
     },
     {
       title: <FormattedMessage id="pages.addressBook.note" defaultMessage="Note" />,

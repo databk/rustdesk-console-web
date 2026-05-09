@@ -52,6 +52,11 @@ export default [
         path: '/address-book/shared',
         component: './address-book/shared',
       },
+      {
+        path: '/address-book/shared/:guid',
+        component: './address-book/shared/detail',
+        hideInMenu: true,
+      },
     ],
   },
   {

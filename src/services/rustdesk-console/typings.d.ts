@@ -110,11 +110,10 @@ declare namespace API {
   type SharedAddressBook = {
     guid: string;
     name: string;
+    owner?: string;
     note?: string;
-    password?: string;
-    peer_count?: number;
-    created_at?: string;
-    updated_at?: string;
+    rule?: number;
+    info?: Record<string, any>;
     [key: string]: any;
   };
 
