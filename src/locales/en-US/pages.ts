@@ -41,7 +41,6 @@ export default {
   'pages.devices.deviceGroupSearchTip': 'Filter by device group name',
   'pages.addressBook.name': 'Name',
   'pages.addressBook.note': 'Note',
-  'pages.addressBook.peerCount': 'Peer Count',
   'pages.addressBook.shared': 'Shared Address Books',
   'pages.addressBook.create': 'Create Address Book',
   'pages.addressBook.edit': 'Edit Address Book',

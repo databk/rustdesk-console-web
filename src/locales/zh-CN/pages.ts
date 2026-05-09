@@ -41,7 +41,6 @@ export default {
   'pages.devices.deviceGroupSearchTip': '按设备组名称筛选',
   'pages.addressBook.name': '名称',
   'pages.addressBook.note': '备注',
-  'pages.addressBook.peerCount': '设备数',
   'pages.addressBook.shared': '共享地址簿',
   'pages.addressBook.create': '创建地址簿',
   'pages.addressBook.edit': '编辑地址簿',
