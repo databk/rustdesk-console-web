@@ -15,6 +15,8 @@ import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
 import { App, Button, Popconfirm, Space } from 'antd';
 import React, { useRef, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
+import Settings from '../../../../config/defaultSettings';
 import { getDeviceColumns } from '@/components/DeviceSelectTable/columns';
 
 export interface DeviceListProps {
@@ -154,10 +156,19 @@ const DeviceList: React.FC<DeviceListProps> = ({ deviceGroupGuid, title, onBack 
   const columns = [...filteredColumns, actionColumn];
 
   return (
-    <PageContainer
-      title={title || <FormattedMessage id="pages.devices.list" defaultMessage="Device List" />}
-      onBack={onBack}
-    >
+    <>
+      {title && (
+        <Helmet>
+          <title>
+            {title}
+            {Settings.title && ` - ${Settings.title}`}
+          </title>
+        </Helmet>
+      )}
+      <PageContainer
+        title={title || <FormattedMessage id="pages.devices.list" defaultMessage="Device List" />}
+        onBack={onBack}
+      >
       <ProTable<API.DeviceItem>
         headerTitle={
           <span>
@@ -216,6 +227,7 @@ const DeviceList: React.FC<DeviceListProps> = ({ deviceGroupGuid, title, onBack 
         }}
       />
     </PageContainer>
+    </>
   );
 };
 
