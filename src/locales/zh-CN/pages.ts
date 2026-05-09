@@ -84,7 +84,6 @@ export default {
   'pages.deviceGroups.list': '设备组列表',
   'pages.deviceGroups.name': '名称',
   'pages.deviceGroups.note': '备注',
-  'pages.deviceGroups.deviceCount': '设备数',
   'pages.deviceGroups.create': '创建设备组',
   'pages.deviceGroups.edit': '编辑设备组',
   'pages.deviceGroups.createSuccess': '设备组已创建',

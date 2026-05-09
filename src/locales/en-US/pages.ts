@@ -84,7 +84,6 @@ export default {
   'pages.deviceGroups.list': 'Device Groups',
   'pages.deviceGroups.name': 'Name',
   'pages.deviceGroups.note': 'Note',
-  'pages.deviceGroups.deviceCount': 'Device Count',
   'pages.deviceGroups.create': 'Create Device Group',
   'pages.deviceGroups.edit': 'Edit Device Group',
   'pages.deviceGroups.createSuccess': 'Device group created',

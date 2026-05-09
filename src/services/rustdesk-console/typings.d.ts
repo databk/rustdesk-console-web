@@ -91,7 +91,6 @@ declare namespace API {
     guid: string;
     name: string;
     note?: string;
-    device_count?: number;
     created_at?: string;
     updated_at?: string;
     [key: string]: any;
