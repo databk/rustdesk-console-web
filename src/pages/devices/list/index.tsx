@@ -14,7 +14,7 @@ import { removeDeviceFromGroup } from '@/services/rustdesk-console/deviceGroup';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
-import { App, Button, Popconfirm, Space } from 'antd';
+import { App, Button, Divider, Popconfirm, Space } from 'antd';
 import React, { useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Settings from '../../../../config/defaultSettings';
@@ -30,8 +30,6 @@ const DeviceList: React.FC<DeviceListProps> = ({ deviceGroupGuid, title, onBack 
   const intl = useIntl();
   const { message: msgApi } = App.useApp();
   const actionRef = useRef<ActionType>(null);
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const [totalDevices, setTotalDevices] = useState<number>(0);
 
   const handleEnable = async (guid: string) => {
     try {
@@ -142,6 +140,8 @@ const DeviceList: React.FC<DeviceListProps> = ({ deviceGroupGuid, title, onBack 
               />
             }
             onConfirm={() => handleRemoveFromGroup(record.id)}
+            okText={intl.formatMessage({ id: 'pages.common.confirm', defaultMessage: 'Yes' })}
+            cancelText={intl.formatMessage({ id: 'pages.common.cancel', defaultMessage: 'No' })}
           >
             <Button type="link" size="small" danger icon={<DeleteOutlined />}>
               <FormattedMessage id="pages.devices.remove" defaultMessage="Remove" />
@@ -152,7 +152,7 @@ const DeviceList: React.FC<DeviceListProps> = ({ deviceGroupGuid, title, onBack 
       
       // Normal device list (not in device group context)
       return (
-        <Space size="small" split={<span style={{ color: '#ccc' }}>|</span>}>
+        <Space size={0} split={<Divider type="vertical" />}>
           <Button key="edit" type="link" size="small" icon={<EditOutlined />}>
             <FormattedMessage id="pages.common.edit" defaultMessage="Edit" />
           </Button>
@@ -187,6 +187,8 @@ const DeviceList: React.FC<DeviceListProps> = ({ deviceGroupGuid, title, onBack 
                 />
               }
               onConfirm={() => handleDelete(record.guid)}
+              okText={intl.formatMessage({ id: 'pages.common.confirm', defaultMessage: 'Yes' })}
+              cancelText={intl.formatMessage({ id: 'pages.common.cancel', defaultMessage: 'No' })}
             >
               <Button type="link" size="small" danger icon={<DeleteOutlined />}>
                 <FormattedMessage id="pages.common.delete" defaultMessage="Delete" />
@@ -215,13 +217,10 @@ const DeviceList: React.FC<DeviceListProps> = ({ deviceGroupGuid, title, onBack 
       >
       <ProTable<API.DeviceItem>
         headerTitle={
-          <span>
-            <FormattedMessage
-              id="pages.devices.list"
-              defaultMessage="Device List"
-            />{' '}
-            ({totalDevices}/-)
-          </span>
+          <FormattedMessage
+            id="pages.devices.list"
+            defaultMessage="Device List"
+          />
         }
         actionRef={actionRef}
         rowKey="guid"
@@ -237,7 +236,6 @@ const DeviceList: React.FC<DeviceListProps> = ({ deviceGroupGuid, title, onBack 
             device_group_guid: deviceGroupGuid,
             os: params.os,
           });
-          setTotalDevices(result.total || 0);
           return {
             data: result.data || [],
             total: result.total || 0,
@@ -245,10 +243,6 @@ const DeviceList: React.FC<DeviceListProps> = ({ deviceGroupGuid, title, onBack 
           };
         }}
         columns={columns}
-        rowSelection={{
-          selectedRowKeys,
-          onChange: setSelectedRowKeys,
-        }}
         search={{
           labelWidth: 'auto',
           defaultCollapsed: true,

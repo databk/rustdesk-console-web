@@ -9,15 +9,15 @@ import {
 } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { useIntl, useModel } from '@umijs/max';
+import { FormattedMessage, useIntl, useModel } from '@umijs/max';
 import {
   App,
   Button,
+  Divider,
   Dropdown,
   Form,
   Input,
   Modal,
-  Popconfirm,
   Space,
   Switch,
   Tag,
@@ -35,7 +35,7 @@ import {
 
 const UserList: React.FC = () => {
   const intl = useIntl();
-  const { message: msgApi } = App.useApp();
+  const { message: msgApi, modal } = App.useApp();
   const { initialState } = useModel('@@initialState');
   const currentUser = initialState?.currentUser;
   const actionRef = useRef<ActionType>(null);
@@ -43,7 +43,6 @@ const UserList: React.FC = () => {
   const [inviteModalVisible, setInviteModalVisible] = useState(false);
   const [createForm] = Form.useForm();
   const [inviteForm] = Form.useForm();
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [searchParams, setSearchParams] = useState<{
     search?: string;
     status?: string;
@@ -143,12 +142,12 @@ const UserList: React.FC = () => {
         <Space>
           <span>{record.name}</span>
           {record.is_admin && (
-            <Tooltip title="Admin">
+            <Tooltip title={intl.formatMessage({ id: 'pages.users.admin', defaultMessage: 'Admin' })}>
               <CrownOutlined style={{ color: '#faad14' }} />
             </Tooltip>
           )}
           {record.name === currentUser?.name && (
-            <Tag color="blue">Me</Tag>
+            <Tag color="blue"><FormattedMessage id="pages.users.me" defaultMessage="Me" /></Tag>
           )}
         </Space>
       ),
@@ -199,7 +198,7 @@ const UserList: React.FC = () => {
       search: false,
       render: (_: unknown, record: API.UserItem) =>
         record.is_admin ? (
-          <Tag color="blue">Admin</Tag>
+          <Tag color="blue"><FormattedMessage id="pages.users.admin" defaultMessage="Admin" /></Tag>
         ) : (
           <span>-</span>
         ),
@@ -246,7 +245,7 @@ const UserList: React.FC = () => {
       width: 180,
       fixed: 'right',
       render: (_: unknown, record: API.UserItem) => (
-        <Space size="small">
+        <Space size={0} split={<Divider type="vertical" />}>
           <Button
             key="edit"
             type="link"
@@ -280,12 +279,17 @@ const UserList: React.FC = () => {
                 {
                   key: 'delete',
                   label: (
-                    <span style={{ color: '#ff4d4f' }}>
-                      <FormattedMessage id="pages.common.delete" defaultMessage="Delete" />
-                    </span>
+                    <FormattedMessage id="pages.common.delete" defaultMessage="Delete" />
                   ),
                   danger: true,
-                  onClick: () => handleDelete(record.guid),
+                  onClick: () => {
+                    modal.confirm({
+                      title: intl.formatMessage({ id: 'pages.users.deleteConfirm', defaultMessage: 'Are you sure to delete this user?' }),
+                      okText: intl.formatMessage({ id: 'pages.common.confirm', defaultMessage: 'Yes' }),
+                      cancelText: intl.formatMessage({ id: 'pages.common.cancel', defaultMessage: 'No' }),
+                      onOk: () => handleDelete(record.guid),
+                    });
+                  },
                 },
               ],
             }}
@@ -303,10 +307,7 @@ const UserList: React.FC = () => {
     <PageContainer>
       <ProTable<API.UserItem>
         headerTitle={
-          <span>
-            <FormattedMessage id="pages.users.list" defaultMessage="User List" /> {' '}
-            {searchParams.search ? '*' : '0'}/-
-          </span>
+          <FormattedMessage id="pages.users.list" defaultMessage="User List" />
         }
         actionRef={actionRef}
         rowKey="guid"
@@ -324,10 +325,6 @@ const UserList: React.FC = () => {
           };
         }}
         columns={columns}
-        rowSelection={{
-          selectedRowKeys,
-          onChange: setSelectedRowKeys,
-        }}
         search={{
           labelWidth: 'auto',
           defaultCollapsed: false,
@@ -432,8 +429,3 @@ const UserList: React.FC = () => {
 };
 
 export default UserList;
-
-function FormattedMessage(props: { id: string; defaultMessage: string }): React.JSX.Element {
-  const intl = useIntl();
-  return <>{intl.formatMessage(props)}</>;
-}

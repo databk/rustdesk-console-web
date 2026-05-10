@@ -1,7 +1,7 @@
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { FormattedMessage, history, useIntl } from '@umijs/max';
-import { App, Button, Form, Input, Modal, Popconfirm } from 'antd';
+import { App, Button, Divider, Form, Input, Modal, Popconfirm, Space } from 'antd';
 import React, { useRef, useState } from 'react';
 import {
   addSharedAddressBook,
@@ -112,7 +112,7 @@ const SharedAddressBook: React.FC = () => {
       valueType: 'option',
       width: 180,
       render: (_, record) => (
-        <>
+        <Space size={0} split={<Divider type="vertical" />}>
           <Button
             key="edit"
             type="link"
@@ -134,12 +134,14 @@ const SharedAddressBook: React.FC = () => {
               />
             }
             onConfirm={() => handleDelete([record.guid])}
+            okText={intl.formatMessage({ id: 'pages.common.confirm', defaultMessage: 'Yes' })}
+            cancelText={intl.formatMessage({ id: 'pages.common.cancel', defaultMessage: 'No' })}
           >
             <Button type="link" size="small" danger>
               <FormattedMessage id="pages.common.delete" defaultMessage="Delete" />
             </Button>
           </Popconfirm>
-        </>
+        </Space>
       ),
     },
   ];
@@ -154,7 +156,7 @@ const SharedAddressBook: React.FC = () => {
         rowKey="guid"
         request={async (params) => {
           const result = await getSharedAddressBooks({
-            pageSize: params.pageSize || 10,
+            pageSize: params.pageSize || 20,
             current: params.current || 1,
           });
           return {
@@ -167,6 +169,11 @@ const SharedAddressBook: React.FC = () => {
         rowSelection={{
           selectedRowKeys,
           onChange: setSelectedRowKeys,
+        }}
+        pagination={{
+          defaultPageSize: 20,
+          showSizeChanger: true,
+          showQuickJumper: true,
         }}
         toolBarRender={() => [
           <Button key="create" type="primary" onClick={() => setCreateModalVisible(true)}>
@@ -182,6 +189,8 @@ const SharedAddressBook: React.FC = () => {
                 />
               }
               onConfirm={() => handleDelete(selectedRowKeys as string[])}
+              okText={intl.formatMessage({ id: 'pages.common.confirm', defaultMessage: 'Yes' })}
+              cancelText={intl.formatMessage({ id: 'pages.common.cancel', defaultMessage: 'No' })}
             >
               <Button danger>
                 <FormattedMessage id="pages.common.batchDelete" defaultMessage="Batch Delete" />
@@ -189,6 +198,15 @@ const SharedAddressBook: React.FC = () => {
             </Popconfirm>
           ),
         ]}
+        options={{
+          density: true,
+          setting: {
+            listsHeight: 400,
+          },
+          fullScreen: false,
+          reload: true,
+        }}
+        scroll={{ x: 800 }}
       />
 
       <Modal

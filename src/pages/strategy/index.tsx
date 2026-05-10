@@ -5,13 +5,14 @@ import {
   SolutionOutlined,
 } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
-import { ModalForm, ProTable } from '@ant-design/pro-components';
-import { useIntl } from '@umijs/max';
+import { ModalForm, PageContainer, ProTable } from '@ant-design/pro-components';
+import { FormattedMessage, useIntl } from '@umijs/max';
 import {
+  App,
   Button,
+  Divider,
   Form,
   Input,
-  message as messageApi,
   Popconfirm,
   Space,
   Switch,
@@ -26,6 +27,7 @@ import {
 
 const StrategyList: React.FC = () => {
   const intl = useIntl();
+  const { message: msgApi } = App.useApp();
   const actionRef = useRef<ActionType>(null);
   const [createModalVisible, setCreateModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
@@ -35,12 +37,12 @@ const StrategyList: React.FC = () => {
   const handleCreate = async (values: API.CreateStrategyParams) => {
     try {
       await createStrategy(values);
-      messageApi.success(intl.formatMessage({ id: 'pages.strategies.createSuccess', defaultMessage: 'Strategy created' }));
+      msgApi.success(intl.formatMessage({ id: 'pages.strategies.createSuccess', defaultMessage: 'Strategy created' }));
       setCreateModalVisible(false);
       form.resetFields();
       actionRef.current?.reload();
     } catch (error) {
-      messageApi.error(intl.formatMessage({ id: 'pages.strategies.createFailed', defaultMessage: 'Failed to create strategy' }));
+      msgApi.error(intl.formatMessage({ id: 'pages.strategies.createFailed', defaultMessage: 'Failed to create strategy' }));
     }
   };
 
@@ -48,23 +50,23 @@ const StrategyList: React.FC = () => {
     if (!currentStrategy) return;
     try {
       await updateStrategy(currentStrategy.guid, values);
-      messageApi.success(intl.formatMessage({ id: 'pages.strategies.updateSuccess', defaultMessage: 'Strategy updated' }));
+      msgApi.success(intl.formatMessage({ id: 'pages.strategies.updateSuccess', defaultMessage: 'Strategy updated' }));
       setEditModalVisible(false);
       setCurrentStrategy(null);
       form.resetFields();
       actionRef.current?.reload();
     } catch (error) {
-      messageApi.error(intl.formatMessage({ id: 'pages.strategies.updateFailed', defaultMessage: 'Failed to update strategy' }));
+      msgApi.error(intl.formatMessage({ id: 'pages.strategies.updateFailed', defaultMessage: 'Failed to update strategy' }));
     }
   };
 
   const handleDelete = async (guid: string) => {
     try {
       await deleteStrategy(guid);
-      messageApi.success(intl.formatMessage({ id: 'pages.strategies.deleteSuccess', defaultMessage: 'Strategy deleted' }));
+      msgApi.success(intl.formatMessage({ id: 'pages.strategies.deleteSuccess', defaultMessage: 'Strategy deleted' }));
       actionRef.current?.reload();
     } catch (error) {
-      messageApi.error(intl.formatMessage({ id: 'pages.strategies.deleteFailed', defaultMessage: 'Failed to delete strategy' }));
+      msgApi.error(intl.formatMessage({ id: 'pages.strategies.deleteFailed', defaultMessage: 'Failed to delete strategy' }));
     }
   };
 
@@ -108,7 +110,7 @@ const StrategyList: React.FC = () => {
       width: 180,
       fixed: 'right',
       render: (_, record) => (
-        <Space size="small">
+        <Space size={0} split={<Divider type="vertical" />}>
           <Button type="link" size="small" icon={<EditOutlined />} onClick={() => {
             setCurrentStrategy(record);
             form.setFieldsValue(record);
@@ -119,8 +121,8 @@ const StrategyList: React.FC = () => {
           <Popconfirm
             title={intl.formatMessage({ id: 'pages.strategies.deleteConfirm', defaultMessage: 'Delete this strategy?' })}
             onConfirm={() => handleDelete(record.guid)}
-            okText="Yes"
-            cancelText="No"
+            okText={intl.formatMessage({ id: 'pages.common.confirm', defaultMessage: 'Yes' })}
+            cancelText={intl.formatMessage({ id: 'pages.common.cancel', defaultMessage: 'No' })}
           >
             <Button type="link" size="small" danger icon={<DeleteOutlined />}>
               <FormattedMessage id="pages.common.delete" defaultMessage="Delete" />
@@ -132,7 +134,7 @@ const StrategyList: React.FC = () => {
   ];
 
   return (
-    <>
+    <PageContainer>
       <ProTable<API.StrategyItem>
         headerTitle={<FormattedMessage id="pages.strategies.list" defaultMessage="Strategy List" />}
         actionRef={actionRef}
@@ -166,10 +168,10 @@ const StrategyList: React.FC = () => {
         modalProps={{ destroyOnClose: true }}
       >
         <Form.Item name="name" label={<FormattedMessage id="pages.strategies.name" defaultMessage="Name" />} rules={[{ required: true }]}>
-          <Input placeholder="Enter strategy name" />
+          <Input placeholder={intl.formatMessage({ id: 'pages.strategies.enterName', defaultMessage: 'Enter strategy name' })} />
         </Form.Item>
         <Form.Item name="note" label={<FormattedMessage id="pages.strategies.note" defaultMessage="Note" />}>
-          <Input.TextArea rows={3} placeholder="Enter description" />
+          <Input.TextArea rows={3} placeholder={intl.formatMessage({ id: 'pages.common.enterDescription', defaultMessage: 'Enter description' })} />
         </Form.Item>
       </ModalForm>
 
@@ -183,19 +185,14 @@ const StrategyList: React.FC = () => {
         modalProps={{ destroyOnClose: true }}
       >
         <Form.Item name="name" label={<FormattedMessage id="pages.strategies.name" defaultMessage="Name" />} rules={[{ required: true }]}>
-          <Input placeholder="Enter strategy name" />
+          <Input placeholder={intl.formatMessage({ id: 'pages.strategies.enterName', defaultMessage: 'Enter strategy name' })} />
         </Form.Item>
         <Form.Item name="note" label={<FormattedMessage id="pages.strategies.note" defaultMessage="Note" />}>
-          <Input.TextArea rows={3} placeholder="Enter description" />
+          <Input.TextArea rows={3} placeholder={intl.formatMessage({ id: 'pages.common.enterDescription', defaultMessage: 'Enter description' })} />
         </Form.Item>
       </ModalForm>
-    </>
+    </PageContainer>
   );
 };
 
 export default StrategyList;
-
-function FormattedMessage(props: { id: string; defaultMessage?: string }): React.JSX.Element {
-  const intl = useIntl();
-  return <>{intl.formatMessage(props)}</>;
-}

@@ -1,5 +1,5 @@
 import React, { useState, useRef, Fragment } from 'react';
-import { Breadcrumb, Button, Drawer, Tooltip, Typography } from 'antd';
+import { Breadcrumb, Button, Drawer, Tooltip, Typography, App } from 'antd';
 import { PageContainer } from '@ant-design/pro-components';
 import type { ProColumns, ActionType } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
@@ -51,6 +51,7 @@ const FileAudit: React.FC = () => {
   const [info, setInfo] = useState<IInfo>();
   const [pageParams, setPageParams] = useState<Partial<API.PageParams>>();
   const intl = useIntl();
+  const { message: msgApi } = App.useApp();
 
   const onShowDrawer = (i: IInfo) => {
     setInfo(i);
@@ -128,9 +129,16 @@ const FileAudit: React.FC = () => {
     const blob = new Blob([`\ufeff${csvContent}`], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = `file-audit-${new Date().toISOString().split('T')[0]}.csv`;
+    link.download = `file-audit-${dayjs().format('YYYY-MM-DD-HHmmss')}.csv`;
     link.click();
     URL.revokeObjectURL(link.href);
+
+    msgApi.success(
+      intl.formatMessage({
+        id: 'pages.audits.exportSuccess',
+        defaultMessage: 'Export successful',
+      }),
+    );
   };
 
   const columns: ProColumns<API.FileAuditItem>[] = [

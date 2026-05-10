@@ -1,12 +1,12 @@
 import { SaveOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
-import { useIntl } from '@umijs/max';
+import { FormattedMessage, useIntl } from '@umijs/max';
 import {
+  App,
   Button,
   Card,
   Form,
   Input,
-  message as messageApi,
   Select,
   Space,
   Switch,
@@ -17,6 +17,7 @@ import { getSettings, updateSetting } from '@/services/rustdesk-console/settings
 
 const Settings: React.FC = () => {
   const intl = useIntl();
+  const { message: msgApi } = App.useApp();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('general');
@@ -38,7 +39,7 @@ const Settings: React.FC = () => {
       }
     } catch (error) {
       console.error('Failed to fetch settings:', error);
-      messageApi.error(intl.formatMessage({ id: 'pages.settings.fetchFailed', defaultMessage: 'Failed to load settings' }));
+      msgApi.error(intl.formatMessage({ id: 'pages.settings.fetchFailed', defaultMessage: 'Failed to load settings' }));
     } finally {
       setLoading(false);
     }
@@ -52,9 +53,9 @@ const Settings: React.FC = () => {
           updateSetting(key, value as string | number | boolean)
         )
       );
-      messageApi.success(intl.formatMessage({ id: 'pages.settings.saveSuccess', defaultMessage: 'Settings saved successfully' }));
+      msgApi.success(intl.formatMessage({ id: 'pages.settings.saveSuccess', defaultMessage: 'Settings saved successfully' }));
     } catch (error) {
-      messageApi.error(intl.formatMessage({ id: 'pages.settings.saveFailed', defaultMessage: 'Failed to save settings' }));
+      msgApi.error(intl.formatMessage({ id: 'pages.settings.saveFailed', defaultMessage: 'Failed to save settings' }));
     }
   };
 
@@ -77,13 +78,13 @@ const Settings: React.FC = () => {
             children: (
               <Form form={form} layout="vertical" style={{ marginTop: 24 }}>
                 <Form.Item name="site_name" label={<FormattedMessage id="pages.settings.siteName" defaultMessage="Site Name" />}>
-                  <Input placeholder="Enter site name" />
+                  <Input placeholder={intl.formatMessage({ id: 'pages.settings.enterSiteName', defaultMessage: 'Enter site name' })} />
                 </Form.Item>
                 <Form.Item name="admin_email" label={<FormattedMessage id="pages.settings.adminEmail" defaultMessage="Admin Email" />}>
-                  <Input placeholder="Enter admin email" />
+                  <Input placeholder={intl.formatMessage({ id: 'pages.settings.enterAdminEmail', defaultMessage: 'Enter admin email' })} />
                 </Form.Item>
                 <Form.Item name="language" label={<FormattedMessage id="pages.settings.language" defaultMessage="Default Language" />}>
-                  <Select options={[{ value: 'en', label: 'English' }, { value: 'zh', label: 'Chinese' }]} />
+                  <Select options={[{ value: 'en', label: intl.formatMessage({ id: 'pages.settings.english', defaultMessage: 'English' }) }, { value: 'zh', label: intl.formatMessage({ id: 'pages.settings.chinese', defaultMessage: 'Chinese' }) }]} />
                 </Form.Item>
               </Form>
             ),
@@ -111,7 +112,7 @@ const Settings: React.FC = () => {
             children: (
               <Form form={form} layout="vertical" style={{ marginTop: 24 }}>
                 <Form.Item name="log_level" label={<FormattedMessage id="pages.settings.logLevel" defaultMessage="Log Level" />}>
-                  <Select options={[{ value: 'info', label: 'Info' }, { value: 'warn', label: 'Warning' }, { value: 'error', label: 'Error' }]} />
+                  <Select options={[{ value: 'info', label: intl.formatMessage({ id: 'pages.settings.logInfo', defaultMessage: 'Info' }) }, { value: 'warn', label: intl.formatMessage({ id: 'pages.settings.logWarning', defaultMessage: 'Warning' }) }, { value: 'error', label: intl.formatMessage({ id: 'pages.settings.logError', defaultMessage: 'Error' }) }]} />
                 </Form.Item>
                 <Form.Item name="enable_debug_mode" label={<FormattedMessage id="pages.settings.enableDebugMode" defaultMessage="Enable Debug Mode" />} valuePropName="checked">
                   <Switch />
@@ -126,8 +127,3 @@ const Settings: React.FC = () => {
 };
 
 export default Settings;
-
-function FormattedMessage(props: { id: string; defaultMessage?: string }): React.JSX.Element {
-  const intl = useIntl();
-  return <>{intl.formatMessage(props)}</>;
-}

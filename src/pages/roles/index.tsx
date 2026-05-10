@@ -6,14 +6,15 @@ import {
   SafetyCertificateOutlined,
 } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
-import { ModalForm, ProTable } from '@ant-design/pro-components';
-import { useIntl } from '@umijs/max';
+import { ModalForm, PageContainer, ProTable } from '@ant-design/pro-components';
+import { FormattedMessage, useIntl } from '@umijs/max';
 import {
+  App,
   Button,
   Checkbox,
+  Divider,
   Form,
   Input,
-  message as messageApi,
   Popconfirm,
   Space,
   Tag,
@@ -31,6 +32,7 @@ import {
 
 const RoleList: React.FC = () => {
   const intl = useIntl();
+  const { message: msgApi } = App.useApp();
   const actionRef = useRef<ActionType>(null);
   const [createModalVisible, setCreateModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
@@ -50,14 +52,14 @@ const RoleList: React.FC = () => {
   const handleCreate = async (values: API.CreateRoleParams) => {
     try {
       await createRole(values);
-      messageApi.success(
+      msgApi.success(
         intl.formatMessage({ id: 'pages.roles.createSuccess', defaultMessage: 'Role created successfully' }),
       );
       setCreateModalVisible(false);
       form.resetFields();
       actionRef.current?.reload();
     } catch (error) {
-      messageApi.error(
+      msgApi.error(
         intl.formatMessage({ id: 'pages.roles.createFailed', defaultMessage: 'Failed to create role' }),
       );
     }
@@ -67,7 +69,7 @@ const RoleList: React.FC = () => {
     if (!currentRole) return;
     try {
       await updateRole(currentRole.guid, values);
-      messageApi.success(
+      msgApi.success(
         intl.formatMessage({ id: 'pages.roles.updateSuccess', defaultMessage: 'Role updated successfully' }),
       );
       setEditModalVisible(false);
@@ -75,7 +77,7 @@ const RoleList: React.FC = () => {
       form.resetFields();
       actionRef.current?.reload();
     } catch (error) {
-      messageApi.error(
+      msgApi.error(
         intl.formatMessage({ id: 'pages.roles.updateFailed', defaultMessage: 'Failed to update role' }),
       );
     }
@@ -84,12 +86,12 @@ const RoleList: React.FC = () => {
   const handleDelete = async (guid: string) => {
     try {
       await deleteRole(guid);
-      messageApi.success(
+      msgApi.success(
         intl.formatMessage({ id: 'pages.roles.deleteSuccess', defaultMessage: 'Role deleted successfully' }),
       );
       actionRef.current?.reload();
     } catch (error) {
-      messageApi.error(
+      msgApi.error(
         intl.formatMessage({ id: 'pages.roles.deleteFailed', defaultMessage: 'Failed to delete role' }),
       );
     }
@@ -118,7 +120,7 @@ const RoleList: React.FC = () => {
       width: 200,
       render: (_, record) => (
         <Space>
-          <SafetyCertificateOutlined style={{ color: '#1890ff' }} />
+          <SafetyCertificateOutlined style={{ color: '#1677ff' }} />
           <span>{record.name}</span>
         </Space>
       ),
@@ -150,7 +152,7 @@ const RoleList: React.FC = () => {
       width: 180,
       fixed: 'right',
       render: (_, record) => (
-        <Space size="small">
+        <Space size={0} split={<Divider type="vertical" />}>
           <Button
             key="edit"
             type="link"
@@ -163,8 +165,8 @@ const RoleList: React.FC = () => {
           <Popconfirm
             title={intl.formatMessage({ id: 'pages.roles.deleteConfirm', defaultMessage: 'Are you sure to delete this role?' })}
             onConfirm={() => handleDelete(record.guid)}
-            okText={intl.formatMessage({ id: 'pages.common.yes', defaultMessage: 'Yes' })}
-            cancelText={intl.formatMessage({ id: 'pages.common.no', defaultMessage: 'No' })}
+            okText={intl.formatMessage({ id: 'pages.common.confirm', defaultMessage: 'Yes' })}
+            cancelText={intl.formatMessage({ id: 'pages.common.cancel', defaultMessage: 'No' })}
           >
             <Button key="delete" type="link" size="small" danger icon={<DeleteOutlined />}>
               <FormattedMessage id="pages.common.delete" defaultMessage="Delete" />
@@ -203,7 +205,7 @@ const RoleList: React.FC = () => {
   };
 
   return (
-    <>
+    <PageContainer>
       <ProTable<API.RoleItem>
         headerTitle={
           <FormattedMessage id="pages.roles.list" defaultMessage="Role List" />
@@ -273,7 +275,7 @@ const RoleList: React.FC = () => {
           <Input placeholder={intl.formatMessage({ id: 'pages.common.pleaseEnterRoleName', defaultMessage: 'Please enter role name' })} />
         </Form.Item>
         <Form.Item name="note" label={<FormattedMessage id="pages.roles.note" defaultMessage="Note" />}>
-          <Input.TextArea rows={3} placeholder="Enter role description" />
+          <Input.TextArea rows={3} placeholder={intl.formatMessage({ id: 'pages.common.enterDescription', defaultMessage: 'Enter description' })} />
         </Form.Item>
         <Form.Item
           name="permissions"
@@ -312,7 +314,7 @@ const RoleList: React.FC = () => {
           <Input placeholder={intl.formatMessage({ id: 'pages.common.pleaseEnterRoleName', defaultMessage: 'Please enter role name' })} />
         </Form.Item>
         <Form.Item name="note" label={<FormattedMessage id="pages.roles.note" defaultMessage="Note" />}>
-          <Input.TextArea rows={3} placeholder="Enter role description" />
+          <Input.TextArea rows={3} placeholder={intl.formatMessage({ id: 'pages.common.enterDescription', defaultMessage: 'Enter description' })} />
         </Form.Item>
         <Form.Item
           name="permissions"
@@ -329,13 +331,8 @@ const RoleList: React.FC = () => {
           </Checkbox.Group>
         </Form.Item>
       </ModalForm>
-    </>
+    </PageContainer>
   );
 };
 
 export default RoleList;
-
-function FormattedMessage(props: { id: string; defaultMessage?: string }): React.JSX.Element {
-  const intl = useIntl();
-  return <>{intl.formatMessage(props)}</>;
-}

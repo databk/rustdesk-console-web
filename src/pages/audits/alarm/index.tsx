@@ -1,12 +1,11 @@
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { FormattedMessage, useIntl } from '@umijs/max';
+import { FormattedMessage } from '@umijs/max';
 import { Tag } from 'antd';
 import React, { useRef } from 'react';
 import { getAlarmAudits } from '@/services/rustdesk-console/audit';
 
 const AlarmAudit: React.FC = () => {
-  const intl = useIntl();
   const actionRef = useRef<ActionType>(null);
 
   const columns: ProColumns<API.AlarmAuditItem>[] = [
@@ -62,7 +61,7 @@ const AlarmAudit: React.FC = () => {
         request={async (params) => {
           const result = await getAlarmAudits({
             current: params.current || 1,
-            pageSize: params.pageSize || 10,
+            pageSize: params.pageSize || 20,
           });
           return {
             data: result.data || [],
@@ -73,7 +72,7 @@ const AlarmAudit: React.FC = () => {
         columns={columns}
         search={false}
         pagination={{
-          defaultPageSize: 10,
+          defaultPageSize: 20,
           showSizeChanger: true,
           showQuickJumper: true,
         }}
