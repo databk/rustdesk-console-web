@@ -1,5 +1,5 @@
 import React, { useState, useRef, Fragment } from 'react';
-import { Breadcrumb, Button, Drawer, Tooltip, Typography, App } from 'antd';
+import { Breadcrumb, Button, Drawer, Tooltip, Typography, App, Modal } from 'antd';
 import { PageContainer } from '@ant-design/pro-components';
 import type { ProColumns, ActionType } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
@@ -9,12 +9,11 @@ import { ArrowLeftOutlined, ArrowRightOutlined, InfoCircleOutlined } from '@ant-
 import { useIntl, FormattedMessage } from '@umijs/max';
 import dayjs from 'dayjs';
 
-function formatBytes(a: number, b = 2) {
-  if (!+a) return '0 Bytes';
-  const c = 0 > b ? 0 : b,
-    d = Math.floor(Math.log(a) / Math.log(1024));
-  return `${parseFloat((a / Math.pow(1024, d)).toFixed(c))} ${['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'][d]
-    }`;
+function formatBytes(bytes: number, decimals = 2) {
+  if (!+bytes) return '0 Bytes';
+  const safeDecimals = decimals < 0 ? 0 : decimals;
+  const exponent = Math.floor(Math.log(bytes) / Math.log(1024));
+  return `${parseFloat((bytes / Math.pow(1024, exponent)).toFixed(safeDecimals))} ${['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'][exponent]}`;
 }
 
 interface IInfo {
@@ -51,31 +50,32 @@ const FileAudit: React.FC = () => {
   const [info, setInfo] = useState<IInfo>();
   const [pageParams, setPageParams] = useState<Partial<API.PageParams>>();
   const intl = useIntl();
-  const { message: msgApi } = App.useApp();
+  const { message: msgApi, modal } = App.useApp();
 
   const onShowDrawer = (i: IInfo) => {
     setInfo(i);
     setDrawerOpen(true);
   };
 
-  const directionEnumMap = (i: number) => {
+  const directionEnumMap = (type: number) => {
     const remoteText = intl.formatMessage({ id: 'pages.audits.remote', defaultMessage: 'Remote' });
     const localText = intl.formatMessage({ id: 'pages.audits.local', defaultMessage: 'Local' });
-    switch (i) {
+    switch (type) {
       case 0:
         return `${remoteText}->${localText}`;
       case 1:
         return `${localText}->${remoteText}`;
       default:
-        return i.toString();
+        return type.toString();
     }
   };
 
-  const exportCsv = async () => {
+  const fetchExportData = async (): Promise<API.FileAuditItem[]> => {
     let allItems: API.FileAuditItem[] = [];
     let total = 0;
     const pageSize = 100;
     let current = 0;
+    
     do {
       current++;
       const items = await getFileAudits({
@@ -83,7 +83,7 @@ const FileAudit: React.FC = () => {
         current: current,
         pageSize: pageSize,
       });
-      if (total == 0 && items.total != null) {
+      if (total === 0 && items.total != null) {
         total = items.total;
       }
       if (items.data != null) {
@@ -91,6 +91,10 @@ const FileAudit: React.FC = () => {
       }
     } while (current < 10 && pageSize * current < total);
 
+    return allItems;
+  };
+
+  const generateCsvContent = (items: API.FileAuditItem[]): string => {
     const titles = [
       intl.formatMessage({ id: 'pages.audits.remote', defaultMessage: 'Remote' }),
       intl.formatMessage({ id: 'pages.audits.local', defaultMessage: 'Local' }),
@@ -101,7 +105,7 @@ const FileAudit: React.FC = () => {
     ];
 
     const rows: string[][] = [];
-    allItems.forEach((record) => {
+    items.forEach((record) => {
       const row: string[] = [];
       row.push(record.deviceId || '');
       const localTxt = `${record.clientName || ''}@${record.clientIp || ''}`;
@@ -121,24 +125,82 @@ const FileAudit: React.FC = () => {
       rows.push(row);
     });
 
-    const csvContent = [
+    return [
       titles.join(','),
       ...rows.map((row) => row.map((cell) => `"${cell}"`).join(',')),
     ].join('\n');
+  };
 
+  const downloadCsv = (csvContent: string) => {
     const blob = new Blob([`\ufeff${csvContent}`], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
     link.download = `file-audit-${dayjs().format('YYYY-MM-DD-HHmmss')}.csv`;
     link.click();
     URL.revokeObjectURL(link.href);
+  };
 
-    msgApi.success(
-      intl.formatMessage({
-        id: 'pages.audits.exportSuccess',
-        defaultMessage: 'Export successful',
-      }),
-    );
+  const exportCsv = async () => {
+    modal.confirm({
+      title: intl.formatMessage({ id: 'pages.audits.exportConfirmTitle', defaultMessage: 'Export CSV' }),
+      content: intl.formatMessage({ id: 'pages.audits.exportConfirmContent', defaultMessage: 'Export up to 1000 records. Continue?' }),
+      okText: intl.formatMessage({ id: 'pages.common.confirm', defaultMessage: 'Yes' }),
+      cancelText: intl.formatMessage({ id: 'pages.common.cancel', defaultMessage: 'No' }),
+      onOk: async () => {
+        try {
+          const items = await fetchExportData();
+          const csvContent = generateCsvContent(items);
+          downloadCsv(csvContent);
+          msgApi.success(
+            intl.formatMessage({
+              id: 'pages.audits.exportSuccess',
+              defaultMessage: 'Export successful',
+            }),
+          );
+        } catch (error) {
+          msgApi.error(
+            intl.formatMessage({
+              id: 'pages.audits.exportFailed',
+              defaultMessage: 'Export failed',
+            }),
+          );
+        }
+      },
+    });
+  };
+
+  const renderDetailColumn = (record: API.FileAuditItem) => {
+    if (record.isFile) {
+      if (record.fileCount === 1 && record.files && record.files.length === 1) {
+        return formatBytes(record.files[0][1]);
+      }
+      return '';
+    }
+
+    if (record.fileCount !== undefined && record.files) {
+      const text = `${record.fileCount} ${intl.formatMessage({
+        id: 'pages.audits.files',
+        defaultMessage: 'Files',
+      })}`;
+      
+      if (record.fileCount > 0 && record.files.length > 0) {
+        const localInfo: IInfo = {
+          num: record.fileCount,
+          files: record.files,
+          name: record.clientName,
+          ip: record.clientIp,
+        };
+        return (
+          <Button type="link" onClick={() => onShowDrawer(localInfo)}>
+            {text}
+          </Button>
+        );
+      }
+      
+      return text;
+    }
+
+    return '';
   };
 
   const columns: ProColumns<API.FileAuditItem>[] = [
@@ -176,7 +238,7 @@ const FileAudit: React.FC = () => {
         const tip = directionEnumMap(record.type || 0);
         return (
           <Tooltip title={tip}>
-            {record.type == 1 ? <ArrowLeftOutlined /> : <ArrowRightOutlined />}
+            {record.type === 1 ? <ArrowLeftOutlined /> : <ArrowRightOutlined />}
           </Tooltip>
         );
       },
@@ -245,36 +307,7 @@ const FileAudit: React.FC = () => {
       dataIndex: 'detail',
       search: false,
       align: 'center',
-      render: (_, record) => {
-        if (record.isFile) {
-          if (record.fileCount == 1 && record.files && record.files.length == 1) {
-            return formatBytes(record.files[0][1]);
-          }
-        } else {
-          if (record.fileCount != undefined && record.files) {
-            const text = `${record.fileCount} ${intl.formatMessage({
-              id: 'pages.audits.files',
-              defaultMessage: 'Files',
-            })}`;
-            if (record.fileCount > 0 && record.files.length > 0) {
-              const localInfo: IInfo = {
-                num: record.fileCount,
-                files: record.files,
-                name: record.clientName,
-                ip: record.clientIp,
-              };
-              return (
-                <Button type="link" onClick={() => onShowDrawer(localInfo)}>
-                  {text}
-                </Button>
-              );
-            } else {
-              return text;
-            }
-          }
-        }
-        return '';
-      },
+      render: (_, record) => renderDetailColumn(record),
     },
   ];
 
