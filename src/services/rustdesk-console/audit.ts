@@ -21,8 +21,10 @@ export async function getFileAudits(
   params: {
     current?: number;
     pageSize?: number;
-    remote?: string;
-    created_at?: string;
+    peerId?: string;
+    type?: number;
+    startTime?: string;
+    endTime?: string;
   },
   options?: { [key: string]: any },
 ) {

@@ -38,8 +38,6 @@
     "@ant-design/plots": "^2.6.0",
     "@ant-design/pro-components": "^2.7.19",
     "@ant-design/v5-patch-for-react-19": "^1.0.3",
-    "@antv/l7": "^2.22.7",
-    "@antv/l7-react": "^2.4.3",
     "antd": "^5.25.4",
     "antd-style": "^3.7.0",
     "classnames": "^2.5.1",

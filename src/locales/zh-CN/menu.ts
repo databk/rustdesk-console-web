@@ -24,4 +24,6 @@ export default {
   'menu.settings.smtp': 'SMTP 配置',
   'menu.customClients': '自定义客户端',
   'menu.addressBooks': '地址簿',
+  'menu.list.audit-list': '审计列表',
+  'menu.list.audit-list.File': '文件传输',
 };
