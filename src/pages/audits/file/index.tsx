@@ -7,6 +7,7 @@ import { getFileAudits } from '@/services/rustdesk-console/audit';
 import type { API } from '@/services/rustdesk-console/typings';
 import { ArrowLeftOutlined, ArrowRightOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import { useIntl, FormattedMessage } from '@umijs/max';
+import dayjs from 'dayjs';
 
 function formatBytes(a: number, b = 2) {
   if (!+a) return '0 Bytes';
@@ -183,7 +184,11 @@ const FileAudit: React.FC = () => {
       title: <FormattedMessage id="pages.audits.time" defaultMessage="Time" />,
       dataIndex: 'createdAt',
       valueType: 'dateTime',
-      render: (_, record) => record.createdAt || '-',
+      width: 180,
+      render: (_, record) => {
+        if (!record.createdAt) return '-';
+        return dayjs(record.createdAt).format('YYYY-MM-DD HH:mm:ss');
+      },
     },
     {
       title: <FormattedMessage id="pages.audits.file" defaultMessage="File" />,
