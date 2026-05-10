@@ -78,13 +78,13 @@ const Settings: React.FC = () => {
             children: (
               <Form form={form} layout="vertical" style={{ marginTop: 24 }}>
                 <Form.Item name="site_name" label={<FormattedMessage id="pages.settings.siteName" defaultMessage="Site Name" />}>
-                  <Input placeholder="Enter site name" />
+                  <Input placeholder={intl.formatMessage({ id: 'pages.settings.enterSiteName', defaultMessage: 'Enter site name' })} />
                 </Form.Item>
                 <Form.Item name="admin_email" label={<FormattedMessage id="pages.settings.adminEmail" defaultMessage="Admin Email" />}>
-                  <Input placeholder="Enter admin email" />
+                  <Input placeholder={intl.formatMessage({ id: 'pages.settings.enterAdminEmail', defaultMessage: 'Enter admin email' })} />
                 </Form.Item>
                 <Form.Item name="language" label={<FormattedMessage id="pages.settings.language" defaultMessage="Default Language" />}>
-                  <Select options={[{ value: 'en', label: 'English' }, { value: 'zh', label: 'Chinese' }]} />
+                  <Select options={[{ value: 'en', label: intl.formatMessage({ id: 'pages.settings.english', defaultMessage: 'English' }) }, { value: 'zh', label: intl.formatMessage({ id: 'pages.settings.chinese', defaultMessage: 'Chinese' }) }]} />
                 </Form.Item>
               </Form>
             ),
@@ -112,7 +112,7 @@ const Settings: React.FC = () => {
             children: (
               <Form form={form} layout="vertical" style={{ marginTop: 24 }}>
                 <Form.Item name="log_level" label={<FormattedMessage id="pages.settings.logLevel" defaultMessage="Log Level" />}>
-                  <Select options={[{ value: 'info', label: 'Info' }, { value: 'warn', label: 'Warning' }, { value: 'error', label: 'Error' }]} />
+                  <Select options={[{ value: 'info', label: intl.formatMessage({ id: 'pages.settings.logInfo', defaultMessage: 'Info' }) }, { value: 'warn', label: intl.formatMessage({ id: 'pages.settings.logWarning', defaultMessage: 'Warning' }) }, { value: 'error', label: intl.formatMessage({ id: 'pages.settings.logError', defaultMessage: 'Error' }) }]} />
                 </Form.Item>
                 <Form.Item name="enable_debug_mode" label={<FormattedMessage id="pages.settings.enableDebugMode" defaultMessage="Enable Debug Mode" />} valuePropName="checked">
                   <Switch />

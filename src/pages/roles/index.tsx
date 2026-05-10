@@ -12,6 +12,7 @@ import {
   App,
   Button,
   Checkbox,
+  Divider,
   Form,
   Input,
   Popconfirm,
@@ -151,7 +152,7 @@ const RoleList: React.FC = () => {
       width: 180,
       fixed: 'right',
       render: (_, record) => (
-        <Space size="small">
+        <Space size={0} split={<Divider type="vertical" />}>
           <Button
             key="edit"
             type="link"
@@ -164,8 +165,8 @@ const RoleList: React.FC = () => {
           <Popconfirm
             title={intl.formatMessage({ id: 'pages.roles.deleteConfirm', defaultMessage: 'Are you sure to delete this role?' })}
             onConfirm={() => handleDelete(record.guid)}
-            okText={intl.formatMessage({ id: 'pages.common.yes', defaultMessage: 'Yes' })}
-            cancelText={intl.formatMessage({ id: 'pages.common.no', defaultMessage: 'No' })}
+            okText={intl.formatMessage({ id: 'pages.common.confirm', defaultMessage: 'Yes' })}
+            cancelText={intl.formatMessage({ id: 'pages.common.cancel', defaultMessage: 'No' })}
           >
             <Button key="delete" type="link" size="small" danger icon={<DeleteOutlined />}>
               <FormattedMessage id="pages.common.delete" defaultMessage="Delete" />
@@ -274,7 +275,7 @@ const RoleList: React.FC = () => {
           <Input placeholder={intl.formatMessage({ id: 'pages.common.pleaseEnterRoleName', defaultMessage: 'Please enter role name' })} />
         </Form.Item>
         <Form.Item name="note" label={<FormattedMessage id="pages.roles.note" defaultMessage="Note" />}>
-          <Input.TextArea rows={3} placeholder="Enter role description" />
+          <Input.TextArea rows={3} placeholder={intl.formatMessage({ id: 'pages.common.enterDescription', defaultMessage: 'Enter description' })} />
         </Form.Item>
         <Form.Item
           name="permissions"
@@ -313,7 +314,7 @@ const RoleList: React.FC = () => {
           <Input placeholder={intl.formatMessage({ id: 'pages.common.pleaseEnterRoleName', defaultMessage: 'Please enter role name' })} />
         </Form.Item>
         <Form.Item name="note" label={<FormattedMessage id="pages.roles.note" defaultMessage="Note" />}>
-          <Input.TextArea rows={3} placeholder="Enter role description" />
+          <Input.TextArea rows={3} placeholder={intl.formatMessage({ id: 'pages.common.enterDescription', defaultMessage: 'Enter description' })} />
         </Form.Item>
         <Form.Item
           name="permissions"

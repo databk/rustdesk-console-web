@@ -134,6 +134,8 @@ const SharedAddressBook: React.FC = () => {
               />
             }
             onConfirm={() => handleDelete([record.guid])}
+            okText={intl.formatMessage({ id: 'pages.common.confirm', defaultMessage: 'Yes' })}
+            cancelText={intl.formatMessage({ id: 'pages.common.cancel', defaultMessage: 'No' })}
           >
             <Button type="link" size="small" danger>
               <FormattedMessage id="pages.common.delete" defaultMessage="Delete" />
@@ -187,6 +189,8 @@ const SharedAddressBook: React.FC = () => {
                 />
               }
               onConfirm={() => handleDelete(selectedRowKeys as string[])}
+              okText={intl.formatMessage({ id: 'pages.common.confirm', defaultMessage: 'Yes' })}
+              cancelText={intl.formatMessage({ id: 'pages.common.cancel', defaultMessage: 'No' })}
             >
               <Button danger>
                 <FormattedMessage id="pages.common.batchDelete" defaultMessage="Batch Delete" />

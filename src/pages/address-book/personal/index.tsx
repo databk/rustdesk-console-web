@@ -54,7 +54,7 @@ export interface PersonalAddressBookProps {
 
 const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({ guid: propGuid, title: propTitle, onBack }) => {
   const intl = useIntl();
-  const { message: msgApi } = App.useApp();
+  const { message: msgApi, modal } = App.useApp();
   const actionRef = useRef<ActionType>(null);
   
   const [addPeerModalVisible, setAddPeerModalVisible] = useState(false);
@@ -461,6 +461,8 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({ guid: propGui
               />
             }
             onConfirm={() => handleDeletePeer(record.id)}
+            okText={intl.formatMessage({ id: 'pages.common.confirm', defaultMessage: 'Yes' })}
+            cancelText={intl.formatMessage({ id: 'pages.common.cancel', defaultMessage: 'No' })}
           >
             <Button type="link" size="small" danger>
               <FormattedMessage id="pages.common.delete" defaultMessage="Delete" />
@@ -510,12 +512,12 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({ guid: propGui
       key: 'action',
       width: 180,
       render: (_: unknown, record: API.TagItem) => (
-        <Space size="small">
+        <Space size={0} split={<Divider type="vertical" />}>
           <Button
             type="link"
             size="small"
             onClick={() => {
-              Modal.confirm({
+              modal.confirm({
                 title: intl.formatMessage({ id: 'pages.addressBook.renameTag', defaultMessage: 'Rename Tag' }),
                 content: (
                   <Form form={renameTagForm} initialValues={{ old: record.name, new: '' }}>
@@ -543,6 +545,8 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({ guid: propGui
               />
             }
             onConfirm={() => handleDeleteTag(record.name)}
+            okText={intl.formatMessage({ id: 'pages.common.confirm', defaultMessage: 'Yes' })}
+            cancelText={intl.formatMessage({ id: 'pages.common.cancel', defaultMessage: 'No' })}
           >
             <Button type="link" size="small" danger>
               <FormattedMessage id="pages.common.delete" defaultMessage="Delete" />
@@ -577,7 +581,7 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({ guid: propGui
           color={selectedTags.length === 0 ? 'blue' : undefined}
           onClick={() => { setSelectedTags([]); actionRef.current?.reload(); }}
         >
-          Untagged
+          <FormattedMessage id="pages.addressBook.untagged" defaultMessage="Untagged" />
         </Tag>
         {(tags as API.TagItem[]).map((tag: API.TagItem) => {
           const displayColor = argbToHex(pendingColorUpdates[tag.name] ?? tag.color);
@@ -596,6 +600,8 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({ guid: propGui
                       defaultMessage="Are you sure to delete this tag?"
                     />
                   }
+                  okText={intl.formatMessage({ id: 'pages.common.confirm', defaultMessage: 'Yes' })}
+                  cancelText={intl.formatMessage({ id: 'pages.common.cancel', defaultMessage: 'No' })}
                   onConfirm={(e) => {
                     e?.stopPropagation();
                     handleDeleteTag(tag.name);
@@ -846,7 +852,7 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({ guid: propGui
           />
         )}
         <Form form={editPeerForm} onFinish={handleUpdatePeer} layout="vertical">
-          <Form.Item name="id" label="ID">
+          <Form.Item name="id" label={<FormattedMessage id="pages.common.id" defaultMessage="ID" />}>
             <Text>{editingPeer?.id}</Text>
           </Form.Item>
           <Form.Item name="alias" label={<FormattedMessage id="pages.addressBook.alias" defaultMessage="Alias" />}>

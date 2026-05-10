@@ -10,6 +10,7 @@ import { FormattedMessage, useIntl } from '@umijs/max';
 import {
   App,
   Button,
+  Divider,
   Form,
   Input,
   Popconfirm,
@@ -109,7 +110,7 @@ const StrategyList: React.FC = () => {
       width: 180,
       fixed: 'right',
       render: (_, record) => (
-        <Space size="small">
+        <Space size={0} split={<Divider type="vertical" />}>
           <Button type="link" size="small" icon={<EditOutlined />} onClick={() => {
             setCurrentStrategy(record);
             form.setFieldsValue(record);
@@ -167,10 +168,10 @@ const StrategyList: React.FC = () => {
         modalProps={{ destroyOnClose: true }}
       >
         <Form.Item name="name" label={<FormattedMessage id="pages.strategies.name" defaultMessage="Name" />} rules={[{ required: true }]}>
-          <Input placeholder="Enter strategy name" />
+          <Input placeholder={intl.formatMessage({ id: 'pages.strategies.enterName', defaultMessage: 'Enter strategy name' })} />
         </Form.Item>
         <Form.Item name="note" label={<FormattedMessage id="pages.strategies.note" defaultMessage="Note" />}>
-          <Input.TextArea rows={3} placeholder="Enter description" />
+          <Input.TextArea rows={3} placeholder={intl.formatMessage({ id: 'pages.common.enterDescription', defaultMessage: 'Enter description' })} />
         </Form.Item>
       </ModalForm>
 
@@ -184,10 +185,10 @@ const StrategyList: React.FC = () => {
         modalProps={{ destroyOnClose: true }}
       >
         <Form.Item name="name" label={<FormattedMessage id="pages.strategies.name" defaultMessage="Name" />} rules={[{ required: true }]}>
-          <Input placeholder="Enter strategy name" />
+          <Input placeholder={intl.formatMessage({ id: 'pages.strategies.enterName', defaultMessage: 'Enter strategy name' })} />
         </Form.Item>
         <Form.Item name="note" label={<FormattedMessage id="pages.strategies.note" defaultMessage="Note" />}>
-          <Input.TextArea rows={3} placeholder="Enter description" />
+          <Input.TextArea rows={3} placeholder={intl.formatMessage({ id: 'pages.common.enterDescription', defaultMessage: 'Enter description' })} />
         </Form.Item>
       </ModalForm>
     </PageContainer>

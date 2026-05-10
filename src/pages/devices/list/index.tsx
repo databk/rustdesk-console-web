@@ -140,6 +140,8 @@ const DeviceList: React.FC<DeviceListProps> = ({ deviceGroupGuid, title, onBack 
               />
             }
             onConfirm={() => handleRemoveFromGroup(record.id)}
+            okText={intl.formatMessage({ id: 'pages.common.confirm', defaultMessage: 'Yes' })}
+            cancelText={intl.formatMessage({ id: 'pages.common.cancel', defaultMessage: 'No' })}
           >
             <Button type="link" size="small" danger icon={<DeleteOutlined />}>
               <FormattedMessage id="pages.devices.remove" defaultMessage="Remove" />
@@ -185,6 +187,8 @@ const DeviceList: React.FC<DeviceListProps> = ({ deviceGroupGuid, title, onBack 
                 />
               }
               onConfirm={() => handleDelete(record.guid)}
+              okText={intl.formatMessage({ id: 'pages.common.confirm', defaultMessage: 'Yes' })}
+              cancelText={intl.formatMessage({ id: 'pages.common.cancel', defaultMessage: 'No' })}
             >
               <Button type="link" size="small" danger icon={<DeleteOutlined />}>
                 <FormattedMessage id="pages.common.delete" defaultMessage="Delete" />

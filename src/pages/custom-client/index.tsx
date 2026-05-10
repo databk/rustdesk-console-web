@@ -11,6 +11,7 @@ import { FormattedMessage, useIntl } from '@umijs/max';
 import {
   App,
   Button,
+  Divider,
   Form,
   Input,
   Popconfirm,
@@ -117,7 +118,7 @@ const CustomClientList: React.FC = () => {
       width: 250,
       fixed: 'right',
       render: (_, record) => (
-        <Space size="small">
+        <Space size={0} split={<Divider type="vertical" />}>
           <Button type="link" size="small" icon={<DownloadOutlined />} onClick={() => handleDownload(record.guid, record.name)}>
             <FormattedMessage id="pages.common.download" defaultMessage="Download" />
           </Button>
@@ -178,7 +179,7 @@ const CustomClientList: React.FC = () => {
         modalProps={{ destroyOnClose: true }}
       >
         <Form.Item name="name" label={<FormattedMessage id="pages.customClients.name" defaultMessage="Name" />} rules={[{ required: true }]}>
-          <Input placeholder="Enter client name" />
+          <Input placeholder={intl.formatMessage({ id: 'pages.customClients.enterName', defaultMessage: 'Enter client name' })} />
         </Form.Item>
       </ModalForm>
 
@@ -192,7 +193,7 @@ const CustomClientList: React.FC = () => {
         modalProps={{ destroyOnClose: true }}
       >
         <Form.Item name="name" label={<FormattedMessage id="pages.customClients.name" defaultMessage="Name" />} rules={[{ required: true }]}>
-          <Input placeholder="Enter client name" />
+          <Input placeholder={intl.formatMessage({ id: 'pages.customClients.enterName', defaultMessage: 'Enter client name' })} />
         </Form.Item>
       </ModalForm>
     </PageContainer>

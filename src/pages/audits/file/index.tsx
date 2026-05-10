@@ -40,7 +40,7 @@ const FileAudit: React.FC = () => {
         item.peerId || '',
         item.clientName || '',
         item.clientIp || '',
-        item.type === 0 ? 'Download' : 'Upload',
+        item.type === 0 ? intl.formatMessage({ id: 'pages.audits.download', defaultMessage: 'Download' }) : intl.formatMessage({ id: 'pages.audits.upload', defaultMessage: 'Upload' }),
         item.path || files,
         item.fileCount || 0,
         item.createdAt || '',
@@ -105,10 +105,10 @@ const FileAudit: React.FC = () => {
       search: false,
       render: (_: unknown, record: API.FileAuditItem) => {
         if (record.type === 0) {
-          return <Tag color="green">Download</Tag>;
+          return <Tag color="green"><FormattedMessage id="pages.audits.download" defaultMessage="Download" /></Tag>;
         }
         if (record.type === 1) {
-          return <Tag color="blue">Upload</Tag>;
+          return <Tag color="blue"><FormattedMessage id="pages.audits.upload" defaultMessage="Upload" /></Tag>;
         }
         return <Tag>{record.type}</Tag>;
       },

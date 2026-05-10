@@ -81,10 +81,10 @@ const ConnectionAudit: React.FC = () => {
       render: (_: unknown, record: API.ConnectionAuditItem) => {
         const action = record.action || '';
         if (action === 'established') {
-          return <Tag color="green">Established</Tag>;
+          return <Tag color="green"><FormattedMessage id="pages.audits.established" defaultMessage="Established" /></Tag>;
         }
         if (action === 'close') {
-          return <Tag color="red">Closed</Tag>;
+          return <Tag color="red"><FormattedMessage id="pages.audits.closed" defaultMessage="Closed" /></Tag>;
         }
         return <Tag>{action}</Tag>;
       },

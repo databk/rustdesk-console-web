@@ -10,6 +10,7 @@ import { FormattedMessage, useIntl } from '@umijs/max';
 import {
   App,
   Button,
+  Divider,
   Form,
   Input,
   Popconfirm,
@@ -105,7 +106,7 @@ const UserGroupList: React.FC = () => {
       width: 180,
       fixed: 'right',
       render: (_, record) => (
-        <Space size="small">
+        <Space size={0} split={<Divider type="vertical" />}>
           <Button type="link" size="small" icon={<EditOutlined />} onClick={() => {
             setCurrentGroup(record);
             form.setFieldsValue(record);
@@ -163,10 +164,10 @@ const UserGroupList: React.FC = () => {
         modalProps={{ destroyOnClose: true }}
       >
         <Form.Item name="name" label={<FormattedMessage id="pages.userGroups.name" defaultMessage="Name" />} rules={[{ required: true }]}>
-          <Input placeholder="Enter group name" />
+          <Input placeholder={intl.formatMessage({ id: 'pages.userGroups.enterName', defaultMessage: 'Enter group name' })} />
         </Form.Item>
         <Form.Item name="note" label={<FormattedMessage id="pages.userGroups.note" defaultMessage="Note" />}>
-          <Input.TextArea rows={3} placeholder="Enter description" />
+          <Input.TextArea rows={3} placeholder={intl.formatMessage({ id: 'pages.common.enterDescription', defaultMessage: 'Enter description' })} />
         </Form.Item>
       </ModalForm>
 
@@ -180,10 +181,10 @@ const UserGroupList: React.FC = () => {
         modalProps={{ destroyOnClose: true }}
       >
         <Form.Item name="name" label={<FormattedMessage id="pages.userGroups.name" defaultMessage="Name" />} rules={[{ required: true }]}>
-          <Input placeholder="Enter group name" />
+          <Input placeholder={intl.formatMessage({ id: 'pages.userGroups.enterName', defaultMessage: 'Enter group name' })} />
         </Form.Item>
         <Form.Item name="note" label={<FormattedMessage id="pages.userGroups.note" defaultMessage="Note" />}>
-          <Input.TextArea rows={3} placeholder="Enter description" />
+          <Input.TextArea rows={3} placeholder={intl.formatMessage({ id: 'pages.common.enterDescription', defaultMessage: 'Enter description' })} />
         </Form.Item>
       </ModalForm>
     </PageContainer>

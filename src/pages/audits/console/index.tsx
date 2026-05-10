@@ -1,11 +1,10 @@
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { FormattedMessage, useIntl } from '@umijs/max';
+import { FormattedMessage } from '@umijs/max';
 import React, { useRef } from 'react';
 import { getConsoleAudits } from '@/services/rustdesk-console/audit';
 
 const ConsoleAudit: React.FC = () => {
-  const intl = useIntl();
   const actionRef = useRef<ActionType>(null);
 
   const columns: ProColumns<API.ConsoleAuditItem>[] = [
