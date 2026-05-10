@@ -135,16 +135,16 @@ const FileAudit: React.FC = () => {
 
   const columns: ProColumns<API.FileAuditItem>[] = [
     {
-      title: <FormattedMessage id="pages.audits.peerId" defaultMessage="Peer ID" />,
+      title: <FormattedMessage id="pages.audits.remote" defaultMessage="Remote" />,
       dataIndex: 'peerId',
       tip: intl.formatMessage({
-        id: 'pages.audits.peerIdTip',
-        defaultMessage: 'Remote device ID (fuzzy match)',
+        id: 'pages.audits.remoteSearchTip',
+        defaultMessage: 'Search by remote device ID (fuzzy match)',
       }),
       fieldProps: {
         placeholder: intl.formatMessage({
-          id: 'pages.audits.peerIdPlaceholder',
-          defaultMessage: 'Enter peer ID',
+          id: 'pages.audits.remotePlaceholder',
+          defaultMessage: 'Enter remote device ID',
         }),
       },
       hideInTable: true,
