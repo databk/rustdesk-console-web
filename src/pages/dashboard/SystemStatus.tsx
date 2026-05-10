@@ -1,6 +1,6 @@
 import { FormattedMessage } from '@umijs/max';
 import { Card, Progress, Space, Typography } from 'antd';
-import React, { CSSProperties } from 'react';
+import React, { type CSSProperties } from 'react';
 
 const { Text } = Typography;
 

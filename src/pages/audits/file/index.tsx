@@ -13,7 +13,7 @@ function formatBytes(bytes: number, decimals = 2) {
   if (!+bytes) return '0 Bytes';
   const safeDecimals = decimals < 0 ? 0 : decimals;
   const exponent = Math.floor(Math.log(bytes) / Math.log(1024));
-  return `${parseFloat((bytes / Math.pow(1024, exponent)).toFixed(safeDecimals))} ${['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'][exponent]}`;
+  return `${parseFloat((bytes / 1024 ** exponent).toFixed(safeDecimals))} ${['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'][exponent]}`;
 }
 
 interface IInfo {
@@ -418,8 +418,8 @@ const FileAudit: React.FC = () => {
         onClose={() => setDrawerOpen(false)}
         open={drawerOpen}
       >
-        {info?.files?.map(([name, size], index) => (
-          <p key={index}>
+        {info?.files?.map(([name, size]) => (
+          <p key={name}>
             <span>{name}</span>
             <span style={{ float: 'right' }}>{formatBytes(size)}</span>
           </p>

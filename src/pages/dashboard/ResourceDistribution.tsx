@@ -1,7 +1,7 @@
 import { TeamOutlined, DesktopOutlined } from '@ant-design/icons';
 import { FormattedMessage, useIntl } from '@umijs/max';
 import { Card, Col, Progress, Row, Space, Statistic, Tag, Typography } from 'antd';
-import React, { CSSProperties } from 'react';
+import React, { type CSSProperties } from 'react';
 
 const { Text } = Typography;
 
