@@ -135,6 +135,21 @@ const FileAudit: React.FC = () => {
 
   const columns: ProColumns<API.FileAuditItem>[] = [
     {
+      title: <FormattedMessage id="pages.audits.peerId" defaultMessage="Peer ID" />,
+      dataIndex: 'peerId',
+      tip: intl.formatMessage({
+        id: 'pages.audits.peerIdTip',
+        defaultMessage: 'Remote device ID (fuzzy match)',
+      }),
+      fieldProps: {
+        placeholder: intl.formatMessage({
+          id: 'pages.audits.peerIdPlaceholder',
+          defaultMessage: 'Enter peer ID',
+        }),
+      },
+      hideInTable: true,
+    },
+    {
       title: <FormattedMessage id="pages.audits.remote" defaultMessage="Remote" />,
       dataIndex: 'deviceId',
       tip: intl.formatMessage({
@@ -183,11 +198,17 @@ const FileAudit: React.FC = () => {
     {
       title: <FormattedMessage id="pages.audits.time" defaultMessage="Time" />,
       dataIndex: 'createdAt',
-      valueType: 'dateTime',
+      valueType: 'dateTimeRange',
       width: 180,
       render: (_, record) => {
         if (!record.createdAt) return '-';
         return dayjs(record.createdAt).format('YYYY-MM-DD HH:mm:ss');
+      },
+      fieldProps: {
+        placeholder: [
+          intl.formatMessage({ id: 'pages.audits.startTime', defaultMessage: 'Start Time' }),
+          intl.formatMessage({ id: 'pages.audits.endTime', defaultMessage: 'End Time' }),
+        ],
       },
     },
     {
@@ -285,11 +306,25 @@ const FileAudit: React.FC = () => {
           labelWidth: 120,
         }}
         request={async (params) => {
-          const result = await getFileAudits({
+          const requestParams: any = {
             current: params.current,
             pageSize: params.pageSize,
-            remote: params.deviceId,
-          });
+          };
+
+          if (params.peerId) {
+            requestParams.peerId = params.peerId;
+          }
+
+          if (params.type !== undefined && params.type !== null) {
+            requestParams.type = params.type;
+          }
+
+          if (params.createdAt && Array.isArray(params.createdAt) && params.createdAt.length === 2) {
+            requestParams.startTime = dayjs(params.createdAt[0]).toISOString();
+            requestParams.endTime = dayjs(params.createdAt[1]).toISOString();
+          }
+
+          const result = await getFileAudits(requestParams);
           return {
             data: result.data || [],
             total: result.total || 0,
