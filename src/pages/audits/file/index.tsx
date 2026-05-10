@@ -1,170 +1,290 @@
-import type { ActionType, ProColumns } from '@ant-design/pro-components';
-import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { FormattedMessage, useIntl } from '@umijs/max';
-import { Button, message, Tag } from 'antd';
-import React, { useRef, useState } from 'react';
+import React, { useState, useRef, Fragment } from 'react';
+import { Breadcrumb, Button, Drawer, Tooltip, Typography } from 'antd';
+import { PageContainer } from '@ant-design/pro-components';
+import type { ProColumns, ActionType } from '@ant-design/pro-components';
+import { ProTable } from '@ant-design/pro-components';
 import { getFileAudits } from '@/services/rustdesk-console/audit';
-import { DownloadOutlined } from '@ant-design/icons';
-import dayjs from 'dayjs';
+import type { API } from '@/services/rustdesk-console/typings';
+import { ArrowLeftOutlined, ArrowRightOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import { useIntl, FormattedMessage } from '@umijs/max';
+
+function formatBytes(a: number, b = 2) {
+  if (!+a) return '0 Bytes';
+  const c = 0 > b ? 0 : b,
+    d = Math.floor(Math.log(a) / Math.log(1024));
+  return `${parseFloat((a / Math.pow(1024, d)).toFixed(c))} ${['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'][d]
+    }`;
+}
+
+interface IInfo {
+  name?: string;
+  ip?: string;
+  num?: number;
+  files?: [string, number][];
+}
+
+const { Text } = Typography;
+
+const EllipsisMiddle: React.FC<{ suffixCount: number; children: string }> = ({
+  suffixCount,
+  children,
+}) => {
+  let start = children;
+  let suffix = '';
+  if (children.length > suffixCount) {
+    start = children.slice(0, children.length - suffixCount).trim();
+    suffix = children.slice(-suffixCount).trim();
+  }
+  return (
+    <Tooltip title={children}>
+      <Text style={{ maxWidth: '100%' }} ellipsis={{ suffix }}>
+        {start}
+      </Text>
+    </Tooltip>
+  );
+};
 
 const FileAudit: React.FC = () => {
+  const actionRef = useRef<ActionType>();
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [info, setInfo] = useState<IInfo>();
+  const [pageParams, setPageParams] = useState<Partial<API.PageParams>>();
   const intl = useIntl();
-  const actionRef = useRef<ActionType>(null);
-  const [dataSource, setDataSource] = useState<API.FileAuditItem[]>([]);
 
-  const handleExportCSV = () => {
-    if (dataSource.length === 0) {
-      message.warning(
-        intl.formatMessage({
-          id: 'pages.audits.noDataToExport',
-          defaultMessage: 'No data to export',
-        }),
-      );
-      return;
+  const onShowDrawer = (i: IInfo) => {
+    setInfo(i);
+    setDrawerOpen(true);
+  };
+
+  const directionEnumMap = (i: number) => {
+    const remoteText = intl.formatMessage({ id: 'pages.audits.remote', defaultMessage: 'Remote' });
+    const localText = intl.formatMessage({ id: 'pages.audits.local', defaultMessage: 'Local' });
+    switch (i) {
+      case 0:
+        return `${remoteText}->${localText}`;
+      case 1:
+        return `${localText}->${remoteText}`;
+      default:
+        return i.toString();
     }
+  };
 
-    const headers = [
-      intl.formatMessage({ id: 'pages.audits.peerId', defaultMessage: 'Peer ID' }),
-      intl.formatMessage({ id: 'pages.audits.clientName', defaultMessage: 'Client Name' }),
-      intl.formatMessage({ id: 'pages.audits.clientIp', defaultMessage: 'Client IP' }),
-      intl.formatMessage({ id: 'pages.audits.type', defaultMessage: 'Type' }),
-      intl.formatMessage({ id: 'pages.audits.path', defaultMessage: 'Path' }),
-      intl.formatMessage({ id: 'pages.audits.fileCount', defaultMessage: 'File Count' }),
+  const exportCsv = async () => {
+    let allItems: API.FileAuditItem[] = [];
+    let total = 0;
+    const pageSize = 100;
+    let current = 0;
+    do {
+      current++;
+      const items = await getFileAudits({
+        ...pageParams,
+        current: current,
+        pageSize: pageSize,
+      });
+      if (total == 0 && items.total != null) {
+        total = items.total;
+      }
+      if (items.data != null) {
+        allItems = allItems.concat(items.data);
+      }
+    } while (current < 10 && pageSize * current < total);
+
+    const titles = [
+      intl.formatMessage({ id: 'pages.audits.remote', defaultMessage: 'Remote' }),
+      intl.formatMessage({ id: 'pages.audits.local', defaultMessage: 'Local' }),
       intl.formatMessage({ id: 'pages.audits.time', defaultMessage: 'Time' }),
+      intl.formatMessage({ id: 'pages.audits.direction', defaultMessage: 'Direction' }),
+      intl.formatMessage({ id: 'pages.audits.file', defaultMessage: 'File' }),
+      intl.formatMessage({ id: 'pages.audits.detail', defaultMessage: 'Detail' }),
     ];
 
-    const rows = dataSource.map((item) => {
-      const files = item.files ? item.files.map((f: any[]) => f[0]).join('; ') : '';
-      return [
-        item.peerId || '',
-        item.clientName || '',
-        item.clientIp || '',
-        item.type === 0 ? 'Download' : 'Upload',
-        item.path || files,
-        item.fileCount || 0,
-        item.createdAt || '',
-      ];
+    const rows: string[][] = [];
+    allItems.forEach((record) => {
+      const row: string[] = [];
+      row.push(record.deviceId || '');
+      const localTxt = `${record.clientName || ''}@${record.clientIp || ''}`;
+      row.push(localTxt);
+      row.push(record.createdAt || '');
+      row.push(directionEnumMap(record.type || 0));
+      row.push(record.path || '');
+      let detail = '';
+      if (record.files && record.files.length > 0) {
+        const detailObj = {
+          num: record.fileCount,
+          files: record.files,
+        };
+        detail = JSON.stringify(detailObj);
+      }
+      row.push(detail);
+      rows.push(row);
     });
 
     const csvContent = [
-      headers.join(','),
+      titles.join(','),
       ...rows.map((row) => row.map((cell) => `"${cell}"`).join(',')),
     ].join('\n');
 
     const blob = new Blob([`\ufeff${csvContent}`], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = `file-audit-${dayjs().format('YYYY-MM-DD-HHmmss')}.csv`;
+    link.download = `file-audit-${new Date().toISOString().split('T')[0]}.csv`;
     link.click();
     URL.revokeObjectURL(link.href);
-
-    message.success(
-      intl.formatMessage({
-        id: 'pages.audits.exportSuccess',
-        defaultMessage: 'Export successful',
-      }),
-    );
   };
 
   const columns: ProColumns<API.FileAuditItem>[] = [
     {
-      title: '',
-      dataIndex: 'index',
-      valueType: 'indexBorder',
-      width: 50,
-    },
-    {
-      title: <FormattedMessage id="pages.audits.peerId" defaultMessage="Peer ID" />,
-      dataIndex: 'peerId',
-      width: 150,
-      ellipsis: true,
-      search: false,
-      render: (_: unknown, record: API.FileAuditItem) => record.peerId || '-',
-    },
-    {
-      title: <FormattedMessage id="pages.audits.clientName" defaultMessage="Client Name" />,
-      dataIndex: 'clientName',
-      width: 150,
-      ellipsis: true,
-      search: false,
-      render: (_: unknown, record: API.FileAuditItem) => record.clientName || '-',
-    },
-    {
-      title: <FormattedMessage id="pages.audits.clientIp" defaultMessage="Client IP" />,
-      dataIndex: 'clientIp',
-      width: 150,
-      ellipsis: true,
-      search: false,
-      render: (_: unknown, record: API.FileAuditItem) => record.clientIp || '-',
-    },
-    {
-      title: <FormattedMessage id="pages.audits.type" defaultMessage="Type" />,
-      dataIndex: 'type',
-      width: 100,
-      search: false,
-      render: (_: unknown, record: API.FileAuditItem) => {
-        if (record.type === 0) {
-          return <Tag color="green">Download</Tag>;
-        }
-        if (record.type === 1) {
-          return <Tag color="blue">Upload</Tag>;
-        }
-        return <Tag>{record.type}</Tag>;
-      },
-    },
-    {
-      title: <FormattedMessage id="pages.audits.path" defaultMessage="Path" />,
-      dataIndex: 'path',
-      width: 250,
-      ellipsis: true,
-      search: false,
-      render: (_: unknown, record: API.FileAuditItem) => {
-        if (record.path) return record.path;
-        if (record.files && record.files.length > 0) {
-          return record.files.map((f: any[]) => f[0]).join('; ');
-        }
-        return '-';
-      },
-    },
-    {
-      title: <FormattedMessage id="pages.audits.fileCount" defaultMessage="File Count" />,
-      dataIndex: 'fileCount',
-      width: 100,
-      search: false,
-      render: (_: unknown, record: API.FileAuditItem) => record.fileCount || 0,
-    },
-    {
-      title: <FormattedMessage id="pages.audits.deviceId" defaultMessage="Device ID" />,
+      title: <FormattedMessage id="pages.audits.remote" defaultMessage="Remote" />,
       dataIndex: 'deviceId',
-      width: 120,
-      ellipsis: true,
+      tip: intl.formatMessage({
+        id: 'pages.audits.remoteTip',
+        defaultMessage: 'Remotely controlled computer or terminal',
+      }),
+      hideInSearch: true,
+      render: (_, record) => record.deviceId || '-',
+    },
+    {
+      title: <FormattedMessage id="pages.audits.direction" defaultMessage="Direction" />,
+      dataIndex: 'type',
+      valueType: 'select',
+      width: 80,
+      render: (_, record) => {
+        const tip = directionEnumMap(record.type || 0);
+        return (
+          <Tooltip title={tip}>
+            {record.type == 1 ? <ArrowLeftOutlined /> : <ArrowRightOutlined />}
+          </Tooltip>
+        );
+      },
+      valueEnum: {
+        0: {
+          text: directionEnumMap(0),
+        },
+        1: {
+          text: directionEnumMap(1),
+        },
+      },
+    },
+    {
+      title: <FormattedMessage id="pages.audits.local" defaultMessage="Local" />,
+      dataIndex: 'local',
       search: false,
-      render: (_: unknown, record: API.FileAuditItem) => record.deviceId || '-',
+      width: 200,
+      render: (_, record) => {
+        let txt = '';
+        const name = record.clientName || '';
+        const ip = (record.clientIp || '').replace('::ffff:', '');
+        if (name) txt = name;
+        if (ip) txt += '@' + ip;
+        return txt || '-';
+      },
     },
     {
       title: <FormattedMessage id="pages.audits.time" defaultMessage="Time" />,
       dataIndex: 'createdAt',
       valueType: 'dateTime',
-      width: 180,
+      render: (_, record) => record.createdAt || '-',
+    },
+    {
+      title: <FormattedMessage id="pages.audits.file" defaultMessage="File" />,
       search: false,
-      render: (_: unknown, record: API.FileAuditItem) => record.createdAt || '-',
+      dataIndex: 'path',
+      width: '30%',
+      ellipsis: true,
+      tip: intl.formatMessage({
+        id: 'pages.audits.pathTip',
+        defaultMessage: 'Path of Remote Device',
+      }),
+      render: (_, record) => {
+        if (record.path) {
+          return <EllipsisMiddle suffixCount={16}>{record.path}</EllipsisMiddle>;
+        }
+        if (record.files && record.files.length > 0) {
+          const filePath = record.files[0][0];
+          return <EllipsisMiddle suffixCount={16}>{filePath}</EllipsisMiddle>;
+        }
+        return '-';
+      },
+    },
+    {
+      title: <FormattedMessage id="pages.audits.detail" defaultMessage="Detail" />,
+      dataIndex: 'detail',
+      search: false,
+      align: 'center',
+      render: (_, record) => {
+        if (record.isFile) {
+          if (record.fileCount == 1 && record.files && record.files.length == 1) {
+            return formatBytes(record.files[0][1]);
+          }
+        } else {
+          if (record.fileCount != undefined && record.files) {
+            const text = `${record.fileCount} ${intl.formatMessage({
+              id: 'pages.audits.files',
+              defaultMessage: 'Files',
+            })}`;
+            if (record.fileCount > 0 && record.files.length > 0) {
+              const localInfo: IInfo = {
+                num: record.fileCount,
+                files: record.files,
+                name: record.clientName,
+                ip: record.clientIp,
+              };
+              return (
+                <Button type="link" onClick={() => onShowDrawer(localInfo)}>
+                  {text}
+                </Button>
+              );
+            } else {
+              return text;
+            }
+          }
+        }
+        return '';
+      },
     },
   ];
 
   return (
-    <PageContainer>
-      <ProTable<API.FileAuditItem>
+    <PageContainer
+      breadcrumbRender={() => (
+        <Breadcrumb
+          items={[
+            {
+              title: (
+                <FormattedMessage id="menu.list.audit-list" defaultMessage="Audit List" />
+              ),
+            },
+            {
+              title: (
+                <FormattedMessage
+                  id="menu.list.audit-list.File"
+                  defaultMessage="File Transfer"
+                />
+              ),
+            },
+          ]}
+        />
+      )}
+    >
+      <ProTable<API.FileAuditItem, API.PageParams>
         headerTitle={
           <FormattedMessage id="pages.audits.file" defaultMessage="File Transfer Logs" />
         }
+        columnsState={{
+          persistenceType: 'localStorage',
+          persistenceKey: 'filelist_columns_state',
+        }}
         actionRef={actionRef}
         rowKey="id"
+        search={{
+          labelWidth: 120,
+        }}
         request={async (params) => {
           const result = await getFileAudits({
-            current: params.current || 1,
-            pageSize: params.pageSize || 20,
+            current: params.current,
+            pageSize: params.pageSize,
+            remote: params.deviceId,
           });
-          setDataSource(result.data || []);
           return {
             data: result.data || [],
             total: result.total || 0,
@@ -172,31 +292,59 @@ const FileAudit: React.FC = () => {
           };
         }}
         columns={columns}
-        search={false}
+        beforeSearchSubmit={(params) => {
+          setPageParams(params);
+          return params;
+        }}
+        toolBarRender={() => [
+          <Tooltip
+            key="export"
+            title={intl.formatMessage({
+              id: 'pages.audits.exportCsvTip',
+              defaultMessage: 'Export up to 1000 records at a time',
+            })}
+          >
+            <Button type="default" onClick={exportCsv}>
+              <FormattedMessage id="pages.audits.exportCSV" defaultMessage="Export as csv" />
+            </Button>
+          </Tooltip>,
+        ]}
         pagination={{
           defaultPageSize: 20,
           showSizeChanger: true,
           showQuickJumper: true,
         }}
-        scroll={{ x: 1300 }}
-        toolBarRender={() => [
-          <Button
-            key="export"
-            icon={<DownloadOutlined />}
-            onClick={handleExportCSV}
-          >
-            <FormattedMessage id="pages.audits.exportCSV" defaultMessage="Export CSV" />
-          </Button>,
-        ]}
-        options={{
-          density: true,
-          setting: {
-            listsHeight: 400,
-          },
-          fullScreen: false,
-          reload: true,
-        }}
       />
+      <Drawer
+        title={
+          <Fragment>
+            <FormattedMessage id="pages.audits.detail" defaultMessage="Detail" />
+            {info?.num && info?.files?.length && info?.num > info.files.length ? (
+              <Tooltip
+                title={intl.formatMessage({
+                  id: 'pages.audits.limitedTip',
+                  defaultMessage: 'Show the 10 largest files by size',
+                })}
+              >
+                <InfoCircleOutlined style={{ float: 'right' }} />
+              </Tooltip>
+            ) : (
+              ''
+            )}
+          </Fragment>
+        }
+        placement="right"
+        onClose={() => setDrawerOpen(false)}
+        open={drawerOpen}
+      >
+        {info?.files?.map(([name, size], index) => (
+          <p key={index}>
+            <span>{name}</span>
+            <span style={{ float: 'right' }}>{formatBytes(size)}</span>
+          </p>
+        ))}
+        {info?.num && info?.files?.length && info?.num > info.files.length ? '...' : ''}
+      </Drawer>
     </PageContainer>
   );
 };
