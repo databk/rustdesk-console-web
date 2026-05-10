@@ -8,7 +8,7 @@ import {
 } from '@ant-design/icons';
 import { FormattedMessage } from '@umijs/max';
 import { Card, Col, Row, Space, Statistic, Typography } from 'antd';
-import React, { CSSProperties } from 'react';
+import React, { type CSSProperties } from 'react';
 
 const { Text } = Typography;
 

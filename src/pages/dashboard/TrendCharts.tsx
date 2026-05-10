@@ -2,7 +2,7 @@ import { ApiOutlined, UserOutlined, AlertOutlined } from '@ant-design/icons';
 import { Area, Column } from '@ant-design/plots';
 import { FormattedMessage, useIntl } from '@umijs/max';
 import { Card, Select, Space, Tabs, Typography } from 'antd';
-import React, { CSSProperties, useMemo, useState } from 'react';
+import React, { type CSSProperties, useMemo, useState } from 'react';
 
 const { Text } = Typography;
 
@@ -39,7 +39,7 @@ const TrendCharts: React.FC<TrendChartsProps> = ({
   const connectionChartData = useMemo(() => {
     if (!trends?.connectionTrend) return [];
     return trends.connectionTrend
-      .map((item) => [
+      .flatMap((item) => [
         {
           date: item.date,
           value: item.count,
@@ -56,14 +56,13 @@ const TrendCharts: React.FC<TrendChartsProps> = ({
             defaultMessage: 'Avg Duration',
           }),
         },
-      ])
-      .flat();
+      ]);
   }, [trends?.connectionTrend, intl]);
 
   const userActiveChartData = useMemo(() => {
     if (!trends?.userActiveTrend) return [];
     return trends.userActiveTrend
-      .map((item) => [
+      .flatMap((item) => [
         {
           date: item.date,
           value: item.newUsers,
@@ -80,19 +79,17 @@ const TrendCharts: React.FC<TrendChartsProps> = ({
             defaultMessage: 'Active Users',
           }),
         },
-      ])
-      .flat();
+      ]);
   }, [trends?.userActiveTrend, intl]);
 
   const alarmChartData = useMemo(() => {
     if (!trends?.alarmTrend) return [];
     return trends.alarmTrend
-      .map((item) => [
+      .flatMap((item) => [
         { date: item.date, value: item.critical, type: 'Critical' },
         { date: item.date, value: item.warning, type: 'Warning' },
         { date: item.date, value: item.info, type: 'Info' },
-      ])
-      .flat();
+      ]);
   }, [trends?.alarmTrend]);
 
   return (
