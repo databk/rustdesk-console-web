@@ -1,12 +1,12 @@
 import { SaveOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
-import { useIntl } from '@umijs/max';
+import { FormattedMessage, useIntl } from '@umijs/max';
 import {
+  App,
   Button,
   Card,
   Form,
   Input,
-  message as messageApi,
   Select,
   Space,
   Switch,
@@ -17,6 +17,7 @@ import { getSettings, updateSetting } from '@/services/rustdesk-console/settings
 
 const Settings: React.FC = () => {
   const intl = useIntl();
+  const { message: msgApi } = App.useApp();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('general');
@@ -38,7 +39,7 @@ const Settings: React.FC = () => {
       }
     } catch (error) {
       console.error('Failed to fetch settings:', error);
-      messageApi.error(intl.formatMessage({ id: 'pages.settings.fetchFailed', defaultMessage: 'Failed to load settings' }));
+      msgApi.error(intl.formatMessage({ id: 'pages.settings.fetchFailed', defaultMessage: 'Failed to load settings' }));
     } finally {
       setLoading(false);
     }
@@ -52,9 +53,9 @@ const Settings: React.FC = () => {
           updateSetting(key, value as string | number | boolean)
         )
       );
-      messageApi.success(intl.formatMessage({ id: 'pages.settings.saveSuccess', defaultMessage: 'Settings saved successfully' }));
+      msgApi.success(intl.formatMessage({ id: 'pages.settings.saveSuccess', defaultMessage: 'Settings saved successfully' }));
     } catch (error) {
-      messageApi.error(intl.formatMessage({ id: 'pages.settings.saveFailed', defaultMessage: 'Failed to save settings' }));
+      msgApi.error(intl.formatMessage({ id: 'pages.settings.saveFailed', defaultMessage: 'Failed to save settings' }));
     }
   };
 
@@ -126,8 +127,3 @@ const Settings: React.FC = () => {
 };
 
 export default Settings;
-
-function FormattedMessage(props: { id: string; defaultMessage?: string }): React.JSX.Element {
-  const intl = useIntl();
-  return <>{intl.formatMessage(props)}</>;
-}
