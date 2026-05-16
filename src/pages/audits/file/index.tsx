@@ -34,6 +34,12 @@ interface IInfo {
   files?: [string, number][];
 }
 
+interface FileAuditSearchParams extends API.PageParams {
+  peerId?: string;
+  type?: number;
+  createdAt?: [string, string];
+}
+
 const { Text } = Typography;
 
 const EllipsisMiddle: React.FC<{ suffixCount: number; children: string }> = ({
@@ -397,7 +403,7 @@ const FileAudit: React.FC = () => {
         />
       )}
     >
-      <ProTable<API.FileAuditItem, API.PageParams>
+      <ProTable<API.FileAuditItem, FileAuditSearchParams>
         headerTitle={
           <FormattedMessage
             id="pages.audits.file"
