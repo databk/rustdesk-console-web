@@ -12,7 +12,6 @@ import { PageContainer } from '@ant-design/pro-components';
 import type { ProColumns, ActionType } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
 import { getFileAudits } from '@/services/rustdesk-console/audit';
-import type { API } from '@/services/rustdesk-console/typings';
 import {
   ArrowLeftOutlined,
   ArrowRightOutlined,
@@ -57,7 +56,7 @@ const EllipsisMiddle: React.FC<{ suffixCount: number; children: string }> = ({
 };
 
 const FileAudit: React.FC = () => {
-  const actionRef = useRef<ActionType>();
+  const actionRef = useRef<ActionType>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [info, setInfo] = useState<IInfo>();
   const [pageParams, setPageParams] = useState<Partial<API.PageParams>>();
