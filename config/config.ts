@@ -6,7 +6,9 @@ import routes from './routes';
 
 const { REACT_APP_ENV = 'dev' } = process.env;
 
-const PUBLIC_PATH: string = '/';
+const PUBLIC_PATH: string = process.env.GITHUB_PAGES
+  ? '/rustdesk-console-web/'
+  : '/';
 
 export default defineConfig({
   hash: true,

@@ -46,6 +46,7 @@ jobs:
         run: npm run build
         env:
           NODE_ENV: production
+          GITHUB_PAGES: true
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
