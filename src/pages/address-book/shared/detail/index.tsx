@@ -1,4 +1,9 @@
-import { FormattedMessage, useLocation, useNavigate, useParams } from '@umijs/max';
+import {
+  FormattedMessage,
+  useLocation,
+  useNavigate,
+  useParams,
+} from '@umijs/max';
 import React from 'react';
 import PersonalAddressBook from '@/pages/address-book/personal';
 

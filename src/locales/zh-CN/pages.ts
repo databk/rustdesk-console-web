@@ -80,7 +80,8 @@ export default {
   'pages.addressBook.recycleBin': '回收站',
   'pages.addressBook.selectDevice': '选择设备',
   'pages.addressBook.selectDevicePlaceholder': '从系统中选择设备',
-  'pages.addressBook.noAvailableDevices': '暂无可用设备，设备需先连接到服务器。',
+  'pages.addressBook.noAvailableDevices':
+    '暂无可用设备，设备需先连接到服务器。',
   'pages.deviceGroups.list': '设备组列表',
   'pages.deviceGroups.name': '名称',
   'pages.deviceGroups.note': '备注',
@@ -327,7 +328,8 @@ export default {
   'pages.smtp.port': '端口',
   'pages.smtp.portPlaceholder': '请输入端口号',
   'pages.smtp.secure': '使用 SSL/TLS',
-  'pages.smtp.secureHelp': '启用安全连接（通常端口 465 使用 SSL，端口 587 使用 TLS）',
+  'pages.smtp.secureHelp':
+    '启用安全连接（通常端口 465 使用 SSL，端口 587 使用 TLS）',
   'pages.smtp.user': '用户名',
   'pages.smtp.userPlaceholder': '请输入 SMTP 认证用户名',
   'pages.smtp.password': '密码',

@@ -26,7 +26,11 @@ export interface DeviceListProps {
   onBack?: () => void;
 }
 
-const DeviceList: React.FC<DeviceListProps> = ({ deviceGroupGuid, title, onBack }) => {
+const DeviceList: React.FC<DeviceListProps> = ({
+  deviceGroupGuid,
+  title,
+  onBack,
+}) => {
   const intl = useIntl();
   const { message: msgApi } = App.useApp();
   const actionRef = useRef<ActionType>(null);
@@ -114,20 +118,26 @@ const DeviceList: React.FC<DeviceListProps> = ({ deviceGroupGuid, title, onBack 
 
   // Use shared columns definition and add action column
   const baseColumns = getDeviceColumns();
-  
+
   // Filter out device group column if deviceGroupGuid is provided
-  const filteredColumns = deviceGroupGuid 
-    ? baseColumns.filter(col => col.dataIndex !== 'device_group_name' && col.dataIndex !== 'device_group_name_search')
+  const filteredColumns = deviceGroupGuid
+    ? baseColumns.filter(
+        (col) =>
+          col.dataIndex !== 'device_group_name' &&
+          col.dataIndex !== 'device_group_name_search',
+      )
     : baseColumns;
-  
+
   const actionColumn: ProColumns<API.DeviceItem> = {
-    title: <FormattedMessage id="pages.common.action" defaultMessage="Action" />,
+    title: (
+      <FormattedMessage id="pages.common.action" defaultMessage="Action" />
+    ),
     valueType: 'option',
     width: '15%',
     fixed: 'right',
     render: (_: unknown, record: API.DeviceItem) => {
       const isDisabled = record.status === 0;
-      
+
       // When in device group context, only show remove button
       if (deviceGroupGuid) {
         return (
@@ -140,16 +150,25 @@ const DeviceList: React.FC<DeviceListProps> = ({ deviceGroupGuid, title, onBack 
               />
             }
             onConfirm={() => handleRemoveFromGroup(record.id)}
-            okText={intl.formatMessage({ id: 'pages.common.confirm', defaultMessage: 'Yes' })}
-            cancelText={intl.formatMessage({ id: 'pages.common.cancel', defaultMessage: 'No' })}
+            okText={intl.formatMessage({
+              id: 'pages.common.confirm',
+              defaultMessage: 'Yes',
+            })}
+            cancelText={intl.formatMessage({
+              id: 'pages.common.cancel',
+              defaultMessage: 'No',
+            })}
           >
             <Button type="link" size="small" danger icon={<DeleteOutlined />}>
-              <FormattedMessage id="pages.devices.remove" defaultMessage="Remove" />
+              <FormattedMessage
+                id="pages.devices.remove"
+                defaultMessage="Remove"
+              />
             </Button>
           </Popconfirm>
         );
       }
-      
+
       // Normal device list (not in device group context)
       return (
         <Space size={0} split={<Divider type="vertical" />}>
@@ -164,7 +183,10 @@ const DeviceList: React.FC<DeviceListProps> = ({ deviceGroupGuid, title, onBack 
               icon={<PlusCircleOutlined />}
               onClick={() => handleEnable(record.guid)}
             >
-              <FormattedMessage id="pages.devices.enable" defaultMessage="Enable" />
+              <FormattedMessage
+                id="pages.devices.enable"
+                defaultMessage="Enable"
+              />
             </Button>
           ) : (
             <Button
@@ -174,7 +196,10 @@ const DeviceList: React.FC<DeviceListProps> = ({ deviceGroupGuid, title, onBack 
               icon={<MinusCircleOutlined />}
               onClick={() => handleDisable(record.guid)}
             >
-              <FormattedMessage id="pages.devices.disable" defaultMessage="Disable" />
+              <FormattedMessage
+                id="pages.devices.disable"
+                defaultMessage="Disable"
+              />
             </Button>
           )}
           {isDisabled && (
@@ -187,11 +212,20 @@ const DeviceList: React.FC<DeviceListProps> = ({ deviceGroupGuid, title, onBack 
                 />
               }
               onConfirm={() => handleDelete(record.guid)}
-              okText={intl.formatMessage({ id: 'pages.common.confirm', defaultMessage: 'Yes' })}
-              cancelText={intl.formatMessage({ id: 'pages.common.cancel', defaultMessage: 'No' })}
+              okText={intl.formatMessage({
+                id: 'pages.common.confirm',
+                defaultMessage: 'Yes',
+              })}
+              cancelText={intl.formatMessage({
+                id: 'pages.common.cancel',
+                defaultMessage: 'No',
+              })}
             >
               <Button type="link" size="small" danger icon={<DeleteOutlined />}>
-                <FormattedMessage id="pages.common.delete" defaultMessage="Delete" />
+                <FormattedMessage
+                  id="pages.common.delete"
+                  defaultMessage="Delete"
+                />
               </Button>
             </Popconfirm>
           )}
@@ -212,59 +246,68 @@ const DeviceList: React.FC<DeviceListProps> = ({ deviceGroupGuid, title, onBack 
         </Helmet>
       )}
       <PageContainer
-        title={title || <FormattedMessage id="pages.devices.list" defaultMessage="Device List" />}
+        title={
+          title || (
+            <FormattedMessage
+              id="pages.devices.list"
+              defaultMessage="Device List"
+            />
+          )
+        }
         onBack={onBack}
       >
-      <ProTable<API.DeviceItem>
-        headerTitle={
-          <FormattedMessage
-            id="pages.devices.list"
-            defaultMessage="Device List"
-          />
-        }
-        actionRef={actionRef}
-        rowKey="guid"
-        request={async (params) => {
-          const result = await getDeviceList({
-            current: params.current || 1,
-            pageSize: params.pageSize || 20,
-            id: params.id,
-            status: params.status,
-            is_online: params.is_online,
-            user_name: params.user_name,
-            device_group_name: params.device_group_name_search,
-            device_group_guid: deviceGroupGuid,
-            os: params.os,
-          });
-          return {
-            data: result.data || [],
-            total: result.total || 0,
-            success: true,
-          };
-        }}
-        columns={columns}
-        search={{
-          labelWidth: 'auto',
-          defaultCollapsed: true,
-          optionRender: (_searchConfig, _formProps, dom) => [...dom.reverse()],
-        }}
-        pagination={{
-          defaultPageSize: 20,
-          showSizeChanger: true,
-          showQuickJumper: true,
-        }}
-        scroll={{ x: '100%' }}
-        toolBarRender={false}
-        options={{
-          density: true,
-          setting: {
-            listsHeight: 400,
-          },
-          fullScreen: false,
-          reload: true,
-        }}
-      />
-    </PageContainer>
+        <ProTable<API.DeviceItem>
+          headerTitle={
+            <FormattedMessage
+              id="pages.devices.list"
+              defaultMessage="Device List"
+            />
+          }
+          actionRef={actionRef}
+          rowKey="guid"
+          request={async (params) => {
+            const result = await getDeviceList({
+              current: params.current || 1,
+              pageSize: params.pageSize || 20,
+              id: params.id,
+              status: params.status,
+              is_online: params.is_online,
+              user_name: params.user_name,
+              device_group_name: params.device_group_name_search,
+              device_group_guid: deviceGroupGuid,
+              os: params.os,
+            });
+            return {
+              data: result.data || [],
+              total: result.total || 0,
+              success: true,
+            };
+          }}
+          columns={columns}
+          search={{
+            labelWidth: 'auto',
+            defaultCollapsed: true,
+            optionRender: (_searchConfig, _formProps, dom) => [
+              ...dom.reverse(),
+            ],
+          }}
+          pagination={{
+            defaultPageSize: 20,
+            showSizeChanger: true,
+            showQuickJumper: true,
+          }}
+          scroll={{ x: '100%' }}
+          toolBarRender={false}
+          options={{
+            density: true,
+            setting: {
+              listsHeight: 400,
+            },
+            fullScreen: false,
+            reload: true,
+          }}
+        />
+      </PageContainer>
     </>
   );
 };

@@ -10,4 +10,11 @@ import { Question, SelectLang } from './RightContent';
 import { AvatarDropdown, AvatarName } from './RightContent/AvatarDropdown';
 import ThemeToggle from './ThemeToggle';
 
-export { AvatarDropdown, AvatarName, Footer, Question, SelectLang, ThemeToggle };
+export {
+  AvatarDropdown,
+  AvatarName,
+  Footer,
+  Question,
+  SelectLang,
+  ThemeToggle,
+};

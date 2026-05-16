@@ -119,7 +119,13 @@ const SMTPSettings: React.FC = () => {
 
   const handleTest = async () => {
     try {
-      const values = await form.validateFields(['host', 'port', 'secure', 'user', 'from']);
+      const values = await form.validateFields([
+        'host',
+        'port',
+        'secure',
+        'user',
+        'from',
+      ]);
       setTesting(true);
 
       // 构建测试数据
@@ -179,7 +185,10 @@ const SMTPSettings: React.FC = () => {
         title={
           <Space>
             <MailOutlined />
-            <FormattedMessage id="pages.smtp.title" defaultMessage="SMTP Configuration" />
+            <FormattedMessage
+              id="pages.smtp.title"
+              defaultMessage="SMTP Configuration"
+            />
           </Space>
         }
         extra={
@@ -190,7 +199,10 @@ const SMTPSettings: React.FC = () => {
               loading={testing}
               disabled={loading}
             >
-              <FormattedMessage id="pages.smtp.testConnection" defaultMessage="Test Connection" />
+              <FormattedMessage
+                id="pages.smtp.testConnection"
+                defaultMessage="Test Connection"
+              />
             </Button>
             <Button
               icon={<SaveOutlined />}
@@ -212,11 +224,22 @@ const SMTPSettings: React.FC = () => {
             />
           </p>
 
-          <Form form={form} layout="vertical" initialValues={{ port: 587, secure: true, enabled: false }}>
+          <Form
+            form={form}
+            layout="vertical"
+            initialValues={{ port: 587, secure: true, enabled: false }}
+          >
             <Form.Item
               name="host"
-              label={<FormattedMessage id="pages.smtp.host" defaultMessage="Server Address" />}
-              rules={[{ required: true, message: 'Please enter SMTP server address' }]}
+              label={
+                <FormattedMessage
+                  id="pages.smtp.host"
+                  defaultMessage="Server Address"
+                />
+              }
+              rules={[
+                { required: true, message: 'Please enter SMTP server address' },
+              ]}
             >
               <Input
                 placeholder={intl.formatMessage({
@@ -228,10 +251,17 @@ const SMTPSettings: React.FC = () => {
 
             <Form.Item
               name="port"
-              label={<FormattedMessage id="pages.smtp.port" defaultMessage="Port" />}
+              label={
+                <FormattedMessage id="pages.smtp.port" defaultMessage="Port" />
+              }
               rules={[
                 { required: true, message: 'Please enter port number' },
-                { type: 'number', min: 1, max: 65535, message: 'Port must be between 1-65535' },
+                {
+                  type: 'number',
+                  min: 1,
+                  max: 65535,
+                  message: 'Port must be between 1-65535',
+                },
               ]}
             >
               <InputNumber
@@ -247,7 +277,12 @@ const SMTPSettings: React.FC = () => {
 
             <Form.Item
               name="secure"
-              label={<FormattedMessage id="pages.smtp.secure" defaultMessage="Use SSL/TLS" />}
+              label={
+                <FormattedMessage
+                  id="pages.smtp.secure"
+                  defaultMessage="Use SSL/TLS"
+                />
+              }
               valuePropName="checked"
               extra={
                 <FormattedMessage
@@ -261,8 +296,18 @@ const SMTPSettings: React.FC = () => {
 
             <Form.Item
               name="user"
-              label={<FormattedMessage id="pages.smtp.user" defaultMessage="Username" />}
-              rules={[{ required: true, message: 'Please enter SMTP authentication username' }]}
+              label={
+                <FormattedMessage
+                  id="pages.smtp.user"
+                  defaultMessage="Username"
+                />
+              }
+              rules={[
+                {
+                  required: true,
+                  message: 'Please enter SMTP authentication username',
+                },
+              ]}
             >
               <Input
                 placeholder={intl.formatMessage({
@@ -274,8 +319,18 @@ const SMTPSettings: React.FC = () => {
 
             <Form.Item
               name="pass"
-              label={<FormattedMessage id="pages.smtp.password" defaultMessage="Password" />}
-              rules={[{ required: !configExists, message: 'Please enter SMTP authentication password' }]}
+              label={
+                <FormattedMessage
+                  id="pages.smtp.password"
+                  defaultMessage="Password"
+                />
+              }
+              rules={[
+                {
+                  required: !configExists,
+                  message: 'Please enter SMTP authentication password',
+                },
+              ]}
             >
               <Input.Password
                 placeholder={intl.formatMessage({
@@ -287,10 +342,21 @@ const SMTPSettings: React.FC = () => {
 
             <Form.Item
               name="from"
-              label={<FormattedMessage id="pages.smtp.from" defaultMessage="Sender Email" />}
+              label={
+                <FormattedMessage
+                  id="pages.smtp.from"
+                  defaultMessage="Sender Email"
+                />
+              }
               rules={[
-                { required: true, message: 'Please enter sender email address' },
-                { type: 'email', message: 'Please enter a valid email address' },
+                {
+                  required: true,
+                  message: 'Please enter sender email address',
+                },
+                {
+                  type: 'email',
+                  message: 'Please enter a valid email address',
+                },
               ]}
             >
               <Input
@@ -303,7 +369,12 @@ const SMTPSettings: React.FC = () => {
 
             <Form.Item
               name="enabled"
-              label={<FormattedMessage id="pages.smtp.enabled" defaultMessage="Enable Configuration" />}
+              label={
+                <FormattedMessage
+                  id="pages.smtp.enabled"
+                  defaultMessage="Enable Configuration"
+                />
+              }
               valuePropName="checked"
               extra={
                 <FormattedMessage
@@ -321,14 +392,24 @@ const SMTPSettings: React.FC = () => {
                 <Descriptions column={1} size="small">
                   {configInfo.createdAt && (
                     <Descriptions.Item
-                      label={<FormattedMessage id="pages.smtp.createdAt" defaultMessage="Created At" />}
+                      label={
+                        <FormattedMessage
+                          id="pages.smtp.createdAt"
+                          defaultMessage="Created At"
+                        />
+                      }
                     >
                       {new Date(configInfo.createdAt).toLocaleString()}
                     </Descriptions.Item>
                   )}
                   {configInfo.updatedAt && (
                     <Descriptions.Item
-                      label={<FormattedMessage id="pages.smtp.updatedAt" defaultMessage="Updated At" />}
+                      label={
+                        <FormattedMessage
+                          id="pages.smtp.updatedAt"
+                          defaultMessage="Updated At"
+                        />
+                      }
                     >
                       {new Date(configInfo.updatedAt).toLocaleString()}
                     </Descriptions.Item>

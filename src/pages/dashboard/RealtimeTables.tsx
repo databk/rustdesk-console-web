@@ -67,9 +67,7 @@ const RealtimeTables: React.FC<RealtimeTablesProps> = ({ realtime }) => {
     },
   ];
 
-  const eventColumns: ColumnsType<
-    API.DashboardRealtime['recentEvents'][0]
-  > = [
+  const eventColumns: ColumnsType<API.DashboardRealtime['recentEvents'][0]> = [
     {
       title: (
         <FormattedMessage
@@ -83,7 +81,11 @@ const RealtimeTables: React.FC<RealtimeTablesProps> = ({ realtime }) => {
       render: (type: string) => (
         <Tag
           color={
-            type === 'connection' ? 'blue' : type === 'file' ? 'green' : 'orange'
+            type === 'connection'
+              ? 'blue'
+              : type === 'file'
+                ? 'green'
+                : 'orange'
           }
         >
           {type}
@@ -107,10 +109,7 @@ const RealtimeTables: React.FC<RealtimeTablesProps> = ({ realtime }) => {
     },
     {
       title: (
-        <FormattedMessage
-          id="pages.dashboard.target"
-          defaultMessage="Target"
-        />
+        <FormattedMessage id="pages.dashboard.target" defaultMessage="Target" />
       ),
       dataIndex: 'target',
       key: 'target',

@@ -97,10 +97,7 @@ const OperationAnalysis: React.FC<OperationAnalysisProps> = ({
                 defaultMessage="Avg Duration"
               />
               : {statistics?.connectionAnalysis.avgDuration || 0}{' '}
-              <FormattedMessage
-                id="pages.dashboard.min"
-                defaultMessage="min"
-              />
+              <FormattedMessage id="pages.dashboard.min" defaultMessage="min" />
             </Text>
           </Col>
           <Col span={12}>
@@ -110,10 +107,7 @@ const OperationAnalysis: React.FC<OperationAnalysisProps> = ({
                 defaultMessage="Total Duration"
               />
               : {statistics?.connectionAnalysis.totalDuration || 0}{' '}
-              <FormattedMessage
-                id="pages.dashboard.min"
-                defaultMessage="min"
-              />
+              <FormattedMessage id="pages.dashboard.min" defaultMessage="min" />
             </Text>
           </Col>
         </Row>

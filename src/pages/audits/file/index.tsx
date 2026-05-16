@@ -1,11 +1,23 @@
 import React, { useState, useRef, Fragment } from 'react';
-import { Breadcrumb, Button, Drawer, Tooltip, Typography, App, Modal } from 'antd';
+import {
+  Breadcrumb,
+  Button,
+  Drawer,
+  Tooltip,
+  Typography,
+  App,
+  Modal,
+} from 'antd';
 import { PageContainer } from '@ant-design/pro-components';
 import type { ProColumns, ActionType } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
 import { getFileAudits } from '@/services/rustdesk-console/audit';
 import type { API } from '@/services/rustdesk-console/typings';
-import { ArrowLeftOutlined, ArrowRightOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import {
+  ArrowLeftOutlined,
+  ArrowRightOutlined,
+  InfoCircleOutlined,
+} from '@ant-design/icons';
 import { useIntl, FormattedMessage } from '@umijs/max';
 import dayjs from 'dayjs';
 
@@ -58,8 +70,14 @@ const FileAudit: React.FC = () => {
   };
 
   const directionEnumMap = (type: number) => {
-    const remoteText = intl.formatMessage({ id: 'pages.audits.remote', defaultMessage: 'Remote' });
-    const localText = intl.formatMessage({ id: 'pages.audits.local', defaultMessage: 'Local' });
+    const remoteText = intl.formatMessage({
+      id: 'pages.audits.remote',
+      defaultMessage: 'Remote',
+    });
+    const localText = intl.formatMessage({
+      id: 'pages.audits.local',
+      defaultMessage: 'Local',
+    });
     switch (type) {
       case 0:
         return `${remoteText}->${localText}`;
@@ -75,7 +93,7 @@ const FileAudit: React.FC = () => {
     let total = 0;
     const pageSize = 100;
     let current = 0;
-    
+
     do {
       current++;
       const items = await getFileAudits({
@@ -96,12 +114,21 @@ const FileAudit: React.FC = () => {
 
   const generateCsvContent = (items: API.FileAuditItem[]): string => {
     const titles = [
-      intl.formatMessage({ id: 'pages.audits.remote', defaultMessage: 'Remote' }),
+      intl.formatMessage({
+        id: 'pages.audits.remote',
+        defaultMessage: 'Remote',
+      }),
       intl.formatMessage({ id: 'pages.audits.local', defaultMessage: 'Local' }),
       intl.formatMessage({ id: 'pages.audits.time', defaultMessage: 'Time' }),
-      intl.formatMessage({ id: 'pages.audits.direction', defaultMessage: 'Direction' }),
+      intl.formatMessage({
+        id: 'pages.audits.direction',
+        defaultMessage: 'Direction',
+      }),
       intl.formatMessage({ id: 'pages.audits.file', defaultMessage: 'File' }),
-      intl.formatMessage({ id: 'pages.audits.detail', defaultMessage: 'Detail' }),
+      intl.formatMessage({
+        id: 'pages.audits.detail',
+        defaultMessage: 'Detail',
+      }),
     ];
 
     const rows: string[][] = [];
@@ -132,7 +159,9 @@ const FileAudit: React.FC = () => {
   };
 
   const downloadCsv = (csvContent: string) => {
-    const blob = new Blob([`\ufeff${csvContent}`], { type: 'text/csv;charset=utf-8;' });
+    const blob = new Blob([`\ufeff${csvContent}`], {
+      type: 'text/csv;charset=utf-8;',
+    });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
     link.download = `file-audit-${dayjs().format('YYYY-MM-DD-HHmmss')}.csv`;
@@ -142,10 +171,22 @@ const FileAudit: React.FC = () => {
 
   const exportCsv = async () => {
     modal.confirm({
-      title: intl.formatMessage({ id: 'pages.audits.exportConfirmTitle', defaultMessage: 'Export CSV' }),
-      content: intl.formatMessage({ id: 'pages.audits.exportConfirmContent', defaultMessage: 'Export up to 1000 records. Continue?' }),
-      okText: intl.formatMessage({ id: 'pages.common.confirm', defaultMessage: 'Yes' }),
-      cancelText: intl.formatMessage({ id: 'pages.common.cancel', defaultMessage: 'No' }),
+      title: intl.formatMessage({
+        id: 'pages.audits.exportConfirmTitle',
+        defaultMessage: 'Export CSV',
+      }),
+      content: intl.formatMessage({
+        id: 'pages.audits.exportConfirmContent',
+        defaultMessage: 'Export up to 1000 records. Continue?',
+      }),
+      okText: intl.formatMessage({
+        id: 'pages.common.confirm',
+        defaultMessage: 'Yes',
+      }),
+      cancelText: intl.formatMessage({
+        id: 'pages.common.cancel',
+        defaultMessage: 'No',
+      }),
       onOk: async () => {
         try {
           const items = await fetchExportData();
@@ -182,7 +223,7 @@ const FileAudit: React.FC = () => {
         id: 'pages.audits.files',
         defaultMessage: 'Files',
       })}`;
-      
+
       if (record.fileCount > 0 && record.files.length > 0) {
         const localInfo: IInfo = {
           num: record.fileCount,
@@ -196,7 +237,7 @@ const FileAudit: React.FC = () => {
           </Button>
         );
       }
-      
+
       return text;
     }
 
@@ -205,7 +246,9 @@ const FileAudit: React.FC = () => {
 
   const columns: ProColumns<API.FileAuditItem>[] = [
     {
-      title: <FormattedMessage id="pages.audits.remote" defaultMessage="Remote" />,
+      title: (
+        <FormattedMessage id="pages.audits.remote" defaultMessage="Remote" />
+      ),
       dataIndex: 'peerId',
       tip: intl.formatMessage({
         id: 'pages.audits.remoteSearchTip',
@@ -220,7 +263,9 @@ const FileAudit: React.FC = () => {
       hideInTable: true,
     },
     {
-      title: <FormattedMessage id="pages.audits.remote" defaultMessage="Remote" />,
+      title: (
+        <FormattedMessage id="pages.audits.remote" defaultMessage="Remote" />
+      ),
       dataIndex: 'deviceId',
       tip: intl.formatMessage({
         id: 'pages.audits.remoteTip',
@@ -230,7 +275,12 @@ const FileAudit: React.FC = () => {
       render: (_, record) => record.deviceId || '-',
     },
     {
-      title: <FormattedMessage id="pages.audits.direction" defaultMessage="Direction" />,
+      title: (
+        <FormattedMessage
+          id="pages.audits.direction"
+          defaultMessage="Direction"
+        />
+      ),
       dataIndex: 'type',
       valueType: 'select',
       width: 80,
@@ -252,7 +302,9 @@ const FileAudit: React.FC = () => {
       },
     },
     {
-      title: <FormattedMessage id="pages.audits.local" defaultMessage="Local" />,
+      title: (
+        <FormattedMessage id="pages.audits.local" defaultMessage="Local" />
+      ),
       dataIndex: 'local',
       search: false,
       width: 200,
@@ -276,8 +328,14 @@ const FileAudit: React.FC = () => {
       },
       fieldProps: {
         placeholder: [
-          intl.formatMessage({ id: 'pages.audits.startTime', defaultMessage: 'Start Time' }),
-          intl.formatMessage({ id: 'pages.audits.endTime', defaultMessage: 'End Time' }),
+          intl.formatMessage({
+            id: 'pages.audits.startTime',
+            defaultMessage: 'Start Time',
+          }),
+          intl.formatMessage({
+            id: 'pages.audits.endTime',
+            defaultMessage: 'End Time',
+          }),
         ],
       },
     },
@@ -293,7 +351,9 @@ const FileAudit: React.FC = () => {
       }),
       render: (_, record) => {
         if (record.path) {
-          return <EllipsisMiddle suffixCount={16}>{record.path}</EllipsisMiddle>;
+          return (
+            <EllipsisMiddle suffixCount={16}>{record.path}</EllipsisMiddle>
+          );
         }
         if (record.files && record.files.length > 0) {
           const filePath = record.files[0][0];
@@ -303,7 +363,9 @@ const FileAudit: React.FC = () => {
       },
     },
     {
-      title: <FormattedMessage id="pages.audits.detail" defaultMessage="Detail" />,
+      title: (
+        <FormattedMessage id="pages.audits.detail" defaultMessage="Detail" />
+      ),
       dataIndex: 'detail',
       search: false,
       align: 'center',
@@ -318,7 +380,10 @@ const FileAudit: React.FC = () => {
           items={[
             {
               title: (
-                <FormattedMessage id="menu.list.audit-list" defaultMessage="Audit List" />
+                <FormattedMessage
+                  id="menu.list.audit-list"
+                  defaultMessage="Audit List"
+                />
               ),
             },
             {
@@ -335,7 +400,10 @@ const FileAudit: React.FC = () => {
     >
       <ProTable<API.FileAuditItem, API.PageParams>
         headerTitle={
-          <FormattedMessage id="pages.audits.file" defaultMessage="File Transfer Logs" />
+          <FormattedMessage
+            id="pages.audits.file"
+            defaultMessage="File Transfer Logs"
+          />
         }
         columnsState={{
           persistenceType: 'localStorage',
@@ -360,7 +428,11 @@ const FileAudit: React.FC = () => {
             requestParams.type = params.type;
           }
 
-          if (params.createdAt && Array.isArray(params.createdAt) && params.createdAt.length === 2) {
+          if (
+            params.createdAt &&
+            Array.isArray(params.createdAt) &&
+            params.createdAt.length === 2
+          ) {
             requestParams.startTime = dayjs(params.createdAt[0]).toISOString();
             requestParams.endTime = dayjs(params.createdAt[1]).toISOString();
           }
@@ -386,7 +458,10 @@ const FileAudit: React.FC = () => {
             })}
           >
             <Button type="default" onClick={exportCsv}>
-              <FormattedMessage id="pages.audits.exportCSV" defaultMessage="Export as csv" />
+              <FormattedMessage
+                id="pages.audits.exportCSV"
+                defaultMessage="Export as csv"
+              />
             </Button>
           </Tooltip>,
         ]}
@@ -399,8 +474,13 @@ const FileAudit: React.FC = () => {
       <Drawer
         title={
           <Fragment>
-            <FormattedMessage id="pages.audits.detail" defaultMessage="Detail" />
-            {info?.num && info?.files?.length && info?.num > info.files.length ? (
+            <FormattedMessage
+              id="pages.audits.detail"
+              defaultMessage="Detail"
+            />
+            {info?.num &&
+            info?.files?.length &&
+            info?.num > info.files.length ? (
               <Tooltip
                 title={intl.formatMessage({
                   id: 'pages.audits.limitedTip',
@@ -424,7 +504,9 @@ const FileAudit: React.FC = () => {
             <span style={{ float: 'right' }}>{formatBytes(size)}</span>
           </p>
         ))}
-        {info?.num && info?.files?.length && info?.num > info.files.length ? '...' : ''}
+        {info?.num && info?.files?.length && info?.num > info.files.length
+          ? '...'
+          : ''}
       </Drawer>
     </PageContainer>
   );

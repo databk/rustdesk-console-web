@@ -1,9 +1,9 @@
 import type { ProColumns } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
 import { Badge, Tooltip } from 'antd';
-import { 
-  CheckCircleOutlined, 
-  CloseCircleOutlined, 
+import {
+  CheckCircleOutlined,
+  CloseCircleOutlined,
   InfoCircleOutlined,
   WindowsFilled,
   AndroidFilled,
@@ -17,7 +17,9 @@ import React from 'react';
  */
 const getOfflineDuration = (lastOnlineTime: string, intl: any): string => {
   try {
-    const lastOnline = new Date(lastOnlineTime + (lastOnlineTime.endsWith('Z') ? '' : 'Z'));
+    const lastOnline = new Date(
+      lastOnlineTime + (lastOnlineTime.endsWith('Z') ? '' : 'Z'),
+    );
     const now = new Date();
     const diffMs = now.getTime() - lastOnline.getTime();
 
@@ -48,20 +50,24 @@ const getOfflineDuration = (lastOnlineTime: string, intl: any): string => {
  */
 const getOSIcon = (os: string): React.ReactNode => {
   const osLower = (os || '').toLowerCase();
-  
+
   if (osLower.includes('windows')) {
     return <WindowsFilled />;
   }
   if (osLower.includes('android')) {
     return <AndroidFilled />;
   }
-  if (osLower.includes('macos') || osLower.includes('ios') || osLower.includes('mac')) {
+  if (
+    osLower.includes('macos') ||
+    osLower.includes('ios') ||
+    osLower.includes('mac')
+  ) {
     return <AppleFilled />;
   }
   if (osLower.includes('linux')) {
     return <QqCircleFilled />;
   }
-  
+
   return null;
 };
 
@@ -71,7 +77,9 @@ const getOSIcon = (os: string): React.ReactNode => {
  * @param options - Configuration options
  * @param options.hideAction - Whether to hide the action column (default: false)
  */
-export const getDeviceColumns = (options?: { hideAction?: boolean }): ProColumns<API.DeviceItem>[] => {
+export const getDeviceColumns = (options?: {
+  hideAction?: boolean;
+}): ProColumns<API.DeviceItem>[] => {
   const intl = useIntl();
   const { hideAction = false } = options || {};
 
@@ -85,19 +93,24 @@ export const getDeviceColumns = (options?: { hideAction?: boolean }): ProColumns
       render: (_: unknown, record: API.DeviceItem) => {
         const osParts = (record.info?.os || '').split(' / ');
         const osIcon = getOSIcon(record.info?.os || '');
-        
+
         // Build online status tooltip
         let onlineTooltip: string;
         if (record.is_online) {
-          onlineTooltip = intl.formatMessage({ id: 'pages.devices.online', defaultMessage: 'Online' });
+          onlineTooltip = intl.formatMessage({
+            id: 'pages.devices.online',
+            defaultMessage: 'Online',
+          });
         } else {
-          const offlineDuration = record.last_online ? getOfflineDuration(record.last_online, intl) : '';
+          const offlineDuration = record.last_online
+            ? getOfflineDuration(record.last_online, intl)
+            : '';
           onlineTooltip = `${intl.formatMessage({ id: 'pages.devices.offline', defaultMessage: 'Offline' })}${offlineDuration}`;
         }
-        
+
         // Build OS tooltip - show full OS info in one line
         const osTooltip = osParts[1] || osParts[0] || '';
-        
+
         return (
           <span>
             <Tooltip title={onlineTooltip}>
@@ -107,7 +120,7 @@ export const getDeviceColumns = (options?: { hideAction?: boolean }): ProColumns
             </Tooltip>
             &nbsp;&nbsp;
             {osIcon && osTooltip && (
-              <Tooltip 
+              <Tooltip
                 title={osTooltip}
                 styles={{
                   root: {
@@ -131,7 +144,12 @@ export const getDeviceColumns = (options?: { hideAction?: boolean }): ProColumns
       title: (
         <span>
           <FormattedMessage id="pages.devices.device" defaultMessage="Device" />
-          <Tooltip title={intl.formatMessage({ id: 'pages.devices.deviceInfo', defaultMessage: 'username@device_name' })}>
+          <Tooltip
+            title={intl.formatMessage({
+              id: 'pages.devices.deviceInfo',
+              defaultMessage: 'username@device_name',
+            })}
+          >
             <InfoCircleOutlined style={{ marginLeft: 4 }} />
           </Tooltip>
         </span>
@@ -148,12 +166,18 @@ export const getDeviceColumns = (options?: { hideAction?: boolean }): ProColumns
       },
     },
     {
-      title: <FormattedMessage id="pages.devices.deviceGroup" defaultMessage="Group" />,
+      title: (
+        <FormattedMessage
+          id="pages.devices.deviceGroup"
+          defaultMessage="Group"
+        />
+      ),
       dataIndex: 'device_group_name',
       ellipsis: true,
       hideInSearch: true,
       sorter: true,
-      render: (_: unknown, record: API.DeviceItem) => record.device_group_name || '-',
+      render: (_: unknown, record: API.DeviceItem) =>
+        record.device_group_name || '-',
     },
     {
       title: <FormattedMessage id="pages.devices.user" defaultMessage="User" />,
@@ -163,24 +187,51 @@ export const getDeviceColumns = (options?: { hideAction?: boolean }): ProColumns
       render: (_: unknown, record: API.DeviceItem) => record.user_name || '-',
     },
     {
-      title: <FormattedMessage id="pages.devices.status" defaultMessage="Status" />,
+      title: (
+        <FormattedMessage id="pages.devices.status" defaultMessage="Status" />
+      ),
       dataIndex: 'status',
       width: 80,
       valueType: 'select',
       valueEnum: {
-        '1': { text: intl.formatMessage({ id: 'pages.devices.statusNormal', defaultMessage: 'Normal' }) },
-        '0': { text: intl.formatMessage({ id: 'pages.devices.statusDisabled', defaultMessage: 'Disabled' }) },
+        '1': {
+          text: intl.formatMessage({
+            id: 'pages.devices.statusNormal',
+            defaultMessage: 'Normal',
+          }),
+        },
+        '0': {
+          text: intl.formatMessage({
+            id: 'pages.devices.statusDisabled',
+            defaultMessage: 'Disabled',
+          }),
+        },
       },
       hideInTable: true,
     },
     {
-      title: <FormattedMessage id="pages.devices.onlineStatus" defaultMessage="Online Status" />,
+      title: (
+        <FormattedMessage
+          id="pages.devices.onlineStatus"
+          defaultMessage="Online Status"
+        />
+      ),
       dataIndex: 'is_online',
       width: 80,
       valueType: 'select',
       valueEnum: {
-        '1': { text: intl.formatMessage({ id: 'pages.devices.online', defaultMessage: 'Online' }) },
-        '0': { text: intl.formatMessage({ id: 'pages.devices.offline', defaultMessage: 'Offline' }) },
+        '1': {
+          text: intl.formatMessage({
+            id: 'pages.devices.online',
+            defaultMessage: 'Online',
+          }),
+        },
+        '0': {
+          text: intl.formatMessage({
+            id: 'pages.devices.offline',
+            defaultMessage: 'Offline',
+          }),
+        },
       },
       hideInTable: true,
     },
@@ -190,28 +241,48 @@ export const getDeviceColumns = (options?: { hideAction?: boolean }): ProColumns
       hideInTable: true,
     },
     {
-      title: <FormattedMessage id="pages.devices.deviceGroup" defaultMessage="Group" />,
+      title: (
+        <FormattedMessage
+          id="pages.devices.deviceGroup"
+          defaultMessage="Group"
+        />
+      ),
       dataIndex: 'device_group_name_search',
       hideInTable: true,
-      tooltip: intl.formatMessage({ id: 'pages.devices.deviceGroupSearchTip', defaultMessage: 'Filter by device group name' }),
+      tooltip: intl.formatMessage({
+        id: 'pages.devices.deviceGroupSearchTip',
+        defaultMessage: 'Filter by device group name',
+      }),
     },
     {
-      title: <FormattedMessage id="pages.devices.status" defaultMessage="Status" />,
+      title: (
+        <FormattedMessage id="pages.devices.status" defaultMessage="Status" />
+      ),
       dataIndex: 'status_display',
       search: false,
       sorter: true,
       render: (_: unknown, record: API.DeviceItem) => {
         const isNormal = record.status === 1;
-        return isNormal
-          ? <CheckCircleOutlined style={{ color: '#52c41a', fontSize: 16 }} />
-          : <CloseCircleOutlined style={{ color: '#f5222d', fontSize: 16 }} />;
+        return isNormal ? (
+          <CheckCircleOutlined style={{ color: '#52c41a', fontSize: 16 }} />
+        ) : (
+          <CloseCircleOutlined style={{ color: '#f5222d', fontSize: 16 }} />
+        );
       },
     },
     {
       title: (
         <span>
-          <FormattedMessage id="pages.devices.strategy" defaultMessage="Strategy" />
-          <Tooltip title={intl.formatMessage({ id: 'pages.devices.strategyInfo', defaultMessage: 'Connection strategy' })}>
+          <FormattedMessage
+            id="pages.devices.strategy"
+            defaultMessage="Strategy"
+          />
+          <Tooltip
+            title={intl.formatMessage({
+              id: 'pages.devices.strategyInfo',
+              defaultMessage: 'Connection strategy',
+            })}
+          >
             <InfoCircleOutlined style={{ marginLeft: 4 }} />
           </Tooltip>
         </span>
@@ -219,7 +290,8 @@ export const getDeviceColumns = (options?: { hideAction?: boolean }): ProColumns
       dataIndex: 'strategy_name',
       ellipsis: true,
       search: false,
-      render: (_: unknown, record: API.DeviceItem) => record.strategy_name || '-',
+      render: (_: unknown, record: API.DeviceItem) =>
+        record.strategy_name || '-',
     },
     {
       title: <FormattedMessage id="pages.devices.info" defaultMessage="Info" />,

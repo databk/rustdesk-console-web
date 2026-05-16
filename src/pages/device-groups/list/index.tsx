@@ -1,7 +1,16 @@
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { FormattedMessage, history, useIntl } from '@umijs/max';
-import { App, Button, Divider, Form, Input, Modal, Popconfirm, Space } from 'antd';
+import {
+  App,
+  Button,
+  Divider,
+  Form,
+  Input,
+  Modal,
+  Popconfirm,
+  Space,
+} from 'antd';
 import React, { useRef, useState } from 'react';
 import {
   createDeviceGroup,
@@ -16,7 +25,8 @@ const DeviceGroupList: React.FC = () => {
   const actionRef = useRef<ActionType>(null);
   const [createModalVisible, setCreateModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
-  const [editingRecord, setEditingRecord] = useState<API.DeviceGroupItem | null>(null);
+  const [editingRecord, setEditingRecord] =
+    useState<API.DeviceGroupItem | null>(null);
   const [createForm] = Form.useForm();
   const [editForm] = Form.useForm();
 
@@ -42,7 +52,10 @@ const DeviceGroupList: React.FC = () => {
     }
   };
 
-  const handleEdit = async (guid: string, values: API.UpdateDeviceGroupParams) => {
+  const handleEdit = async (
+    guid: string,
+    values: API.UpdateDeviceGroupParams,
+  ) => {
     try {
       await updateDeviceGroup(guid, values);
       msgApi.success(
@@ -87,12 +100,16 @@ const DeviceGroupList: React.FC = () => {
 
   const columns: ProColumns<API.DeviceGroupItem>[] = [
     {
-      title: <FormattedMessage id="pages.deviceGroups.name" defaultMessage="Name" />,
+      title: (
+        <FormattedMessage id="pages.deviceGroups.name" defaultMessage="Name" />
+      ),
       dataIndex: 'name',
       render: (_, record: API.DeviceGroupItem) => (
         <a
           onClick={() => {
-            history.push(`/groups/device/${record.guid}`, { name: record.name });
+            history.push(`/groups/device/${record.guid}`, {
+              name: record.name,
+            });
           }}
           style={{ cursor: 'pointer' }}
         >
@@ -101,12 +118,16 @@ const DeviceGroupList: React.FC = () => {
       ),
     },
     {
-      title: <FormattedMessage id="pages.deviceGroups.note" defaultMessage="Note" />,
+      title: (
+        <FormattedMessage id="pages.deviceGroups.note" defaultMessage="Note" />
+      ),
       dataIndex: 'note',
       ellipsis: true,
     },
     {
-      title: <FormattedMessage id="pages.common.action" defaultMessage="Action" />,
+      title: (
+        <FormattedMessage id="pages.common.action" defaultMessage="Action" />
+      ),
       valueType: 'option',
       width: 180,
       render: (_, record) => (
@@ -132,11 +153,20 @@ const DeviceGroupList: React.FC = () => {
               />
             }
             onConfirm={() => handleDelete(record.guid)}
-            okText={intl.formatMessage({ id: 'pages.common.confirm', defaultMessage: 'Yes' })}
-            cancelText={intl.formatMessage({ id: 'pages.common.cancel', defaultMessage: 'No' })}
+            okText={intl.formatMessage({
+              id: 'pages.common.confirm',
+              defaultMessage: 'Yes',
+            })}
+            cancelText={intl.formatMessage({
+              id: 'pages.common.cancel',
+              defaultMessage: 'No',
+            })}
           >
             <Button type="link" size="small" danger>
-              <FormattedMessage id="pages.common.delete" defaultMessage="Delete" />
+              <FormattedMessage
+                id="pages.common.delete"
+                defaultMessage="Delete"
+              />
             </Button>
           </Popconfirm>
         </Space>
@@ -148,7 +178,10 @@ const DeviceGroupList: React.FC = () => {
     <PageContainer>
       <ProTable<API.DeviceGroupItem>
         headerTitle={
-          <FormattedMessage id="pages.deviceGroups.list" defaultMessage="Device Groups" />
+          <FormattedMessage
+            id="pages.deviceGroups.list"
+            defaultMessage="Device Groups"
+          />
         }
         actionRef={actionRef}
         rowKey="guid"
@@ -171,7 +204,11 @@ const DeviceGroupList: React.FC = () => {
           showQuickJumper: true,
         }}
         toolBarRender={() => [
-          <Button key="create" type="primary" onClick={() => setCreateModalVisible(true)}>
+          <Button
+            key="create"
+            type="primary"
+            onClick={() => setCreateModalVisible(true)}
+          >
             <FormattedMessage
               id="pages.deviceGroups.create"
               defaultMessage="Create Device Group"
@@ -191,7 +228,10 @@ const DeviceGroupList: React.FC = () => {
 
       <Modal
         title={
-          <FormattedMessage id="pages.deviceGroups.create" defaultMessage="Create Device Group" />
+          <FormattedMessage
+            id="pages.deviceGroups.create"
+            defaultMessage="Create Device Group"
+          />
         }
         open={createModalVisible}
         onCancel={() => setCreateModalVisible(false)}
@@ -200,12 +240,33 @@ const DeviceGroupList: React.FC = () => {
         <Form form={createForm} onFinish={handleCreate}>
           <Form.Item
             name="name"
-            label={<FormattedMessage id="pages.deviceGroups.name" defaultMessage="Name" />}
-            rules={[{ required: true, message: intl.formatMessage({ id: 'pages.common.pleaseEnterName', defaultMessage: 'Please enter name' }) }]}
+            label={
+              <FormattedMessage
+                id="pages.deviceGroups.name"
+                defaultMessage="Name"
+              />
+            }
+            rules={[
+              {
+                required: true,
+                message: intl.formatMessage({
+                  id: 'pages.common.pleaseEnterName',
+                  defaultMessage: 'Please enter name',
+                }),
+              },
+            ]}
           >
             <Input />
           </Form.Item>
-          <Form.Item name="note" label={<FormattedMessage id="pages.deviceGroups.note" defaultMessage="Note" />}>
+          <Form.Item
+            name="note"
+            label={
+              <FormattedMessage
+                id="pages.deviceGroups.note"
+                defaultMessage="Note"
+              />
+            }
+          >
             <Input.TextArea />
           </Form.Item>
         </Form>
@@ -213,7 +274,10 @@ const DeviceGroupList: React.FC = () => {
 
       <Modal
         title={
-          <FormattedMessage id="pages.deviceGroups.edit" defaultMessage="Edit Device Group" />
+          <FormattedMessage
+            id="pages.deviceGroups.edit"
+            defaultMessage="Edit Device Group"
+          />
         }
         open={editModalVisible}
         onCancel={() => {
@@ -232,12 +296,33 @@ const DeviceGroupList: React.FC = () => {
         >
           <Form.Item
             name="name"
-            label={<FormattedMessage id="pages.deviceGroups.name" defaultMessage="Name" />}
-            rules={[{ required: true, message: intl.formatMessage({ id: 'pages.common.pleaseEnterName', defaultMessage: 'Please enter name' }) }]}
+            label={
+              <FormattedMessage
+                id="pages.deviceGroups.name"
+                defaultMessage="Name"
+              />
+            }
+            rules={[
+              {
+                required: true,
+                message: intl.formatMessage({
+                  id: 'pages.common.pleaseEnterName',
+                  defaultMessage: 'Please enter name',
+                }),
+              },
+            ]}
           >
             <Input />
           </Form.Item>
-          <Form.Item name="note" label={<FormattedMessage id="pages.deviceGroups.note" defaultMessage="Note" />}>
+          <Form.Item
+            name="note"
+            label={
+              <FormattedMessage
+                id="pages.deviceGroups.note"
+                defaultMessage="Note"
+              />
+            }
+          >
             <Input.TextArea />
           </Form.Item>
         </Form>

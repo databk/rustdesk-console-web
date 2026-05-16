@@ -38,58 +38,55 @@ const TrendCharts: React.FC<TrendChartsProps> = ({
 
   const connectionChartData = useMemo(() => {
     if (!trends?.connectionTrend) return [];
-    return trends.connectionTrend
-      .flatMap((item) => [
-        {
-          date: item.date,
-          value: item.count,
-          type: intl.formatMessage({
-            id: 'pages.dashboard.connectionCount',
-            defaultMessage: 'Count',
-          }),
-        },
-        {
-          date: item.date,
-          value: item.avgDuration,
-          type: intl.formatMessage({
-            id: 'pages.dashboard.avgDuration',
-            defaultMessage: 'Avg Duration',
-          }),
-        },
-      ]);
+    return trends.connectionTrend.flatMap((item) => [
+      {
+        date: item.date,
+        value: item.count,
+        type: intl.formatMessage({
+          id: 'pages.dashboard.connectionCount',
+          defaultMessage: 'Count',
+        }),
+      },
+      {
+        date: item.date,
+        value: item.avgDuration,
+        type: intl.formatMessage({
+          id: 'pages.dashboard.avgDuration',
+          defaultMessage: 'Avg Duration',
+        }),
+      },
+    ]);
   }, [trends?.connectionTrend, intl]);
 
   const userActiveChartData = useMemo(() => {
     if (!trends?.userActiveTrend) return [];
-    return trends.userActiveTrend
-      .flatMap((item) => [
-        {
-          date: item.date,
-          value: item.newUsers,
-          type: intl.formatMessage({
-            id: 'pages.dashboard.newUsers',
-            defaultMessage: 'New Users',
-          }),
-        },
-        {
-          date: item.date,
-          value: item.activeUsers,
-          type: intl.formatMessage({
-            id: 'pages.dashboard.activeUsers',
-            defaultMessage: 'Active Users',
-          }),
-        },
-      ]);
+    return trends.userActiveTrend.flatMap((item) => [
+      {
+        date: item.date,
+        value: item.newUsers,
+        type: intl.formatMessage({
+          id: 'pages.dashboard.newUsers',
+          defaultMessage: 'New Users',
+        }),
+      },
+      {
+        date: item.date,
+        value: item.activeUsers,
+        type: intl.formatMessage({
+          id: 'pages.dashboard.activeUsers',
+          defaultMessage: 'Active Users',
+        }),
+      },
+    ]);
   }, [trends?.userActiveTrend, intl]);
 
   const alarmChartData = useMemo(() => {
     if (!trends?.alarmTrend) return [];
-    return trends.alarmTrend
-      .flatMap((item) => [
-        { date: item.date, value: item.critical, type: 'Critical' },
-        { date: item.date, value: item.warning, type: 'Warning' },
-        { date: item.date, value: item.info, type: 'Info' },
-      ]);
+    return trends.alarmTrend.flatMap((item) => [
+      { date: item.date, value: item.critical, type: 'Critical' },
+      { date: item.date, value: item.warning, type: 'Warning' },
+      { date: item.date, value: item.info, type: 'Info' },
+    ]);
   }, [trends?.alarmTrend]);
 
   return (

@@ -16,7 +16,12 @@ const AlarmAudit: React.FC = () => {
       ellipsis: true,
     },
     {
-      title: <FormattedMessage id="pages.audits.fromName" defaultMessage="From Name" />,
+      title: (
+        <FormattedMessage
+          id="pages.audits.fromName"
+          defaultMessage="From Name"
+        />
+      ),
       dataIndex: 'from_name',
       width: 150,
       ellipsis: true,
@@ -28,13 +33,20 @@ const AlarmAudit: React.FC = () => {
       ellipsis: true,
     },
     {
-      title: <FormattedMessage id="pages.audits.toName" defaultMessage="To Name" />,
+      title: (
+        <FormattedMessage id="pages.audits.toName" defaultMessage="To Name" />
+      ),
       dataIndex: 'to_name',
       width: 150,
       ellipsis: true,
     },
     {
-      title: <FormattedMessage id="pages.audits.alarmType" defaultMessage="Alarm Type" />,
+      title: (
+        <FormattedMessage
+          id="pages.audits.alarmType"
+          defaultMessage="Alarm Type"
+        />
+      ),
       dataIndex: 'alarm_type',
       width: 120,
       render: (_, record) => {
@@ -54,7 +66,10 @@ const AlarmAudit: React.FC = () => {
     <PageContainer>
       <ProTable<API.AlarmAuditItem>
         headerTitle={
-          <FormattedMessage id="pages.audits.alarm" defaultMessage="Alarm Audits" />
+          <FormattedMessage
+            id="pages.audits.alarm"
+            defaultMessage="Alarm Audits"
+          />
         }
         actionRef={actionRef}
         rowKey="id"

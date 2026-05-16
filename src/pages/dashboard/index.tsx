@@ -114,14 +114,21 @@ const Dashboard: React.FC = () => {
           <ResourceDistribution statistics={statistics} style={{ flex: 1 }} />
         </Col>
         <Col xs={24} lg={12} style={{ display: 'flex' }}>
-          <OperationAnalysis statistics={statistics} overview={overview} style={{ flex: 1 }} />
+          <OperationAnalysis
+            statistics={statistics}
+            overview={overview}
+            style={{ flex: 1 }}
+          />
         </Col>
       </Row>
 
       {/* Area 3: System Status + Trend Charts */}
       <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
         <Col xs={24} lg={6} style={{ display: 'flex' }}>
-          <SystemStatus systemStatus={realtime?.systemStatus} style={{ flex: 1 }} />
+          <SystemStatus
+            systemStatus={realtime?.systemStatus}
+            style={{ flex: 1 }}
+          />
         </Col>
         <Col xs={24} lg={18} style={{ display: 'flex' }}>
           <TrendCharts

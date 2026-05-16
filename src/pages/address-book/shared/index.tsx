@@ -1,7 +1,16 @@
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { FormattedMessage, history, useIntl } from '@umijs/max';
-import { App, Button, Divider, Form, Input, Modal, Popconfirm, Space } from 'antd';
+import {
+  App,
+  Button,
+  Divider,
+  Form,
+  Input,
+  Modal,
+  Popconfirm,
+  Space,
+} from 'antd';
 import React, { useRef, useState } from 'react';
 import {
   addSharedAddressBook,
@@ -16,7 +25,8 @@ const SharedAddressBook: React.FC = () => {
   const actionRef = useRef<ActionType>(null);
   const [createModalVisible, setCreateModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
-  const [editingRecord, setEditingRecord] = useState<API.SharedAddressBook | null>(null);
+  const [editingRecord, setEditingRecord] =
+    useState<API.SharedAddressBook | null>(null);
   const [createForm] = Form.useForm();
   const [editForm] = Form.useForm();
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
@@ -89,12 +99,16 @@ const SharedAddressBook: React.FC = () => {
 
   const columns: ProColumns<API.SharedAddressBook>[] = [
     {
-      title: <FormattedMessage id="pages.addressBook.name" defaultMessage="Name" />,
+      title: (
+        <FormattedMessage id="pages.addressBook.name" defaultMessage="Name" />
+      ),
       dataIndex: 'name',
       render: (_, record: API.SharedAddressBook) => (
         <a
           onClick={() => {
-            history.push(`/address-book/shared/${record.guid}`, { name: record.name });
+            history.push(`/address-book/shared/${record.guid}`, {
+              name: record.name,
+            });
           }}
           style={{ cursor: 'pointer' }}
         >
@@ -103,12 +117,16 @@ const SharedAddressBook: React.FC = () => {
       ),
     },
     {
-      title: <FormattedMessage id="pages.addressBook.note" defaultMessage="Note" />,
+      title: (
+        <FormattedMessage id="pages.addressBook.note" defaultMessage="Note" />
+      ),
       dataIndex: 'note',
       ellipsis: true,
     },
     {
-      title: <FormattedMessage id="pages.common.action" defaultMessage="Action" />,
+      title: (
+        <FormattedMessage id="pages.common.action" defaultMessage="Action" />
+      ),
       valueType: 'option',
       width: 180,
       render: (_, record) => (
@@ -134,11 +152,20 @@ const SharedAddressBook: React.FC = () => {
               />
             }
             onConfirm={() => handleDelete([record.guid])}
-            okText={intl.formatMessage({ id: 'pages.common.confirm', defaultMessage: 'Yes' })}
-            cancelText={intl.formatMessage({ id: 'pages.common.cancel', defaultMessage: 'No' })}
+            okText={intl.formatMessage({
+              id: 'pages.common.confirm',
+              defaultMessage: 'Yes',
+            })}
+            cancelText={intl.formatMessage({
+              id: 'pages.common.cancel',
+              defaultMessage: 'No',
+            })}
           >
             <Button type="link" size="small" danger>
-              <FormattedMessage id="pages.common.delete" defaultMessage="Delete" />
+              <FormattedMessage
+                id="pages.common.delete"
+                defaultMessage="Delete"
+              />
             </Button>
           </Popconfirm>
         </Space>
@@ -150,7 +177,10 @@ const SharedAddressBook: React.FC = () => {
     <PageContainer>
       <ProTable<API.SharedAddressBook>
         headerTitle={
-          <FormattedMessage id="pages.addressBook.shared" defaultMessage="Shared Address Books" />
+          <FormattedMessage
+            id="pages.addressBook.shared"
+            defaultMessage="Shared Address Books"
+          />
         }
         actionRef={actionRef}
         rowKey="guid"
@@ -176,8 +206,15 @@ const SharedAddressBook: React.FC = () => {
           showQuickJumper: true,
         }}
         toolBarRender={() => [
-          <Button key="create" type="primary" onClick={() => setCreateModalVisible(true)}>
-            <FormattedMessage id="pages.addressBook.create" defaultMessage="Create Address Book" />
+          <Button
+            key="create"
+            type="primary"
+            onClick={() => setCreateModalVisible(true)}
+          >
+            <FormattedMessage
+              id="pages.addressBook.create"
+              defaultMessage="Create Address Book"
+            />
           </Button>,
           selectedRowKeys.length > 0 && (
             <Popconfirm
@@ -189,11 +226,20 @@ const SharedAddressBook: React.FC = () => {
                 />
               }
               onConfirm={() => handleDelete(selectedRowKeys as string[])}
-              okText={intl.formatMessage({ id: 'pages.common.confirm', defaultMessage: 'Yes' })}
-              cancelText={intl.formatMessage({ id: 'pages.common.cancel', defaultMessage: 'No' })}
+              okText={intl.formatMessage({
+                id: 'pages.common.confirm',
+                defaultMessage: 'Yes',
+              })}
+              cancelText={intl.formatMessage({
+                id: 'pages.common.cancel',
+                defaultMessage: 'No',
+              })}
             >
               <Button danger>
-                <FormattedMessage id="pages.common.batchDelete" defaultMessage="Batch Delete" />
+                <FormattedMessage
+                  id="pages.common.batchDelete"
+                  defaultMessage="Batch Delete"
+                />
               </Button>
             </Popconfirm>
           ),
@@ -211,7 +257,10 @@ const SharedAddressBook: React.FC = () => {
 
       <Modal
         title={
-          <FormattedMessage id="pages.addressBook.create" defaultMessage="Create Address Book" />
+          <FormattedMessage
+            id="pages.addressBook.create"
+            defaultMessage="Create Address Book"
+          />
         }
         open={createModalVisible}
         onCancel={() => setCreateModalVisible(false)}
@@ -220,15 +269,44 @@ const SharedAddressBook: React.FC = () => {
         <Form form={createForm} onFinish={handleCreate}>
           <Form.Item
             name="name"
-            label={<FormattedMessage id="pages.addressBook.name" defaultMessage="Name" />}
-            rules={[{ required: true, message: intl.formatMessage({ id: 'pages.common.pleaseEnterName', defaultMessage: 'Please enter name' }) }]}
+            label={
+              <FormattedMessage
+                id="pages.addressBook.name"
+                defaultMessage="Name"
+              />
+            }
+            rules={[
+              {
+                required: true,
+                message: intl.formatMessage({
+                  id: 'pages.common.pleaseEnterName',
+                  defaultMessage: 'Please enter name',
+                }),
+              },
+            ]}
           >
             <Input />
           </Form.Item>
-          <Form.Item name="note" label={<FormattedMessage id="pages.addressBook.note" defaultMessage="Note" />}>
+          <Form.Item
+            name="note"
+            label={
+              <FormattedMessage
+                id="pages.addressBook.note"
+                defaultMessage="Note"
+              />
+            }
+          >
             <Input.TextArea />
           </Form.Item>
-          <Form.Item name="password" label={<FormattedMessage id="pages.users.password" defaultMessage="Password" />}>
+          <Form.Item
+            name="password"
+            label={
+              <FormattedMessage
+                id="pages.users.password"
+                defaultMessage="Password"
+              />
+            }
+          >
             <Input.Password />
           </Form.Item>
         </Form>
@@ -236,7 +314,10 @@ const SharedAddressBook: React.FC = () => {
 
       <Modal
         title={
-          <FormattedMessage id="pages.addressBook.edit" defaultMessage="Edit Address Book" />
+          <FormattedMessage
+            id="pages.addressBook.edit"
+            defaultMessage="Edit Address Book"
+          />
         }
         open={editModalVisible}
         onCancel={() => {
@@ -251,12 +332,33 @@ const SharedAddressBook: React.FC = () => {
           </Form.Item>
           <Form.Item
             name="name"
-            label={<FormattedMessage id="pages.addressBook.name" defaultMessage="Name" />}
-            rules={[{ required: true, message: intl.formatMessage({ id: 'pages.common.pleaseEnterName', defaultMessage: 'Please enter name' }) }]}
+            label={
+              <FormattedMessage
+                id="pages.addressBook.name"
+                defaultMessage="Name"
+              />
+            }
+            rules={[
+              {
+                required: true,
+                message: intl.formatMessage({
+                  id: 'pages.common.pleaseEnterName',
+                  defaultMessage: 'Please enter name',
+                }),
+              },
+            ]}
           >
             <Input />
           </Form.Item>
-          <Form.Item name="note" label={<FormattedMessage id="pages.addressBook.note" defaultMessage="Note" />}>
+          <Form.Item
+            name="note"
+            label={
+              <FormattedMessage
+                id="pages.addressBook.note"
+                defaultMessage="Note"
+              />
+            }
+          >
             <Input.TextArea />
           </Form.Item>
         </Form>

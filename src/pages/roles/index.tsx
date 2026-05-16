@@ -53,14 +53,20 @@ const RoleList: React.FC = () => {
     try {
       await createRole(values);
       msgApi.success(
-        intl.formatMessage({ id: 'pages.roles.createSuccess', defaultMessage: 'Role created successfully' }),
+        intl.formatMessage({
+          id: 'pages.roles.createSuccess',
+          defaultMessage: 'Role created successfully',
+        }),
       );
       setCreateModalVisible(false);
       form.resetFields();
       actionRef.current?.reload();
     } catch (error) {
       msgApi.error(
-        intl.formatMessage({ id: 'pages.roles.createFailed', defaultMessage: 'Failed to create role' }),
+        intl.formatMessage({
+          id: 'pages.roles.createFailed',
+          defaultMessage: 'Failed to create role',
+        }),
       );
     }
   };
@@ -70,7 +76,10 @@ const RoleList: React.FC = () => {
     try {
       await updateRole(currentRole.guid, values);
       msgApi.success(
-        intl.formatMessage({ id: 'pages.roles.updateSuccess', defaultMessage: 'Role updated successfully' }),
+        intl.formatMessage({
+          id: 'pages.roles.updateSuccess',
+          defaultMessage: 'Role updated successfully',
+        }),
       );
       setEditModalVisible(false);
       setCurrentRole(null);
@@ -78,7 +87,10 @@ const RoleList: React.FC = () => {
       actionRef.current?.reload();
     } catch (error) {
       msgApi.error(
-        intl.formatMessage({ id: 'pages.roles.updateFailed', defaultMessage: 'Failed to update role' }),
+        intl.formatMessage({
+          id: 'pages.roles.updateFailed',
+          defaultMessage: 'Failed to update role',
+        }),
       );
     }
   };
@@ -87,12 +99,18 @@ const RoleList: React.FC = () => {
     try {
       await deleteRole(guid);
       msgApi.success(
-        intl.formatMessage({ id: 'pages.roles.deleteSuccess', defaultMessage: 'Role deleted successfully' }),
+        intl.formatMessage({
+          id: 'pages.roles.deleteSuccess',
+          defaultMessage: 'Role deleted successfully',
+        }),
       );
       actionRef.current?.reload();
     } catch (error) {
       msgApi.error(
-        intl.formatMessage({ id: 'pages.roles.deleteFailed', defaultMessage: 'Failed to delete role' }),
+        intl.formatMessage({
+          id: 'pages.roles.deleteFailed',
+          defaultMessage: 'Failed to delete role',
+        }),
       );
     }
   };
@@ -115,7 +133,9 @@ const RoleList: React.FC = () => {
       width: 50,
     },
     {
-      title: <FormattedMessage id="pages.roles.name" defaultMessage="Role Name" />,
+      title: (
+        <FormattedMessage id="pages.roles.name" defaultMessage="Role Name" />
+      ),
       dataIndex: 'name',
       width: 200,
       render: (_, record) => (
@@ -135,8 +155,16 @@ const RoleList: React.FC = () => {
     {
       title: (
         <span>
-          <FormattedMessage id="pages.roles.permissions" defaultMessage="Permissions" />
-          <Tooltip title={intl.formatMessage({ id: 'pages.roles.permissionsInfo', defaultMessage: 'Number of assigned permissions' })}>
+          <FormattedMessage
+            id="pages.roles.permissions"
+            defaultMessage="Permissions"
+          />
+          <Tooltip
+            title={intl.formatMessage({
+              id: 'pages.roles.permissionsInfo',
+              defaultMessage: 'Number of assigned permissions',
+            })}
+          >
             <InfoCircleOutlined style={{ marginLeft: 4 }} />
           </Tooltip>
         </span>
@@ -144,10 +172,14 @@ const RoleList: React.FC = () => {
       dataIndex: 'permission_count',
       width: 120,
       search: false,
-      render: (_, record) => <Tag color="blue">{record.permission_count || 0}</Tag>,
+      render: (_, record) => (
+        <Tag color="blue">{record.permission_count || 0}</Tag>
+      ),
     },
     {
-      title: <FormattedMessage id="pages.common.action" defaultMessage="Action" />,
+      title: (
+        <FormattedMessage id="pages.common.action" defaultMessage="Action" />
+      ),
       valueType: 'option',
       width: 180,
       fixed: 'right',
@@ -163,13 +195,31 @@ const RoleList: React.FC = () => {
             <FormattedMessage id="pages.common.edit" defaultMessage="Edit" />
           </Button>
           <Popconfirm
-            title={intl.formatMessage({ id: 'pages.roles.deleteConfirm', defaultMessage: 'Are you sure to delete this role?' })}
+            title={intl.formatMessage({
+              id: 'pages.roles.deleteConfirm',
+              defaultMessage: 'Are you sure to delete this role?',
+            })}
             onConfirm={() => handleDelete(record.guid)}
-            okText={intl.formatMessage({ id: 'pages.common.confirm', defaultMessage: 'Yes' })}
-            cancelText={intl.formatMessage({ id: 'pages.common.cancel', defaultMessage: 'No' })}
+            okText={intl.formatMessage({
+              id: 'pages.common.confirm',
+              defaultMessage: 'Yes',
+            })}
+            cancelText={intl.formatMessage({
+              id: 'pages.common.cancel',
+              defaultMessage: 'No',
+            })}
           >
-            <Button key="delete" type="link" size="small" danger icon={<DeleteOutlined />}>
-              <FormattedMessage id="pages.common.delete" defaultMessage="Delete" />
+            <Button
+              key="delete"
+              type="link"
+              size="small"
+              danger
+              icon={<DeleteOutlined />}
+            >
+              <FormattedMessage
+                id="pages.common.delete"
+                defaultMessage="Delete"
+              />
             </Button>
           </Popconfirm>
         </Space>
@@ -178,12 +228,15 @@ const RoleList: React.FC = () => {
   ];
 
   const buildPermissionTree = () => {
-    const grouped = permissions.reduce((acc, perm) => {
-      const module = perm.module || 'Other';
-      if (!acc[module]) acc[module] = [];
-      acc[module].push(perm);
-      return acc;
-    }, {} as Record<string, API.PermissionItem[]>);
+    const grouped = permissions.reduce(
+      (acc, perm) => {
+        const module = perm.module || 'Other';
+        if (!acc[module]) acc[module] = [];
+        acc[module].push(perm);
+        return acc;
+      },
+      {} as Record<string, API.PermissionItem[]>,
+    );
 
     return Object.entries(grouped).map(([module, perms]) => ({
       title: module,
@@ -241,7 +294,10 @@ const RoleList: React.FC = () => {
               fetchPermissions();
             }}
           >
-            <FormattedMessage id="pages.roles.create" defaultMessage="Create Role" />
+            <FormattedMessage
+              id="pages.roles.create"
+              defaultMessage="Create Role"
+            />
           </Button>,
         ]}
         options={{
@@ -256,7 +312,12 @@ const RoleList: React.FC = () => {
 
       {/* Create Role Modal */}
       <ModalForm
-        title={<FormattedMessage id="pages.roles.create" defaultMessage="Create Role" />}
+        title={
+          <FormattedMessage
+            id="pages.roles.create"
+            defaultMessage="Create Role"
+          />
+        }
         open={createModalVisible}
         onOpenChange={setCreateModalVisible}
         onFinish={handleCreate}
@@ -269,17 +330,51 @@ const RoleList: React.FC = () => {
       >
         <Form.Item
           name="name"
-          label={<FormattedMessage id="pages.roles.name" defaultMessage="Role Name" />}
-          rules={[{ required: true, message: intl.formatMessage({ id: 'pages.common.pleaseEnterRoleName', defaultMessage: 'Please enter role name' }) }]}
+          label={
+            <FormattedMessage
+              id="pages.roles.name"
+              defaultMessage="Role Name"
+            />
+          }
+          rules={[
+            {
+              required: true,
+              message: intl.formatMessage({
+                id: 'pages.common.pleaseEnterRoleName',
+                defaultMessage: 'Please enter role name',
+              }),
+            },
+          ]}
         >
-          <Input placeholder={intl.formatMessage({ id: 'pages.common.pleaseEnterRoleName', defaultMessage: 'Please enter role name' })} />
+          <Input
+            placeholder={intl.formatMessage({
+              id: 'pages.common.pleaseEnterRoleName',
+              defaultMessage: 'Please enter role name',
+            })}
+          />
         </Form.Item>
-        <Form.Item name="note" label={<FormattedMessage id="pages.roles.note" defaultMessage="Note" />}>
-          <Input.TextArea rows={3} placeholder={intl.formatMessage({ id: 'pages.common.enterDescription', defaultMessage: 'Enter description' })} />
+        <Form.Item
+          name="note"
+          label={
+            <FormattedMessage id="pages.roles.note" defaultMessage="Note" />
+          }
+        >
+          <Input.TextArea
+            rows={3}
+            placeholder={intl.formatMessage({
+              id: 'pages.common.enterDescription',
+              defaultMessage: 'Enter description',
+            })}
+          />
         </Form.Item>
         <Form.Item
           name="permissions"
-          label={<FormattedMessage id="pages.roles.selectPermissions" defaultMessage="Select Permissions" />}
+          label={
+            <FormattedMessage
+              id="pages.roles.selectPermissions"
+              defaultMessage="Select Permissions"
+            />
+          }
         >
           <Checkbox.Group style={{ width: '100%' }}>
             <Tree
@@ -295,7 +390,9 @@ const RoleList: React.FC = () => {
 
       {/* Edit Role Modal */}
       <ModalForm
-        title={<FormattedMessage id="pages.roles.edit" defaultMessage="Edit Role" />}
+        title={
+          <FormattedMessage id="pages.roles.edit" defaultMessage="Edit Role" />
+        }
         open={editModalVisible}
         onOpenChange={setEditModalVisible}
         onFinish={handleUpdate}
@@ -308,17 +405,51 @@ const RoleList: React.FC = () => {
       >
         <Form.Item
           name="name"
-          label={<FormattedMessage id="pages.roles.name" defaultMessage="Role Name" />}
-          rules={[{ required: true, message: intl.formatMessage({ id: 'pages.common.pleaseEnterRoleName', defaultMessage: 'Please enter role name' }) }]}
+          label={
+            <FormattedMessage
+              id="pages.roles.name"
+              defaultMessage="Role Name"
+            />
+          }
+          rules={[
+            {
+              required: true,
+              message: intl.formatMessage({
+                id: 'pages.common.pleaseEnterRoleName',
+                defaultMessage: 'Please enter role name',
+              }),
+            },
+          ]}
         >
-          <Input placeholder={intl.formatMessage({ id: 'pages.common.pleaseEnterRoleName', defaultMessage: 'Please enter role name' })} />
+          <Input
+            placeholder={intl.formatMessage({
+              id: 'pages.common.pleaseEnterRoleName',
+              defaultMessage: 'Please enter role name',
+            })}
+          />
         </Form.Item>
-        <Form.Item name="note" label={<FormattedMessage id="pages.roles.note" defaultMessage="Note" />}>
-          <Input.TextArea rows={3} placeholder={intl.formatMessage({ id: 'pages.common.enterDescription', defaultMessage: 'Enter description' })} />
+        <Form.Item
+          name="note"
+          label={
+            <FormattedMessage id="pages.roles.note" defaultMessage="Note" />
+          }
+        >
+          <Input.TextArea
+            rows={3}
+            placeholder={intl.formatMessage({
+              id: 'pages.common.enterDescription',
+              defaultMessage: 'Enter description',
+            })}
+          />
         </Form.Item>
         <Form.Item
           name="permissions"
-          label={<FormattedMessage id="pages.roles.selectPermissions" defaultMessage="Select Permissions" />}
+          label={
+            <FormattedMessage
+              id="pages.roles.selectPermissions"
+              defaultMessage="Select Permissions"
+            />
+          }
         >
           <Checkbox.Group style={{ width: '100%' }}>
             <Tree

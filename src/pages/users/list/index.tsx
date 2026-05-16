@@ -52,14 +52,20 @@ const UserList: React.FC = () => {
     try {
       await createUser({ ...values, is_admin: values.is_admin || false });
       msgApi.success(
-        intl.formatMessage({ id: 'pages.users.createSuccess', defaultMessage: 'User created' }),
+        intl.formatMessage({
+          id: 'pages.users.createSuccess',
+          defaultMessage: 'User created',
+        }),
       );
       setCreateModalVisible(false);
       createForm.resetFields();
       actionRef.current?.reload();
     } catch {
       msgApi.error(
-        intl.formatMessage({ id: 'pages.users.createFailed', defaultMessage: 'Failed to create user' }),
+        intl.formatMessage({
+          id: 'pages.users.createFailed',
+          defaultMessage: 'Failed to create user',
+        }),
       );
     }
   };
@@ -68,13 +74,19 @@ const UserList: React.FC = () => {
     try {
       await inviteUser(values);
       msgApi.success(
-        intl.formatMessage({ id: 'pages.users.inviteSuccess', defaultMessage: 'Invitation sent' }),
+        intl.formatMessage({
+          id: 'pages.users.inviteSuccess',
+          defaultMessage: 'Invitation sent',
+        }),
       );
       setInviteModalVisible(false);
       inviteForm.resetFields();
     } catch {
       msgApi.error(
-        intl.formatMessage({ id: 'pages.users.inviteFailed', defaultMessage: 'Failed to send invitation' }),
+        intl.formatMessage({
+          id: 'pages.users.inviteFailed',
+          defaultMessage: 'Failed to send invitation',
+        }),
       );
     }
   };
@@ -83,12 +95,18 @@ const UserList: React.FC = () => {
     try {
       await enableUser(guid);
       msgApi.success(
-        intl.formatMessage({ id: 'pages.users.enableSuccess', defaultMessage: 'User enabled' }),
+        intl.formatMessage({
+          id: 'pages.users.enableSuccess',
+          defaultMessage: 'User enabled',
+        }),
       );
       actionRef.current?.reload();
     } catch {
       msgApi.error(
-        intl.formatMessage({ id: 'pages.users.enableFailed', defaultMessage: 'Failed to enable user' }),
+        intl.formatMessage({
+          id: 'pages.users.enableFailed',
+          defaultMessage: 'Failed to enable user',
+        }),
       );
     }
   };
@@ -97,12 +115,18 @@ const UserList: React.FC = () => {
     try {
       await disableUser(guid);
       msgApi.success(
-        intl.formatMessage({ id: 'pages.users.disableSuccess', defaultMessage: 'User disabled' }),
+        intl.formatMessage({
+          id: 'pages.users.disableSuccess',
+          defaultMessage: 'User disabled',
+        }),
       );
       actionRef.current?.reload();
     } catch {
       msgApi.error(
-        intl.formatMessage({ id: 'pages.users.disableFailed', defaultMessage: 'Failed to disable user' }),
+        intl.formatMessage({
+          id: 'pages.users.disableFailed',
+          defaultMessage: 'Failed to disable user',
+        }),
       );
     }
   };
@@ -111,12 +135,18 @@ const UserList: React.FC = () => {
     try {
       await deleteUser(guid);
       msgApi.success(
-        intl.formatMessage({ id: 'pages.users.deleteSuccess', defaultMessage: 'User deleted' }),
+        intl.formatMessage({
+          id: 'pages.users.deleteSuccess',
+          defaultMessage: 'User deleted',
+        }),
       );
       actionRef.current?.reload();
     } catch {
       msgApi.error(
-        intl.formatMessage({ id: 'pages.users.deleteFailed', defaultMessage: 'Failed to delete user' }),
+        intl.formatMessage({
+          id: 'pages.users.deleteFailed',
+          defaultMessage: 'Failed to delete user',
+        }),
       );
     }
   };
@@ -134,7 +164,9 @@ const UserList: React.FC = () => {
       width: 50,
     },
     {
-      title: <FormattedMessage id="pages.users.name" defaultMessage="Username" />,
+      title: (
+        <FormattedMessage id="pages.users.name" defaultMessage="Username" />
+      ),
       dataIndex: 'name',
       width: 150,
       ellipsis: true,
@@ -142,12 +174,19 @@ const UserList: React.FC = () => {
         <Space>
           <span>{record.name}</span>
           {record.is_admin && (
-            <Tooltip title={intl.formatMessage({ id: 'pages.users.admin', defaultMessage: 'Admin' })}>
+            <Tooltip
+              title={intl.formatMessage({
+                id: 'pages.users.admin',
+                defaultMessage: 'Admin',
+              })}
+            >
               <CrownOutlined style={{ color: '#faad14' }} />
             </Tooltip>
           )}
           {record.name === currentUser?.name && (
-            <Tag color="blue"><FormattedMessage id="pages.users.me" defaultMessage="Me" /></Tag>
+            <Tag color="blue">
+              <FormattedMessage id="pages.users.me" defaultMessage="Me" />
+            </Tag>
           )}
         </Space>
       ),
@@ -163,7 +202,12 @@ const UserList: React.FC = () => {
       title: (
         <span>
           <FormattedMessage id="pages.users.status" defaultMessage="Status" />
-          <Tooltip title={intl.formatMessage({ id: 'pages.users.statusInfo', defaultMessage: 'User account status' })}>
+          <Tooltip
+            title={intl.formatMessage({
+              id: 'pages.users.statusInfo',
+              defaultMessage: 'User account status',
+            })}
+          >
             <InfoCircleOutlined style={{ marginLeft: 4 }} />
           </Tooltip>
         </span>
@@ -179,7 +223,10 @@ const UserList: React.FC = () => {
           </Tag>
         ) : (
           <Tag icon={<MinusCircleOutlined />} color="red">
-            <FormattedMessage id="pages.users.disabled" defaultMessage="Disabled" />
+            <FormattedMessage
+              id="pages.users.disabled"
+              defaultMessage="Disabled"
+            />
           </Tag>
         );
       },
@@ -188,7 +235,12 @@ const UserList: React.FC = () => {
       title: (
         <span>
           <FormattedMessage id="pages.users.roles" defaultMessage="Roles" />
-          <Tooltip title={intl.formatMessage({ id: 'pages.users.rolesInfo', defaultMessage: 'User roles and permissions' })}>
+          <Tooltip
+            title={intl.formatMessage({
+              id: 'pages.users.rolesInfo',
+              defaultMessage: 'User roles and permissions',
+            })}
+          >
             <InfoCircleOutlined style={{ marginLeft: 4 }} />
           </Tooltip>
         </span>
@@ -198,7 +250,9 @@ const UserList: React.FC = () => {
       search: false,
       render: (_: unknown, record: API.UserItem) =>
         record.is_admin ? (
-          <Tag color="blue"><FormattedMessage id="pages.users.admin" defaultMessage="Admin" /></Tag>
+          <Tag color="blue">
+            <FormattedMessage id="pages.users.admin" defaultMessage="Admin" />
+          </Tag>
         ) : (
           <span>-</span>
         ),
@@ -206,8 +260,16 @@ const UserList: React.FC = () => {
     {
       title: (
         <span>
-          <FormattedMessage id="pages.users.strategy" defaultMessage="Strategy" />
-          <Tooltip title={intl.formatMessage({ id: 'pages.users.strategyInfo', defaultMessage: 'Connection strategy for user' })}>
+          <FormattedMessage
+            id="pages.users.strategy"
+            defaultMessage="Strategy"
+          />
+          <Tooltip
+            title={intl.formatMessage({
+              id: 'pages.users.strategyInfo',
+              defaultMessage: 'Connection strategy for user',
+            })}
+          >
             <InfoCircleOutlined style={{ marginLeft: 4 }} />
           </Tooltip>
         </span>
@@ -221,7 +283,12 @@ const UserList: React.FC = () => {
       title: (
         <span>
           <FormattedMessage id="pages.users.group" defaultMessage="Group" />
-          <Tooltip title={intl.formatMessage({ id: 'pages.users.groupInfo', defaultMessage: 'User group assignment' })}>
+          <Tooltip
+            title={intl.formatMessage({
+              id: 'pages.users.groupInfo',
+              defaultMessage: 'User group assignment',
+            })}
+          >
             <InfoCircleOutlined style={{ marginLeft: 4 }} />
           </Tooltip>
         </span>
@@ -240,18 +307,15 @@ const UserList: React.FC = () => {
       render: (_: unknown, record: API.UserItem) => record.note || '-',
     },
     {
-      title: <FormattedMessage id="pages.common.action" defaultMessage="Action" />,
+      title: (
+        <FormattedMessage id="pages.common.action" defaultMessage="Action" />
+      ),
       valueType: 'option',
       width: 180,
       fixed: 'right',
       render: (_: unknown, record: API.UserItem) => (
         <Space size={0} split={<Divider type="vertical" />}>
-          <Button
-            key="edit"
-            type="link"
-            size="small"
-            icon={<EditOutlined />}
-          >
+          <Button key="edit" type="link" size="small" icon={<EditOutlined />}>
             <FormattedMessage id="pages.common.edit" defaultMessage="Edit" />
           </Button>
           <Dropdown
@@ -261,14 +325,20 @@ const UserList: React.FC = () => {
                   ? [
                       {
                         key: 'disable',
-                        label: intl.formatMessage({ id: 'pages.users.disable', defaultMessage: 'Disable' }),
+                        label: intl.formatMessage({
+                          id: 'pages.users.disable',
+                          defaultMessage: 'Disable',
+                        }),
                         onClick: () => handleDisable(record.guid),
                       },
                     ]
                   : [
                       {
                         key: 'enable',
-                        label: intl.formatMessage({ id: 'pages.users.enable', defaultMessage: 'Enable' }),
+                        label: intl.formatMessage({
+                          id: 'pages.users.enable',
+                          defaultMessage: 'Enable',
+                        }),
                         onClick: () => handleEnable(record.guid),
                       },
                     ]),
@@ -279,14 +349,26 @@ const UserList: React.FC = () => {
                 {
                   key: 'delete',
                   label: (
-                    <FormattedMessage id="pages.common.delete" defaultMessage="Delete" />
+                    <FormattedMessage
+                      id="pages.common.delete"
+                      defaultMessage="Delete"
+                    />
                   ),
                   danger: true,
                   onClick: () => {
                     modal.confirm({
-                      title: intl.formatMessage({ id: 'pages.users.deleteConfirm', defaultMessage: 'Are you sure to delete this user?' }),
-                      okText: intl.formatMessage({ id: 'pages.common.confirm', defaultMessage: 'Yes' }),
-                      cancelText: intl.formatMessage({ id: 'pages.common.cancel', defaultMessage: 'No' }),
+                      title: intl.formatMessage({
+                        id: 'pages.users.deleteConfirm',
+                        defaultMessage: 'Are you sure to delete this user?',
+                      }),
+                      okText: intl.formatMessage({
+                        id: 'pages.common.confirm',
+                        defaultMessage: 'Yes',
+                      }),
+                      cancelText: intl.formatMessage({
+                        id: 'pages.common.cancel',
+                        defaultMessage: 'No',
+                      }),
                       onOk: () => handleDelete(record.guid),
                     });
                   },
@@ -328,9 +410,7 @@ const UserList: React.FC = () => {
         search={{
           labelWidth: 'auto',
           defaultCollapsed: false,
-          optionRender: (searchConfig, formProps, dom) => [
-            ...dom.reverse(),
-          ],
+          optionRender: (searchConfig, formProps, dom) => [...dom.reverse()],
         }}
         form={{
           onFinish: handleSearch,
@@ -345,10 +425,19 @@ const UserList: React.FC = () => {
         }}
         scroll={{ x: 1200 }}
         toolBarRender={() => [
-          <Button key="create" type="primary" icon={<PlusOutlined />} onClick={() => setCreateModalVisible(true)}>
+          <Button
+            key="create"
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => setCreateModalVisible(true)}
+          >
             <FormattedMessage id="pages.users.create" defaultMessage="Create" />
           </Button>,
-          <Button key="invite" icon={<PlusOutlined />} onClick={() => setInviteModalVisible(true)}>
+          <Button
+            key="invite"
+            icon={<PlusOutlined />}
+            onClick={() => setInviteModalVisible(true)}
+          >
             <FormattedMessage id="pages.users.invite" defaultMessage="Invite" />
           </Button>,
         ]}
@@ -363,7 +452,12 @@ const UserList: React.FC = () => {
       />
 
       <Modal
-        title={<FormattedMessage id="pages.users.create" defaultMessage="Create User" />}
+        title={
+          <FormattedMessage
+            id="pages.users.create"
+            defaultMessage="Create User"
+          />
+        }
         open={createModalVisible}
         onCancel={() => setCreateModalVisible(false)}
         onOk={() => createForm.submit()}
@@ -371,39 +465,98 @@ const UserList: React.FC = () => {
         <Form form={createForm} onFinish={handleCreate} layout="vertical">
           <Form.Item
             name="name"
-            label={<FormattedMessage id="pages.users.name" defaultMessage="Username" />}
-            rules={[{ required: true, message: intl.formatMessage({ id: 'pages.common.pleaseEnterUsername', defaultMessage: 'Please enter username' }) }]}
+            label={
+              <FormattedMessage
+                id="pages.users.name"
+                defaultMessage="Username"
+              />
+            }
+            rules={[
+              {
+                required: true,
+                message: intl.formatMessage({
+                  id: 'pages.common.pleaseEnterUsername',
+                  defaultMessage: 'Please enter username',
+                }),
+              },
+            ]}
           >
             <Input />
           </Form.Item>
           <Form.Item
             name="email"
-            label={<FormattedMessage id="pages.users.email" defaultMessage="Email" />}
+            label={
+              <FormattedMessage id="pages.users.email" defaultMessage="Email" />
+            }
             rules={[
-              { required: true, message: intl.formatMessage({ id: 'pages.common.pleaseEnterEmail', defaultMessage: 'Please enter email' }) },
-              { type: 'email', message: intl.formatMessage({ id: 'pages.common.pleaseEnterValidEmail', defaultMessage: 'Please enter valid email' }) },
+              {
+                required: true,
+                message: intl.formatMessage({
+                  id: 'pages.common.pleaseEnterEmail',
+                  defaultMessage: 'Please enter email',
+                }),
+              },
+              {
+                type: 'email',
+                message: intl.formatMessage({
+                  id: 'pages.common.pleaseEnterValidEmail',
+                  defaultMessage: 'Please enter valid email',
+                }),
+              },
             ]}
           >
             <Input />
           </Form.Item>
           <Form.Item
             name="password"
-            label={<FormattedMessage id="pages.users.password" defaultMessage="Password" />}
-            rules={[{ required: true, message: intl.formatMessage({ id: 'pages.common.pleaseEnterPassword', defaultMessage: 'Please enter password' }) }]}
+            label={
+              <FormattedMessage
+                id="pages.users.password"
+                defaultMessage="Password"
+              />
+            }
+            rules={[
+              {
+                required: true,
+                message: intl.formatMessage({
+                  id: 'pages.common.pleaseEnterPassword',
+                  defaultMessage: 'Please enter password',
+                }),
+              },
+            ]}
           >
             <Input.Password />
           </Form.Item>
-          <Form.Item name="note" label={<FormattedMessage id="pages.users.note" defaultMessage="Note" />}>
+          <Form.Item
+            name="note"
+            label={
+              <FormattedMessage id="pages.users.note" defaultMessage="Note" />
+            }
+          >
             <Input.TextArea />
           </Form.Item>
-          <Form.Item name="is_admin" label={<FormattedMessage id="pages.users.isAdmin" defaultMessage="Admin" />} valuePropName="checked">
+          <Form.Item
+            name="is_admin"
+            label={
+              <FormattedMessage
+                id="pages.users.isAdmin"
+                defaultMessage="Admin"
+              />
+            }
+            valuePropName="checked"
+          >
             <Switch />
           </Form.Item>
         </Form>
       </Modal>
 
       <Modal
-        title={<FormattedMessage id="pages.users.invite" defaultMessage="Invite User" />}
+        title={
+          <FormattedMessage
+            id="pages.users.invite"
+            defaultMessage="Invite User"
+          />
+        }
         open={inviteModalVisible}
         onCancel={() => setInviteModalVisible(false)}
         onOk={() => inviteForm.submit()}
@@ -411,15 +564,34 @@ const UserList: React.FC = () => {
         <Form form={inviteForm} onFinish={handleInvite} layout="vertical">
           <Form.Item
             name="email"
-            label={<FormattedMessage id="pages.users.email" defaultMessage="Email" />}
+            label={
+              <FormattedMessage id="pages.users.email" defaultMessage="Email" />
+            }
             rules={[
-              { required: true, message: intl.formatMessage({ id: 'pages.common.pleaseEnterEmail', defaultMessage: 'Please enter email' }) },
-              { type: 'email', message: intl.formatMessage({ id: 'pages.common.pleaseEnterValidEmail', defaultMessage: 'Please enter valid email' }) },
+              {
+                required: true,
+                message: intl.formatMessage({
+                  id: 'pages.common.pleaseEnterEmail',
+                  defaultMessage: 'Please enter email',
+                }),
+              },
+              {
+                type: 'email',
+                message: intl.formatMessage({
+                  id: 'pages.common.pleaseEnterValidEmail',
+                  defaultMessage: 'Please enter valid email',
+                }),
+              },
             ]}
           >
             <Input />
           </Form.Item>
-          <Form.Item name="note" label={<FormattedMessage id="pages.users.note" defaultMessage="Note" />}>
+          <Form.Item
+            name="note"
+            label={
+              <FormattedMessage id="pages.users.note" defaultMessage="Note" />
+            }
+          >
             <Input.TextArea />
           </Form.Item>
         </Form>

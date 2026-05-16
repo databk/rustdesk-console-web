@@ -110,7 +110,9 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({
     {
       key: 'logout',
       icon: <LogoutOutlined />,
-      label: <FormattedMessage id="layout.user.logout" defaultMessage="Logout" />,
+      label: (
+        <FormattedMessage id="layout.user.logout" defaultMessage="Logout" />
+      ),
     },
   ];
 

@@ -102,7 +102,9 @@ const Login: React.FC = () => {
     }
   };
 
-  const handleSubmit = async (values: API.LoginParams & { rememberMe?: boolean }) => {
+  const handleSubmit = async (
+    values: API.LoginParams & { rememberMe?: boolean },
+  ) => {
     try {
       const msg = await login(values);
       const token = msg?.access_token || msg?.data?.access_token;
@@ -141,7 +143,7 @@ const Login: React.FC = () => {
       intl.formatMessage({
         id: 'pages.login.forgotPasswordInfo',
         defaultMessage: 'Please contact administrator to reset password',
-      })
+      }),
     );
   };
 
@@ -172,7 +174,9 @@ const Login: React.FC = () => {
           title="RustDesk Console"
           subTitle="RustDesk Remote Desktop Management Console"
           onFinish={async (values) => {
-            await handleSubmit(values as API.LoginParams & { rememberMe?: boolean });
+            await handleSubmit(
+              values as API.LoginParams & { rememberMe?: boolean },
+            );
           }}
         >
           {loginError && <LoginMessage content={loginError} />}

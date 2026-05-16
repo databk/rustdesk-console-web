@@ -7,7 +7,8 @@ export default {
   'pages.login.password.required': 'Please enter your password!',
   'pages.login.rememberMe': 'Remember me',
   'pages.login.forgotPassword': 'Forgot Password?',
-  'pages.login.forgotPasswordInfo': 'Please contact administrator to reset password',
+  'pages.login.forgotPasswordInfo':
+    'Please contact administrator to reset password',
   'pages.devices.list': 'Device List',
   'pages.devices.hostname': 'Hostname',
   'pages.devices.os': 'OS',
@@ -66,8 +67,10 @@ export default {
   'pages.addressBook.updateFailed': 'Failed to update address book',
   'pages.addressBook.deleteSuccess': 'Address book(s) deleted',
   'pages.addressBook.deleteFailed': 'Failed to delete address book(s)',
-  'pages.addressBook.deleteConfirm': 'Are you sure to delete this address book?',
-  'pages.addressBook.batchDeleteConfirm': 'Are you sure to delete selected address books?',
+  'pages.addressBook.deleteConfirm':
+    'Are you sure to delete this address book?',
+  'pages.addressBook.batchDeleteConfirm':
+    'Are you sure to delete selected address books?',
   'pages.addressBook.device': 'Device',
   'pages.addressBook.alias': 'Alias',
   'pages.addressBook.tags': 'Tags',
@@ -79,8 +82,10 @@ export default {
   'pages.addressBook.import': 'Import',
   'pages.addressBook.recycleBin': 'Recycle Bin',
   'pages.addressBook.selectDevice': 'Select Device',
-  'pages.addressBook.selectDevicePlaceholder': 'Select a device from the system',
-  'pages.addressBook.noAvailableDevices': 'No available devices. Devices must connect to the server first.',
+  'pages.addressBook.selectDevicePlaceholder':
+    'Select a device from the system',
+  'pages.addressBook.noAvailableDevices':
+    'No available devices. Devices must connect to the server first.',
   'pages.deviceGroups.list': 'Device Groups',
   'pages.deviceGroups.name': 'Name',
   'pages.deviceGroups.note': 'Note',
@@ -92,7 +97,8 @@ export default {
   'pages.deviceGroups.updateFailed': 'Failed to update device group',
   'pages.deviceGroups.deleteSuccess': 'Device group deleted',
   'pages.deviceGroups.deleteFailed': 'Failed to delete device group',
-  'pages.deviceGroups.deleteConfirm': 'Are you sure to delete this device group?',
+  'pages.deviceGroups.deleteConfirm':
+    'Are you sure to delete this device group?',
   'pages.users.list': 'User List',
   'pages.users.name': 'Name',
   'pages.users.email': 'Email',
@@ -172,7 +178,8 @@ export default {
   'pages.customClients.createdAt': 'Created At',
   'pages.customClients.create': 'Create Custom Client',
   'pages.customClients.edit': 'Edit Custom Client',
-  'pages.customClients.deleteConfirm': 'Are you sure to delete this custom client?',
+  'pages.customClients.deleteConfirm':
+    'Are you sure to delete this custom client?',
   'pages.customClients.createSuccess': 'Custom client created',
   'pages.customClients.createFailed': 'Failed to create custom client',
   'pages.customClients.updateSuccess': 'Custom client updated',
@@ -321,13 +328,15 @@ export default {
   'pages.dashboard.resourceDistribution': 'Resource Distribution',
   'pages.dashboard.operationAnalysis': 'Operation Analysis',
   'pages.smtp.title': 'SMTP Configuration',
-  'pages.smtp.description': 'Configure SMTP mail server for sending system notification emails',
+  'pages.smtp.description':
+    'Configure SMTP mail server for sending system notification emails',
   'pages.smtp.host': 'Server Address',
   'pages.smtp.hostPlaceholder': 'Please enter SMTP server address',
   'pages.smtp.port': 'Port',
   'pages.smtp.portPlaceholder': 'Please enter port number',
   'pages.smtp.secure': 'Use SSL/TLS',
-  'pages.smtp.secureHelp': 'Enable secure connection (usually port 465 uses SSL, port 587 uses TLS)',
+  'pages.smtp.secureHelp':
+    'Enable secure connection (usually port 465 uses SSL, port 587 uses TLS)',
   'pages.smtp.user': 'Username',
   'pages.smtp.userPlaceholder': 'Please enter SMTP authentication username',
   'pages.smtp.password': 'Password',
@@ -335,7 +344,8 @@ export default {
   'pages.smtp.from': 'Sender Email',
   'pages.smtp.fromPlaceholder': 'Please enter sender email address',
   'pages.smtp.enabled': 'Enable Configuration',
-  'pages.smtp.enabledHelp': 'When enabled, this configuration will be used to send system emails',
+  'pages.smtp.enabledHelp':
+    'When enabled, this configuration will be used to send system emails',
   'pages.smtp.testConnection': 'Test Connection',
   'pages.smtp.testSuccess': 'SMTP connection test successful',
   'pages.smtp.testFailed': 'SMTP connection test failed',
@@ -344,7 +354,8 @@ export default {
   'pages.smtp.loadFailed': 'Failed to load SMTP configuration',
   'pages.smtp.testing': 'Testing connection...',
   'pages.smtp.saving': 'Saving...',
-  'pages.smtp.configNotFound': 'SMTP configuration not found, please configure first',
+  'pages.smtp.configNotFound':
+    'SMTP configuration not found, please configure first',
   'pages.smtp.createdAt': 'Created At',
   'pages.smtp.updatedAt': 'Updated At',
 };

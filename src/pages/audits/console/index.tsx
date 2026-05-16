@@ -14,12 +14,16 @@ const ConsoleAudit: React.FC = () => {
       width: 150,
     },
     {
-      title: <FormattedMessage id="pages.audits.action" defaultMessage="Action" />,
+      title: (
+        <FormattedMessage id="pages.audits.action" defaultMessage="Action" />
+      ),
       dataIndex: 'action',
       width: 150,
     },
     {
-      title: <FormattedMessage id="pages.audits.detail" defaultMessage="Detail" />,
+      title: (
+        <FormattedMessage id="pages.audits.detail" defaultMessage="Detail" />
+      ),
       dataIndex: 'detail',
       ellipsis: true,
     },
@@ -35,7 +39,10 @@ const ConsoleAudit: React.FC = () => {
     <PageContainer>
       <ProTable<API.ConsoleAuditItem>
         headerTitle={
-          <FormattedMessage id="pages.audits.console" defaultMessage="Console Audits" />
+          <FormattedMessage
+            id="pages.audits.console"
+            defaultMessage="Console Audits"
+          />
         }
         actionRef={actionRef}
         rowKey="id"

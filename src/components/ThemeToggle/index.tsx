@@ -52,7 +52,9 @@ const ThemeToggle: React.FC = () => {
   return (
     <Tooltip
       title={intl.formatMessage({
-        id: isDark ? 'component.themeToggle.switchToLight' : 'component.themeToggle.switchToDark',
+        id: isDark
+          ? 'component.themeToggle.switchToLight'
+          : 'component.themeToggle.switchToDark',
       })}
     >
       <span

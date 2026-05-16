@@ -31,18 +31,29 @@ const StrategyList: React.FC = () => {
   const actionRef = useRef<ActionType>(null);
   const [createModalVisible, setCreateModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
-  const [currentStrategy, setCurrentStrategy] = useState<API.StrategyItem | null>(null);
+  const [currentStrategy, setCurrentStrategy] =
+    useState<API.StrategyItem | null>(null);
   const [form] = Form.useForm();
 
   const handleCreate = async (values: API.CreateStrategyParams) => {
     try {
       await createStrategy(values);
-      msgApi.success(intl.formatMessage({ id: 'pages.strategies.createSuccess', defaultMessage: 'Strategy created' }));
+      msgApi.success(
+        intl.formatMessage({
+          id: 'pages.strategies.createSuccess',
+          defaultMessage: 'Strategy created',
+        }),
+      );
       setCreateModalVisible(false);
       form.resetFields();
       actionRef.current?.reload();
     } catch (error) {
-      msgApi.error(intl.formatMessage({ id: 'pages.strategies.createFailed', defaultMessage: 'Failed to create strategy' }));
+      msgApi.error(
+        intl.formatMessage({
+          id: 'pages.strategies.createFailed',
+          defaultMessage: 'Failed to create strategy',
+        }),
+      );
     }
   };
 
@@ -50,23 +61,43 @@ const StrategyList: React.FC = () => {
     if (!currentStrategy) return;
     try {
       await updateStrategy(currentStrategy.guid, values);
-      msgApi.success(intl.formatMessage({ id: 'pages.strategies.updateSuccess', defaultMessage: 'Strategy updated' }));
+      msgApi.success(
+        intl.formatMessage({
+          id: 'pages.strategies.updateSuccess',
+          defaultMessage: 'Strategy updated',
+        }),
+      );
       setEditModalVisible(false);
       setCurrentStrategy(null);
       form.resetFields();
       actionRef.current?.reload();
     } catch (error) {
-      msgApi.error(intl.formatMessage({ id: 'pages.strategies.updateFailed', defaultMessage: 'Failed to update strategy' }));
+      msgApi.error(
+        intl.formatMessage({
+          id: 'pages.strategies.updateFailed',
+          defaultMessage: 'Failed to update strategy',
+        }),
+      );
     }
   };
 
   const handleDelete = async (guid: string) => {
     try {
       await deleteStrategy(guid);
-      msgApi.success(intl.formatMessage({ id: 'pages.strategies.deleteSuccess', defaultMessage: 'Strategy deleted' }));
+      msgApi.success(
+        intl.formatMessage({
+          id: 'pages.strategies.deleteSuccess',
+          defaultMessage: 'Strategy deleted',
+        }),
+      );
       actionRef.current?.reload();
     } catch (error) {
-      msgApi.error(intl.formatMessage({ id: 'pages.strategies.deleteFailed', defaultMessage: 'Failed to delete strategy' }));
+      msgApi.error(
+        intl.formatMessage({
+          id: 'pages.strategies.deleteFailed',
+          defaultMessage: 'Failed to delete strategy',
+        }),
+      );
     }
   };
 
@@ -78,7 +109,12 @@ const StrategyList: React.FC = () => {
       width: 50,
     },
     {
-      title: <FormattedMessage id="pages.strategies.name" defaultMessage="Strategy Name" />,
+      title: (
+        <FormattedMessage
+          id="pages.strategies.name"
+          defaultMessage="Strategy Name"
+        />
+      ),
       dataIndex: 'name',
       width: 200,
       render: (_, record) => (
@@ -89,43 +125,67 @@ const StrategyList: React.FC = () => {
       ),
     },
     {
-      title: <FormattedMessage id="pages.strategies.note" defaultMessage="Note" />,
+      title: (
+        <FormattedMessage id="pages.strategies.note" defaultMessage="Note" />
+      ),
       dataIndex: 'note',
       width: 250,
       ellipsis: true,
       render: (_, record) => record.note || '-',
     },
     {
-      title: <FormattedMessage id="pages.strategies.status" defaultMessage="Status" />,
+      title: (
+        <FormattedMessage
+          id="pages.strategies.status"
+          defaultMessage="Status"
+        />
+      ),
       dataIndex: 'status',
       width: 100,
       search: false,
-      render: (_, record) => (
-        <Switch checked={record.status === 1} disabled />
-      ),
+      render: (_, record) => <Switch checked={record.status === 1} disabled />,
     },
     {
-      title: <FormattedMessage id="pages.common.action" defaultMessage="Action" />,
+      title: (
+        <FormattedMessage id="pages.common.action" defaultMessage="Action" />
+      ),
       valueType: 'option',
       width: 180,
       fixed: 'right',
       render: (_, record) => (
         <Space size={0} split={<Divider type="vertical" />}>
-          <Button type="link" size="small" icon={<EditOutlined />} onClick={() => {
-            setCurrentStrategy(record);
-            form.setFieldsValue(record);
-            setEditModalVisible(true);
-          }}>
+          <Button
+            type="link"
+            size="small"
+            icon={<EditOutlined />}
+            onClick={() => {
+              setCurrentStrategy(record);
+              form.setFieldsValue(record);
+              setEditModalVisible(true);
+            }}
+          >
             <FormattedMessage id="pages.common.edit" defaultMessage="Edit" />
           </Button>
           <Popconfirm
-            title={intl.formatMessage({ id: 'pages.strategies.deleteConfirm', defaultMessage: 'Delete this strategy?' })}
+            title={intl.formatMessage({
+              id: 'pages.strategies.deleteConfirm',
+              defaultMessage: 'Delete this strategy?',
+            })}
             onConfirm={() => handleDelete(record.guid)}
-            okText={intl.formatMessage({ id: 'pages.common.confirm', defaultMessage: 'Yes' })}
-            cancelText={intl.formatMessage({ id: 'pages.common.cancel', defaultMessage: 'No' })}
+            okText={intl.formatMessage({
+              id: 'pages.common.confirm',
+              defaultMessage: 'Yes',
+            })}
+            cancelText={intl.formatMessage({
+              id: 'pages.common.cancel',
+              defaultMessage: 'No',
+            })}
           >
             <Button type="link" size="small" danger icon={<DeleteOutlined />}>
-              <FormattedMessage id="pages.common.delete" defaultMessage="Delete" />
+              <FormattedMessage
+                id="pages.common.delete"
+                defaultMessage="Delete"
+              />
             </Button>
           </Popconfirm>
         </Space>
@@ -136,7 +196,12 @@ const StrategyList: React.FC = () => {
   return (
     <PageContainer>
       <ProTable<API.StrategyItem>
-        headerTitle={<FormattedMessage id="pages.strategies.list" defaultMessage="Strategy List" />}
+        headerTitle={
+          <FormattedMessage
+            id="pages.strategies.list"
+            defaultMessage="Strategy List"
+          />
+        }
         actionRef={actionRef}
         rowKey="guid"
         request={async (params) => {
@@ -145,21 +210,47 @@ const StrategyList: React.FC = () => {
             pageSize: params.pageSize,
             search: params.name,
           });
-          return { data: result.data || [], total: result.total || 0, success: true };
+          return {
+            data: result.data || [],
+            total: result.total || 0,
+            success: true,
+          };
         }}
         columns={columns}
-        pagination={{ defaultPageSize: 20, showSizeChanger: true, showQuickJumper: true }}
+        pagination={{
+          defaultPageSize: 20,
+          showSizeChanger: true,
+          showQuickJumper: true,
+        }}
         scroll={{ x: 800 }}
         toolBarRender={() => [
-          <Button key="create" type="primary" icon={<PlusOutlined />} onClick={() => setCreateModalVisible(true)}>
-            <FormattedMessage id="pages.strategies.create" defaultMessage="Create Strategy" />
+          <Button
+            key="create"
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => setCreateModalVisible(true)}
+          >
+            <FormattedMessage
+              id="pages.strategies.create"
+              defaultMessage="Create Strategy"
+            />
           </Button>,
         ]}
-        options={{ density: true, setting: { listsHeight: 400 }, fullScreen: false, reload: true }}
+        options={{
+          density: true,
+          setting: { listsHeight: 400 },
+          fullScreen: false,
+          reload: true,
+        }}
       />
 
       <ModalForm
-        title={<FormattedMessage id="pages.strategies.create" defaultMessage="Create Strategy" />}
+        title={
+          <FormattedMessage
+            id="pages.strategies.create"
+            defaultMessage="Create Strategy"
+          />
+        }
         open={createModalVisible}
         onOpenChange={setCreateModalVisible}
         onFinish={handleCreate}
@@ -167,16 +258,49 @@ const StrategyList: React.FC = () => {
         layout="vertical"
         modalProps={{ destroyOnClose: true }}
       >
-        <Form.Item name="name" label={<FormattedMessage id="pages.strategies.name" defaultMessage="Name" />} rules={[{ required: true }]}>
-          <Input placeholder={intl.formatMessage({ id: 'pages.strategies.enterName', defaultMessage: 'Enter strategy name' })} />
+        <Form.Item
+          name="name"
+          label={
+            <FormattedMessage
+              id="pages.strategies.name"
+              defaultMessage="Name"
+            />
+          }
+          rules={[{ required: true }]}
+        >
+          <Input
+            placeholder={intl.formatMessage({
+              id: 'pages.strategies.enterName',
+              defaultMessage: 'Enter strategy name',
+            })}
+          />
         </Form.Item>
-        <Form.Item name="note" label={<FormattedMessage id="pages.strategies.note" defaultMessage="Note" />}>
-          <Input.TextArea rows={3} placeholder={intl.formatMessage({ id: 'pages.common.enterDescription', defaultMessage: 'Enter description' })} />
+        <Form.Item
+          name="note"
+          label={
+            <FormattedMessage
+              id="pages.strategies.note"
+              defaultMessage="Note"
+            />
+          }
+        >
+          <Input.TextArea
+            rows={3}
+            placeholder={intl.formatMessage({
+              id: 'pages.common.enterDescription',
+              defaultMessage: 'Enter description',
+            })}
+          />
         </Form.Item>
       </ModalForm>
 
       <ModalForm
-        title={<FormattedMessage id="pages.strategies.edit" defaultMessage="Edit Strategy" />}
+        title={
+          <FormattedMessage
+            id="pages.strategies.edit"
+            defaultMessage="Edit Strategy"
+          />
+        }
         open={editModalVisible}
         onOpenChange={setEditModalVisible}
         onFinish={handleUpdate}
@@ -184,11 +308,39 @@ const StrategyList: React.FC = () => {
         layout="vertical"
         modalProps={{ destroyOnClose: true }}
       >
-        <Form.Item name="name" label={<FormattedMessage id="pages.strategies.name" defaultMessage="Name" />} rules={[{ required: true }]}>
-          <Input placeholder={intl.formatMessage({ id: 'pages.strategies.enterName', defaultMessage: 'Enter strategy name' })} />
+        <Form.Item
+          name="name"
+          label={
+            <FormattedMessage
+              id="pages.strategies.name"
+              defaultMessage="Name"
+            />
+          }
+          rules={[{ required: true }]}
+        >
+          <Input
+            placeholder={intl.formatMessage({
+              id: 'pages.strategies.enterName',
+              defaultMessage: 'Enter strategy name',
+            })}
+          />
         </Form.Item>
-        <Form.Item name="note" label={<FormattedMessage id="pages.strategies.note" defaultMessage="Note" />}>
-          <Input.TextArea rows={3} placeholder={intl.formatMessage({ id: 'pages.common.enterDescription', defaultMessage: 'Enter description' })} />
+        <Form.Item
+          name="note"
+          label={
+            <FormattedMessage
+              id="pages.strategies.note"
+              defaultMessage="Note"
+            />
+          }
+        >
+          <Input.TextArea
+            rows={3}
+            placeholder={intl.formatMessage({
+              id: 'pages.common.enterDescription',
+              defaultMessage: 'Enter description',
+            })}
+          />
         </Form.Item>
       </ModalForm>
     </PageContainer>
