@@ -1,0 +1,50 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Asia/Shanghai"
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    labels:
+      - "dependencies"
+    reviewers:
+      - "yuzhiyuan"
+    assignees:
+      - "yuzhiyuan"
+    versioning-strategy: "increase-if-necessary"
+    ignore:
+      - dependency-name: "react"
+        versions: ["20.x"]
+      - dependency-name: "react-dom"
+        versions: ["20.x"]
+      - dependency-name: "antd"
+        versions: ["6.x"]
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Asia/Shanghai"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    reviewers:
+      - "yuzhiyuan"
+    assignees:
+      - "yuzhiyuan"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
