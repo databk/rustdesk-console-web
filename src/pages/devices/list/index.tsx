@@ -297,7 +297,7 @@ const DeviceList: React.FC<DeviceListProps> = ({
             showQuickJumper: true,
           }}
           scroll={{ x: '100%' }}
-          toolBarRender={false}
+          toolBarRender={() => []}
           options={{
             density: true,
             setting: {
