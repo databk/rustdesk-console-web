@@ -14,9 +14,9 @@ updates:
     labels:
       - "dependencies"
     reviewers:
-      - "yuzhiyuan"
+      - "YuZhiYuanDev"
     assignees:
-      - "yuzhiyuan"
+      - "YuZhiYuanDev"
     versioning-strategy: "increase-if-necessary"
     ignore:
       - dependency-name: "react"
@@ -41,9 +41,9 @@ updates:
       - "dependencies"
       - "github-actions"
     reviewers:
-      - "yuzhiyuan"
+      - "YuZhiYuanDev"
     assignees:
-      - "yuzhiyuan"
+      - "YuZhiYuanDev"
     groups:
       github-actions:
         patterns:
