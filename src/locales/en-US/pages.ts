@@ -99,6 +99,10 @@ export default {
   'pages.deviceGroups.deleteFailed': 'Failed to delete device group',
   'pages.deviceGroups.deleteConfirm':
     'Are you sure to delete this device group?',
+  'pages.deviceGroups.import': 'Import',
+  'pages.deviceGroups.importDevices': 'Import Devices',
+  'pages.deviceGroups.importSuccess': 'Successfully imported {count} device(s)',
+  'pages.deviceGroups.importFailed': 'Failed to import devices',
   'pages.users.list': 'User List',
   'pages.users.name': 'Name',
   'pages.users.email': 'Email',

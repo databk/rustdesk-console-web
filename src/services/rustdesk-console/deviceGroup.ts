@@ -23,8 +23,8 @@ export async function deleteDeviceGroup(guid: string) {
   return request(`/api/device-groups/${guid}`, { method: 'DELETE' });
 }
 
-export async function addDeviceToGroup(guid: string, data: { deviceIds: string[] }) {
-  return request(`/api/device-groups/${guid}`, { method: 'POST', data });
+export async function addDeviceToGroup(guid: string, deviceIds: string[]) {
+  return request(`/api/device-groups/${guid}`, { method: 'POST', data: deviceIds });
 }
 
 export async function removeDeviceFromGroup(guid: string, data: { deviceIds: string[] }) {

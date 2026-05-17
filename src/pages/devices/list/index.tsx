@@ -3,6 +3,7 @@ import {
   EditOutlined,
   MinusCircleOutlined,
   PlusCircleOutlined,
+  SelectOutlined,
 } from '@ant-design/icons';
 import {
   deleteDevice,
@@ -10,15 +11,19 @@ import {
   enableDevice,
   getDeviceList,
 } from '@/services/rustdesk-console/device';
-import { removeDeviceFromGroup } from '@/services/rustdesk-console/deviceGroup';
+import {
+  addDeviceToGroup,
+  removeDeviceFromGroup,
+} from '@/services/rustdesk-console/deviceGroup';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
-import { App, Button, Divider, Popconfirm, Space } from 'antd';
+import { App, Button, Divider, Modal, Popconfirm, Space } from 'antd';
 import React, { useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Settings from '../../../../config/defaultSettings';
 import { getDeviceColumns } from '@/components/DeviceSelectTable/columns';
+import DeviceSelectTable from '@/components/DeviceSelectTable';
 
 export interface DeviceListProps {
   deviceGroupGuid?: string;
@@ -34,6 +39,11 @@ const DeviceList: React.FC<DeviceListProps> = ({
   const intl = useIntl();
   const { message: msgApi } = App.useApp();
   const actionRef = useRef<ActionType>(null);
+
+  const [importDevicesModalVisible, setImportDevicesModalVisible] =
+    useState(false);
+  const [selectedDeviceKeys, setSelectedDeviceKeys] = useState<React.Key[]>([]);
+  const [importing, setImporting] = useState(false);
 
   const handleEnable = async (guid: string) => {
     try {
@@ -113,6 +123,38 @@ const DeviceList: React.FC<DeviceListProps> = ({
           defaultMessage: 'Failed to remove device from group',
         }),
       );
+    }
+  };
+
+  const handleImportDevices = async () => {
+    if (!deviceGroupGuid || selectedDeviceKeys.length === 0) return;
+    setImporting(true);
+    try {
+      await addDeviceToGroup(
+        deviceGroupGuid,
+        selectedDeviceKeys as string[],
+      );
+      msgApi.success(
+        intl.formatMessage(
+          {
+            id: 'pages.deviceGroups.importSuccess',
+            defaultMessage: 'Successfully imported {count} device(s)',
+          },
+          { count: selectedDeviceKeys.length },
+        ),
+      );
+      setImportDevicesModalVisible(false);
+      setSelectedDeviceKeys([]);
+      actionRef.current?.reload();
+    } catch {
+      msgApi.error(
+        intl.formatMessage({
+          id: 'pages.deviceGroups.importFailed',
+          defaultMessage: 'Failed to import devices',
+        }),
+      );
+    } finally {
+      setImporting(false);
     }
   };
 
@@ -297,7 +339,22 @@ const DeviceList: React.FC<DeviceListProps> = ({
             showQuickJumper: true,
           }}
           scroll={{ x: '100%' }}
-          toolBarRender={() => []}
+          toolBarRender={() =>
+            deviceGroupGuid
+              ? [
+                  <Button
+                    key="import"
+                    icon={<SelectOutlined />}
+                    onClick={() => setImportDevicesModalVisible(true)}
+                  >
+                    <FormattedMessage
+                      id="pages.deviceGroups.import"
+                      defaultMessage="Import"
+                    />
+                  </Button>,
+                ]
+              : []
+          }
           options={{
             density: true,
             setting: {
@@ -307,6 +364,33 @@ const DeviceList: React.FC<DeviceListProps> = ({
             reload: true,
           }}
         />
+
+        {deviceGroupGuid && (
+          <Modal
+            title={
+              <FormattedMessage
+                id="pages.deviceGroups.importDevices"
+                defaultMessage="Import Devices"
+              />
+            }
+            open={importDevicesModalVisible}
+            onCancel={() => {
+              setImportDevicesModalVisible(false);
+              setSelectedDeviceKeys([]);
+            }}
+            onOk={handleImportDevices}
+            okButtonProps={{
+              loading: importing,
+              disabled: selectedDeviceKeys.length === 0,
+            }}
+            width={1000}
+          >
+            <DeviceSelectTable
+              selectedRowKeys={selectedDeviceKeys}
+              onSelectionChange={setSelectedDeviceKeys}
+            />
+          </Modal>
+        )}
       </PageContainer>
     </>
   );
