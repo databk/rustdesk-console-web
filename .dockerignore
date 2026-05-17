@@ -3,11 +3,8 @@ dist
 .git
 .github
 .husky
-.arts
-.codeartsdoer
-.continue
-.playwright-cli
-.trae
-*.md
-LICENSE
 .gitignore
+.dockerignore
+*.md
+!README.md
+Dockerfile
