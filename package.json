@@ -2,7 +2,18 @@
   "name": "rustdesk-console-web",
   "version": "1.0.0",
   "private": false,
-  "description": "RustDesk Console Web Application",
+  "description": "Web frontend for RustDesk Console",
+  "keywords": [
+    "rustdesk",
+    "rustdesk-console",
+    "antd",
+    "ant-design-pro",
+    "umi",
+    "remote-desktop",
+    "admin-panel",
+    "frontend",
+    "web-app"
+  ],
   "homepage": "https://databk.github.io/rustdesk-console-web/",
   "bugs": {
     "url": "https://github.com/databk/rustdesk-console-web/issues"
