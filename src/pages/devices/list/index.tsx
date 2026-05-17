@@ -349,13 +349,44 @@ const DeviceList: React.FC<DeviceListProps> = ({
                 }
               : undefined
           }
-          tableAlertRender={({ selectedRowKeys }) => (
-            <FormattedMessage
-              id="pages.devices.selectedDevices"
-              defaultMessage="Selected {count} device(s)"
-              values={{ count: selectedRowKeys.length }}
-            />
-          )}
+          tableAlertOptionRender={
+            deviceGroupGuid
+              ? () => (
+                  <Space size={16}>
+                    <Popconfirm
+                      title={
+                        <FormattedMessage
+                          id="pages.devices.batchRemoveFromGroupConfirm"
+                          defaultMessage="Are you sure to remove selected devices from the group?"
+                        />
+                      }
+                      onConfirm={handleBatchRemoveFromGroup}
+                      okText={intl.formatMessage({
+                        id: 'pages.common.confirm',
+                        defaultMessage: 'Yes',
+                      })}
+                      cancelText={intl.formatMessage({
+                        id: 'pages.common.cancel',
+                        defaultMessage: 'No',
+                      })}
+                    >
+                      <Button
+                        type="link"
+                        danger
+                        icon={<DeleteOutlined />}
+                        loading={batchRemoving}
+                        style={{ padding: 0 }}
+                      >
+                        <FormattedMessage
+                          id="pages.devices.batchRemove"
+                          defaultMessage="Batch Remove"
+                        />
+                      </Button>
+                    </Popconfirm>
+                  </Space>
+                )
+              : undefined
+          }
           request={async (params) => {
             const result = await getDeviceList({
               current: params.current || 1,
@@ -391,36 +422,6 @@ const DeviceList: React.FC<DeviceListProps> = ({
           toolBarRender={() =>
             deviceGroupGuid
               ? [
-                  <Popconfirm
-                    key="batchRemove"
-                    title={
-                      <FormattedMessage
-                        id="pages.devices.batchRemoveFromGroupConfirm"
-                        defaultMessage="Are you sure to remove selected devices from the group?"
-                      />
-                    }
-                    onConfirm={handleBatchRemoveFromGroup}
-                    okText={intl.formatMessage({
-                      id: 'pages.common.confirm',
-                      defaultMessage: 'Yes',
-                    })}
-                    cancelText={intl.formatMessage({
-                      id: 'pages.common.cancel',
-                      defaultMessage: 'No',
-                    })}
-                  >
-                    <Button
-                      danger
-                      icon={<DeleteOutlined />}
-                      disabled={selectedRows.length === 0}
-                      loading={batchRemoving}
-                    >
-                      <FormattedMessage
-                        id="pages.devices.batchRemove"
-                        defaultMessage="Batch Remove"
-                      />
-                    </Button>
-                  </Popconfirm>,
                   <Button
                     key="import"
                     icon={<SelectOutlined />}
