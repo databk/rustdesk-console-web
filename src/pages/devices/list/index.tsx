@@ -108,7 +108,7 @@ const DeviceList: React.FC<DeviceListProps> = ({
   const handleRemoveFromGroup = async (deviceId: string) => {
     if (!deviceGroupGuid) return;
     try {
-      await removeDeviceFromGroup(deviceGroupGuid, { deviceIds: [deviceId] });
+      await removeDeviceFromGroup(deviceGroupGuid, [deviceId]);
       msgApi.success(
         intl.formatMessage({
           id: 'pages.devices.removeFromGroupSuccess',
@@ -123,6 +123,37 @@ const DeviceList: React.FC<DeviceListProps> = ({
           defaultMessage: 'Failed to remove device from group',
         }),
       );
+    }
+  };
+
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [batchRemoving, setBatchRemoving] = useState(false);
+
+  const handleBatchRemoveFromGroup = async () => {
+    if (!deviceGroupGuid || selectedRowKeys.length === 0) return;
+    setBatchRemoving(true);
+    try {
+      await removeDeviceFromGroup(deviceGroupGuid, selectedRowKeys as string[]);
+      msgApi.success(
+        intl.formatMessage(
+          {
+            id: 'pages.devices.batchRemoveFromGroupSuccess',
+            defaultMessage: 'Successfully removed {count} device(s) from group',
+          },
+          { count: selectedRowKeys.length },
+        ),
+      );
+      setSelectedRowKeys([]);
+      actionRef.current?.reload();
+    } catch {
+      msgApi.error(
+        intl.formatMessage({
+          id: 'pages.devices.batchRemoveFromGroupFailed',
+          defaultMessage: 'Failed to remove devices from group',
+        }),
+      );
+    } finally {
+      setBatchRemoving(false);
     }
   };
 
@@ -304,6 +335,21 @@ const DeviceList: React.FC<DeviceListProps> = ({
           }
           actionRef={actionRef}
           rowKey="guid"
+          rowSelection={
+            deviceGroupGuid
+              ? {
+                  selectedRowKeys,
+                  onChange: setSelectedRowKeys,
+                }
+              : undefined
+          }
+          tableAlertRender={({ selectedRowKeys }) => (
+            <FormattedMessage
+              id="pages.devices.selectedDevices"
+              defaultMessage="Selected {count} device(s)"
+              values={{ count: selectedRowKeys.length }}
+            />
+          )}
           request={async (params) => {
             const result = await getDeviceList({
               current: params.current || 1,
@@ -339,6 +385,36 @@ const DeviceList: React.FC<DeviceListProps> = ({
           toolBarRender={() =>
             deviceGroupGuid
               ? [
+                  <Popconfirm
+                    key="batchRemove"
+                    title={
+                      <FormattedMessage
+                        id="pages.devices.batchRemoveFromGroupConfirm"
+                        defaultMessage="Are you sure to remove selected devices from the group?"
+                      />
+                    }
+                    onConfirm={handleBatchRemoveFromGroup}
+                    okText={intl.formatMessage({
+                      id: 'pages.common.confirm',
+                      defaultMessage: 'Yes',
+                    })}
+                    cancelText={intl.formatMessage({
+                      id: 'pages.common.cancel',
+                      defaultMessage: 'No',
+                    })}
+                  >
+                    <Button
+                      danger
+                      icon={<DeleteOutlined />}
+                      disabled={selectedRowKeys.length === 0}
+                      loading={batchRemoving}
+                    >
+                      <FormattedMessage
+                        id="pages.devices.batchRemove"
+                        defaultMessage="Batch Remove"
+                      />
+                    </Button>
+                  </Popconfirm>,
                   <Button
                     key="import"
                     icon={<SelectOutlined />}

@@ -40,6 +40,19 @@ export default {
   'pages.devices.statusDisabled': 'Disabled',
   'pages.devices.onlineStatus': 'Online Status',
   'pages.devices.deviceGroupSearchTip': 'Filter by device group name',
+  'pages.devices.remove': 'Remove',
+  'pages.devices.removeFromGroupSuccess': 'Device removed from group',
+  'pages.devices.removeFromGroupFailed': 'Failed to remove device from group',
+  'pages.devices.removeFromGroupConfirm':
+    'Are you sure to remove this device from the group?',
+  'pages.devices.batchRemove': 'Batch Remove',
+  'pages.devices.batchRemoveFromGroupSuccess':
+    'Successfully removed {count} device(s) from group',
+  'pages.devices.batchRemoveFromGroupFailed':
+    'Failed to remove devices from group',
+  'pages.devices.batchRemoveFromGroupConfirm':
+    'Are you sure to remove selected devices from the group?',
+  'pages.devices.selectedDevices': 'Selected {count} device(s)',
   'pages.addressBook.name': 'Name',
   'pages.addressBook.note': 'Note',
   'pages.addressBook.shared': 'Shared Address Books',
