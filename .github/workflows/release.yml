@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     tags:
-      - 'v*'
+      - '[0-9]+.*'
 
 concurrency:
   group: release-${{ github.ref }}
@@ -52,7 +52,7 @@ jobs:
 
       - name: Determine version
         id: version
-        run: echo "version=${GITHUB_REF#refs/tags/v}" >> "$GITHUB_OUTPUT"
+        run: echo "version=${GITHUB_REF#refs/tags/}" >> "$GITHUB_OUTPUT"
 
       - name: Download build artifact
         uses: actions/download-artifact@v8
@@ -63,22 +63,22 @@ jobs:
       - name: Create release archive
         run: |
           cd dist
-          tar -czf ../rustdesk-console-web-v${{ steps.version.outputs.version }}.tar.gz .
+          tar -czf ../rustdesk-console-web-${{ steps.version.outputs.version }}.tar.gz .
           cd ..
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
         with:
-          name: v${{ steps.version.outputs.version }}
+          name: ${{ steps.version.outputs.version }}
           body: |
-            ## rustdesk-console-web v${{ steps.version.outputs.version }}
+            ## rustdesk-console-web ${{ steps.version.outputs.version }}
 
             ### Changes
             See [commit history](https://github.com/${{ github.repository }}/compare/${{ github.event.before }}...${{ github.sha }}) for details.
           draft: false
           prerelease: ${{ contains(steps.version.outputs.version, '-') }}
           files: |
-            rustdesk-console-web-v${{ steps.version.outputs.version }}.tar.gz
+            rustdesk-console-web-${{ steps.version.outputs.version }}.tar.gz
           discussion_category_name: Releases
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

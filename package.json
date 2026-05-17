@@ -1,8 +1,18 @@
 {
   "name": "rustdesk-console-web",
   "version": "1.0.0",
-  "private": true,
+  "private": false,
   "description": "RustDesk Console Web Application",
+  "homepage": "https://databk.github.io/rustdesk-console-web/",
+  "bugs": {
+    "url": "https://github.com/databk/rustdesk-console-web/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/databk/rustdesk-console-web.git"
+  },
+  "license": "AGPL-3.0-or-later",
+  "author": "databk",
   "scripts": {
     "analyze": "cross-env ANALYZE=1 max build",
     "biome:lint": "npx @biomejs/biome lint",

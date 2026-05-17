@@ -1,57 +1,56 @@
-# Ant Design Pro
+# RustDesk Console Web
 
-This project is initialized with [Ant Design Pro](https://pro.ant.design). Follow is the quick guide for how to use.
+Web frontend for [RustDesk](https://rustdesk.com) Console, built with [Ant Design Pro](https://pro.ant.design) and [UmiJS](https://umijs.org).
 
-## Environment Prepare
+## Features
 
-Install `node_modules`:
+- Device management
+- User and address book management
+- Group and permission management
+- Activity monitoring and statistics
+- Multi-language support
+
+## Prerequisites
+
+- Node.js >= 20.0.0
+
+## Getting Started
+
+Install dependencies:
 
 ```bash
 npm install
 ```
 
-or
+Start development server:
 
 ```bash
-yarn
+npm run dev
 ```
 
-## Provided Scripts
-
-Ant Design Pro provides some useful script to help you quick start and build with web project, code style check and test.
-
-Scripts provided in `package.json`. It's safe to modify or add additional script:
-
-### Start project
-
-```bash
-npm start
-```
-
-### Build project
+Build for production:
 
 ```bash
 npm run build
 ```
 
-### Check code style
+Preview production build:
 
 ```bash
-npm run lint
+npm run preview
 ```
 
-You can also use script to auto fix some lint error:
+## Available Scripts
 
-```bash
-npm run lint:fix
-```
+| Script            | Description                            |
+| ----------------- | -------------------------------------- |
+| `npm run dev`     | Start dev server (connects to dev API) |
+| `npm start`       | Start dev server with mock data        |
+| `npm run build`   | Build for production                   |
+| `npm run preview` | Build and preview locally              |
+| `npm run lint`    | Run linter (Biome + TypeScript)        |
+| `npm test`        | Run tests                              |
 
-### Test code
+## License
 
-```bash
-npm test
-```
-
-## More
-
-You can view full document on our [official website](https://pro.ant.design). And welcome any feedback in our [github](https://github.com/ant-design/ant-design-pro).
+[AGPL-3.0-or-later](LICENSE)
