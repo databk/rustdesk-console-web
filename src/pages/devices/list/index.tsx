@@ -127,23 +127,26 @@ const DeviceList: React.FC<DeviceListProps> = ({
   };
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [selectedRows, setSelectedRows] = useState<API.DeviceItem[]>([]);
   const [batchRemoving, setBatchRemoving] = useState(false);
 
   const handleBatchRemoveFromGroup = async () => {
-    if (!deviceGroupGuid || selectedRowKeys.length === 0) return;
+    if (!deviceGroupGuid || selectedRows.length === 0) return;
     setBatchRemoving(true);
     try {
-      await removeDeviceFromGroup(deviceGroupGuid, selectedRowKeys as string[]);
+      const deviceIds = selectedRows.map((row) => row.id);
+      await removeDeviceFromGroup(deviceGroupGuid, deviceIds);
       msgApi.success(
         intl.formatMessage(
           {
             id: 'pages.devices.batchRemoveFromGroupSuccess',
             defaultMessage: 'Successfully removed {count} device(s) from group',
           },
-          { count: selectedRowKeys.length },
+          { count: selectedRows.length },
         ),
       );
       setSelectedRowKeys([]);
+      setSelectedRows([]);
       actionRef.current?.reload();
     } catch {
       msgApi.error(
@@ -339,7 +342,10 @@ const DeviceList: React.FC<DeviceListProps> = ({
             deviceGroupGuid
               ? {
                   selectedRowKeys,
-                  onChange: setSelectedRowKeys,
+                  onChange: (keys, rows) => {
+                    setSelectedRowKeys(keys);
+                    setSelectedRows(rows);
+                  },
                 }
               : undefined
           }
@@ -406,7 +412,7 @@ const DeviceList: React.FC<DeviceListProps> = ({
                     <Button
                       danger
                       icon={<DeleteOutlined />}
-                      disabled={selectedRowKeys.length === 0}
+                      disabled={selectedRows.length === 0}
                       loading={batchRemoving}
                     >
                       <FormattedMessage
