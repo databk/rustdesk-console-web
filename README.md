@@ -1,6 +1,6 @@
 # RustDesk Console Web
 
-Web frontend for [RustDesk](https://rustdesk.com) Console, built with [Ant Design Pro](https://pro.ant.design) and [UmiJS](https://umijs.org).
+Web frontend for [RustDesk Console](https://github.com/databk/rustdesk-console), built with [Ant Design Pro](https://pro.ant.design) and [UmiJS](https://umijs.org).
 
 ## Features
 
@@ -53,4 +53,4 @@ npm run preview
 
 ## License
 
-[AGPL-3.0-or-later](LICENSE)
+[AGPL-3.0](LICENSE)
