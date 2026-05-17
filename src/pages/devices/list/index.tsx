@@ -130,10 +130,7 @@ const DeviceList: React.FC<DeviceListProps> = ({
     if (!deviceGroupGuid || selectedDeviceKeys.length === 0) return;
     setImporting(true);
     try {
-      await addDeviceToGroup(
-        deviceGroupGuid,
-        selectedDeviceKeys as string[],
-      );
+      await addDeviceToGroup(deviceGroupGuid, selectedDeviceKeys as string[]);
       msgApi.success(
         intl.formatMessage(
           {
