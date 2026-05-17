@@ -1,0 +1,13 @@
+node_modules
+dist
+.git
+.github
+.husky
+.arts
+.codeartsdoer
+.continue
+.playwright-cli
+.trae
+*.md
+LICENSE
+.gitignore
