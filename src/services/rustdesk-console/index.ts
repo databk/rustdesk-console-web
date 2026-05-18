@@ -1,5 +1,5 @@
 export { login, logout, currentUser } from './auth';
-export { getDeviceList, enableDevice, disableDevice, deleteDevice, assignDevice } from './device';
+export { getDeviceList, batchUpdateDeviceStatus, deleteDevice, assignDevice } from './device';
 export {
   getUserList,
   createUser,

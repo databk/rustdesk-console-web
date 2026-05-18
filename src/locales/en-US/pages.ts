@@ -53,6 +53,20 @@ export default {
   'pages.devices.batchRemoveFromGroupConfirm':
     'Are you sure to remove selected devices from the group?',
   'pages.devices.selectedDevices': 'Selected {count} device(s)',
+  'pages.devices.batchEnable': 'Batch Enable',
+  'pages.devices.batchDisable': 'Batch Disable',
+  'pages.devices.batchEnableConfirm':
+    'Are you sure to enable selected devices?',
+  'pages.devices.batchDisableConfirm':
+    'Are you sure to disable selected devices?',
+  'pages.devices.batchEnableSuccess': 'Successfully enabled {count} device(s)',
+  'pages.devices.batchEnableFailed': 'Failed to enable devices',
+  'pages.devices.batchEnablePartialFailed':
+    'Successfully enabled {success} device(s), {failed} failed',
+  'pages.devices.batchDisableSuccess': 'Successfully disabled {count} device(s)',
+  'pages.devices.batchDisableFailed': 'Failed to disable devices',
+  'pages.devices.batchDisablePartialFailed':
+    'Successfully disabled {success} device(s), {failed} failed',
   'pages.addressBook.name': 'Name',
   'pages.addressBook.note': 'Note',
   'pages.addressBook.shared': 'Shared Address Books',

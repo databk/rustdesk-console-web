@@ -31,12 +31,20 @@ export async function getDeviceList(
   });
 }
 
-export async function enableDevice(guid: string) {
-  return request(`/api/peers/${guid}/enable`, { method: 'POST' });
-}
-
-export async function disableDevice(guid: string) {
-  return request(`/api/peers/${guid}/disable`, { method: 'POST' });
+export async function batchUpdateDeviceStatus(params: {
+  guids: string[];
+  status: 'enabled' | 'disabled';
+}) {
+  return request<{
+    succeeded: string[];
+    failed: Array<{ guid: string; reason: string }>;
+    total: number;
+    succeededCount: number;
+    failedCount: number;
+  }>('/api/devices/status', {
+    method: 'PATCH',
+    data: params,
+  });
 }
 
 export async function deleteDevice(guid: string) {

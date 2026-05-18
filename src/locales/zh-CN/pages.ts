@@ -48,6 +48,18 @@ export default {
   'pages.devices.batchRemoveFromGroupFailed': '从组中移除设备失败',
   'pages.devices.batchRemoveFromGroupConfirm': '确定要从组中移除选中的设备吗？',
   'pages.devices.selectedDevices': '已选择 {count} 个设备',
+  'pages.devices.batchEnable': '批量启用',
+  'pages.devices.batchDisable': '批量禁用',
+  'pages.devices.batchEnableConfirm': '确定要启用选中的设备吗？',
+  'pages.devices.batchDisableConfirm': '确定要禁用选中的设备吗？',
+  'pages.devices.batchEnableSuccess': '成功启用 {count} 个设备',
+  'pages.devices.batchEnableFailed': '启用设备失败',
+  'pages.devices.batchEnablePartialFailed':
+    '成功启用 {success} 个设备，{failed} 个失败',
+  'pages.devices.batchDisableSuccess': '成功禁用 {count} 个设备',
+  'pages.devices.batchDisableFailed': '禁用设备失败',
+  'pages.devices.batchDisablePartialFailed':
+    '成功禁用 {success} 个设备，{failed} 个失败',
   'pages.addressBook.name': '名称',
   'pages.addressBook.note': '备注',
   'pages.addressBook.shared': '共享地址簿',

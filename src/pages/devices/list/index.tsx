@@ -6,9 +6,8 @@ import {
   SelectOutlined,
 } from '@ant-design/icons';
 import {
+  batchUpdateDeviceStatus,
   deleteDevice,
-  disableDevice,
-  enableDevice,
   getDeviceList,
 } from '@/services/rustdesk-console/device';
 import {
@@ -47,13 +46,25 @@ const DeviceList: React.FC<DeviceListProps> = ({
 
   const handleEnable = async (guid: string) => {
     try {
-      await enableDevice(guid);
-      msgApi.success(
-        intl.formatMessage({
-          id: 'pages.devices.enableSuccess',
-          defaultMessage: 'Device enabled',
-        }),
-      );
+      const result = await batchUpdateDeviceStatus({
+        guids: [guid],
+        status: 'enabled',
+      });
+      if (result.failedCount > 0) {
+        msgApi.warning(
+          intl.formatMessage({
+            id: 'pages.devices.enableFailed',
+            defaultMessage: 'Failed to enable device',
+          }),
+        );
+      } else {
+        msgApi.success(
+          intl.formatMessage({
+            id: 'pages.devices.enableSuccess',
+            defaultMessage: 'Device enabled',
+          }),
+        );
+      }
       actionRef.current?.reload();
     } catch {
       msgApi.error(
@@ -67,13 +78,25 @@ const DeviceList: React.FC<DeviceListProps> = ({
 
   const handleDisable = async (guid: string) => {
     try {
-      await disableDevice(guid);
-      msgApi.success(
-        intl.formatMessage({
-          id: 'pages.devices.disableSuccess',
-          defaultMessage: 'Device disabled',
-        }),
-      );
+      const result = await batchUpdateDeviceStatus({
+        guids: [guid],
+        status: 'disabled',
+      });
+      if (result.failedCount > 0) {
+        msgApi.warning(
+          intl.formatMessage({
+            id: 'pages.devices.disableFailed',
+            defaultMessage: 'Failed to disable device',
+          }),
+        );
+      } else {
+        msgApi.success(
+          intl.formatMessage({
+            id: 'pages.devices.disableSuccess',
+            defaultMessage: 'Device disabled',
+          }),
+        );
+      }
       actionRef.current?.reload();
     } catch {
       msgApi.error(
@@ -129,6 +152,99 @@ const DeviceList: React.FC<DeviceListProps> = ({
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [selectedRows, setSelectedRows] = useState<API.DeviceItem[]>([]);
   const [batchRemoving, setBatchRemoving] = useState(false);
+  const [batchStatusUpdating, setBatchStatusUpdating] = useState(false);
+
+  const handleBatchEnable = async () => {
+    if (selectedRows.length === 0) return;
+    setBatchStatusUpdating(true);
+    try {
+      const guids = selectedRows.map((row) => row.guid);
+      const result = await batchUpdateDeviceStatus({
+        guids,
+        status: 'enabled',
+      });
+      if (result.failedCount > 0) {
+        msgApi.warning(
+          intl.formatMessage(
+            {
+              id: 'pages.devices.batchEnablePartialFailed',
+              defaultMessage:
+                'Successfully enabled {success} device(s), {failed} failed',
+            },
+            { success: result.succeededCount, failed: result.failedCount },
+          ),
+        );
+      } else {
+        msgApi.success(
+          intl.formatMessage(
+            {
+              id: 'pages.devices.batchEnableSuccess',
+              defaultMessage: 'Successfully enabled {count} device(s)',
+            },
+            { count: result.succeededCount },
+          ),
+        );
+      }
+      setSelectedRowKeys([]);
+      setSelectedRows([]);
+      actionRef.current?.reload();
+    } catch {
+      msgApi.error(
+        intl.formatMessage({
+          id: 'pages.devices.batchEnableFailed',
+          defaultMessage: 'Failed to enable devices',
+        }),
+      );
+    } finally {
+      setBatchStatusUpdating(false);
+    }
+  };
+
+  const handleBatchDisable = async () => {
+    if (selectedRows.length === 0) return;
+    setBatchStatusUpdating(true);
+    try {
+      const guids = selectedRows.map((row) => row.guid);
+      const result = await batchUpdateDeviceStatus({
+        guids,
+        status: 'disabled',
+      });
+      if (result.failedCount > 0) {
+        msgApi.warning(
+          intl.formatMessage(
+            {
+              id: 'pages.devices.batchDisablePartialFailed',
+              defaultMessage:
+                'Successfully disabled {success} device(s), {failed} failed',
+            },
+            { success: result.succeededCount, failed: result.failedCount },
+          ),
+        );
+      } else {
+        msgApi.success(
+          intl.formatMessage(
+            {
+              id: 'pages.devices.batchDisableSuccess',
+              defaultMessage: 'Successfully disabled {count} device(s)',
+            },
+            { count: result.succeededCount },
+          ),
+        );
+      }
+      setSelectedRowKeys([]);
+      setSelectedRows([]);
+      actionRef.current?.reload();
+    } catch {
+      msgApi.error(
+        intl.formatMessage({
+          id: 'pages.devices.batchDisableFailed',
+          defaultMessage: 'Failed to disable devices',
+        }),
+      );
+    } finally {
+      setBatchStatusUpdating(false);
+    }
+  };
 
   const handleBatchRemoveFromGroup = async () => {
     if (!deviceGroupGuid || selectedRows.length === 0) return;
@@ -338,55 +454,110 @@ const DeviceList: React.FC<DeviceListProps> = ({
           }
           actionRef={actionRef}
           rowKey="guid"
-          rowSelection={
-            deviceGroupGuid
-              ? {
-                  selectedRowKeys,
-                  onChange: (keys, rows) => {
-                    setSelectedRowKeys(keys);
-                    setSelectedRows(rows);
-                  },
-                }
-              : undefined
-          }
-          tableAlertOptionRender={
-            deviceGroupGuid
-              ? () => (
-                  <Space size={16}>
-                    <Popconfirm
-                      title={
-                        <FormattedMessage
-                          id="pages.devices.batchRemoveFromGroupConfirm"
-                          defaultMessage="Are you sure to remove selected devices from the group?"
-                        />
-                      }
-                      onConfirm={handleBatchRemoveFromGroup}
-                      okText={intl.formatMessage({
-                        id: 'pages.common.confirm',
-                        defaultMessage: 'Yes',
-                      })}
-                      cancelText={intl.formatMessage({
-                        id: 'pages.common.cancel',
-                        defaultMessage: 'No',
-                      })}
+          rowSelection={{
+            selectedRowKeys,
+            onChange: (keys, rows) => {
+              setSelectedRowKeys(keys);
+              setSelectedRows(rows);
+            },
+          }}
+          tableAlertOptionRender={() => (
+            <Space size={16}>
+              {deviceGroupGuid ? (
+                <Popconfirm
+                  title={
+                    <FormattedMessage
+                      id="pages.devices.batchRemoveFromGroupConfirm"
+                      defaultMessage="Are you sure to remove selected devices from the group?"
+                    />
+                  }
+                  onConfirm={handleBatchRemoveFromGroup}
+                  okText={intl.formatMessage({
+                    id: 'pages.common.confirm',
+                    defaultMessage: 'Yes',
+                  })}
+                  cancelText={intl.formatMessage({
+                    id: 'pages.common.cancel',
+                    defaultMessage: 'No',
+                  })}
+                >
+                  <Button
+                    type="link"
+                    danger
+                    icon={<DeleteOutlined />}
+                    loading={batchRemoving}
+                    style={{ padding: 0 }}
+                  >
+                    <FormattedMessage
+                      id="pages.devices.batchRemove"
+                      defaultMessage="Batch Remove"
+                    />
+                  </Button>
+                </Popconfirm>
+              ) : (
+                <>
+                  <Popconfirm
+                    title={
+                      <FormattedMessage
+                        id="pages.devices.batchEnableConfirm"
+                        defaultMessage="Are you sure to enable selected devices?"
+                      />
+                    }
+                    onConfirm={handleBatchEnable}
+                    okText={intl.formatMessage({
+                      id: 'pages.common.confirm',
+                      defaultMessage: 'Yes',
+                    })}
+                    cancelText={intl.formatMessage({
+                      id: 'pages.common.cancel',
+                      defaultMessage: 'No',
+                    })}
+                  >
+                    <Button
+                      type="link"
+                      icon={<PlusCircleOutlined />}
+                      loading={batchStatusUpdating}
+                      style={{ padding: 0 }}
                     >
-                      <Button
-                        type="link"
-                        danger
-                        icon={<DeleteOutlined />}
-                        loading={batchRemoving}
-                        style={{ padding: 0 }}
-                      >
-                        <FormattedMessage
-                          id="pages.devices.batchRemove"
-                          defaultMessage="Batch Remove"
-                        />
-                      </Button>
-                    </Popconfirm>
-                  </Space>
-                )
-              : undefined
-          }
+                      <FormattedMessage
+                        id="pages.devices.batchEnable"
+                        defaultMessage="Batch Enable"
+                      />
+                    </Button>
+                  </Popconfirm>
+                  <Popconfirm
+                    title={
+                      <FormattedMessage
+                        id="pages.devices.batchDisableConfirm"
+                        defaultMessage="Are you sure to disable selected devices?"
+                      />
+                    }
+                    onConfirm={handleBatchDisable}
+                    okText={intl.formatMessage({
+                      id: 'pages.common.confirm',
+                      defaultMessage: 'Yes',
+                    })}
+                    cancelText={intl.formatMessage({
+                      id: 'pages.common.cancel',
+                      defaultMessage: 'No',
+                    })}
+                  >
+                    <Button
+                      type="link"
+                      icon={<MinusCircleOutlined />}
+                      loading={batchStatusUpdating}
+                      style={{ padding: 0 }}
+                    >
+                      <FormattedMessage
+                        id="pages.devices.batchDisable"
+                        defaultMessage="Batch Disable"
+                      />
+                    </Button>
+                  </Popconfirm>
+                </>
+              )}
+            </Space>
+          )}
           request={async (params) => {
             const result = await getDeviceList({
               current: params.current || 1,
