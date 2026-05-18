@@ -9,6 +9,8 @@ export default {
   'pages.login.forgotPassword': 'Forgot Password?',
   'pages.login.forgotPasswordInfo':
     'Please contact administrator to reset password',
+  'pages.login.switchToDark': 'Switch to dark mode',
+  'pages.login.switchToLight': 'Switch to light mode',
   'pages.devices.list': 'Device List',
   'pages.devices.hostname': 'Hostname',
   'pages.devices.os': 'OS',

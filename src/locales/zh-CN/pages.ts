@@ -8,6 +8,8 @@ export default {
   'pages.login.rememberMe': '记住我',
   'pages.login.forgotPassword': '忘记密码？',
   'pages.login.forgotPasswordInfo': '请联系管理员重置密码',
+  'pages.login.switchToDark': '切换到深色模式',
+  'pages.login.switchToLight': '切换到亮色模式',
   'pages.devices.list': '设备列表',
   'pages.devices.hostname': '主机名',
   'pages.devices.os': '操作系统',

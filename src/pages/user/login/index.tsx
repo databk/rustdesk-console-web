@@ -3,29 +3,40 @@ import { LoginForm, ProFormText } from '@ant-design/pro-components';
 import {
   FormattedMessage,
   Helmet,
+  history,
   SelectLang,
   useIntl,
   useModel,
-  history,
 } from '@umijs/max';
 import { Alert, App, Checkbox } from 'antd';
 import { createStyles } from 'antd-style';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
-import { setToken } from '@/utils/auth';
-import { Footer } from '@/components';
+import { Footer, ThemeToggle } from '@/components';
 import { login } from '@/services/rustdesk-console/auth';
+import { setToken } from '@/utils/auth';
 import Settings from '../../../../config/defaultSettings';
 
-const useStyles = createStyles(({ token }) => {
+const useStyles = createStyles(({ token, isDarkMode }) => {
   return {
-    lang: {
+    topActions: {
+      position: 'fixed',
+      right: 16,
+      top: 16,
+      display: 'flex',
+      alignItems: 'center',
+      gap: 4,
+      zIndex: 10,
+    },
+    actionBtn: {
       width: 42,
       height: 42,
       lineHeight: '42px',
-      position: 'fixed',
-      right: 16,
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
       borderRadius: token.borderRadius,
+      cursor: 'pointer',
       ':hover': {
         backgroundColor: token.colorBgTextHover,
       },
@@ -35,9 +46,11 @@ const useStyles = createStyles(({ token }) => {
       flexDirection: 'column',
       height: '100vh',
       overflow: 'auto',
-      backgroundImage:
-        "url('https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/V-_oS6r-i7wAAAAAAAAAAAAAFl94AQBr')",
+      backgroundImage: isDarkMode
+        ? 'none'
+        : "url('https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/V-_oS6r-i7wAAAAAAAAAAAAAFl94AQBr')",
       backgroundSize: '100% 100%',
+      backgroundColor: isDarkMode ? token.colorBgContainer : 'transparent',
     },
     loginFormExtra: {
       display: 'flex',
@@ -57,12 +70,17 @@ const useStyles = createStyles(({ token }) => {
   };
 });
 
-const Lang = () => {
+const TopActions = () => {
   const { styles } = useStyles();
 
   return (
-    <div className={styles.lang} data-lang>
-      {SelectLang && <SelectLang />}
+    <div className={styles.topActions}>
+      <span className={styles.actionBtn}>
+        <ThemeToggle />
+      </span>
+      <span className={styles.actionBtn} data-lang>
+        {SelectLang && <SelectLang />}
+      </span>
     </div>
   );
 };
@@ -158,7 +176,7 @@ const Login: React.FC = () => {
           {Settings.title && ` - ${Settings.title}`}
         </title>
       </Helmet>
-      <Lang />
+      <TopActions />
       <div
         style={{
           flex: '1',
