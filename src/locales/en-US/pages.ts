@@ -63,7 +63,8 @@ export default {
   'pages.devices.batchEnableFailed': 'Failed to enable devices',
   'pages.devices.batchEnablePartialFailed':
     'Successfully enabled {success} device(s), {failed} failed',
-  'pages.devices.batchDisableSuccess': 'Successfully disabled {count} device(s)',
+  'pages.devices.batchDisableSuccess':
+    'Successfully disabled {count} device(s)',
   'pages.devices.batchDisableFailed': 'Failed to disable devices',
   'pages.devices.batchDisablePartialFailed':
     'Successfully disabled {success} device(s), {failed} failed',
