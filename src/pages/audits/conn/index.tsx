@@ -1,30 +1,210 @@
-import type { ActionType, ProColumns } from '@ant-design/pro-components';
-import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { FormattedMessage, useIntl } from '@umijs/max';
-import { App, Button, Tag } from 'antd';
-import React, { useRef, useState } from 'react';
-import { getConnectionAudits } from '@/services/rustdesk-console/audit';
-import { DownloadOutlined } from '@ant-design/icons';
+import React, { useRef, useState, Fragment } from 'react';
+import {
+  Breadcrumb,
+  Button,
+  Drawer,
+  Modal,
+  Tooltip,
+  Typography,
+  App,
+} from 'antd';
+import {
+  PageContainer,
+  ProTable,
+  ModalForm,
+  ProFormTextArea,
+} from '@ant-design/pro-components';
+import type { ProColumns, ActionType } from '@ant-design/pro-components';
+import { FormattedMessage, useIntl, useAccess } from '@umijs/max';
+import {
+  CameraOutlined,
+  CodeOutlined,
+  DownloadOutlined,
+  EditTwoTone,
+  FileSyncOutlined,
+  FundProjectionScreenOutlined,
+  QuestionOutlined,
+  RetweetOutlined,
+} from '@ant-design/icons';
 import dayjs from 'dayjs';
+import {
+  getConnectionAudits,
+  updateConnectionAudit,
+  disconnectConnection,
+} from '@/services/rustdesk-console/audit';
+
+const { Text } = Typography;
+
+const renderDuration = (record: API.ConnectionAuditItem): string => {
+  if (!record.establishedAt || !record.closedAt) return '-';
+  const start = dayjs(record.establishedAt);
+  const end = dayjs(record.closedAt);
+  const durationSeconds = end.diff(start, 'second');
+  if (durationSeconds < 0) return '-';
+
+  const days = Math.floor(durationSeconds / 86400);
+  const hours = Math.floor((durationSeconds % 86400) / 3600);
+  const minutes = Math.floor((durationSeconds % 3600) / 60);
+  const seconds = durationSeconds % 60;
+
+  const parts: string[] = [];
+  if (days > 0) parts.push(`${days}d`);
+  if (hours > 0) parts.push(`${hours}h`);
+  if (minutes > 0) parts.push(`${minutes}m`);
+  if (seconds > 0 || parts.length === 0) parts.push(`${seconds}s`);
+
+  return parts.join(' ');
+};
+
+const renderConnTypeIcon = (type?: number) => {
+  switch (type) {
+    case 0:
+      return <FundProjectionScreenOutlined />;
+    case 1:
+      return <FileSyncOutlined />;
+    case 2:
+      return <RetweetOutlined />;
+    case 3:
+      return <CameraOutlined />;
+    case 4:
+      return <CodeOutlined />;
+    default:
+      return <QuestionOutlined />;
+  }
+};
+
+const getConnTypeMsgId = (type?: number): string => {
+  switch (type) {
+    case 0:
+      return 'pages.audits.connType.remoteDesktop';
+    case 1:
+      return 'pages.audits.connType.fileTransfer';
+    case 2:
+      return 'pages.audits.connType.portTransfer';
+    case 3:
+      return 'pages.audits.connType.viewCamera';
+    case 4:
+      return 'pages.audits.connType.terminal';
+    default:
+      return 'pages.audits.connType.notLoggedIn';
+  }
+};
+
+interface ConnectionAuditSearchParams extends API.PageParams {
+  peerId?: string;
+  type?: number;
+}
 
 const ConnectionAudit: React.FC = () => {
-  const intl = useIntl();
-  const { message: msgApi } = App.useApp();
   const actionRef = useRef<ActionType>(null);
-  const [dataSource, setDataSource] = useState<API.ConnectionAuditItem[]>([]);
+  const intl = useIntl();
+  const { message: msgApi, modal } = App.useApp();
+  const access = useAccess();
+  const canEdit = access.canAdmin;
 
-  const handleExportCSV = () => {
-    if (dataSource.length === 0) {
-      msgApi.warning(
+  const [pageParams, setPageParams] =
+    useState<Partial<ConnectionAuditSearchParams>>();
+  const [currentRow, setCurrentRow] = useState<API.ConnectionAuditItem>();
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [disconnectModalOpen, setDisconnectModalOpen] = useState(false);
+  const [disconnectConfirmLoading, setDisconnectConfirmLoading] =
+    useState(false);
+  const [currentDisconnectId, setCurrentDisconnectId] = useState<string>('');
+
+  const handleDisconnect = async () => {
+    setDisconnectConfirmLoading(true);
+    try {
+      const res = await disconnectConnection(currentDisconnectId);
+      if (res.succ !== false) {
+        msgApi.success(
+          intl.formatMessage({
+            id: 'pages.audits.disconnectSuccess',
+            defaultMessage: 'Successfully disconnected!',
+          }),
+        );
+        setTimeout(() => actionRef.current?.reload(), 1000);
+      } else {
+        msgApi.error(
+          intl.formatMessage({
+            id: 'pages.audits.disconnectFailed',
+            defaultMessage: 'Disconnect failed!',
+          }),
+        );
+      }
+    } catch (error) {
+      msgApi.error(
+        typeof error === 'string'
+          ? error
+          : intl.formatMessage({
+              id: 'pages.audits.disconnectFailed',
+              defaultMessage: 'Disconnect failed!',
+            }),
+      );
+    } finally {
+      setDisconnectConfirmLoading(false);
+      setDisconnectModalOpen(false);
+    }
+  };
+
+  const handleUpdateNote = async (
+    fields: API.ConnectionAuditItem,
+    old: API.ConnectionAuditItem,
+  ) => {
+    const data: Record<string, any> = { id: old.id };
+    if ((fields.note || '') !== (old.note || '')) {
+      data.note = fields.note;
+    }
+    if (Object.keys(data).length === 1) return true;
+
+    try {
+      await updateConnectionAudit(data);
+      msgApi.success(
         intl.formatMessage({
-          id: 'pages.audits.noDataToExport',
-          defaultMessage: 'No data to export',
+          id: 'pages.audits.updateSuccess',
+          defaultMessage: 'Update is successful',
         }),
       );
-      return;
+      return true;
+    } catch (error) {
+      msgApi.error(
+        typeof error === 'string'
+          ? error
+          : intl.formatMessage({
+              id: 'pages.audits.updateFailed',
+              defaultMessage: 'Update failed, please try again!',
+            }),
+      );
+      return false;
     }
+  };
 
-    const headers = [
+  const fetchExportData = async (): Promise<API.ConnectionAuditItem[]> => {
+    let allItems: API.ConnectionAuditItem[] = [];
+    let total = 0;
+    const pageSize = 100;
+    let current = 0;
+
+    do {
+      current++;
+      const items = await getConnectionAudits({
+        ...pageParams,
+        current,
+        pageSize,
+      });
+      if (total === 0 && items.total != null) {
+        total = items.total;
+      }
+      if (items.data != null) {
+        allItems = allItems.concat(items.data);
+      }
+    } while (current < 10 && pageSize * current < total);
+
+    return allItems;
+  };
+
+  const generateCsvContent = (items: API.ConnectionAuditItem[]): string => {
+    const titles = [
       intl.formatMessage({ id: 'pages.audits.type', defaultMessage: 'Type' }),
       intl.formatMessage({
         id: 'pages.audits.peerName',
@@ -51,27 +231,42 @@ const ConnectionAudit: React.FC = () => {
         defaultMessage: 'Closed At',
       }),
       intl.formatMessage({
-        id: 'pages.audits.deviceId',
-        defaultMessage: 'Device ID',
+        id: 'pages.audits.duration',
+        defaultMessage: 'Duration',
+      }),
+      intl.formatMessage({
+        id: 'pages.audits.note',
+        defaultMessage: 'Note',
       }),
     ];
 
-    const rows = dataSource.map((item) => [
-      item.action || '',
-      item.peerName || '',
-      item.peerId || '',
-      item.ip || '',
-      item.requestedAt || '',
-      item.establishedAt || '',
-      item.closedAt || '',
-      item.deviceId || '',
-    ]);
+    const rows: string[][] = [];
+    items.forEach((record) => {
+      const row: string[] = [];
+      row.push(
+        intl.formatMessage({
+          id: getConnTypeMsgId(record.type),
+          defaultMessage: '-',
+        }),
+      );
+      row.push(record.peerName || '');
+      row.push(record.peerId || '');
+      row.push((record.ip || '').replace('::ffff:', ''));
+      row.push(record.requestedAt || '');
+      row.push(record.establishedAt || '');
+      row.push(record.closedAt || '');
+      row.push(renderDuration(record));
+      row.push(record.note || '');
+      rows.push(row);
+    });
 
-    const csvContent = [
-      headers.join(','),
+    return [
+      titles.join(','),
       ...rows.map((row) => row.map((cell) => `"${cell}"`).join(',')),
     ].join('\n');
+  };
 
+  const downloadCsv = (csvContent: string) => {
     const blob = new Blob([`\ufeff${csvContent}`], {
       type: 'text/csv;charset=utf-8;',
     });
@@ -80,13 +275,89 @@ const ConnectionAudit: React.FC = () => {
     link.download = `connection-audit-${dayjs().format('YYYY-MM-DD-HHmmss')}.csv`;
     link.click();
     URL.revokeObjectURL(link.href);
+  };
 
-    msgApi.success(
-      intl.formatMessage({
-        id: 'pages.audits.exportSuccess',
-        defaultMessage: 'Export successful',
+  const exportCsv = async () => {
+    modal.confirm({
+      title: intl.formatMessage({
+        id: 'pages.audits.exportConfirmTitle',
+        defaultMessage: 'Export CSV',
       }),
-    );
+      content: intl.formatMessage({
+        id: 'pages.audits.exportConfirmContent',
+        defaultMessage: 'Export up to 1000 records. Continue?',
+      }),
+      okText: intl.formatMessage({
+        id: 'pages.common.confirm',
+        defaultMessage: 'Yes',
+      }),
+      cancelText: intl.formatMessage({
+        id: 'pages.common.cancel',
+        defaultMessage: 'No',
+      }),
+      onOk: async () => {
+        try {
+          const items = await fetchExportData();
+          if (items.length === 0) {
+            msgApi.warning(
+              intl.formatMessage({
+                id: 'pages.audits.noDataToExport',
+                defaultMessage: 'No data to export',
+              }),
+            );
+            return;
+          }
+          const csvContent = generateCsvContent(items);
+          downloadCsv(csvContent);
+          msgApi.success(
+            intl.formatMessage({
+              id: 'pages.audits.exportSuccess',
+              defaultMessage: 'Export successful',
+            }),
+          );
+        } catch (_error) {
+          msgApi.error(
+            intl.formatMessage({
+              id: 'pages.audits.exportFailed',
+              defaultMessage: 'Export failed',
+            }),
+          );
+        }
+      },
+    });
+  };
+
+  const connTypeValueEnum: Record<number, { text: string }> = {
+    0: {
+      text: intl.formatMessage({
+        id: 'pages.audits.connType.remoteDesktop',
+        defaultMessage: 'Remote Desktop',
+      }),
+    },
+    1: {
+      text: intl.formatMessage({
+        id: 'pages.audits.connType.fileTransfer',
+        defaultMessage: 'File Transfer',
+      }),
+    },
+    2: {
+      text: intl.formatMessage({
+        id: 'pages.audits.connType.portTransfer',
+        defaultMessage: 'Port Transfer',
+      }),
+    },
+    3: {
+      text: intl.formatMessage({
+        id: 'pages.audits.connType.viewCamera',
+        defaultMessage: 'View Camera',
+      }),
+    },
+    4: {
+      text: intl.formatMessage({
+        id: 'pages.audits.connType.terminal',
+        defaultMessage: 'Terminal',
+      }),
+    },
   };
 
   const columns: ProColumns<API.ConnectionAuditItem>[] = [
@@ -98,32 +369,23 @@ const ConnectionAudit: React.FC = () => {
     },
     {
       title: <FormattedMessage id="pages.audits.type" defaultMessage="Type" />,
-      dataIndex: 'action',
-      width: 120,
-      search: false,
-      render: (_: unknown, record: API.ConnectionAuditItem) => {
-        const action = record.action || '';
-        if (action === 'established') {
-          return (
-            <Tag color="green">
-              <FormattedMessage
-                id="pages.audits.established"
-                defaultMessage="Established"
-              />
-            </Tag>
-          );
-        }
-        if (action === 'close') {
-          return (
-            <Tag color="red">
-              <FormattedMessage
-                id="pages.audits.closed"
-                defaultMessage="Closed"
-              />
-            </Tag>
-          );
-        }
-        return <Tag>{action}</Tag>;
+      dataIndex: 'type',
+      width: 60,
+      valueType: 'select',
+      valueEnum: connTypeValueEnum,
+      render: (_, record) => {
+        const icon = renderConnTypeIcon(record.type);
+        const msgId = getConnTypeMsgId(record.type);
+        return (
+          <a
+            onClick={() => {
+              setCurrentRow(record);
+              setDrawerOpen(true);
+            }}
+          >
+            <Tooltip title={intl.formatMessage({ id: msgId })}>{icon}</Tooltip>
+          </a>
+        );
       },
     },
     {
@@ -137,8 +399,7 @@ const ConnectionAudit: React.FC = () => {
       width: 150,
       ellipsis: true,
       search: false,
-      render: (_: unknown, record: API.ConnectionAuditItem) =>
-        record.peerName || '-',
+      render: (_, record) => record.peerName || '-',
     },
     {
       title: (
@@ -147,9 +408,17 @@ const ConnectionAudit: React.FC = () => {
       dataIndex: 'peerId',
       width: 150,
       ellipsis: true,
-      search: false,
-      render: (_: unknown, record: API.ConnectionAuditItem) =>
-        record.peerId || '-',
+      tip: intl.formatMessage({
+        id: 'pages.audits.remoteSearchTip',
+        defaultMessage: 'Search by remote device ID (fuzzy match)',
+      }),
+      fieldProps: {
+        placeholder: intl.formatMessage({
+          id: 'pages.audits.remotePlaceholder',
+          defaultMessage: 'Enter remote device ID',
+        }),
+      },
+      render: (_, record) => record.peerId || '-',
     },
     {
       title: (
@@ -159,7 +428,8 @@ const ConnectionAudit: React.FC = () => {
       width: 150,
       ellipsis: true,
       search: false,
-      render: (_: unknown, record: API.ConnectionAuditItem) => record.ip || '-',
+      render: (_, record) =>
+        (record.ip || '').replace('::ffff:', '') || '-',
     },
     {
       title: (
@@ -171,9 +441,10 @@ const ConnectionAudit: React.FC = () => {
       dataIndex: 'requestedAt',
       width: 180,
       search: false,
-      valueType: 'dateTime',
-      render: (_: unknown, record: API.ConnectionAuditItem) =>
-        record.requestedAt || '-',
+      render: (_, record) =>
+        record.requestedAt
+          ? dayjs(record.requestedAt).format('YYYY-MM-DD HH:mm:ss')
+          : '-',
     },
     {
       title: (
@@ -185,9 +456,10 @@ const ConnectionAudit: React.FC = () => {
       dataIndex: 'establishedAt',
       width: 180,
       search: false,
-      valueType: 'dateTime',
-      render: (_: unknown, record: API.ConnectionAuditItem) =>
-        record.establishedAt || '-',
+      render: (_, record) =>
+        record.establishedAt
+          ? dayjs(record.establishedAt).format('YYYY-MM-DD HH:mm:ss')
+          : '-',
     },
     {
       title: (
@@ -199,43 +471,224 @@ const ConnectionAudit: React.FC = () => {
       dataIndex: 'closedAt',
       width: 180,
       search: false,
-      valueType: 'dateTime',
-      render: (_: unknown, record: API.ConnectionAuditItem) =>
-        record.closedAt || '-',
+      render: (_, record) =>
+        record.closedAt
+          ? dayjs(record.closedAt).format('YYYY-MM-DD HH:mm:ss')
+          : '-',
     },
     {
       title: (
         <FormattedMessage
-          id="pages.audits.deviceId"
-          defaultMessage="Device ID"
+          id="pages.audits.duration"
+          defaultMessage="Duration"
         />
       ),
-      dataIndex: 'deviceId',
-      width: 120,
-      ellipsis: true,
+      dataIndex: 'duration',
       search: false,
-      render: (_: unknown, record: API.ConnectionAuditItem) =>
-        record.deviceId || '-',
+      width: 120,
+      render: (_, record) => renderDuration(record),
+    },
+    {
+      title: (
+        <FormattedMessage id="pages.audits.note" defaultMessage="Note" />
+      ),
+      dataIndex: 'note',
+      valueType: 'textarea',
+      search: false,
+      width: 200,
+      ellipsis: true,
+      render: (_, record) => (
+        <Fragment>
+          <Text
+            ellipsis={{ tooltip: record.note || '' }}
+            style={{ maxWidth: 150 }}
+          >
+            {record.note || ''}
+          </Text>
+          {canEdit && (
+            <Button
+              style={{ float: 'right' }}
+              icon={<EditTwoTone />}
+              type="text"
+              size="small"
+              onClick={() => {
+                setCurrentRow(record);
+                setEditModalVisible(true);
+              }}
+            />
+          )}
+        </Fragment>
+      ),
+    },
+    {
+      title: (
+        <FormattedMessage
+          id="pages.common.action"
+          defaultMessage="Action"
+        />
+      ),
+      search: false,
+      hideInTable: !canEdit,
+      width: 120,
+      render: (_, record) => {
+        if (!canEdit) {
+          return <span style={{ color: '#999' }}>-</span>;
+        }
+        const isActive = record.action === 'established' && !record.closedAt;
+        if (!isActive) return '';
+        return (
+          <Button
+            size="small"
+            type="default"
+            danger
+            onClick={() => {
+              setCurrentDisconnectId(record.connId || String(record.id));
+              setDisconnectModalOpen(true);
+            }}
+          >
+            <FormattedMessage
+              id="pages.audits.disconnect"
+              defaultMessage="Disconnect"
+            />
+          </Button>
+        );
+      },
+    },
+  ];
+
+  const detailFields = [
+    {
+      label: intl.formatMessage({
+        id: 'pages.audits.type',
+        defaultMessage: 'Type',
+      }),
+      render: (r: API.ConnectionAuditItem) =>
+        intl.formatMessage({ id: getConnTypeMsgId(r.type) }),
+    },
+    {
+      label: intl.formatMessage({
+        id: 'pages.audits.peerName',
+        defaultMessage: 'Peer Name',
+      }),
+      dataIndex: 'peerName',
+    },
+    {
+      label: intl.formatMessage({
+        id: 'pages.audits.peerId',
+        defaultMessage: 'Peer ID',
+      }),
+      dataIndex: 'peerId',
+    },
+    {
+      label: intl.formatMessage({
+        id: 'pages.audits.ip',
+        defaultMessage: 'IP Address',
+      }),
+      render: (r: API.ConnectionAuditItem) =>
+        (r.ip || '').replace('::ffff:', '') || '-',
+    },
+    {
+      label: intl.formatMessage({
+        id: 'pages.audits.deviceId',
+        defaultMessage: 'Device ID',
+      }),
+      dataIndex: 'deviceId',
+    },
+    {
+      label: intl.formatMessage({
+        id: 'pages.audits.requestedAt',
+        defaultMessage: 'Requested At',
+      }),
+      render: (r: API.ConnectionAuditItem) =>
+        r.requestedAt
+          ? dayjs(r.requestedAt).format('YYYY-MM-DD HH:mm:ss')
+          : '-',
+    },
+    {
+      label: intl.formatMessage({
+        id: 'pages.audits.establishedAt',
+        defaultMessage: 'Established At',
+      }),
+      render: (r: API.ConnectionAuditItem) =>
+        r.establishedAt
+          ? dayjs(r.establishedAt).format('YYYY-MM-DD HH:mm:ss')
+          : '-',
+    },
+    {
+      label: intl.formatMessage({
+        id: 'pages.audits.closedAt',
+        defaultMessage: 'Closed At',
+      }),
+      render: (r: API.ConnectionAuditItem) =>
+        r.closedAt ? dayjs(r.closedAt).format('YYYY-MM-DD HH:mm:ss') : '-',
+    },
+    {
+      label: intl.formatMessage({
+        id: 'pages.audits.duration',
+        defaultMessage: 'Duration',
+      }),
+      render: (r: API.ConnectionAuditItem) => renderDuration(r),
+    },
+    {
+      label: intl.formatMessage({
+        id: 'pages.audits.note',
+        defaultMessage: 'Note',
+      }),
+      dataIndex: 'note',
     },
   ];
 
   return (
-    <PageContainer>
-      <ProTable<API.ConnectionAuditItem>
+    <PageContainer
+      breadcrumbRender={() => (
+        <Breadcrumb
+          items={[
+            {
+              title: (
+                <FormattedMessage
+                  id="menu.list.audit-list"
+                  defaultMessage="Audit List"
+                />
+              ),
+            },
+            {
+              title: (
+                <FormattedMessage
+                  id="menu.list.audit-list.Connection"
+                  defaultMessage="Connection"
+                />
+              ),
+            },
+          ]}
+        />
+      )}
+    >
+      <ProTable<API.ConnectionAuditItem, ConnectionAuditSearchParams>
         headerTitle={
           <FormattedMessage
             id="pages.audits.conn"
-            defaultMessage="Connection Logs"
+            defaultMessage="Connection Audits"
           />
         }
+        columnsState={{
+          persistenceType: 'localStorage',
+          persistenceKey: 'conn_audit_columns_state',
+        }}
         actionRef={actionRef}
         rowKey="id"
+        search={{ labelWidth: 120 }}
         request={async (params) => {
-          const result = await getConnectionAudits({
-            current: params.current || 1,
-            pageSize: params.pageSize || 20,
-          });
-          setDataSource(result.data || []);
+          const requestParams: Record<string, any> = {
+            current: params.current,
+            pageSize: params.pageSize,
+          };
+          if (params.peerId) {
+            requestParams.remote = params.peerId;
+          }
+          if (params.type !== undefined && params.type !== null) {
+            requestParams.conn_type = params.type;
+          }
+          const result = await getConnectionAudits(requestParams);
           return {
             data: result.data || [],
             total: result.total || 0,
@@ -243,34 +696,111 @@ const ConnectionAudit: React.FC = () => {
           };
         }}
         columns={columns}
-        search={false}
+        beforeSearchSubmit={(params) => {
+          setPageParams(params);
+          return params;
+        }}
+        toolBarRender={() => [
+          <Tooltip
+            key="export"
+            title={intl.formatMessage({
+              id: 'pages.audits.exportCsvTip',
+              defaultMessage: 'Export up to 1000 records at a time',
+            })}
+          >
+            <Button type="default" icon={<DownloadOutlined />} onClick={exportCsv}>
+              <FormattedMessage
+                id="pages.audits.exportCSV"
+                defaultMessage="Export CSV"
+              />
+            </Button>
+          </Tooltip>,
+        ]}
         pagination={{
           defaultPageSize: 20,
           showSizeChanger: true,
           showQuickJumper: true,
         }}
-        scroll={{ x: 1300 }}
-        toolBarRender={() => [
-          <Button
-            key="export"
-            icon={<DownloadOutlined />}
-            onClick={handleExportCSV}
-          >
-            <FormattedMessage
-              id="pages.audits.exportCSV"
-              defaultMessage="Export CSV"
-            />
-          </Button>,
-        ]}
+        scroll={{ x: 1500 }}
         options={{
           density: true,
-          setting: {
-            listsHeight: 400,
-          },
+          setting: { listsHeight: 400 },
           fullScreen: false,
           reload: true,
         }}
       />
+
+      <Drawer
+        title={
+          <FormattedMessage id="pages.audits.detail" defaultMessage="Detail" />
+        }
+        placement="right"
+        onClose={() => setDrawerOpen(false)}
+        open={drawerOpen}
+        width={400}
+      >
+        {currentRow &&
+          detailFields.map((field) => (
+            <div key={field.dataIndex || field.label} style={{ marginBottom: 16 }}>
+              <Text type="secondary">{field.label}</Text>
+              <div>
+                {field.render
+                  ? field.render(currentRow)
+                  : (currentRow as any)[field.dataIndex || ''] || '-'}
+              </div>
+            </div>
+          ))}
+      </Drawer>
+
+      <ModalForm
+        title={
+          <FormattedMessage id="pages.common.edit" defaultMessage="Edit" />
+        }
+        open={editModalVisible}
+        width="400px"
+        initialValues={currentRow}
+        onOpenChange={setEditModalVisible}
+        onFinish={async (value) => {
+          const success = await handleUpdateNote(
+            value as API.ConnectionAuditItem,
+            currentRow as API.ConnectionAuditItem,
+          );
+          if (success) {
+            setEditModalVisible(false);
+            actionRef.current?.reload();
+          }
+        }}
+      >
+        <ProFormTextArea
+          fieldProps={{ autoComplete: 'off' }}
+          width="md"
+          name="note"
+          rules={[{ max: 300 }]}
+          label={
+            <FormattedMessage id="pages.audits.note" defaultMessage="Note" />
+          }
+        />
+      </ModalForm>
+
+      <Modal
+        title={
+          <FormattedMessage
+            id="pages.audits.disconnectConfirmTitle"
+            defaultMessage="Confirm Operation"
+          />
+        }
+        open={disconnectModalOpen}
+        onOk={handleDisconnect}
+        onCancel={() => setDisconnectModalOpen(false)}
+        confirmLoading={disconnectConfirmLoading}
+      >
+        <p>
+          <FormattedMessage
+            id="pages.audits.disconnectConfirmTip"
+            defaultMessage="Are you sure you want to disconnect this device?"
+          />
+        </p>
+      </Modal>
     </PageContainer>
   );
 };

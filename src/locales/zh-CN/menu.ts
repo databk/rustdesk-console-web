@@ -26,4 +26,5 @@ export default {
   'menu.addressBooks': '地址簿',
   'menu.list.audit-list': '审计列表',
   'menu.list.audit-list.File': '文件传输',
+  'menu.list.audit-list.Connection': '连接审计',
 };
