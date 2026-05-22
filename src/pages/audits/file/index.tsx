@@ -35,7 +35,7 @@ interface IInfo {
 }
 
 interface FileAuditSearchParams extends API.PageParams {
-  peerId?: string;
+  deviceId?: string;
   type?: number;
   createdAt?: [string, string];
 }
@@ -254,7 +254,7 @@ const FileAudit: React.FC = () => {
       title: (
         <FormattedMessage id="pages.audits.remote" defaultMessage="Remote" />
       ),
-      dataIndex: 'peerId',
+      dataIndex: 'deviceId',
       tip: intl.formatMessage({
         id: 'pages.audits.remoteSearchTip',
         defaultMessage: 'Search by remote device ID (fuzzy match)',
@@ -425,8 +425,8 @@ const FileAudit: React.FC = () => {
             pageSize: params.pageSize,
           };
 
-          if (params.peerId) {
-            requestParams.peerId = params.peerId;
+          if (params.deviceId) {
+            requestParams.deviceId = params.deviceId;
           }
 
           if (params.type !== undefined && params.type !== null) {
