@@ -12,9 +12,36 @@ declare namespace API {
     };
   };
 
+  type DeviceInfo = {
+    os?: string;
+    type?: string;
+    name?: string;
+  };
+
   type LoginParams = {
-    username: string;
-    password: string;
+    username?: string;
+    password?: string;
+    type?: 'email_code' | 'tfa_code' | 'sms_code';
+    verificationCode?: string;
+    tfaCode?: string;
+    secret?: string;
+    id?: string;
+    uuid?: string;
+    autoLogin?: boolean;
+    deviceInfo?: DeviceInfo;
+  };
+
+  type LoginResponse = {
+    access_token?: string;
+    type?: 'access_token' | 'email_check' | 'tfa_check';
+    tfa_type?: 'email_check' | 'tfa_check';
+    secret?: string;
+    user?: CurrentUser;
+  };
+
+  type OidcLoginInfo = {
+    name: string;
+    icon?: string;
   };
 
   type LoginResult = {

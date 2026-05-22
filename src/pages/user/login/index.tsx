@@ -1,4 +1,11 @@
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import {
+  LockOutlined,
+  MailOutlined,
+  UserOutlined,
+  SafetyCertificateOutlined,
+  ArrowLeftOutlined,
+  GithubOutlined,
+} from '@ant-design/icons';
 import { LoginForm, ProFormText } from '@ant-design/pro-components';
 import {
   FormattedMessage,
@@ -8,58 +15,156 @@ import {
   useModel,
   history,
 } from '@umijs/max';
-import { Alert, App, Checkbox } from 'antd';
+import { Alert, App, Button, Checkbox, Divider, Form, Input, type InputRef, Typography } from 'antd';
 import { createStyles } from 'antd-style';
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 import { setToken } from '@/utils/auth';
 import { Footer } from '@/components';
-import { login } from '@/services/rustdesk-console/auth';
+import { login, getLoginOptions } from '@/services/rustdesk-console/auth';
 import Settings from '../../../../config/defaultSettings';
 
-const useStyles = createStyles(({ token }) => {
-  return {
-    lang: {
-      width: 42,
-      height: 42,
-      lineHeight: '42px',
-      position: 'fixed',
-      right: 16,
-      borderRadius: token.borderRadius,
-      ':hover': {
-        backgroundColor: token.colorBgTextHover,
-      },
-    },
-    container: {
-      display: 'flex',
-      flexDirection: 'column',
-      height: '100vh',
-      overflow: 'auto',
-      backgroundImage:
-        "url('https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/V-_oS6r-i7wAAAAAAAAAAAAAFl94AQBr')",
-      backgroundSize: '100% 100%',
-    },
-    loginFormExtra: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      marginBottom: 16,
-    },
-    forgotPassword: {
-      color: token.colorPrimary,
-      cursor: 'pointer',
-      transition: 'color 0.3s',
-      ':hover': {
-        color: token.colorPrimaryHover,
-        textDecoration: 'underline',
-      },
-    },
-  };
-});
+// --- Auth step types ---
+type AuthStep = 'account' | 'email_check' | 'tfa_check';
 
+// --- Session data for 2nd-step verification ---
+type VerifySession = {
+  username: string;
+  secret: string;
+  emailHint?: string;
+};
+
+// --- Device info ---
+function getDeviceInfo(): API.DeviceInfo {
+  const ua = navigator.userAgent;
+  let os = 'Unknown';
+  if (ua.includes('Win')) os = 'Windows';
+  else if (ua.includes('Mac')) os = 'macOS';
+  else if (ua.includes('Linux')) os = 'Linux';
+  else if (ua.includes('Android')) os = 'Android';
+  else if (ua.includes('iPhone') || ua.includes('iPad')) os = 'iOS';
+
+  let browserName = 'Unknown';
+  if (ua.includes('Firefox')) browserName = 'Firefox';
+  else if (ua.includes('Edg')) browserName = 'Edge';
+  else if (ua.includes('Chrome')) browserName = 'Chrome';
+  else if (ua.includes('Safari')) browserName = 'Safari';
+
+  return { os, type: 'browser', name: browserName };
+}
+
+function getDeviceId(): string {
+  let id = localStorage.getItem('rustdesk_device_id');
+  if (!id) {
+    id = crypto.randomUUID();
+    localStorage.setItem('rustdesk_device_id', id);
+  }
+  return id;
+}
+
+function getDeviceUuid(): string {
+  let uuid = localStorage.getItem('rustdesk_device_uuid');
+  if (!uuid) {
+    uuid = crypto.randomUUID();
+    localStorage.setItem('rustdesk_device_uuid', uuid);
+  }
+  return uuid;
+}
+
+// --- OIDC icon mapping ---
+const OIDC_ICONS: Record<string, React.ReactNode> = {
+  github: <GithubOutlined style={{ fontSize: 20 }} />,
+};
+
+const OIDC_LABELS: Record<string, string> = {
+  github: 'GitHub',
+  gitlab: 'GitLab',
+  google: 'Google',
+};
+
+// --- Styles ---
+const useStyles = createStyles(({ token }) => ({
+  lang: {
+    width: 42,
+    height: 42,
+    lineHeight: '42px',
+    position: 'fixed',
+    right: 16,
+    borderRadius: token.borderRadius,
+    ':hover': {
+      backgroundColor: token.colorBgTextHover,
+    },
+  },
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100vh',
+    overflow: 'auto',
+    backgroundImage:
+      "url('https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/V-_oS6r-i7wAAAAAAAAAAAAAFl94AQBr')",
+    backgroundSize: '100% 100%',
+  },
+  loginFormExtra: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  forgotPassword: {
+    color: token.colorPrimary,
+    cursor: 'pointer',
+    transition: 'color 0.3s',
+    ':hover': {
+      color: token.colorPrimaryHover,
+      textDecoration: 'underline',
+    },
+  },
+  verifySection: {
+    marginTop: 8,
+  },
+  verifyHint: {
+    color: token.colorTextSecondary,
+    marginBottom: 16,
+    fontSize: 14,
+  },
+  codeInputGroup: {
+    display: 'flex',
+    gap: 8,
+    justifyContent: 'center',
+    marginBottom: 24,
+  },
+  codeInput: {
+    width: 44,
+    height: 52,
+    textAlign: 'center' as const,
+    fontSize: 20,
+    fontWeight: 600,
+    borderRadius: token.borderRadius,
+  },
+  oidcSection: {
+    marginTop: 24,
+  },
+  oidcDivider: {
+    color: token.colorTextSecondary,
+    fontSize: 13,
+  },
+  oidcButton: {
+    width: '100%',
+    height: 40,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    marginBottom: 8,
+  },
+  stepTransition: {
+    animation: 'fadeIn 0.3s ease-in-out',
+  },
+}));
+
+// --- Lang selector ---
 const Lang = () => {
   const { styles } = useStyles();
-
   return (
     <div className={styles.lang} data-lang>
       {SelectLang && <SelectLang />}
@@ -67,28 +172,180 @@ const Lang = () => {
   );
 };
 
-const LoginMessage: React.FC<{
-  content: string;
-}> = ({ content }) => {
+// --- Error alert ---
+const LoginMessage: React.FC<{ content: string }> = ({ content }) => (
+  <Alert style={{ marginBottom: 24 }} message={content} type="error" showIcon />
+);
+
+// --- Verification code input (6-digit) ---
+const VerificationCodeInput: React.FC<{
+  length?: number;
+  onChange: (code: string) => void;
+  resetKey: string;
+}> = ({ length = 6, onChange, resetKey }) => {
+  const { styles } = useStyles();
+  const inputsRef = useRef<(InputRef | null)[]>([]);
+  const [codes, setCodes] = useState<string[]>(Array(length).fill(''));
+
+  // Reset when step changes
+  useEffect(() => {
+    setCodes(Array(length).fill(''));
+    setTimeout(() => inputsRef.current[0]?.focus(), 100);
+  }, [resetKey, length]);
+
+  const handleChange = useCallback(
+    (index: number, value: string) => {
+      if (!/^\d*$/.test(value)) return;
+      const newCodes = [...codes];
+      newCodes[index] = value.slice(-1);
+      setCodes(newCodes);
+      const code = newCodes.join('');
+      onChange(code);
+      if (value && index < length - 1) {
+        inputsRef.current[index + 1]?.focus();
+      }
+    },
+    [codes, length, onChange],
+  );
+
+  const handleKeyDown = useCallback(
+    (index: number, e: React.KeyboardEvent) => {
+      if (e.key === 'Backspace' && !codes[index] && index > 0) {
+        inputsRef.current[index - 1]?.focus();
+      }
+    },
+    [codes],
+  );
+
+  const handlePaste = useCallback(
+    (e: React.ClipboardEvent) => {
+      e.preventDefault();
+      const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, length);
+      if (!pasted) return;
+      const newCodes = [...codes];
+      for (let i = 0; i < length; i++) {
+        newCodes[i] = pasted[i] || '';
+      }
+      setCodes(newCodes);
+      onChange(pasted);
+      const focusIndex = Math.min(pasted.length, length - 1);
+      inputsRef.current[focusIndex]?.focus();
+    },
+    [codes, length, onChange],
+  );
+
+  // Pre-defined slots for verification code inputs (fixed length, order never changes)
+  const slots = useMemo(() => Array.from({ length }, (_, i) => i), [length]);
+
   return (
-    <Alert
-      style={{
-        marginBottom: 24,
-      }}
-      message={content}
-      type="error"
-      showIcon
-    />
+    <div className={styles.codeInputGroup}>
+      {slots.map((i) => (
+        <Input
+          key={`${resetKey}-${i}`}
+          ref={(el) => {
+            inputsRef.current[i] = el;
+          }}
+          className={styles.codeInput}
+          value={codes[i]}
+          onChange={(e) => handleChange(i, e.target.value)}
+          onKeyDown={(e) => handleKeyDown(i, e)}
+          onPaste={handlePaste}
+          maxLength={1}
+          autoFocus={i === 0}
+        />
+      ))}
+    </div>
   );
 };
 
+// --- OIDC login buttons ---
+const OidcLogin: React.FC<{
+  options: API.OidcLoginInfo[];
+  loading: boolean;
+}> = ({ options, loading }) => {
+  const { styles } = useStyles();
+  const intl = useIntl();
+  const { message } = App.useApp();
+
+  if (options.length === 0) return null;
+
+  return (
+    <div className={styles.oidcSection}>
+      <Divider className={styles.oidcDivider}>
+        {intl.formatMessage({
+          id: 'pages.login.oidc.divider',
+          defaultMessage: 'Or continue with',
+        })}
+      </Divider>
+      {options.map((item) => {
+        const label = OIDC_LABELS[item.name.toLowerCase()] || item.name;
+        const icon = OIDC_ICONS[item.name.toLowerCase()];
+        return (
+          <Button
+            key={item.name}
+            className={styles.oidcButton}
+            disabled={loading}
+            onClick={() => {
+              message.info(
+                intl.formatMessage({
+                  id: 'pages.login.oidc.comingSoon',
+                  defaultMessage: 'Third-party login is coming soon',
+                }),
+              );
+            }}
+          >
+            {icon}
+            {intl.formatMessage(
+              {
+                id: 'pages.login.oidc.continueWith',
+                defaultMessage: 'Continue with {provider}',
+              },
+              { provider: label },
+            )}
+          </Button>
+        );
+      })}
+    </div>
+  );
+};
+
+// --- Main Login Component ---
 const Login: React.FC = () => {
+  const [authStep, setAuthStep] = useState<AuthStep>('account');
+  const [verifySession, setVerifySession] = useState<VerifySession | null>(null);
   const [loginError, setLoginError] = useState<string>('');
   const [rememberMe, setRememberMe] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [oidcOptions, setOidcOptions] = useState<API.OidcLoginInfo[]>([]);
   const { initialState, setInitialState } = useModel('@@initialState');
   const { styles } = useStyles();
   const { message } = App.useApp();
   const intl = useIntl();
+  const [accountForm] = Form.useForm();
+  const verifyCodeRef = useRef<string>('');
+
+  const isVerifyStep = authStep === 'email_check' || authStep === 'tfa_check';
+
+  // Fetch OIDC login options on mount
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await getLoginOptions();
+        const ops: API.OidcLoginInfo[] = [];
+        for (const item of res) {
+          if (item.startsWith('common-oidc/')) {
+            const parsed = JSON.parse(item.substring('common-oidc/'.length));
+            ops.push(...parsed);
+          } else if (item.startsWith('oidc/')) {
+            ops.push({ name: item.substring('oidc/'.length) });
+          }
+        }
+        setOidcOptions(ops);
+      } catch {
+        // Silently ignore - OIDC is optional
+      }
+    })();
+  }, []);
 
   const fetchUserInfo = async () => {
     const userInfo = await initialState?.fetchUserInfo?.();
@@ -102,41 +359,191 @@ const Login: React.FC = () => {
     }
   };
 
-  const handleSubmit = async (
-    values: API.LoginParams & { rememberMe?: boolean },
-  ) => {
-    try {
-      const msg = await login(values);
-      const token = msg?.access_token || msg?.data?.access_token;
-
-      if (token) {
-        setToken(token, values.rememberMe);
-
-        const defaultLoginSuccessMessage = intl.formatMessage({
+  const handleLoginSuccess = useCallback(
+    async (token: string) => {
+      setToken(token, rememberMe);
+      message.success(
+        intl.formatMessage({
           id: 'pages.login.success',
           defaultMessage: 'Login successful!',
-        });
-        message.success(defaultLoginSuccessMessage);
-        await fetchUserInfo();
-        const urlParams = new URL(window.location.href).searchParams;
-        history.push(urlParams.get('redirect') || '/');
-        return;
-      }
-      setLoginError(
-        intl.formatMessage({
-          id: 'pages.login.failure',
-          defaultMessage: 'Login failed, please try again!',
         }),
       );
-    } catch (error) {
-      const defaultLoginFailureMessage = intl.formatMessage({
-        id: 'pages.login.failure',
-        defaultMessage: 'Login failed, please try again!',
-      });
-      message.error(defaultLoginFailureMessage);
-      setLoginError(defaultLoginFailureMessage);
-    }
-  };
+      await fetchUserInfo();
+      const urlParams = new URL(window.location.href).searchParams;
+      history.push(urlParams.get('redirect') || '/');
+    },
+    [rememberMe, intl, message],
+  );
+
+  const handleAccountSubmit = useCallback(
+    async (values: API.LoginParams) => {
+      setLoginError('');
+      setSubmitting(true);
+      try {
+        const deviceInfo = getDeviceInfo();
+        const msg = await login({
+          username: values.username?.trim(),
+          password: values.password?.trim(),
+          id: getDeviceId(),
+          uuid: getDeviceUuid(),
+          autoLogin: rememberMe,
+          deviceInfo,
+        });
+
+        if (msg.type === 'access_token' && msg.access_token) {
+          await handleLoginSuccess(msg.access_token);
+          return;
+        }
+
+        if (msg.type === 'email_check') {
+          setVerifySession({
+            username: values.username?.trim() || '',
+            secret: msg.secret || '',
+            emailHint: msg.user?.email,
+          });
+          setAuthStep('email_check');
+          message.info(
+            intl.formatMessage({
+              id: 'pages.login.emailCheck.sent',
+              defaultMessage: 'A verification code has been sent to your email',
+            }),
+          );
+          return;
+        }
+
+        if (msg.type === 'tfa_check') {
+          setVerifySession({
+            username: values.username?.trim() || '',
+            secret: msg.secret || '',
+          });
+          setAuthStep('tfa_check');
+          return;
+        }
+
+        setLoginError(
+          intl.formatMessage({
+            id: 'pages.login.failure',
+            defaultMessage: 'Login failed, please try again!',
+          }),
+        );
+      } catch (error: any) {
+        const status = error?.response?.status;
+        if (status === 401) {
+          const errorData = error?.response?.data;
+          const errorMsg =
+            errorData?.error ||
+            errorData?.message ||
+            intl.formatMessage({
+              id: 'pages.login.failure',
+              defaultMessage: 'Login failed, please try again!',
+            });
+          setLoginError(errorMsg);
+        } else {
+          setLoginError(
+            intl.formatMessage({
+              id: 'pages.login.failure',
+              defaultMessage: 'Login failed, please try again!',
+            }),
+          );
+        }
+      } finally {
+        setSubmitting(false);
+      }
+    },
+    [rememberMe, intl, message, handleLoginSuccess],
+  );
+
+  const handleVerifySubmit = useCallback(
+    async (code: string) => {
+      if (!verifySession || code.length < 6) return;
+      setLoginError('');
+      setSubmitting(true);
+      try {
+        const deviceInfo = getDeviceInfo();
+        const params: API.LoginParams = {
+          username: verifySession.username,
+          secret: verifySession.secret,
+          id: getDeviceId(),
+          uuid: getDeviceUuid(),
+          autoLogin: rememberMe,
+          deviceInfo,
+        };
+
+        if (authStep === 'email_check') {
+          params.type = 'email_code';
+          params.verificationCode = code;
+        } else if (authStep === 'tfa_check') {
+          params.type = 'tfa_code';
+          params.tfaCode = code;
+        }
+
+        const msg = await login(params);
+
+        if (msg.type === 'access_token' && msg.access_token) {
+          await handleLoginSuccess(msg.access_token);
+          return;
+        }
+
+        // TFA check might follow email check
+        if (msg.type === 'tfa_check') {
+          setVerifySession((prev) =>
+            prev ? { ...prev, secret: msg.secret || '' } : null,
+          );
+          setAuthStep('tfa_check');
+          verifyCodeRef.current = '';
+          return;
+        }
+
+        if (msg.type === 'email_check') {
+          setVerifySession((prev) =>
+            prev
+              ? { ...prev, secret: msg.secret || '', emailHint: msg.user?.email }
+              : null,
+          );
+          setAuthStep('email_check');
+          verifyCodeRef.current = '';
+          return;
+        }
+
+        setLoginError(
+          intl.formatMessage({
+            id: 'pages.login.failure',
+            defaultMessage: 'Login failed, please try again!',
+          }),
+        );
+      } catch (error: any) {
+        const status = error?.response?.status;
+        if (status === 401) {
+          const errorData = error?.response?.data;
+          const errorMsg =
+            errorData?.error ||
+            errorData?.message ||
+            intl.formatMessage({
+              id: 'pages.login.verifyCode.invalid',
+              defaultMessage: 'Invalid verification code',
+            });
+          setLoginError(errorMsg);
+        } else {
+          setLoginError(
+            intl.formatMessage({
+              id: 'pages.login.failure',
+              defaultMessage: 'Login failed, please try again!',
+            }),
+          );
+        }
+      } finally {
+        setSubmitting(false);
+      }
+    },
+    [authStep, verifySession, rememberMe, intl, message, handleLoginSuccess],
+  );
+
+  const handleBackToAccount = useCallback(() => {
+    setAuthStep('account');
+    setVerifySession(null);
+    setLoginError('');
+    verifyCodeRef.current = '';
+  }, []);
 
   const handleForgotPassword = () => {
     message.info(
@@ -147,106 +554,263 @@ const Login: React.FC = () => {
     );
   };
 
+  const verifyStepTitle = useMemo(() => {
+    if (authStep === 'email_check') {
+      return intl.formatMessage({
+        id: 'pages.login.emailCheck.title',
+        defaultMessage: 'Email Verification',
+      });
+    }
+    if (authStep === 'tfa_check') {
+      return intl.formatMessage({
+        id: 'pages.login.tfaCheck.title',
+        defaultMessage: 'Two-Factor Authentication',
+      });
+    }
+    return '';
+  }, [authStep, intl]);
+
+  const verifyStepDescription = useMemo(() => {
+    if (authStep === 'email_check' && verifySession?.emailHint) {
+      return intl.formatMessage(
+        {
+          id: 'pages.login.emailCheck.description',
+          defaultMessage: 'A 6-digit code has been sent to {email}',
+        },
+        { email: verifySession.emailHint },
+      );
+    }
+    if (authStep === 'tfa_check') {
+      return intl.formatMessage({
+        id: 'pages.login.tfaCheck.description',
+        defaultMessage: 'Enter the 6-digit code from your authenticator app',
+      });
+    }
+    return '';
+  }, [authStep, verifySession, intl]);
+
   return (
     <div className={styles.container}>
       <Helmet>
         <title>
-          {intl.formatMessage({
-            id: 'menu.login',
-            defaultMessage: 'Login',
-          })}
+          {intl.formatMessage({ id: 'menu.login', defaultMessage: 'Login' })}
           {Settings.title && ` - ${Settings.title}`}
         </title>
       </Helmet>
       <Lang />
-      <div
-        style={{
-          flex: '1',
-          padding: '32px 0',
-        }}
-      >
+      <div style={{ flex: 1, padding: '32px 0' }}>
         <LoginForm
-          contentStyle={{
-            minWidth: 280,
-            maxWidth: '75vw',
-          }}
+          form={accountForm}
+          contentStyle={{ minWidth: 280, maxWidth: '75vw' }}
           logo={<img alt="logo" src="/logo.svg" />}
           title="RustDesk Console"
           subTitle="RustDesk Remote Desktop Management Console"
-          onFinish={async (values) => {
-            await handleSubmit(
-              values as API.LoginParams & { rememberMe?: boolean },
-            );
+          initialValues={{ rememberMe }}
+          onValuesChange={(values) => {
+            if (values.rememberMe !== undefined) {
+              setRememberMe(values.rememberMe);
+            }
           }}
+          onFinish={async (values) => {
+            await handleAccountSubmit(values as API.LoginParams);
+          }}
+          submitter={
+            isVerifyStep
+              ? { render: () => null }
+              : {
+                  searchConfig: {
+                    submitText: intl.formatMessage({
+                      id: 'pages.login.submit',
+                      defaultMessage: 'Login',
+                    }),
+                  },
+                  submitButtonProps: {
+                    loading: submitting,
+                    size: 'large',
+                    style: { width: '100%' },
+                  },
+                }
+          }
         >
-          {loginError && <LoginMessage content={loginError} />}
+          {/* Account Login Step */}
+          {authStep === 'account' && (
+            <div className={styles.stepTransition}>
+              {loginError && <LoginMessage content={loginError} />}
 
-          <ProFormText
-            name="username"
-            fieldProps={{
-              size: 'large',
-              prefix: <UserOutlined />,
-              autoComplete: 'username',
-            }}
-            placeholder={intl.formatMessage({
-              id: 'pages.login.username.placeholder',
-              defaultMessage: 'Username',
-            })}
-            rules={[
-              {
-                required: true,
-                message: (
-                  <FormattedMessage
-                    id="pages.login.username.required"
-                    defaultMessage="Please enter your username!"
-                  />
-                ),
-              },
-            ]}
-          />
+              <ProFormText
+                name="username"
+                fieldProps={{
+                  size: 'large',
+                  prefix: <UserOutlined />,
+                  autoComplete: 'username',
+                }}
+                placeholder={intl.formatMessage({
+                  id: 'pages.login.username.placeholder',
+                  defaultMessage: 'Username',
+                })}
+                rules={[
+                  {
+                    required: true,
+                    message: (
+                      <FormattedMessage
+                        id="pages.login.username.required"
+                        defaultMessage="Please enter your username!"
+                      />
+                    ),
+                  },
+                ]}
+              />
 
-          <ProFormText.Password
-            name="password"
-            fieldProps={{
-              size: 'large',
-              prefix: <LockOutlined />,
-              autoComplete: 'current-password',
-            }}
-            placeholder={intl.formatMessage({
-              id: 'pages.login.password.placeholder',
-              defaultMessage: 'Password',
-            })}
-            rules={[
-              {
-                required: true,
-                message: (
-                  <FormattedMessage
-                    id="pages.login.password.required"
-                    defaultMessage="Please enter your password!"
-                  />
-                ),
-              },
-            ]}
-          />
+              <ProFormText.Password
+                name="password"
+                fieldProps={{
+                  size: 'large',
+                  prefix: <LockOutlined />,
+                  autoComplete: 'current-password',
+                }}
+                placeholder={intl.formatMessage({
+                  id: 'pages.login.password.placeholder',
+                  defaultMessage: 'Password',
+                })}
+                rules={[
+                  {
+                    required: true,
+                    message: (
+                      <FormattedMessage
+                        id="pages.login.password.required"
+                        defaultMessage="Please enter your password!"
+                      />
+                    ),
+                  },
+                ]}
+              />
 
-          <div className={styles.loginFormExtra}>
-            <Checkbox
-              checked={rememberMe}
-              onChange={(e) => setRememberMe(e.target.checked)}
-            >
-              {intl.formatMessage({
-                id: 'pages.login.rememberMe',
-                defaultMessage: 'Remember me',
-              })}
-            </Checkbox>
+              <div className={styles.loginFormExtra}>
+                <Form.Item name="rememberMe" valuePropName="checked" noStyle>
+                  <Checkbox>
+                    {intl.formatMessage({
+                      id: 'pages.login.rememberMe',
+                      defaultMessage: 'Remember me',
+                    })}
+                  </Checkbox>
+                </Form.Item>
+                <a className={styles.forgotPassword} onClick={handleForgotPassword}>
+                  {intl.formatMessage({
+                    id: 'pages.login.forgotPassword',
+                    defaultMessage: 'Forgot Password?',
+                  })}
+                </a>
+              </div>
 
-            <a className={styles.forgotPassword} onClick={handleForgotPassword}>
-              {intl.formatMessage({
-                id: 'pages.login.forgotPassword',
-                defaultMessage: 'Forgot Password?',
-              })}
-            </a>
-          </div>
+              <OidcLogin options={oidcOptions} loading={submitting} />
+            </div>
+          )}
+
+          {/* Email Verification Step */}
+          {authStep === 'email_check' && (
+            <div className={`${styles.verifySection} ${styles.stepTransition}`}>
+              {loginError && <LoginMessage content={loginError} />}
+
+              <div style={{ textAlign: 'center', marginBottom: 24 }}>
+                <MailOutlined
+                  style={{ fontSize: 40, color: '#1890ff', marginBottom: 12 }}
+                />
+                <Typography.Title level={5}>{verifyStepTitle}</Typography.Title>
+                <Typography.Text className={styles.verifyHint}>
+                  {verifyStepDescription}
+                </Typography.Text>
+              </div>
+
+              <VerificationCodeInput
+                resetKey="email"
+                onChange={(code) => {
+                  verifyCodeRef.current = code;
+                  if (code.length === 6) {
+                    handleVerifySubmit(code);
+                  }
+                }}
+              />
+
+              <Button
+                type="primary"
+                size="large"
+                block
+                loading={submitting}
+                onClick={() => handleVerifySubmit(verifyCodeRef.current)}
+              >
+                {intl.formatMessage({
+                  id: 'pages.login.verifyCode.submit',
+                  defaultMessage: 'Verify',
+                })}
+              </Button>
+
+              <Button
+                size="large"
+                block
+                style={{ marginTop: 12 }}
+                icon={<ArrowLeftOutlined />}
+                onClick={handleBackToAccount}
+              >
+                {intl.formatMessage({
+                  id: 'pages.login.back',
+                  defaultMessage: 'Back',
+                })}
+              </Button>
+            </div>
+          )}
+
+          {/* TFA Verification Step */}
+          {authStep === 'tfa_check' && (
+            <div className={`${styles.verifySection} ${styles.stepTransition}`}>
+              {loginError && <LoginMessage content={loginError} />}
+
+              <div style={{ textAlign: 'center', marginBottom: 24 }}>
+                <SafetyCertificateOutlined
+                  style={{ fontSize: 40, color: '#1890ff', marginBottom: 12 }}
+                />
+                <Typography.Title level={5}>{verifyStepTitle}</Typography.Title>
+                <Typography.Text className={styles.verifyHint}>
+                  {verifyStepDescription}
+                </Typography.Text>
+              </div>
+
+              <VerificationCodeInput
+                resetKey="tfa"
+                onChange={(code) => {
+                  verifyCodeRef.current = code;
+                  if (code.length === 6) {
+                    handleVerifySubmit(code);
+                  }
+                }}
+              />
+
+              <Button
+                type="primary"
+                size="large"
+                block
+                loading={submitting}
+                onClick={() => handleVerifySubmit(verifyCodeRef.current)}
+              >
+                {intl.formatMessage({
+                  id: 'pages.login.verifyCode.submit',
+                  defaultMessage: 'Verify',
+                })}
+              </Button>
+
+              <Button
+                size="large"
+                block
+                style={{ marginTop: 12 }}
+                icon={<ArrowLeftOutlined />}
+                onClick={handleBackToAccount}
+              >
+                {intl.formatMessage({
+                  id: 'pages.login.back',
+                  defaultMessage: 'Back',
+                })}
+              </Button>
+            </div>
+          )}
         </LoginForm>
       </div>
       <Footer />
