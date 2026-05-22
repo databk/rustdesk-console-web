@@ -160,6 +160,11 @@ const useStyles = createStyles(({ token }) => ({
   stepTransition: {
     animation: 'fadeIn 0.3s ease-in-out',
   },
+  verifyIcon: {
+    fontSize: 40,
+    color: token.colorPrimary,
+    marginBottom: 12,
+  },
 }));
 
 // --- Lang selector ---
@@ -712,9 +717,7 @@ const Login: React.FC = () => {
               {loginError && <LoginMessage content={loginError} />}
 
               <div style={{ textAlign: 'center', marginBottom: 24 }}>
-                <MailOutlined
-                  style={{ fontSize: 40, color: '#1890ff', marginBottom: 12 }}
-                />
+                <MailOutlined className={styles.verifyIcon} />
                 <Typography.Title level={5}>{verifyStepTitle}</Typography.Title>
                 <Typography.Text className={styles.verifyHint}>
                   {verifyStepDescription}
@@ -765,9 +768,7 @@ const Login: React.FC = () => {
               {loginError && <LoginMessage content={loginError} />}
 
               <div style={{ textAlign: 'center', marginBottom: 24 }}>
-                <SafetyCertificateOutlined
-                  style={{ fontSize: 40, color: '#1890ff', marginBottom: 12 }}
-                />
+                <SafetyCertificateOutlined className={styles.verifyIcon} />
                 <Typography.Title level={5}>{verifyStepTitle}</Typography.Title>
                 <Typography.Text className={styles.verifyHint}>
                   {verifyStepDescription}
