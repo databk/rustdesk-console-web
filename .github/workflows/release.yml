@@ -50,10 +50,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Determine version
         id: version
         run: echo "version=${GITHUB_REF#refs/tags/}" >> "$GITHUB_OUTPUT"
+
+      - name: Generate changelog
+        id: changelog
+        uses: TriPSs/conventional-changelog-action@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          output-file: false
+          skip-git-pull: true
 
       - name: Download build artifact
         uses: actions/download-artifact@v8
@@ -71,11 +81,7 @@ jobs:
         uses: softprops/action-gh-release@v3
         with:
           name: ${{ steps.version.outputs.version }}
-          body: |
-            ## rustdesk-console-web ${{ steps.version.outputs.version }}
-
-            ### Changes
-            See [commit history](https://github.com/${{ github.repository }}/compare/${{ github.event.before }}...${{ github.sha }}) for details.
+          body: ${{ steps.changelog.outputs.clean_changelog }}
           draft: false
           prerelease: ${{ contains(steps.version.outputs.version, '-') }}
           files: |
