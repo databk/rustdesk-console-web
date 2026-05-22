@@ -314,6 +314,72 @@ const OidcLogin: React.FC<{
   );
 };
 
+// --- Verify Step (shared by email_check and tfa_check) ---
+const VerifyStep: React.FC<{
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  resetKey: string;
+  error: string;
+  submitting: boolean;
+  onCodeChange: (code: string) => void;
+  onSubmit: (code: string) => void;
+  onBack: () => void;
+}> = ({ icon, title, description, resetKey, error, submitting, onCodeChange, onSubmit, onBack }) => {
+  const { styles } = useStyles();
+  const intl = useIntl();
+  const codeRef = useRef<string>('');
+
+  return (
+    <div className={`${styles.verifySection} ${styles.stepTransition}`}>
+      {error && <LoginMessage content={error} />}
+
+      <div style={{ textAlign: 'center', marginBottom: 24 }}>
+        {icon}
+        <Typography.Title level={5}>{title}</Typography.Title>
+        <Typography.Text className={styles.verifyHint}>{description}</Typography.Text>
+      </div>
+
+      <VerificationCodeInput
+        resetKey={resetKey}
+        onChange={(code) => {
+          codeRef.current = code;
+          onCodeChange(code);
+          if (code.length === 6) {
+            onSubmit(code);
+          }
+        }}
+      />
+
+      <Button
+        type="primary"
+        size="large"
+        block
+        loading={submitting}
+        onClick={() => onSubmit(codeRef.current)}
+      >
+        {intl.formatMessage({
+          id: 'pages.login.verifyCode.submit',
+          defaultMessage: 'Verify',
+        })}
+      </Button>
+
+      <Button
+        size="large"
+        block
+        style={{ marginTop: 12 }}
+        icon={<ArrowLeftOutlined />}
+        onClick={onBack}
+      >
+        {intl.formatMessage({
+          id: 'pages.login.back',
+          defaultMessage: 'Back',
+        })}
+      </Button>
+    </div>
+  );
+};
+
 // --- Main Login Component ---
 const Login: React.FC = () => {
   const [authStep, setAuthStep] = useState<AuthStep>('account');
@@ -713,104 +779,32 @@ const Login: React.FC = () => {
 
           {/* Email Verification Step */}
           {authStep === 'email_check' && (
-            <div className={`${styles.verifySection} ${styles.stepTransition}`}>
-              {loginError && <LoginMessage content={loginError} />}
-
-              <div style={{ textAlign: 'center', marginBottom: 24 }}>
-                <MailOutlined className={styles.verifyIcon} />
-                <Typography.Title level={5}>{verifyStepTitle}</Typography.Title>
-                <Typography.Text className={styles.verifyHint}>
-                  {verifyStepDescription}
-                </Typography.Text>
-              </div>
-
-              <VerificationCodeInput
-                resetKey="email"
-                onChange={(code) => {
-                  verifyCodeRef.current = code;
-                  if (code.length === 6) {
-                    handleVerifySubmit(code);
-                  }
-                }}
-              />
-
-              <Button
-                type="primary"
-                size="large"
-                block
-                loading={submitting}
-                onClick={() => handleVerifySubmit(verifyCodeRef.current)}
-              >
-                {intl.formatMessage({
-                  id: 'pages.login.verifyCode.submit',
-                  defaultMessage: 'Verify',
-                })}
-              </Button>
-
-              <Button
-                size="large"
-                block
-                style={{ marginTop: 12 }}
-                icon={<ArrowLeftOutlined />}
-                onClick={handleBackToAccount}
-              >
-                {intl.formatMessage({
-                  id: 'pages.login.back',
-                  defaultMessage: 'Back',
-                })}
-              </Button>
-            </div>
+            <VerifyStep
+              icon={<MailOutlined className={styles.verifyIcon} />}
+              title={verifyStepTitle}
+              description={verifyStepDescription}
+              resetKey="email"
+              error={loginError}
+              submitting={submitting}
+              onCodeChange={(code) => { verifyCodeRef.current = code; }}
+              onSubmit={handleVerifySubmit}
+              onBack={handleBackToAccount}
+            />
           )}
 
           {/* TFA Verification Step */}
           {authStep === 'tfa_check' && (
-            <div className={`${styles.verifySection} ${styles.stepTransition}`}>
-              {loginError && <LoginMessage content={loginError} />}
-
-              <div style={{ textAlign: 'center', marginBottom: 24 }}>
-                <SafetyCertificateOutlined className={styles.verifyIcon} />
-                <Typography.Title level={5}>{verifyStepTitle}</Typography.Title>
-                <Typography.Text className={styles.verifyHint}>
-                  {verifyStepDescription}
-                </Typography.Text>
-              </div>
-
-              <VerificationCodeInput
-                resetKey="tfa"
-                onChange={(code) => {
-                  verifyCodeRef.current = code;
-                  if (code.length === 6) {
-                    handleVerifySubmit(code);
-                  }
-                }}
-              />
-
-              <Button
-                type="primary"
-                size="large"
-                block
-                loading={submitting}
-                onClick={() => handleVerifySubmit(verifyCodeRef.current)}
-              >
-                {intl.formatMessage({
-                  id: 'pages.login.verifyCode.submit',
-                  defaultMessage: 'Verify',
-                })}
-              </Button>
-
-              <Button
-                size="large"
-                block
-                style={{ marginTop: 12 }}
-                icon={<ArrowLeftOutlined />}
-                onClick={handleBackToAccount}
-              >
-                {intl.formatMessage({
-                  id: 'pages.login.back',
-                  defaultMessage: 'Back',
-                })}
-              </Button>
-            </div>
+            <VerifyStep
+              icon={<SafetyCertificateOutlined className={styles.verifyIcon} />}
+              title={verifyStepTitle}
+              description={verifyStepDescription}
+              resetKey="tfa"
+              error={loginError}
+              submitting={submitting}
+              onCodeChange={(code) => { verifyCodeRef.current = code; }}
+              onSubmit={handleVerifySubmit}
+              onBack={handleBackToAccount}
+            />
           )}
         </LoginForm>
       </div>
