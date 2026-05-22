@@ -380,6 +380,20 @@ const VerifyStep: React.FC<{
   );
 };
 
+// --- Parse OIDC login options from API response ---
+function parseOidcOptions(res: string[]): API.OidcLoginInfo[] {
+  const ops: API.OidcLoginInfo[] = [];
+  for (const item of res) {
+    if (item.startsWith('common-oidc/')) {
+      const parsed = JSON.parse(item.substring('common-oidc/'.length));
+      ops.push(...parsed);
+    } else if (item.startsWith('oidc/')) {
+      ops.push({ name: item.substring('oidc/'.length) });
+    }
+  }
+  return ops;
+}
+
 // --- Main Login Component ---
 const Login: React.FC = () => {
   const [authStep, setAuthStep] = useState<AuthStep>('account');
@@ -402,16 +416,7 @@ const Login: React.FC = () => {
     (async () => {
       try {
         const res = await getLoginOptions();
-        const ops: API.OidcLoginInfo[] = [];
-        for (const item of res) {
-          if (item.startsWith('common-oidc/')) {
-            const parsed = JSON.parse(item.substring('common-oidc/'.length));
-            ops.push(...parsed);
-          } else if (item.startsWith('oidc/')) {
-            ops.push({ name: item.substring('oidc/'.length) });
-          }
-        }
-        setOidcOptions(ops);
+        setOidcOptions(parseOidcOptions(res));
       } catch {
         // Silently ignore - OIDC is optional
       }
