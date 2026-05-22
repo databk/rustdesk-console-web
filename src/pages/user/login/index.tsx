@@ -53,24 +53,6 @@ function getDeviceInfo(): API.DeviceInfo {
   return { os, type: 'browser', name: browserName };
 }
 
-function getDeviceId(): string {
-  let id = localStorage.getItem('rustdesk_device_id');
-  if (!id) {
-    id = crypto.randomUUID();
-    localStorage.setItem('rustdesk_device_id', id);
-  }
-  return id;
-}
-
-function getDeviceUuid(): string {
-  let uuid = localStorage.getItem('rustdesk_device_uuid');
-  if (!uuid) {
-    uuid = crypto.randomUUID();
-    localStorage.setItem('rustdesk_device_uuid', uuid);
-  }
-  return uuid;
-}
-
 // --- OIDC icon mapping ---
 const OIDC_ICONS: Record<string, React.ReactNode> = {
   github: <GithubOutlined style={{ fontSize: 20 }} />,
@@ -479,8 +461,6 @@ const Login: React.FC = () => {
         const msg = await login({
           username: values.username?.trim(),
           password: values.password?.trim(),
-          id: getDeviceId(),
-          uuid: getDeviceUuid(),
           autoLogin: rememberMe,
           deviceInfo,
         });
@@ -540,8 +520,6 @@ const Login: React.FC = () => {
         const params: API.LoginParams = {
           username: verifySession.username,
           secret: verifySession.secret,
-          id: getDeviceId(),
-          uuid: getDeviceUuid(),
           autoLogin: rememberMe,
           deviceInfo,
         };
