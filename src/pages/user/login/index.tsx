@@ -451,6 +451,25 @@ const Login: React.FC = () => {
     [rememberMe, intl, message],
   );
 
+  const handleLoginError = useCallback(
+    (error: any, defaultMsgId: string, defaultMsg: string) => {
+      const status = error?.response?.status;
+      if (status === 401) {
+        const errorData = error?.response?.data;
+        setLoginError(
+          errorData?.error ||
+            errorData?.message ||
+            intl.formatMessage({ id: defaultMsgId, defaultMessage: defaultMsg }),
+        );
+      } else {
+        setLoginError(
+          intl.formatMessage({ id: defaultMsgId, defaultMessage: defaultMsg }),
+        );
+      }
+    },
+    [intl],
+  );
+
   const handleAccountSubmit = useCallback(
     async (values: API.LoginParams) => {
       setLoginError('');
@@ -503,30 +522,12 @@ const Login: React.FC = () => {
           }),
         );
       } catch (error: any) {
-        const status = error?.response?.status;
-        if (status === 401) {
-          const errorData = error?.response?.data;
-          const errorMsg =
-            errorData?.error ||
-            errorData?.message ||
-            intl.formatMessage({
-              id: 'pages.login.failure',
-              defaultMessage: 'Login failed, please try again!',
-            });
-          setLoginError(errorMsg);
-        } else {
-          setLoginError(
-            intl.formatMessage({
-              id: 'pages.login.failure',
-              defaultMessage: 'Login failed, please try again!',
-            }),
-          );
-        }
+        handleLoginError(error, 'pages.login.failure', 'Login failed, please try again!');
       } finally {
         setSubmitting(false);
       }
     },
-    [rememberMe, intl, message, handleLoginSuccess],
+    [rememberMe, intl, message, handleLoginSuccess, handleLoginError],
   );
 
   const handleVerifySubmit = useCallback(
@@ -588,30 +589,12 @@ const Login: React.FC = () => {
           }),
         );
       } catch (error: any) {
-        const status = error?.response?.status;
-        if (status === 401) {
-          const errorData = error?.response?.data;
-          const errorMsg =
-            errorData?.error ||
-            errorData?.message ||
-            intl.formatMessage({
-              id: 'pages.login.verifyCode.invalid',
-              defaultMessage: 'Invalid verification code',
-            });
-          setLoginError(errorMsg);
-        } else {
-          setLoginError(
-            intl.formatMessage({
-              id: 'pages.login.failure',
-              defaultMessage: 'Login failed, please try again!',
-            }),
-          );
-        }
+        handleLoginError(error, 'pages.login.verifyCode.invalid', 'Invalid verification code');
       } finally {
         setSubmitting(false);
       }
     },
-    [authStep, verifySession, rememberMe, intl, message, handleLoginSuccess],
+    [authStep, verifySession, rememberMe, intl, message, handleLoginSuccess, handleLoginError],
   );
 
   const handleBackToAccount = useCallback(() => {
