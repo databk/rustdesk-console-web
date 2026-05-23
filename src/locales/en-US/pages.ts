@@ -12,10 +12,13 @@ export default {
   'pages.login.submit': 'Login',
   'pages.login.back': 'Back',
   'pages.login.emailCheck.title': 'Email Verification',
-  'pages.login.emailCheck.description': 'A 6-digit code has been sent to {email}',
-  'pages.login.emailCheck.sent': 'A verification code has been sent to your email',
+  'pages.login.emailCheck.description':
+    'A 6-digit code has been sent to {email}',
+  'pages.login.emailCheck.sent':
+    'A verification code has been sent to your email',
   'pages.login.tfaCheck.title': 'Two-Factor Authentication',
-  'pages.login.tfaCheck.description': 'Enter the 6-digit code from your authenticator app',
+  'pages.login.tfaCheck.description':
+    'Enter the 6-digit code from your authenticator app',
   'pages.login.verifyCode.submit': 'Verify',
   'pages.login.verifyCode.invalid': 'Invalid verification code',
   'pages.login.oidc.divider': 'Or continue with',

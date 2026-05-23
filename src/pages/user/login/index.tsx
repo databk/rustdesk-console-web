@@ -15,9 +15,24 @@ import {
   useModel,
   history,
 } from '@umijs/max';
-import { Alert, App, Button, Checkbox, Divider, Form, Input, Typography } from 'antd';
+import {
+  Alert,
+  App,
+  Button,
+  Checkbox,
+  Divider,
+  Form,
+  Input,
+  Typography,
+} from 'antd';
 import { createStyles } from 'antd-style';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { flushSync } from 'react-dom';
 import { setToken } from '@/utils/auth';
 import { Footer } from '@/components';
@@ -218,7 +233,16 @@ const VerifyStep: React.FC<{
   submitting: boolean;
   onSubmit: (code: string) => void;
   onBack: () => void;
-}> = ({ icon, title, description, resetKey, error, submitting, onSubmit, onBack }) => {
+}> = ({
+  icon,
+  title,
+  description,
+  resetKey,
+  error,
+  submitting,
+  onSubmit,
+  onBack,
+}) => {
   const { styles } = useStyles();
   const intl = useIntl();
   const [otpValue, setOtpValue] = useState('');
@@ -256,7 +280,9 @@ const VerifyStep: React.FC<{
       <div style={{ textAlign: 'center', marginBottom: 24 }}>
         {icon}
         <Typography.Title level={5}>{title}</Typography.Title>
-        <Typography.Text className={styles.verifyHint}>{description}</Typography.Text>
+        <Typography.Text className={styles.verifyHint}>
+          {description}
+        </Typography.Text>
       </div>
 
       <Input.OTP
@@ -323,7 +349,9 @@ function parseOidcOptions(res: string[]): API.OidcLoginInfo[] {
 // --- Main Login Component ---
 const Login: React.FC = () => {
   const [authStep, setAuthStep] = useState<AuthStep>('account');
-  const [verifySession, setVerifySession] = useState<VerifySession | null>(null);
+  const [verifySession, setVerifySession] = useState<VerifySession | null>(
+    null,
+  );
   const [loginError, setLoginError] = useState<string>('');
   const [rememberMe, setRememberMe] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -378,14 +406,22 @@ const Login: React.FC = () => {
 
   const handleLoginError = useCallback(
     (error: unknown, defaultMsgId: string, defaultMsg: string) => {
-      const err = error as { response?: { status?: number; data?: { error?: string; message?: string } } };
+      const err = error as {
+        response?: {
+          status?: number;
+          data?: { error?: string; message?: string };
+        };
+      };
       const status = err?.response?.status;
       if (status === 400 || status === 401) {
         const errorData = err?.response?.data;
         setLoginError(
           errorData?.error ||
             errorData?.message ||
-            intl.formatMessage({ id: defaultMsgId, defaultMessage: defaultMsg }),
+            intl.formatMessage({
+              id: defaultMsgId,
+              defaultMessage: defaultMsg,
+            }),
         );
       } else {
         setLoginError(
@@ -446,7 +482,11 @@ const Login: React.FC = () => {
           }),
         );
       } catch (error: unknown) {
-        handleLoginError(error, 'pages.login.failure', 'Login failed, please try again!');
+        handleLoginError(
+          error,
+          'pages.login.failure',
+          'Login failed, please try again!',
+        );
       } finally {
         setSubmitting(false);
       }
@@ -495,7 +535,11 @@ const Login: React.FC = () => {
         if (msg.type === 'email_check') {
           setVerifySession((prev) =>
             prev
-              ? { ...prev, secret: msg.secret || '', emailHint: msg.user?.email }
+              ? {
+                  ...prev,
+                  secret: msg.secret || '',
+                  emailHint: msg.user?.email,
+                }
               : null,
           );
           setAuthStep('email_check');
@@ -509,12 +553,24 @@ const Login: React.FC = () => {
           }),
         );
       } catch (error: unknown) {
-        handleLoginError(error, 'pages.login.verifyCode.invalid', 'Invalid verification code');
+        handleLoginError(
+          error,
+          'pages.login.verifyCode.invalid',
+          'Invalid verification code',
+        );
       } finally {
         setSubmitting(false);
       }
     },
-    [authStep, verifySession, rememberMe, intl, message, handleLoginSuccess, handleLoginError],
+    [
+      authStep,
+      verifySession,
+      rememberMe,
+      intl,
+      message,
+      handleLoginSuccess,
+      handleLoginError,
+    ],
   );
 
   const handleBackToAccount = useCallback(() => {
@@ -672,7 +728,10 @@ const Login: React.FC = () => {
                     })}
                   </Checkbox>
                 </Form.Item>
-                <a className={styles.forgotPassword} onClick={handleForgotPassword}>
+                <a
+                  className={styles.forgotPassword}
+                  onClick={handleForgotPassword}
+                >
                   {intl.formatMessage({
                     id: 'pages.login.forgotPassword',
                     defaultMessage: 'Forgot Password?',
