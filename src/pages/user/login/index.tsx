@@ -254,6 +254,13 @@ const VerifyStep: React.FC<{
     submittingRef.current = false;
   }, [resetKey]);
 
+  // Reset ref when submission completes (success or failure)
+  useEffect(() => {
+    if (!submitting) {
+      submittingRef.current = false;
+    }
+  }, [submitting]);
+
   const handleSubmit = useCallback(
     (code: string) => {
       if (submittingRef.current) return;
