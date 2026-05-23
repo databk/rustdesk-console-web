@@ -206,11 +206,11 @@ const ConnectionAudit: React.FC = () => {
 
   const generateCsvContent = (items: API.ConnectionAuditItem[]): string => {
     const titles = [
+      intl.formatMessage({ id: 'pages.audits.type', defaultMessage: 'Type' }),
       intl.formatMessage({
         id: 'pages.audits.remote',
         defaultMessage: 'Remote',
       }),
-      intl.formatMessage({ id: 'pages.audits.type', defaultMessage: 'Type' }),
       intl.formatMessage({
         id: 'pages.audits.local',
         defaultMessage: 'Local',
@@ -240,13 +240,13 @@ const ConnectionAudit: React.FC = () => {
     const rows: string[][] = [];
     items.forEach((record) => {
       const row: string[] = [];
-      row.push(record.peerId || '');
       row.push(
         intl.formatMessage({
           id: getConnTypeMsgId(record.type),
           defaultMessage: '-',
         }),
       );
+      row.push(record.deviceId || '');
       let localTxt = '';
       const name = record.peerName || '';
       const ip = (record.ip || '').replace('::ffff:', '');
@@ -363,6 +363,27 @@ const ConnectionAudit: React.FC = () => {
 
   const columns: ProColumns<API.ConnectionAuditItem>[] = [
     {
+      title: <FormattedMessage id="pages.audits.type" defaultMessage="Type" />,
+      dataIndex: 'type',
+      width: 60,
+      valueType: 'select',
+      valueEnum: connTypeValueEnum,
+      render: (_, record) => {
+        const icon = renderConnTypeIcon(record.type);
+        const msgId = getConnTypeMsgId(record.type);
+        return (
+          <a
+            onClick={() => {
+              setCurrentRow(record);
+              setDrawerOpen(true);
+            }}
+          >
+            <Tooltip title={intl.formatMessage({ id: msgId })}>{icon}</Tooltip>
+          </a>
+        );
+      },
+    },
+    {
       title: (
         <FormattedMessage id="pages.audits.remote" defaultMessage="Remote" />
       ),
@@ -389,28 +410,7 @@ const ConnectionAudit: React.FC = () => {
         defaultMessage: 'Remotely controlled computer or terminal',
       }),
       hideInSearch: true,
-      render: (_, record) => record.peerId || '-',
-    },
-    {
-      title: <FormattedMessage id="pages.audits.type" defaultMessage="Type" />,
-      dataIndex: 'type',
-      width: 60,
-      valueType: 'select',
-      valueEnum: connTypeValueEnum,
-      render: (_, record) => {
-        const icon = renderConnTypeIcon(record.type);
-        const msgId = getConnTypeMsgId(record.type);
-        return (
-          <a
-            onClick={() => {
-              setCurrentRow(record);
-              setDrawerOpen(true);
-            }}
-          >
-            <Tooltip title={intl.formatMessage({ id: msgId })}>{icon}</Tooltip>
-          </a>
-        );
-      },
+      render: (_, record) => record.deviceId || '-',
     },
     {
       title: (
@@ -580,7 +580,7 @@ const ConnectionAudit: React.FC = () => {
         id: 'pages.audits.remote',
         defaultMessage: 'Remote',
       }),
-      dataIndex: 'peerId',
+      dataIndex: 'deviceId',
     },
     {
       label: intl.formatMessage({
@@ -595,13 +595,6 @@ const ConnectionAudit: React.FC = () => {
         if (ip) txt += '@' + ip;
         return txt || '-';
       },
-    },
-    {
-      label: intl.formatMessage({
-        id: 'pages.audits.deviceId',
-        defaultMessage: 'Device ID',
-      }),
-      dataIndex: 'deviceId',
     },
     {
       label: intl.formatMessage({
