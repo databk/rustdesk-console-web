@@ -329,6 +329,12 @@ const ConnectionAudit: React.FC = () => {
   };
 
   const connTypeValueEnum: Record<number, { text: string }> = {
+    [-1]: {
+      text: intl.formatMessage({
+        id: 'pages.audits.connType.notLoggedIn',
+        defaultMessage: 'Not Logged In',
+      }),
+    },
     0: {
       text: intl.formatMessage({
         id: 'pages.audits.connType.remoteDesktop',
