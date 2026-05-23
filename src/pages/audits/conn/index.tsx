@@ -1,21 +1,3 @@
-import React, { useRef, useState, Fragment } from 'react';
-import {
-  Breadcrumb,
-  Button,
-  Drawer,
-  Modal,
-  Tooltip,
-  Typography,
-  App,
-} from 'antd';
-import {
-  PageContainer,
-  ProTable,
-  ModalForm,
-  ProFormTextArea,
-} from '@ant-design/pro-components';
-import type { ProColumns, ActionType } from '@ant-design/pro-components';
-import { FormattedMessage, useIntl, useAccess } from '@umijs/max';
 import {
   CameraOutlined,
   CodeOutlined,
@@ -26,11 +8,29 @@ import {
   QuestionOutlined,
   RetweetOutlined,
 } from '@ant-design/icons';
-import dayjs from 'dayjs';
+import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import {
+  ModalForm,
+  PageContainer,
+  ProFormTextArea,
+  ProTable,
+} from '@ant-design/pro-components';
+import { FormattedMessage, useAccess, useIntl } from '@umijs/max';
+import {
+  App,
+  Breadcrumb,
+  Button,
+  Drawer,
+  Modal,
+  Tooltip,
+  Typography,
+} from 'antd';
+import dayjs from 'dayjs';
+import React, { Fragment, useRef, useState } from 'react';
+import {
+  disconnectConnection,
   getConnectionAudits,
   updateConnectionAudit,
-  disconnectConnection,
 } from '@/services/rustdesk-console/audit';
 
 const { Text } = Typography;
@@ -91,8 +91,9 @@ const getConnTypeMsgId = (type?: number): string => {
 };
 
 interface ConnectionAuditSearchParams extends API.PageParams {
-  peerId?: string;
+  deviceId?: string;
   type?: number;
+  createdAt?: [string, string];
 }
 
 const ConnectionAudit: React.FC = () => {
@@ -403,11 +404,9 @@ const ConnectionAudit: React.FC = () => {
     },
     {
       title: (
-        <FormattedMessage id="pages.audits.peerId" defaultMessage="Peer ID" />
+        <FormattedMessage id="pages.audits.remote" defaultMessage="Remote" />
       ),
-      dataIndex: 'peerId',
-      width: 150,
-      ellipsis: true,
+      dataIndex: 'deviceId',
       tip: intl.formatMessage({
         id: 'pages.audits.remoteSearchTip',
         defaultMessage: 'Search by remote device ID (fuzzy match)',
@@ -418,6 +417,18 @@ const ConnectionAudit: React.FC = () => {
           defaultMessage: 'Enter remote device ID',
         }),
       },
+      hideInTable: true,
+    },
+    {
+      title: (
+        <FormattedMessage id="pages.audits.remote" defaultMessage="Remote" />
+      ),
+      dataIndex: 'deviceId',
+      tip: intl.formatMessage({
+        id: 'pages.audits.remoteTip',
+        defaultMessage: 'Remotely controlled computer or terminal',
+      }),
+      hideInSearch: true,
       render: (_, record) => record.peerId || '-',
     },
     {
@@ -428,8 +439,48 @@ const ConnectionAudit: React.FC = () => {
       width: 150,
       ellipsis: true,
       search: false,
-      render: (_, record) =>
-        (record.ip || '').replace('::ffff:', '') || '-',
+      render: (_, record) => (record.ip || '').replace('::ffff:', '') || '-',
+    },
+    {
+      title: <FormattedMessage id="pages.audits.time" defaultMessage="Time" />,
+      dataIndex: 'createdAt',
+      valueType: 'dateTimeRange',
+      hideInTable: true,
+      fieldProps: {
+        placeholder: [
+          intl.formatMessage({
+            id: 'pages.audits.startTime',
+            defaultMessage: 'Start Time',
+          }),
+          intl.formatMessage({
+            id: 'pages.audits.endTime',
+            defaultMessage: 'End Time',
+          }),
+        ],
+      },
+    },
+    {
+      title: <FormattedMessage id="pages.audits.time" defaultMessage="Time" />,
+      dataIndex: 'createdAt',
+      valueType: 'dateTimeRange',
+      width: 180,
+      hideInSearch: true,
+      render: (_, record) => {
+        if (!record.requestedAt) return '-';
+        return dayjs(record.requestedAt).format('YYYY-MM-DD HH:mm:ss');
+      },
+      fieldProps: {
+        placeholder: [
+          intl.formatMessage({
+            id: 'pages.audits.startTime',
+            defaultMessage: 'Start Time',
+          }),
+          intl.formatMessage({
+            id: 'pages.audits.endTime',
+            defaultMessage: 'End Time',
+          }),
+        ],
+      },
     },
     {
       title: (
@@ -489,9 +540,7 @@ const ConnectionAudit: React.FC = () => {
       render: (_, record) => renderDuration(record),
     },
     {
-      title: (
-        <FormattedMessage id="pages.audits.note" defaultMessage="Note" />
-      ),
+      title: <FormattedMessage id="pages.audits.note" defaultMessage="Note" />,
       dataIndex: 'note',
       valueType: 'textarea',
       search: false,
@@ -522,10 +571,7 @@ const ConnectionAudit: React.FC = () => {
     },
     {
       title: (
-        <FormattedMessage
-          id="pages.common.action"
-          defaultMessage="Action"
-        />
+        <FormattedMessage id="pages.common.action" defaultMessage="Action" />
       ),
       search: false,
       hideInTable: !canEdit,
@@ -682,11 +728,19 @@ const ConnectionAudit: React.FC = () => {
             current: params.current,
             pageSize: params.pageSize,
           };
-          if (params.peerId) {
-            requestParams.remote = params.peerId;
+          if (params.deviceId) {
+            requestParams.deviceId = params.deviceId;
           }
           if (params.type !== undefined && params.type !== null) {
-            requestParams.conn_type = params.type;
+            requestParams.type = params.type;
+          }
+          if (
+            params.createdAt &&
+            Array.isArray(params.createdAt) &&
+            params.createdAt.length === 2
+          ) {
+            requestParams.startTime = dayjs(params.createdAt[0]).toISOString();
+            requestParams.endTime = dayjs(params.createdAt[1]).toISOString();
           }
           const result = await getConnectionAudits(requestParams);
           return {
@@ -708,7 +762,11 @@ const ConnectionAudit: React.FC = () => {
               defaultMessage: 'Export up to 1000 records at a time',
             })}
           >
-            <Button type="default" icon={<DownloadOutlined />} onClick={exportCsv}>
+            <Button
+              type="default"
+              icon={<DownloadOutlined />}
+              onClick={exportCsv}
+            >
               <FormattedMessage
                 id="pages.audits.exportCSV"
                 defaultMessage="Export CSV"
@@ -741,7 +799,10 @@ const ConnectionAudit: React.FC = () => {
       >
         {currentRow &&
           detailFields.map((field) => (
-            <div key={field.dataIndex || field.label} style={{ marginBottom: 16 }}>
+            <div
+              key={field.dataIndex || field.label}
+              style={{ marginBottom: 16 }}
+            >
               <Text type="secondary">{field.label}</Text>
               <div>
                 {field.render

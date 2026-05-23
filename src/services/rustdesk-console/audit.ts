@@ -4,9 +4,10 @@ export async function getConnectionAudits(
   params: {
     current?: number;
     pageSize?: number;
-    remote?: string;
-    conn_type?: number;
-    created_at?: string;
+    deviceId?: string;
+    type?: number;
+    startTime?: string;
+    endTime?: string;
   },
   options?: { [key: string]: any },
 ) {
