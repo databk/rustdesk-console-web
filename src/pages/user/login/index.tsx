@@ -383,20 +383,8 @@ const Login: React.FC = () => {
     })();
   }, []);
 
-  const fetchUserInfo = useCallback(async () => {
-    const userInfo = await initialState?.fetchUserInfo?.();
-    if (userInfo) {
-      flushSync(() => {
-        setInitialState((s) => ({
-          ...s,
-          currentUser: userInfo,
-        }));
-      });
-    }
-  }, [initialState, setInitialState]);
-
   const handleLoginSuccess = useCallback(
-    async (token: string) => {
+    async (token: string, user?: API.CurrentUser) => {
       setToken(token, rememberMe);
       message.success(
         intl.formatMessage({
@@ -404,11 +392,18 @@ const Login: React.FC = () => {
           defaultMessage: 'Login successful!',
         }),
       );
-      await fetchUserInfo();
+      if (user) {
+        flushSync(() => {
+          setInitialState((s) => ({
+            ...s,
+            currentUser: user,
+          }));
+        });
+      }
       const urlParams = new URL(window.location.href).searchParams;
       history.push(urlParams.get('redirect') || '/');
     },
-    [rememberMe, intl, message, fetchUserInfo],
+    [rememberMe, intl, message, setInitialState],
   );
 
   const handleLoginError = useCallback(
@@ -453,7 +448,7 @@ const Login: React.FC = () => {
         });
 
         if (msg.type === 'access_token' && msg.access_token) {
-          await handleLoginSuccess(msg.access_token);
+          await handleLoginSuccess(msg.access_token, msg.user);
           return;
         }
 
@@ -526,7 +521,7 @@ const Login: React.FC = () => {
         const msg = await login(params);
 
         if (msg.type === 'access_token' && msg.access_token) {
-          await handleLoginSuccess(msg.access_token);
+          await handleLoginSuccess(msg.access_token, msg.user);
           return;
         }
 
