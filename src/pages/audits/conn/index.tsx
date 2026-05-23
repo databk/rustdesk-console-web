@@ -206,14 +206,14 @@ const ConnectionAudit: React.FC = () => {
 
   const generateCsvContent = (items: API.ConnectionAuditItem[]): string => {
     const titles = [
+      intl.formatMessage({
+        id: 'pages.audits.remote',
+        defaultMessage: 'Remote',
+      }),
       intl.formatMessage({ id: 'pages.audits.type', defaultMessage: 'Type' }),
       intl.formatMessage({
         id: 'pages.audits.local',
         defaultMessage: 'Local',
-      }),
-      intl.formatMessage({
-        id: 'pages.audits.remote',
-        defaultMessage: 'Remote',
       }),
       intl.formatMessage({
         id: 'pages.audits.requestedAt',
@@ -240,6 +240,7 @@ const ConnectionAudit: React.FC = () => {
     const rows: string[][] = [];
     items.forEach((record) => {
       const row: string[] = [];
+      row.push(record.peerId || '');
       row.push(
         intl.formatMessage({
           id: getConnTypeMsgId(record.type),
@@ -252,7 +253,6 @@ const ConnectionAudit: React.FC = () => {
       if (name) localTxt = name;
       if (ip) localTxt += '@' + ip;
       row.push(localTxt);
-      row.push(record.peerId || '');
       row.push(record.requestedAt || '');
       row.push(record.establishedAt || '');
       row.push(record.closedAt || '');
@@ -363,6 +363,35 @@ const ConnectionAudit: React.FC = () => {
 
   const columns: ProColumns<API.ConnectionAuditItem>[] = [
     {
+      title: (
+        <FormattedMessage id="pages.audits.remote" defaultMessage="Remote" />
+      ),
+      dataIndex: 'deviceId',
+      tip: intl.formatMessage({
+        id: 'pages.audits.remoteSearchTip',
+        defaultMessage: 'Search by remote device ID (fuzzy match)',
+      }),
+      fieldProps: {
+        placeholder: intl.formatMessage({
+          id: 'pages.audits.remotePlaceholder',
+          defaultMessage: 'Enter remote device ID',
+        }),
+      },
+      hideInTable: true,
+    },
+    {
+      title: (
+        <FormattedMessage id="pages.audits.remote" defaultMessage="Remote" />
+      ),
+      dataIndex: 'deviceId',
+      tip: intl.formatMessage({
+        id: 'pages.audits.remoteTip',
+        defaultMessage: 'Remotely controlled computer or terminal',
+      }),
+      hideInSearch: true,
+      render: (_, record) => record.peerId || '-',
+    },
+    {
       title: <FormattedMessage id="pages.audits.type" defaultMessage="Type" />,
       dataIndex: 'type',
       width: 60,
@@ -398,35 +427,6 @@ const ConnectionAudit: React.FC = () => {
         if (ip) txt += '@' + ip;
         return txt || '-';
       },
-    },
-    {
-      title: (
-        <FormattedMessage id="pages.audits.remote" defaultMessage="Remote" />
-      ),
-      dataIndex: 'deviceId',
-      tip: intl.formatMessage({
-        id: 'pages.audits.remoteSearchTip',
-        defaultMessage: 'Search by remote device ID (fuzzy match)',
-      }),
-      fieldProps: {
-        placeholder: intl.formatMessage({
-          id: 'pages.audits.remotePlaceholder',
-          defaultMessage: 'Enter remote device ID',
-        }),
-      },
-      hideInTable: true,
-    },
-    {
-      title: (
-        <FormattedMessage id="pages.audits.remote" defaultMessage="Remote" />
-      ),
-      dataIndex: 'deviceId',
-      tip: intl.formatMessage({
-        id: 'pages.audits.remoteTip',
-        defaultMessage: 'Remotely controlled computer or terminal',
-      }),
-      hideInSearch: true,
-      render: (_, record) => record.peerId || '-',
     },
     {
       title: <FormattedMessage id="pages.audits.time" defaultMessage="Time" />,
@@ -577,6 +577,13 @@ const ConnectionAudit: React.FC = () => {
     },
     {
       label: intl.formatMessage({
+        id: 'pages.audits.remote',
+        defaultMessage: 'Remote',
+      }),
+      dataIndex: 'peerId',
+    },
+    {
+      label: intl.formatMessage({
         id: 'pages.audits.local',
         defaultMessage: 'Local',
       }),
@@ -588,13 +595,6 @@ const ConnectionAudit: React.FC = () => {
         if (ip) txt += '@' + ip;
         return txt || '-';
       },
-    },
-    {
-      label: intl.formatMessage({
-        id: 'pages.audits.remote',
-        defaultMessage: 'Remote',
-      }),
-      dataIndex: 'peerId',
     },
     {
       label: intl.formatMessage({
