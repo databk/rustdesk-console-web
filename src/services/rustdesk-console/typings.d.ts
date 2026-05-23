@@ -225,6 +225,7 @@ declare namespace API {
     peerId?: string;
     peerName?: string;
     type?: number;
+    note?: string;
     createdAt?: string;
     requestedAt?: string;
     establishedAt?: string;

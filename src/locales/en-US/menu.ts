@@ -26,4 +26,5 @@ export default {
   'menu.addressBooks': 'Address Books',
   'menu.list.audit-list': 'Audit List',
   'menu.list.audit-list.File': 'File Transfer',
+  'menu.list.audit-list.Connection': 'Connection',
 };
