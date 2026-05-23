@@ -363,12 +363,6 @@ const ConnectionAudit: React.FC = () => {
 
   const columns: ProColumns<API.ConnectionAuditItem>[] = [
     {
-      title: '',
-      dataIndex: 'index',
-      valueType: 'indexBorder',
-      width: 50,
-    },
-    {
       title: <FormattedMessage id="pages.audits.type" defaultMessage="Type" />,
       dataIndex: 'type',
       width: 60,
