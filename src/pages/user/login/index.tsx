@@ -360,7 +360,9 @@ const Login: React.FC = () => {
     null,
   );
   const [loginError, setLoginError] = useState<string>('');
-  const [rememberMe, setRememberMe] = useState(() => localStorage.getItem('rememberMe') === '1');
+  const [rememberMe, setRememberMe] = useState(
+    () => localStorage.getItem('rememberMe') === '1',
+  );
   const [submitting, setSubmitting] = useState(false);
   const [oidcOptions, setOidcOptions] = useState<API.OidcLoginInfo[]>([]);
   const { initialState, setInitialState } = useModel('@@initialState');
