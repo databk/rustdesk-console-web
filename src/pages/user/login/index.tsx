@@ -15,9 +15,9 @@ import {
   useModel,
   history,
 } from '@umijs/max';
-import { Alert, App, Button, Checkbox, Divider, Form, Input, type InputRef, Typography } from 'antd';
+import { Alert, App, Button, Checkbox, Divider, Form, Input, Typography } from 'antd';
 import { createStyles } from 'antd-style';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { flushSync } from 'react-dom';
 import { setToken } from '@/utils/auth';
 import { Footer } from '@/components';
@@ -95,7 +95,7 @@ const useStyles = createStyles(({ token }) => ({
   forgotPassword: {
     color: token.colorPrimary,
     cursor: 'pointer',
-    transition: 'color 0.3s',
+    transition: `color ${token.motionDurationMid} ${token.motionEaseInOut}`,
     ':hover': {
       color: token.colorPrimaryHover,
       textDecoration: 'underline',
@@ -103,25 +103,17 @@ const useStyles = createStyles(({ token }) => ({
   },
   verifySection: {
     marginTop: 8,
+    opacity: 0,
+    animation: `fadeIn ${token.motionDurationSlow} ${token.motionEaseInOut} forwards`,
   },
   verifyHint: {
     color: token.colorTextSecondary,
     marginBottom: 16,
     fontSize: 14,
   },
-  codeInputGroup: {
-    display: 'flex',
-    gap: 8,
+  otpInput: {
     justifyContent: 'center',
     marginBottom: 24,
-  },
-  codeInput: {
-    width: 44,
-    height: 52,
-    textAlign: 'center' as const,
-    fontSize: 20,
-    fontWeight: 600,
-    borderRadius: token.borderRadius,
   },
   oidcSection: {
     marginTop: 24,
@@ -139,13 +131,14 @@ const useStyles = createStyles(({ token }) => ({
     gap: 8,
     marginBottom: 8,
   },
-  stepTransition: {
-    animation: 'fadeIn 0.3s ease-in-out',
-  },
   verifyIcon: {
     fontSize: 40,
     color: token.colorPrimary,
     marginBottom: 12,
+  },
+  '@keyframes fadeIn': {
+    from: { opacity: 0 },
+    to: { opacity: 1 },
   },
 }));
 
@@ -163,87 +156,6 @@ const Lang = () => {
 const LoginMessage: React.FC<{ content: string }> = ({ content }) => (
   <Alert style={{ marginBottom: 24 }} message={content} type="error" showIcon />
 );
-
-// --- Verification code input (6-digit) ---
-const VerificationCodeInput: React.FC<{
-  length?: number;
-  onChange: (code: string) => void;
-  resetKey: string;
-}> = ({ length = 6, onChange, resetKey }) => {
-  const { styles } = useStyles();
-  const inputsRef = useRef<(InputRef | null)[]>([]);
-  const [codes, setCodes] = useState<string[]>(Array(length).fill(''));
-
-  // Reset when step changes
-  useEffect(() => {
-    setCodes(Array(length).fill(''));
-    setTimeout(() => inputsRef.current[0]?.focus(), 100);
-  }, [resetKey, length]);
-
-  const handleChange = useCallback(
-    (index: number, value: string) => {
-      if (!/^\d*$/.test(value)) return;
-      const newCodes = [...codes];
-      newCodes[index] = value.slice(-1);
-      setCodes(newCodes);
-      const code = newCodes.join('');
-      onChange(code);
-      if (value && index < length - 1) {
-        inputsRef.current[index + 1]?.focus();
-      }
-    },
-    [codes, length, onChange],
-  );
-
-  const handleKeyDown = useCallback(
-    (index: number, e: React.KeyboardEvent) => {
-      if (e.key === 'Backspace' && !codes[index] && index > 0) {
-        inputsRef.current[index - 1]?.focus();
-      }
-    },
-    [codes],
-  );
-
-  const handlePaste = useCallback(
-    (e: React.ClipboardEvent) => {
-      e.preventDefault();
-      const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, length);
-      if (!pasted) return;
-      const newCodes = [...codes];
-      for (let i = 0; i < length; i++) {
-        newCodes[i] = pasted[i] || '';
-      }
-      setCodes(newCodes);
-      onChange(pasted);
-      const focusIndex = Math.min(pasted.length, length - 1);
-      inputsRef.current[focusIndex]?.focus();
-    },
-    [codes, length, onChange],
-  );
-
-  // Pre-defined slots for verification code inputs (fixed length, order never changes)
-  const slots = useMemo(() => Array.from({ length }, (_, i) => i), [length]);
-
-  return (
-    <div className={styles.codeInputGroup}>
-      {slots.map((i) => (
-        <Input
-          key={`${resetKey}-${i}`}
-          ref={(el) => {
-            inputsRef.current[i] = el;
-          }}
-          className={styles.codeInput}
-          value={codes[i]}
-          onChange={(e) => handleChange(i, e.target.value)}
-          onKeyDown={(e) => handleKeyDown(i, e)}
-          onPaste={handlePaste}
-          maxLength={1}
-          autoFocus={i === 0}
-        />
-      ))}
-    </div>
-  );
-};
 
 // --- OIDC login buttons ---
 const OidcLogin: React.FC<{
@@ -304,16 +216,30 @@ const VerifyStep: React.FC<{
   resetKey: string;
   error: string;
   submitting: boolean;
-  onCodeChange: (code: string) => void;
   onSubmit: (code: string) => void;
   onBack: () => void;
-}> = ({ icon, title, description, resetKey, error, submitting, onCodeChange, onSubmit, onBack }) => {
+}> = ({ icon, title, description, resetKey, error, submitting, onSubmit, onBack }) => {
   const { styles } = useStyles();
   const intl = useIntl();
-  const codeRef = useRef<string>('');
+  const [otpValue, setOtpValue] = useState('');
+
+  // Reset OTP when step changes
+  useEffect(() => {
+    setOtpValue('');
+  }, [resetKey]);
+
+  const handleChange = useCallback(
+    (value: string) => {
+      setOtpValue(value);
+      if (value.length === 6) {
+        onSubmit(value);
+      }
+    },
+    [onSubmit],
+  );
 
   return (
-    <div className={`${styles.verifySection} ${styles.stepTransition}`}>
+    <div className={styles.verifySection}>
       {error && <LoginMessage content={error} />}
 
       <div style={{ textAlign: 'center', marginBottom: 24 }}>
@@ -322,15 +248,15 @@ const VerifyStep: React.FC<{
         <Typography.Text className={styles.verifyHint}>{description}</Typography.Text>
       </div>
 
-      <VerificationCodeInput
-        resetKey={resetKey}
-        onChange={(code) => {
-          codeRef.current = code;
-          onCodeChange(code);
-          if (code.length === 6) {
-            onSubmit(code);
-          }
-        }}
+      <Input.OTP
+        key={resetKey}
+        length={6}
+        value={otpValue}
+        onChange={handleChange}
+        variant="outlined"
+        size="large"
+        autoFocus
+        className={styles.otpInput}
       />
 
       <Button
@@ -338,7 +264,8 @@ const VerifyStep: React.FC<{
         size="large"
         block
         loading={submitting}
-        onClick={() => onSubmit(codeRef.current)}
+        disabled={otpValue.length < 6}
+        onClick={() => onSubmit(otpValue)}
       >
         {intl.formatMessage({
           id: 'pages.login.verifyCode.submit',
@@ -367,8 +294,14 @@ function parseOidcOptions(res: string[]): API.OidcLoginInfo[] {
   const ops: API.OidcLoginInfo[] = [];
   for (const item of res) {
     if (item.startsWith('common-oidc/')) {
-      const parsed = JSON.parse(item.substring('common-oidc/'.length));
-      ops.push(...parsed);
+      try {
+        const parsed = JSON.parse(item.substring('common-oidc/'.length));
+        if (Array.isArray(parsed)) {
+          ops.push(...parsed);
+        }
+      } catch {
+        // Skip malformed JSON entries
+      }
     } else if (item.startsWith('oidc/')) {
       ops.push({ name: item.substring('oidc/'.length) });
     }
@@ -389,7 +322,6 @@ const Login: React.FC = () => {
   const { message } = App.useApp();
   const intl = useIntl();
   const [accountForm] = Form.useForm();
-  const verifyCodeRef = useRef<string>('');
 
   const isVerifyStep = authStep === 'email_check' || authStep === 'tfa_check';
 
@@ -405,7 +337,7 @@ const Login: React.FC = () => {
     })();
   }, []);
 
-  const fetchUserInfo = async () => {
+  const fetchUserInfo = useCallback(async () => {
     const userInfo = await initialState?.fetchUserInfo?.();
     if (userInfo) {
       flushSync(() => {
@@ -415,7 +347,7 @@ const Login: React.FC = () => {
         }));
       });
     }
-  };
+  }, [initialState, setInitialState]);
 
   const handleLoginSuccess = useCallback(
     async (token: string) => {
@@ -430,14 +362,15 @@ const Login: React.FC = () => {
       const urlParams = new URL(window.location.href).searchParams;
       history.push(urlParams.get('redirect') || '/');
     },
-    [rememberMe, intl, message],
+    [rememberMe, intl, message, fetchUserInfo],
   );
 
   const handleLoginError = useCallback(
-    (error: any, defaultMsgId: string, defaultMsg: string) => {
-      const status = error?.response?.status;
+    (error: unknown, defaultMsgId: string, defaultMsg: string) => {
+      const err = error as { response?: { status?: number; data?: { error?: string; message?: string } } };
+      const status = err?.response?.status;
       if (status === 401) {
-        const errorData = error?.response?.data;
+        const errorData = err?.response?.data;
         setLoginError(
           errorData?.error ||
             errorData?.message ||
@@ -460,7 +393,7 @@ const Login: React.FC = () => {
         const deviceInfo = getDeviceInfo();
         const msg = await login({
           username: values.username?.trim(),
-          password: values.password?.trim(),
+          password: values.password,
           autoLogin: rememberMe,
           deviceInfo,
         });
@@ -501,7 +434,7 @@ const Login: React.FC = () => {
             defaultMessage: 'Login failed, please try again!',
           }),
         );
-      } catch (error: any) {
+      } catch (error: unknown) {
         handleLoginError(error, 'pages.login.failure', 'Login failed, please try again!');
       } finally {
         setSubmitting(false);
@@ -545,7 +478,6 @@ const Login: React.FC = () => {
             prev ? { ...prev, secret: msg.secret || '' } : null,
           );
           setAuthStep('tfa_check');
-          verifyCodeRef.current = '';
           return;
         }
 
@@ -556,7 +488,6 @@ const Login: React.FC = () => {
               : null,
           );
           setAuthStep('email_check');
-          verifyCodeRef.current = '';
           return;
         }
 
@@ -566,7 +497,7 @@ const Login: React.FC = () => {
             defaultMessage: 'Login failed, please try again!',
           }),
         );
-      } catch (error: any) {
+      } catch (error: unknown) {
         handleLoginError(error, 'pages.login.verifyCode.invalid', 'Invalid verification code');
       } finally {
         setSubmitting(false);
@@ -579,7 +510,6 @@ const Login: React.FC = () => {
     setAuthStep('account');
     setVerifySession(null);
     setLoginError('');
-    verifyCodeRef.current = '';
   }, []);
 
   const handleForgotPassword = () => {
@@ -671,7 +601,7 @@ const Login: React.FC = () => {
         >
           {/* Account Login Step */}
           {authStep === 'account' && (
-            <div className={styles.stepTransition}>
+            <div>
               {loginError && <LoginMessage content={loginError} />}
 
               <ProFormText
@@ -752,7 +682,6 @@ const Login: React.FC = () => {
               resetKey="email"
               error={loginError}
               submitting={submitting}
-              onCodeChange={(code) => { verifyCodeRef.current = code; }}
               onSubmit={handleVerifySubmit}
               onBack={handleBackToAccount}
             />
@@ -767,7 +696,6 @@ const Login: React.FC = () => {
               resetKey="tfa"
               error={loginError}
               submitting={submitting}
-              onCodeChange={(code) => { verifyCodeRef.current = code; }}
               onSubmit={handleVerifySubmit}
               onBack={handleBackToAccount}
             />
