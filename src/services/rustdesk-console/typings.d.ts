@@ -44,18 +44,6 @@ declare namespace API {
     icon?: string;
   };
 
-  type LoginResult = {
-    access_token?: string;
-    type?: string;
-    user?: CurrentUser;
-    data?: {
-      access_token?: string;
-      type?: string;
-      user?: CurrentUser;
-    };
-    [key: string]: any;
-  };
-
   type PageParams = {
     current?: number;
     pageSize?: number;
