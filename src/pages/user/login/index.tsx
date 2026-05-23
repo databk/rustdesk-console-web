@@ -360,7 +360,7 @@ const Login: React.FC = () => {
     null,
   );
   const [loginError, setLoginError] = useState<string>('');
-  const [rememberMe, setRememberMe] = useState(false);
+  const [rememberMe, setRememberMe] = useState(() => localStorage.getItem('rememberMe') === '1');
   const [submitting, setSubmitting] = useState(false);
   const [oidcOptions, setOidcOptions] = useState<API.OidcLoginInfo[]>([]);
   const { initialState, setInitialState } = useModel('@@initialState');
@@ -645,6 +645,11 @@ const Login: React.FC = () => {
           onValuesChange={(values) => {
             if (values.rememberMe !== undefined) {
               setRememberMe(values.rememberMe);
+              if (values.rememberMe) {
+                localStorage.setItem('rememberMe', '1');
+              } else {
+                localStorage.removeItem('rememberMe');
+              }
             }
           }}
           onFinish={async (values) => {
