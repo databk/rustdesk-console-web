@@ -208,16 +208,12 @@ const ConnectionAudit: React.FC = () => {
     const titles = [
       intl.formatMessage({ id: 'pages.audits.type', defaultMessage: 'Type' }),
       intl.formatMessage({
-        id: 'pages.audits.peerName',
-        defaultMessage: 'Peer Name',
+        id: 'pages.audits.local',
+        defaultMessage: 'Local',
       }),
       intl.formatMessage({
-        id: 'pages.audits.peerId',
-        defaultMessage: 'Peer ID',
-      }),
-      intl.formatMessage({
-        id: 'pages.audits.ip',
-        defaultMessage: 'IP Address',
+        id: 'pages.audits.remote',
+        defaultMessage: 'Remote',
       }),
       intl.formatMessage({
         id: 'pages.audits.requestedAt',
@@ -250,9 +246,13 @@ const ConnectionAudit: React.FC = () => {
           defaultMessage: '-',
         }),
       );
-      row.push(record.peerName || '');
+      let localTxt = '';
+      const name = record.peerName || '';
+      const ip = (record.ip || '').replace('::ffff:', '');
+      if (name) localTxt = name;
+      if (ip) localTxt += '@' + ip;
+      row.push(localTxt);
       row.push(record.peerId || '');
-      row.push((record.ip || '').replace('::ffff:', ''));
       row.push(record.requestedAt || '');
       row.push(record.establishedAt || '');
       row.push(record.closedAt || '');
@@ -385,16 +385,19 @@ const ConnectionAudit: React.FC = () => {
     },
     {
       title: (
-        <FormattedMessage
-          id="pages.audits.peerName"
-          defaultMessage="Peer Name"
-        />
+        <FormattedMessage id="pages.audits.local" defaultMessage="Local" />
       ),
-      dataIndex: 'peerName',
-      width: 150,
-      ellipsis: true,
+      dataIndex: 'local',
       search: false,
-      render: (_, record) => record.peerName || '-',
+      width: 200,
+      render: (_, record) => {
+        let txt = '';
+        const name = record.peerName || '';
+        const ip = (record.ip || '').replace('::ffff:', '');
+        if (name) txt = name;
+        if (ip) txt += '@' + ip;
+        return txt || '-';
+      },
     },
     {
       title: (
@@ -424,16 +427,6 @@ const ConnectionAudit: React.FC = () => {
       }),
       hideInSearch: true,
       render: (_, record) => record.peerId || '-',
-    },
-    {
-      title: (
-        <FormattedMessage id="pages.audits.ip" defaultMessage="IP Address" />
-      ),
-      dataIndex: 'ip',
-      width: 150,
-      ellipsis: true,
-      search: false,
-      render: (_, record) => (record.ip || '').replace('::ffff:', '') || '-',
     },
     {
       title: <FormattedMessage id="pages.audits.time" defaultMessage="Time" />,
@@ -584,25 +577,24 @@ const ConnectionAudit: React.FC = () => {
     },
     {
       label: intl.formatMessage({
-        id: 'pages.audits.peerName',
-        defaultMessage: 'Peer Name',
+        id: 'pages.audits.local',
+        defaultMessage: 'Local',
       }),
-      dataIndex: 'peerName',
+      render: (r: API.ConnectionAuditItem) => {
+        let txt = '';
+        const name = r.peerName || '';
+        const ip = (r.ip || '').replace('::ffff:', '');
+        if (name) txt = name;
+        if (ip) txt += '@' + ip;
+        return txt || '-';
+      },
     },
     {
       label: intl.formatMessage({
-        id: 'pages.audits.peerId',
-        defaultMessage: 'Peer ID',
+        id: 'pages.audits.remote',
+        defaultMessage: 'Remote',
       }),
       dataIndex: 'peerId',
-    },
-    {
-      label: intl.formatMessage({
-        id: 'pages.audits.ip',
-        defaultMessage: 'IP Address',
-      }),
-      render: (r: API.ConnectionAuditItem) =>
-        (r.ip || '').replace('::ffff:', '') || '-',
     },
     {
       label: intl.formatMessage({
