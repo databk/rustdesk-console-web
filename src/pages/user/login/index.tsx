@@ -17,7 +17,7 @@ import {
 } from '@umijs/max';
 import { Alert, App, Button, Checkbox, Divider, Form, Input, Typography } from 'antd';
 import { createStyles } from 'antd-style';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 import { setToken } from '@/utils/auth';
 import { Footer } from '@/components';
@@ -222,20 +222,31 @@ const VerifyStep: React.FC<{
   const { styles } = useStyles();
   const intl = useIntl();
   const [otpValue, setOtpValue] = useState('');
+  const submittingRef = useRef(false);
 
   // Reset OTP when step changes
   useEffect(() => {
     setOtpValue('');
+    submittingRef.current = false;
   }, [resetKey]);
+
+  const handleSubmit = useCallback(
+    (code: string) => {
+      if (submittingRef.current) return;
+      submittingRef.current = true;
+      onSubmit(code);
+    },
+    [onSubmit],
+  );
 
   const handleChange = useCallback(
     (value: string) => {
       setOtpValue(value);
       if (value.length === 6) {
-        onSubmit(value);
+        handleSubmit(value);
       }
     },
-    [onSubmit],
+    [handleSubmit],
   );
 
   return (
@@ -265,7 +276,7 @@ const VerifyStep: React.FC<{
         block
         loading={submitting}
         disabled={otpValue.length < 6}
-        onClick={() => onSubmit(otpValue)}
+        onClick={() => handleSubmit(otpValue)}
       >
         {intl.formatMessage({
           id: 'pages.login.verifyCode.submit',
@@ -369,7 +380,7 @@ const Login: React.FC = () => {
     (error: unknown, defaultMsgId: string, defaultMsg: string) => {
       const err = error as { response?: { status?: number; data?: { error?: string; message?: string } } };
       const status = err?.response?.status;
-      if (status === 401) {
+      if (status === 400 || status === 401) {
         const errorData = err?.response?.data;
         setLoginError(
           errorData?.error ||
