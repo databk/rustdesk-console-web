@@ -91,7 +91,7 @@ const getConnTypeMsgId = (type?: number): string => {
 };
 
 interface ConnectionAuditSearchParams extends API.PageParams {
-  peerId?: string;
+  deviceId?: string;
   type?: number;
   createdAt?: [string, string];
 }
@@ -404,11 +404,9 @@ const ConnectionAudit: React.FC = () => {
     },
     {
       title: (
-        <FormattedMessage id="pages.audits.peerId" defaultMessage="Peer ID" />
+        <FormattedMessage id="pages.audits.remote" defaultMessage="Remote" />
       ),
-      dataIndex: 'peerId',
-      width: 150,
-      ellipsis: true,
+      dataIndex: 'deviceId',
       tip: intl.formatMessage({
         id: 'pages.audits.remoteSearchTip',
         defaultMessage: 'Search by remote device ID (fuzzy match)',
@@ -419,6 +417,18 @@ const ConnectionAudit: React.FC = () => {
           defaultMessage: 'Enter remote device ID',
         }),
       },
+      hideInTable: true,
+    },
+    {
+      title: (
+        <FormattedMessage id="pages.audits.remote" defaultMessage="Remote" />
+      ),
+      dataIndex: 'deviceId',
+      tip: intl.formatMessage({
+        id: 'pages.audits.remoteTip',
+        defaultMessage: 'Remotely controlled computer or terminal',
+      }),
+      hideInSearch: true,
       render: (_, record) => record.peerId || '-',
     },
     {
@@ -695,8 +705,8 @@ const ConnectionAudit: React.FC = () => {
             current: params.current,
             pageSize: params.pageSize,
           };
-          if (params.peerId) {
-            requestParams.deviceId = params.peerId;
+          if (params.deviceId) {
+            requestParams.deviceId = params.deviceId;
           }
           if (params.type !== undefined && params.type !== null) {
             requestParams.type = params.type;
