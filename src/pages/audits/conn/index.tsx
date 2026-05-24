@@ -35,6 +35,28 @@ import {
 
 const { Text } = Typography;
 
+const DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss';
+
+const formatDateTime = (val?: string): string =>
+  val ? dayjs(val).format(DATE_FORMAT) : '-';
+
+const renderLocalField = (record: API.ConnectionAuditItem): string => {
+  const name = record.peerName || '';
+  const ip = (record.ip || '').replace('::ffff:', '');
+  let txt = '';
+  if (name) txt = name;
+  if (ip) txt += `@${ip}`;
+  return txt || '-';
+};
+
+const sanitizeCsvCell = (cell: string): string => {
+  let safe = cell.replace(/"/g, '""');
+  if (/^[=+\-@\t\r]/.test(safe)) {
+    safe = `'${safe}`;
+  }
+  return `"${safe}"`;
+};
+
 const renderDuration = (record: API.ConnectionAuditItem): string => {
   if (!record.establishedAt || !record.closedAt) return '-';
   const start = dayjs(record.establishedAt);
@@ -56,7 +78,7 @@ const renderDuration = (record: API.ConnectionAuditItem): string => {
   return parts.join(' ');
 };
 
-const renderConnTypeIcon = (type?: number) => {
+const renderConnTypeIcon = (type: number) => {
   switch (type) {
     case 0:
       return <FundProjectionScreenOutlined />;
@@ -73,8 +95,10 @@ const renderConnTypeIcon = (type?: number) => {
   }
 };
 
-const getConnTypeMsgId = (type?: number): string => {
+const getConnTypeMsgId = (type: number): string => {
   switch (type) {
+    case -1:
+      return 'pages.audits.connType.notLoggedIn';
     case 0:
       return 'pages.audits.connType.remoteDesktop';
     case 1:
@@ -89,6 +113,12 @@ const getConnTypeMsgId = (type?: number): string => {
       return 'pages.audits.connType.notLoggedIn';
   }
 };
+
+interface DetailField {
+  label: string;
+  dataIndex?: keyof API.ConnectionAuditItem;
+  render?: (r: API.ConnectionAuditItem) => string;
+}
 
 interface ConnectionAuditSearchParams extends API.PageParams {
   deviceId?: string;
@@ -124,7 +154,7 @@ const ConnectionAudit: React.FC = () => {
             defaultMessage: 'Successfully disconnected!',
           }),
         );
-        setTimeout(() => actionRef.current?.reload(), 1000);
+        actionRef.current?.reload();
       } else {
         msgApi.error(
           intl.formatMessage({
@@ -242,17 +272,12 @@ const ConnectionAudit: React.FC = () => {
       const row: string[] = [];
       row.push(
         intl.formatMessage({
-          id: getConnTypeMsgId(record.type),
+          id: getConnTypeMsgId(record.type ?? -1),
           defaultMessage: '-',
         }),
       );
       row.push(record.deviceId || '');
-      let localTxt = '';
-      const name = record.peerName || '';
-      const ip = (record.ip || '').replace('::ffff:', '');
-      if (name) localTxt = name;
-      if (ip) localTxt += '@' + ip;
-      row.push(localTxt);
+      row.push(renderLocalField(record));
       row.push(record.requestedAt || '');
       row.push(record.establishedAt || '');
       row.push(record.closedAt || '');
@@ -262,8 +287,8 @@ const ConnectionAudit: React.FC = () => {
     });
 
     return [
-      titles.join(','),
-      ...rows.map((row) => row.map((cell) => `"${cell}"`).join(',')),
+      titles.map(sanitizeCsvCell).join(','),
+      ...rows.map((row) => row.map(sanitizeCsvCell).join(',')),
     ].join('\n');
   };
 
@@ -375,17 +400,19 @@ const ConnectionAudit: React.FC = () => {
       valueType: 'select',
       valueEnum: connTypeValueEnum,
       render: (_, record) => {
-        const icon = renderConnTypeIcon(record.type);
-        const msgId = getConnTypeMsgId(record.type);
+        const icon = renderConnTypeIcon(record.type ?? -1);
+        const msgId = getConnTypeMsgId(record.type ?? -1);
         return (
-          <a
+          <Button
+            type="link"
+            style={{ padding: 0 }}
             onClick={() => {
               setCurrentRow(record);
               setDrawerOpen(true);
             }}
           >
             <Tooltip title={intl.formatMessage({ id: msgId })}>{icon}</Tooltip>
-          </a>
+          </Button>
         );
       },
     },
@@ -425,14 +452,7 @@ const ConnectionAudit: React.FC = () => {
       dataIndex: 'local',
       search: false,
       width: 200,
-      render: (_, record) => {
-        let txt = '';
-        const name = record.peerName || '';
-        const ip = (record.ip || '').replace('::ffff:', '');
-        if (name) txt = name;
-        if (ip) txt += '@' + ip;
-        return txt || '-';
-      },
+      render: (_, record) => renderLocalField(record),
     },
     {
       title: <FormattedMessage id="pages.audits.time" defaultMessage="Time" />,
@@ -462,10 +482,7 @@ const ConnectionAudit: React.FC = () => {
       dataIndex: 'requestedAt',
       width: 180,
       search: false,
-      render: (_, record) =>
-        record.requestedAt
-          ? dayjs(record.requestedAt).format('YYYY-MM-DD HH:mm:ss')
-          : '-',
+      render: (_, record) => formatDateTime(record.requestedAt),
     },
     {
       title: (
@@ -477,10 +494,7 @@ const ConnectionAudit: React.FC = () => {
       dataIndex: 'establishedAt',
       width: 180,
       search: false,
-      render: (_, record) =>
-        record.establishedAt
-          ? dayjs(record.establishedAt).format('YYYY-MM-DD HH:mm:ss')
-          : '-',
+      render: (_, record) => formatDateTime(record.establishedAt),
     },
     {
       title: (
@@ -492,10 +506,7 @@ const ConnectionAudit: React.FC = () => {
       dataIndex: 'closedAt',
       width: 180,
       search: false,
-      render: (_, record) =>
-        record.closedAt
-          ? dayjs(record.closedAt).format('YYYY-MM-DD HH:mm:ss')
-          : '-',
+      render: (_, record) => formatDateTime(record.closedAt),
     },
     {
       title: (
@@ -526,7 +537,6 @@ const ConnectionAudit: React.FC = () => {
           </Text>
           {canEdit && (
             <Button
-              style={{ float: 'right' }}
               icon={<EditTwoTone />}
               type="text"
               size="small"
@@ -548,7 +558,7 @@ const ConnectionAudit: React.FC = () => {
       width: 120,
       render: (_, record) => {
         if (!canEdit) {
-          return <span style={{ color: '#999' }}>-</span>;
+          return <Text type="secondary">-</Text>;
         }
         const isActive = record.action === 'established' && !record.closedAt;
         if (!isActive) return '';
@@ -572,14 +582,14 @@ const ConnectionAudit: React.FC = () => {
     },
   ];
 
-  const detailFields = [
+  const detailFields: DetailField[] = [
     {
       label: intl.formatMessage({
         id: 'pages.audits.type',
         defaultMessage: 'Type',
       }),
       render: (r: API.ConnectionAuditItem) =>
-        intl.formatMessage({ id: getConnTypeMsgId(r.type) }),
+        intl.formatMessage({ id: getConnTypeMsgId(r.type ?? -1) }),
     },
     {
       label: intl.formatMessage({
@@ -593,49 +603,35 @@ const ConnectionAudit: React.FC = () => {
         id: 'pages.audits.local',
         defaultMessage: 'Local',
       }),
-      render: (r: API.ConnectionAuditItem) => {
-        let txt = '';
-        const name = r.peerName || '';
-        const ip = (r.ip || '').replace('::ffff:', '');
-        if (name) txt = name;
-        if (ip) txt += '@' + ip;
-        return txt || '-';
-      },
+      render: renderLocalField,
     },
     {
       label: intl.formatMessage({
         id: 'pages.audits.requestedAt',
         defaultMessage: 'Requested At',
       }),
-      render: (r: API.ConnectionAuditItem) =>
-        r.requestedAt
-          ? dayjs(r.requestedAt).format('YYYY-MM-DD HH:mm:ss')
-          : '-',
+      render: (r: API.ConnectionAuditItem) => formatDateTime(r.requestedAt),
     },
     {
       label: intl.formatMessage({
         id: 'pages.audits.establishedAt',
         defaultMessage: 'Established At',
       }),
-      render: (r: API.ConnectionAuditItem) =>
-        r.establishedAt
-          ? dayjs(r.establishedAt).format('YYYY-MM-DD HH:mm:ss')
-          : '-',
+      render: (r: API.ConnectionAuditItem) => formatDateTime(r.establishedAt),
     },
     {
       label: intl.formatMessage({
         id: 'pages.audits.closedAt',
         defaultMessage: 'Closed At',
       }),
-      render: (r: API.ConnectionAuditItem) =>
-        r.closedAt ? dayjs(r.closedAt).format('YYYY-MM-DD HH:mm:ss') : '-',
+      render: (r: API.ConnectionAuditItem) => formatDateTime(r.closedAt),
     },
     {
       label: intl.formatMessage({
         id: 'pages.audits.duration',
         defaultMessage: 'Duration',
       }),
-      render: (r: API.ConnectionAuditItem) => renderDuration(r),
+      render: renderDuration,
     },
     {
       label: intl.formatMessage({
@@ -769,7 +765,7 @@ const ConnectionAudit: React.FC = () => {
               <div>
                 {field.render
                   ? field.render(currentRow)
-                  : (currentRow as any)[field.dataIndex || ''] || '-'}
+                  : currentRow[field.dataIndex || 'note'] || '-'}
               </div>
             </div>
           ))}
@@ -780,7 +776,7 @@ const ConnectionAudit: React.FC = () => {
           <FormattedMessage id="pages.common.edit" defaultMessage="Edit" />
         }
         open={editModalVisible}
-        width="400px"
+        width={400}
         initialValues={currentRow}
         onOpenChange={setEditModalVisible}
         onFinish={async (value) => {

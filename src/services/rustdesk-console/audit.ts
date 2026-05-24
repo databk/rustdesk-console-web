@@ -70,7 +70,7 @@ export async function updateConnectionAudit(
   data: { id?: number; note?: string },
   options?: { [key: string]: any },
 ) {
-  return request('/api/audits/conn', {
+  return request<API.ResponseResult>('/api/audits/conn', {
     method: 'PUT',
     data,
     ...(options || {}),
@@ -81,7 +81,7 @@ export async function disconnectConnection(
   connId: string,
   options?: { [key: string]: any },
 ) {
-  return request('/api/audits/conn/disconnect', {
+  return request<API.ResponseResult>('/api/audits/conn/disconnect', {
     method: 'POST',
     data: { connId },
     ...(options || {}),

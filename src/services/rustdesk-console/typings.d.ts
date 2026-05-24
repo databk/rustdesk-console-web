@@ -39,6 +39,11 @@ declare namespace API {
     total: number;
   };
 
+  type ResponseResult = {
+    succ?: boolean;
+    [key: string]: any;
+  };
+
   type UserItem = {
     guid: string;
     name: string;

@@ -48,6 +48,8 @@ export {
   getFileAudits,
   getAlarmAudits,
   getConsoleAudits,
+  updateConnectionAudit,
+  disconnectConnection,
 } from './audit';
 export {
   getDashboardOverview,
