@@ -152,10 +152,9 @@ const ConnectionAudit: React.FC = () => {
     if (!disconnectTarget) return;
     setDisconnectConfirmLoading(true);
     try {
-      const res = await disconnectConnection(
-        disconnectTarget.uuid,
-        [disconnectTarget.connId],
-      );
+      const res = await disconnectConnection(disconnectTarget.uuid, [
+        disconnectTarget.connId,
+      ]);
       if (res.succ !== false) {
         msgApi.success(
           intl.formatMessage({
