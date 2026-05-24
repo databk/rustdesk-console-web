@@ -185,6 +185,7 @@ const ConnectionAudit: React.FC = () => {
     old: API.ConnectionAuditItem,
   ) => {
     if (!old.id) return false;
+    if ((fields.note || '') === (old.note || '')) return true;
 
     try {
       await updateConnectionAudit(old.id, { note: fields.note || '' });
