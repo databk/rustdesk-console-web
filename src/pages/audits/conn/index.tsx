@@ -777,6 +777,7 @@ const ConnectionAudit: React.FC = () => {
         open={editModalVisible}
         width={400}
         initialValues={currentRow}
+        modalProps={{ destroyOnClose: true }}
         onOpenChange={setEditModalVisible}
         onFinish={async (value) => {
           const success = await handleUpdateNote(
