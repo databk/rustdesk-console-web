@@ -79,12 +79,13 @@ export async function updateConnectionAudit(
 }
 
 export async function disconnectConnection(
-  connId: string,
+  uuid: string,
+  connIds: number[],
   options?: { [key: string]: any },
 ) {
-  return request<API.ResponseResult>('/api/audits/conn/disconnect', {
+  return request<API.ResponseResult>(`/api/devices/${uuid}/disconnect`, {
     method: 'POST',
-    data: { connId },
+    data: { connIds },
     ...(options || {}),
   });
 }

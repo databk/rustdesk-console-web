@@ -143,12 +143,19 @@ const ConnectionAudit: React.FC = () => {
   const [disconnectModalOpen, setDisconnectModalOpen] = useState(false);
   const [disconnectConfirmLoading, setDisconnectConfirmLoading] =
     useState(false);
-  const [currentDisconnectId, setCurrentDisconnectId] = useState<string>('');
+  const [disconnectTarget, setDisconnectTarget] = useState<{
+    uuid: string;
+    connId: number;
+  }>();
 
   const handleDisconnect = async () => {
+    if (!disconnectTarget) return;
     setDisconnectConfirmLoading(true);
     try {
-      const res = await disconnectConnection(currentDisconnectId);
+      const res = await disconnectConnection(
+        disconnectTarget.uuid,
+        [disconnectTarget.connId],
+      );
       if (res.succ !== false) {
         msgApi.success(
           intl.formatMessage({
@@ -567,7 +574,10 @@ const ConnectionAudit: React.FC = () => {
             type="default"
             danger
             onClick={() => {
-              setCurrentDisconnectId(record.connId || String(record.id));
+              setDisconnectTarget({
+                uuid: record.deviceUuid || '',
+                connId: Number(record.connId || record.id),
+              });
               setDisconnectModalOpen(true);
             }}
           >
