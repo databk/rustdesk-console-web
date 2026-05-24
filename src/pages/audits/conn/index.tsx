@@ -184,14 +184,10 @@ const ConnectionAudit: React.FC = () => {
     fields: API.ConnectionAuditItem,
     old: API.ConnectionAuditItem,
   ) => {
-    const data: Record<string, any> = { id: old.id };
-    if ((fields.note || '') !== (old.note || '')) {
-      data.note = fields.note;
-    }
-    if (Object.keys(data).length === 1) return true;
+    if (!old.id) return false;
 
     try {
-      await updateConnectionAudit(data);
+      await updateConnectionAudit(old.id, { note: fields.note || '' });
       msgApi.success(
         intl.formatMessage({
           id: 'pages.audits.updateSuccess',

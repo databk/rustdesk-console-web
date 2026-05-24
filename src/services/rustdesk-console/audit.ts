@@ -67,11 +67,12 @@ export async function getConsoleAudits(
 }
 
 export async function updateConnectionAudit(
-  data: { id?: number; note?: string },
+  id: number,
+  data: { note: string },
   options?: { [key: string]: any },
 ) {
-  return request<API.ResponseResult>('/api/audits/conn', {
-    method: 'PUT',
+  return request<API.ResponseResult>(`/api/audits/conn/${id}`, {
+    method: 'PATCH',
     data,
     ...(options || {}),
   });
