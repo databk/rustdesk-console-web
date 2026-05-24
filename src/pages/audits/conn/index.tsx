@@ -78,8 +78,10 @@ const renderDuration = (record: API.ConnectionAuditItem): string => {
   return parts.join(' ');
 };
 
-const renderConnTypeIcon = (type: number) => {
+const renderConnTypeIcon = (type?: number) => {
   switch (type) {
+    case -1:
+      return <QuestionOutlined />;
     case 0:
       return <FundProjectionScreenOutlined />;
     case 1:
@@ -95,7 +97,7 @@ const renderConnTypeIcon = (type: number) => {
   }
 };
 
-const getConnTypeMsgId = (type: number): string => {
+const getConnTypeMsgId = (type?: number): string => {
   switch (type) {
     case -1:
       return 'pages.audits.connType.notLoggedIn';
@@ -272,7 +274,7 @@ const ConnectionAudit: React.FC = () => {
       const row: string[] = [];
       row.push(
         intl.formatMessage({
-          id: getConnTypeMsgId(record.type ?? -1),
+          id: getConnTypeMsgId(record.type),
           defaultMessage: '-',
         }),
       );
@@ -400,8 +402,8 @@ const ConnectionAudit: React.FC = () => {
       valueType: 'select',
       valueEnum: connTypeValueEnum,
       render: (_, record) => {
-        const icon = renderConnTypeIcon(record.type ?? -1);
-        const msgId = getConnTypeMsgId(record.type ?? -1);
+        const icon = renderConnTypeIcon(record.type);
+        const msgId = getConnTypeMsgId(record.type);
         return (
           <Button
             type="link"
@@ -589,7 +591,7 @@ const ConnectionAudit: React.FC = () => {
         defaultMessage: 'Type',
       }),
       render: (r: API.ConnectionAuditItem) =>
-        intl.formatMessage({ id: getConnTypeMsgId(r.type ?? -1) }),
+        intl.formatMessage({ id: getConnTypeMsgId(r.type) }),
     },
     {
       label: intl.formatMessage({
