@@ -46,10 +46,10 @@ declare namespace API {
 
   type OidcAuthParams = {
     op: string;
+    deviceInfo: DeviceInfo;
+    redirectUrl: string;
     id?: string;
     uuid?: string;
-    deviceInfo?: DeviceInfo;
-    redirectUrl?: string;
   };
 
   type OidcAuthResponse = {

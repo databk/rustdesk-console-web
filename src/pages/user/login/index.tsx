@@ -36,6 +36,7 @@ import React, {
   useState,
 } from 'react';
 import { flushSync } from 'react-dom';
+import Bowser from 'bowser';
 import { setToken } from '@/utils/auth';
 import { Footer } from '@/components';
 import { login, getLoginOptions, oidcAuth } from '@/services/rustdesk-console/auth';
@@ -53,21 +54,12 @@ type VerifySession = {
 
 // --- Device info ---
 function getDeviceInfo(): API.DeviceInfo {
-  const ua = navigator.userAgent;
-  let os = 'Unknown';
-  if (ua.includes('Win')) os = 'Windows';
-  else if (ua.includes('Mac')) os = 'macOS';
-  else if (ua.includes('Linux')) os = 'Linux';
-  else if (ua.includes('Android')) os = 'Android';
-  else if (ua.includes('iPhone') || ua.includes('iPad')) os = 'iOS';
-
-  let browserName = 'Unknown';
-  if (ua.includes('Firefox')) browserName = 'Firefox';
-  else if (ua.includes('Edg')) browserName = 'Edge';
-  else if (ua.includes('Chrome')) browserName = 'Chrome';
-  else if (ua.includes('Safari')) browserName = 'Safari';
-
-  return { os, type: 'browser', name: browserName };
+  const browser = Bowser.getParser(window.navigator.userAgent);
+  return {
+    os: browser.getOSName(true),
+    type: 'browser',
+    name: `${browser.getBrowserName()} - ${browser.getBrowserVersion()}`,
+  };
 }
 
 // --- OIDC icon mapping ---
