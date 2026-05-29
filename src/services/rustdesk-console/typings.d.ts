@@ -44,6 +44,19 @@ declare namespace API {
     icon?: string;
   };
 
+  type OidcAuthParams = {
+    op: string;
+    id?: string;
+    uuid?: string;
+    deviceInfo?: DeviceInfo;
+    redirectUrl?: string;
+  };
+
+  type OidcAuthResponse = {
+    code?: string;
+    url?: string;
+  };
+
   type PageParams = {
     current?: number;
     pageSize?: number;

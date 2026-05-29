@@ -19,7 +19,7 @@ export default {
   'pages.login.verifyCode.invalid': '验证码无效',
   'pages.login.oidc.divider': '或使用以下方式登录',
   'pages.login.oidc.continueWith': '使用 {provider} 继续',
-  'pages.login.oidc.comingSoon': '第三方登录即将上线',
+  'pages.login.oidc.authFailed': 'OIDC登录失败',
   'pages.devices.list': '设备列表',
   'pages.devices.os': '操作系统',
   'pages.devices.status': '状态',

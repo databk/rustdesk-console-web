@@ -25,4 +25,12 @@ export async function getLoginOptions() {
   });
 }
 
+export async function oidcAuth(body: API.OidcAuthParams) {
+  return request<API.OidcAuthResponse>('/api/oidc/auth', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    data: body,
+  });
+}
+
 export const getCurrentUser = currentUser;

@@ -23,7 +23,7 @@ export default {
   'pages.login.verifyCode.invalid': 'Invalid verification code',
   'pages.login.oidc.divider': 'Or continue with',
   'pages.login.oidc.continueWith': 'Continue with {provider}',
-  'pages.login.oidc.comingSoon': 'Third-party login is coming soon',
+  'pages.login.oidc.authFailed': 'OIDC login failed',
   'pages.devices.list': 'Device List',
   'pages.devices.os': 'OS',
   'pages.devices.status': 'Status',
