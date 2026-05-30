@@ -186,12 +186,12 @@ const OidcLogin: React.FC<{
     setOidcLoading(provider);
     try {
       const deviceInfo = getDeviceInfo();
-      const redirectUrl = `${window.location.origin}/#/dashboard`;
+      const callbackUrl = `${window.location.origin}/#/dashboard`;
       
       const response = await oidcAuth({
         op: provider,
         deviceInfo,
-        redirectUrl,
+        callbackUrl,
       });
 
       if (response.url) {
