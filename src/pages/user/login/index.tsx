@@ -39,7 +39,11 @@ import { flushSync } from 'react-dom';
 import Bowser from 'bowser';
 import { setToken } from '@/utils/auth';
 import { Footer } from '@/components';
-import { login, getLoginOptions, oidcAuth } from '@/services/rustdesk-console/auth';
+import {
+  login,
+  getLoginOptions,
+  oidcAuth,
+} from '@/services/rustdesk-console/auth';
 import Settings from '../../../../config/defaultSettings';
 
 // --- Auth step types ---
@@ -182,12 +186,12 @@ const OidcLogin: React.FC<{
 
   const handleOidcLogin = async (provider: string) => {
     if (loading || oidcLoading) return;
-    
+
     setOidcLoading(provider);
     try {
       const deviceInfo = getDeviceInfo();
       const callbackUrl = `${window.location.origin}/#/dashboard`;
-      
+
       const response = await oidcAuth({
         op: provider,
         deviceInfo,
@@ -211,7 +215,8 @@ const OidcLogin: React.FC<{
           data?: { error?: string; message?: string };
         };
       };
-      const errorMsg = err?.response?.data?.error ||
+      const errorMsg =
+        err?.response?.data?.error ||
         err?.response?.data?.message ||
         intl.formatMessage({
           id: 'pages.login.oidc.authFailed',
