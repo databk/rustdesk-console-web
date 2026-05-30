@@ -557,4 +557,72 @@ declare namespace API {
     success: boolean;
     message: string;
   };
+
+  type OidcProviderType = 'oidc' | 'oauth2';
+
+  type OidcProvider = {
+    guid: string;
+    type?: OidcProviderType;
+    name: string;
+    issuer: string;
+    clientId: string;
+    clientSecret?: string;
+    scope?: string;
+    authorizationEndpoint?: string;
+    tokenEndpoint?: string;
+    userinfoEndpoint?: string;
+    jwksUri?: string;
+    enabled: boolean;
+    priority: number;
+    created_at?: string;
+    updated_at?: string;
+    [key: string]: any;
+  };
+
+  type CreateOidcProviderParams = {
+    type?: OidcProviderType;
+    name: string;
+    issuer: string;
+    clientId: string;
+    clientSecret?: string;
+    scope?: string;
+    authorizationEndpoint?: string;
+    tokenEndpoint?: string;
+    userinfoEndpoint?: string;
+    jwksUri?: string;
+    enabled?: boolean;
+    priority?: number;
+  };
+
+  type UpdateOidcProviderParams = {
+    type?: OidcProviderType;
+    name?: string;
+    issuer?: string;
+    clientId?: string;
+    clientSecret?: string;
+    scope?: string;
+    authorizationEndpoint?: string;
+    tokenEndpoint?: string;
+    userinfoEndpoint?: string;
+    jwksUri?: string;
+    enabled?: boolean;
+    priority?: number;
+  };
+
+  type ToggleOidcProviderParams = {
+    enabled: boolean;
+  };
+
+  type OidcTestEndpoints = {
+    authorization_endpoint: string;
+    token_endpoint: string;
+    userinfo_endpoint: string;
+    jwks_uri: string;
+  };
+
+  type OidcTestResult = {
+    success: boolean;
+    message: string;
+    endpoints?: OidcTestEndpoints;
+  };
 }

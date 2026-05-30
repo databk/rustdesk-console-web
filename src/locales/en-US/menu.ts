@@ -22,6 +22,7 @@ export default {
   'menu.groups.device': 'Device Groups',
   'menu.settings': 'Settings',
   'menu.settings.smtp': 'SMTP Configuration',
+  'menu.settings.oidcProviders': 'OIDC Providers',
   'menu.customClients': 'Custom Clients',
   'menu.addressBooks': 'Address Books',
   'menu.list.audit-list': 'Audit List',

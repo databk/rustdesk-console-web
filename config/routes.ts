@@ -179,6 +179,12 @@ export default [
         path: '/settings/smtp',
         component: './settings/smtp',
       },
+      {
+        name: 'oidcProviders',
+        icon: 'safety',
+        path: '/settings/oidc-providers',
+        component: './settings/oidc-providers',
+      },
     ],
   },
   {

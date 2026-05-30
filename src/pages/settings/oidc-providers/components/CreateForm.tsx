@@ -1,0 +1,243 @@
+import { ModalForm } from '@ant-design/pro-components';
+import { FormattedMessage, useIntl } from '@umijs/max';
+import { Collapse, Form, Input, InputNumber, Select, Switch } from 'antd';
+import React from 'react';
+
+interface CreateFormProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onFinish: (values: API.CreateOidcProviderParams) => Promise<boolean>;
+}
+
+const CreateForm: React.FC<CreateFormProps> = ({
+  open,
+  onOpenChange,
+  onFinish,
+}) => {
+  const intl = useIntl();
+  const [form] = Form.useForm();
+
+  return (
+    <ModalForm
+      title={
+        <FormattedMessage
+          id="pages.oidcProviders.create"
+          defaultMessage="Create OIDC Provider"
+        />
+      }
+      open={open}
+      onOpenChange={onOpenChange}
+      onFinish={onFinish}
+      form={form}
+      layout="vertical"
+      modalProps={{ destroyOnClose: true }}
+      width={560}
+    >
+      <Form.Item
+        name="name"
+        label={
+          <FormattedMessage
+            id="pages.oidcProviders.name"
+            defaultMessage="Provider Name"
+          />
+        }
+        rules={[{ required: true }]}
+      >
+        <Input
+          placeholder={intl.formatMessage({
+            id: 'pages.oidcProviders.enterName',
+            defaultMessage: 'Enter provider name',
+          })}
+        />
+      </Form.Item>
+      <Form.Item
+        name="type"
+        label={
+          <FormattedMessage
+            id="pages.oidcProviders.type"
+            defaultMessage="Type"
+          />
+        }
+        initialValue="oidc"
+      >
+        <Select>
+          <Select.Option value="oidc">OIDC</Select.Option>
+          <Select.Option value="oauth2">OAuth2</Select.Option>
+        </Select>
+      </Form.Item>
+      <Form.Item
+        name="issuer"
+        label={
+          <FormattedMessage
+            id="pages.oidcProviders.issuer"
+            defaultMessage="Issuer URL"
+          />
+        }
+        rules={[
+          { required: true },
+          { type: 'url', message: 'Please enter a valid URL' },
+        ]}
+      >
+        <Input
+          placeholder={intl.formatMessage({
+            id: 'pages.oidcProviders.enterIssuer',
+            defaultMessage: 'Enter issuer URL',
+          })}
+        />
+      </Form.Item>
+      <Form.Item
+        name="clientId"
+        label={
+          <FormattedMessage
+            id="pages.oidcProviders.clientId"
+            defaultMessage="Client ID"
+          />
+        }
+        rules={[{ required: true }]}
+      >
+        <Input
+          placeholder={intl.formatMessage({
+            id: 'pages.oidcProviders.enterClientId',
+            defaultMessage: 'Enter client ID',
+          })}
+        />
+      </Form.Item>
+      <Form.Item
+        name="clientSecret"
+        label={
+          <FormattedMessage
+            id="pages.oidcProviders.clientSecret"
+            defaultMessage="Client Secret"
+          />
+        }
+      >
+        <Input.Password
+          placeholder={intl.formatMessage({
+            id: 'pages.oidcProviders.enterClientSecret',
+            defaultMessage: 'Enter client secret',
+          })}
+        />
+      </Form.Item>
+      <Form.Item
+        name="scope"
+        label={
+          <FormattedMessage
+            id="pages.oidcProviders.scope"
+            defaultMessage="Scope"
+          />
+        }
+      >
+        <Input placeholder="openid email profile" />
+      </Form.Item>
+      <Collapse
+        ghost
+        items={[
+          {
+            key: 'endpoints',
+            label: (
+              <FormattedMessage
+                id="pages.oidcProviders.endpointConfig"
+                defaultMessage="Endpoint Configuration"
+              />
+            ),
+            children: (
+              <>
+                <Form.Item
+                  name="authorizationEndpoint"
+                  label={
+                    <FormattedMessage
+                      id="pages.oidcProviders.authorizationEndpoint"
+                      defaultMessage="Authorization Endpoint"
+                    />
+                  }
+                >
+                  <Input
+                    placeholder={intl.formatMessage({
+                      id: 'pages.oidcProviders.enterEndpoint',
+                      defaultMessage: 'Auto-discovered if empty',
+                    })}
+                  />
+                </Form.Item>
+                <Form.Item
+                  name="tokenEndpoint"
+                  label={
+                    <FormattedMessage
+                      id="pages.oidcProviders.tokenEndpoint"
+                      defaultMessage="Token Endpoint"
+                    />
+                  }
+                >
+                  <Input
+                    placeholder={intl.formatMessage({
+                      id: 'pages.oidcProviders.enterEndpoint',
+                      defaultMessage: 'Auto-discovered if empty',
+                    })}
+                  />
+                </Form.Item>
+                <Form.Item
+                  name="userinfoEndpoint"
+                  label={
+                    <FormattedMessage
+                      id="pages.oidcProviders.userinfoEndpoint"
+                      defaultMessage="Userinfo Endpoint"
+                    />
+                  }
+                >
+                  <Input
+                    placeholder={intl.formatMessage({
+                      id: 'pages.oidcProviders.enterEndpoint',
+                      defaultMessage: 'Auto-discovered if empty',
+                    })}
+                  />
+                </Form.Item>
+                <Form.Item
+                  name="jwksUri"
+                  label={
+                    <FormattedMessage
+                      id="pages.oidcProviders.jwksUri"
+                      defaultMessage="JWKS URI"
+                    />
+                  }
+                >
+                  <Input
+                    placeholder={intl.formatMessage({
+                      id: 'pages.oidcProviders.enterEndpoint',
+                      defaultMessage: 'Auto-discovered if empty',
+                    })}
+                  />
+                </Form.Item>
+              </>
+            ),
+          },
+        ]}
+      />
+      <Form.Item
+        name="enabled"
+        label={
+          <FormattedMessage
+            id="pages.oidcProviders.enabled"
+            defaultMessage="Enabled"
+          />
+        }
+        valuePropName="checked"
+        initialValue={true}
+      >
+        <Switch />
+      </Form.Item>
+      <Form.Item
+        name="priority"
+        label={
+          <FormattedMessage
+            id="pages.oidcProviders.priority"
+            defaultMessage="Priority"
+          />
+        }
+        initialValue={0}
+      >
+        <InputNumber min={0} style={{ width: '100%' }} />
+      </Form.Item>
+    </ModalForm>
+  );
+};
+
+export default CreateForm;

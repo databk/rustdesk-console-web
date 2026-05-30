@@ -58,3 +58,12 @@ export {
   getDashboardRealtime,
 } from './dashboard';
 export { getSMTPConfig, updateSMTPConfig, testSMTPConfig } from './smtp';
+export {
+  getOidcProviderList,
+  getOidcProvider,
+  createOidcProvider,
+  updateOidcProvider,
+  deleteOidcProvider,
+  toggleOidcProvider,
+  testOidcProvider,
+} from './oidcProvider';
