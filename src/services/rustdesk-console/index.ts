@@ -67,3 +67,12 @@ export {
   toggleOidcProvider,
   testOidcProvider,
 } from './oidcProvider';
+export {
+  getStrategyList,
+  getStrategy,
+  createStrategy,
+  updateStrategy,
+  deleteStrategy,
+  assignStrategy,
+  unassignStrategy,
+} from './strategy';
