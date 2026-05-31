@@ -445,8 +445,7 @@ export default {
   'pages.oidcProviders.updateFailed': 'Failed to update OIDC provider',
   'pages.oidcProviders.deleteSuccess': 'OIDC provider deleted',
   'pages.oidcProviders.deleteFailed': 'Failed to delete OIDC provider',
-  'pages.oidcProviders.deleteConfirm':
-    'Are you sure to delete this provider?',
+  'pages.oidcProviders.deleteConfirm': 'Are you sure to delete this provider?',
   'pages.oidcProviders.enableSuccess': 'OIDC provider enabled',
   'pages.oidcProviders.enableFailed': 'Failed to enable OIDC provider',
   'pages.oidcProviders.disableSuccess': 'OIDC provider disabled',
@@ -455,6 +454,5 @@ export default {
   'pages.oidcProviders.disableConfirm':
     'Are you sure to disable this provider?',
   'pages.oidcProviders.testFailed': 'Failed to test OIDC connection',
-  'pages.oidcProviders.fetchDetailFailed':
-    'Failed to fetch provider details',
+  'pages.oidcProviders.fetchDetailFailed': 'Failed to fetch provider details',
 };
