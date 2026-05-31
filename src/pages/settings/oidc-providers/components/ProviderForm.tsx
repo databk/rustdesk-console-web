@@ -1,28 +1,56 @@
 import { ModalForm } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
 import { Collapse, Form, Input, InputNumber, Select, Switch } from 'antd';
-import React from 'react';
+import React, { useEffect } from 'react';
 
-interface CreateFormProps {
+interface ProviderFormProps {
+  mode: 'create' | 'edit';
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onFinish: (values: API.CreateOidcProviderParams) => Promise<boolean>;
+  onFinish: (values: any) => Promise<boolean>;
+  currentRecord?: API.OidcProvider | null;
 }
 
-const CreateForm: React.FC<CreateFormProps> = ({
+const ProviderForm: React.FC<ProviderFormProps> = ({
+  mode,
   open,
   onOpenChange,
   onFinish,
+  currentRecord,
 }) => {
   const intl = useIntl();
   const [form] = Form.useForm();
+  const isEdit = mode === 'edit';
+
+  useEffect(() => {
+    if (isEdit && open && currentRecord) {
+      form.setFieldsValue({
+        name: currentRecord.name,
+        type: currentRecord.type || 'oidc',
+        issuer: currentRecord.issuer,
+        clientId: currentRecord.clientId,
+        clientSecret: currentRecord.clientSecret || '',
+        scope: currentRecord.scope,
+        authorizationEndpoint: currentRecord.authorizationEndpoint,
+        tokenEndpoint: currentRecord.tokenEndpoint,
+        userinfoEndpoint: currentRecord.userinfoEndpoint,
+        jwksUri: currentRecord.jwksUri,
+        enabled: currentRecord.enabled,
+        priority: currentRecord.priority,
+      });
+    }
+  }, [isEdit, open, currentRecord, form]);
 
   return (
     <ModalForm
       title={
         <FormattedMessage
-          id="pages.oidcProviders.create"
-          defaultMessage="Create OIDC Provider"
+          id={
+            isEdit ? 'pages.oidcProviders.edit' : 'pages.oidcProviders.create'
+          }
+          defaultMessage={
+            isEdit ? 'Edit OIDC Provider' : 'Create OIDC Provider'
+          }
         />
       }
       open={open}
@@ -240,4 +268,4 @@ const CreateForm: React.FC<CreateFormProps> = ({
   );
 };
 
-export default CreateForm;
+export default ProviderForm;

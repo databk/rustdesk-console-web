@@ -14,8 +14,7 @@ import {
   updateOidcProvider,
 } from '@/services/rustdesk-console';
 import OidcProviderColumns from './columns';
-import CreateForm from './components/CreateForm';
-import EditForm from './components/EditForm';
+import ProviderForm from './components/ProviderForm';
 import TestResultModal from './components/TestResultModal';
 
 const OidcProviderList: React.FC = () => {
@@ -220,13 +219,15 @@ const OidcProviderList: React.FC = () => {
         }}
       />
 
-      <CreateForm
+      <ProviderForm
+        mode="create"
         open={createModalVisible}
         onOpenChange={setCreateModalVisible}
         onFinish={handleCreate}
       />
 
-      <EditForm
+      <ProviderForm
+        mode="edit"
         open={editModalVisible}
         onOpenChange={setEditModalVisible}
         onFinish={handleUpdate}
