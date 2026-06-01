@@ -5,6 +5,7 @@ export async function login(body: API.LoginParams) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     data: body,
+    skipErrorHandler: true,
   });
 }
 
