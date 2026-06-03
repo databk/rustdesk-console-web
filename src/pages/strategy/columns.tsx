@@ -1,9 +1,8 @@
 import { DeleteOutlined, EditOutlined, TeamOutlined } from '@ant-design/icons';
 import type { ProColumns } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
-import { Button, Divider, Popconfirm, Space, Tag, Tooltip } from 'antd';
+import { Button, Divider, Popconfirm, Space, Tooltip } from 'antd';
 import React from 'react';
-import { configOptions, getModifiedCount } from './configOptions';
 
 interface ColumnHandlers {
   onEdit: (record: API.StrategyItem) => void;
@@ -11,19 +10,18 @@ interface ColumnHandlers {
   onAssign: (record: API.StrategyItem) => void;
 }
 
-const StrategyColumns = (handlers: ColumnHandlers): ProColumns<API.StrategyItem>[] => {
+const StrategyColumns = (
+  handlers: ColumnHandlers,
+): ProColumns<API.StrategyItem>[] => {
   const intl = useIntl();
 
   return [
     {
-      title: '',
-      dataIndex: 'index',
-      valueType: 'indexBorder',
-      width: 48,
-    },
-    {
       title: (
-        <FormattedMessage id="pages.strategies.name" defaultMessage="Strategy Name" />
+        <FormattedMessage
+          id="pages.strategies.name"
+          defaultMessage="Strategy Name"
+        />
       ),
       dataIndex: 'name',
       width: 200,
@@ -33,7 +31,7 @@ const StrategyColumns = (handlers: ColumnHandlers): ProColumns<API.StrategyItem>
         <FormattedMessage id="pages.strategies.note" defaultMessage="Note" />
       ),
       dataIndex: 'note',
-      width: 180,
+      width: 200,
       search: false,
       ellipsis: { showTitle: false },
       render: (_, record) => (
@@ -45,55 +43,16 @@ const StrategyColumns = (handlers: ColumnHandlers): ProColumns<API.StrategyItem>
     {
       title: (
         <FormattedMessage
-          id="pages.strategies.configSummary"
-          defaultMessage="Config"
+          id="pages.strategies.updatedAt"
+          defaultMessage="Updated At"
         />
       ),
-      dataIndex: 'config_options',
-      width: 160,
-      search: false,
-      render: (_, record) => {
-        const modified = getModifiedCount(record.config_options);
-        const total = configOptions.length;
-        return (
-          <Tag color={modified > 0 ? 'blue' : 'default'}>
-            <FormattedMessage
-              id="pages.strategies.configCount"
-              defaultMessage="{modified}/{total} modified"
-              values={{ modified, total }}
-            />
-          </Tag>
-        );
-      },
-    },
-    {
-      title: (
-        <FormattedMessage
-          id="pages.strategies.modifiedAt"
-          defaultMessage="Modified At"
-        />
-      ),
-      dataIndex: 'modified_at',
+      dataIndex: 'updated_at',
       width: 180,
       search: false,
       render: (_, record) => {
-        if (!record.modified_at) return '-';
-        return new Date(record.modified_at).toLocaleString();
-      },
-    },
-    {
-      title: (
-        <FormattedMessage
-          id="pages.strategies.createdAt"
-          defaultMessage="Created At"
-        />
-      ),
-      dataIndex: 'created_at',
-      width: 180,
-      search: false,
-      render: (_, record) => {
-        if (!record.created_at) return '-';
-        return new Date(record.created_at).toLocaleString();
+        if (!record.updated_at) return '-';
+        return new Date(record.updated_at).toLocaleString();
       },
     },
     {

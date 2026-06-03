@@ -342,8 +342,6 @@ declare namespace API {
     name: string;
     note?: string;
     config_options?: Record<string, string>;
-    modified_at?: number;
-    created_at?: string;
     updated_at?: string;
     [key: string]: any;
   };
@@ -362,7 +360,15 @@ declare namespace API {
 
   type StrategyAssignParams = {
     target_type: 'device' | 'user' | 'device_group';
-    target_guid: string;
+    target_guids: string[];
+  };
+
+  type StrategyBatchResult = {
+    success: string[];
+    errors: Array<{
+      target_guid: string;
+      reason: string;
+    }>;
   };
 
   type UserGroupItem = {

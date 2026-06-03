@@ -19,7 +19,11 @@ export type ConfigCategory = {
 };
 
 export const configCategories: ConfigCategory[] = [
-  { key: 'connection', label: '连接与访问控制', labelEn: 'Connection & Access' },
+  {
+    key: 'connection',
+    label: '连接与访问控制',
+    labelEn: 'Connection & Access',
+  },
   { key: 'security', label: '安全与认证', labelEn: 'Security & Auth' },
   { key: 'display', label: '显示与界面', labelEn: 'Display & UI' },
   { key: 'av', label: '音视频与编解码', labelEn: 'Audio/Video & Codec' },
@@ -199,7 +203,11 @@ export const configOptions: ConfigOption[] = [
     category: 'security',
     type: 'select',
     defaultValue: 'use-both-passwords',
-    options: ['use-temporary-password', 'use-permanent-password', 'use-both-passwords'],
+    options: [
+      'use-temporary-password',
+      'use-permanent-password',
+      'use-both-passwords',
+    ],
   },
   {
     key: 'temporary-password-length',
@@ -955,19 +963,20 @@ export const configOptions: ConfigOption[] = [
   },
 ];
 
-export const configOptionsMap = configOptions.reduce<Record<string, ConfigOption>>(
-  (acc, opt) => {
-    acc[opt.key] = opt;
-    return acc;
-  },
-  {},
-);
+export const configOptionsMap = configOptions.reduce<
+  Record<string, ConfigOption>
+>((acc, opt) => {
+  acc[opt.key] = opt;
+  return acc;
+}, {});
 
 export function getOptionsByCategory(category: string): ConfigOption[] {
   return configOptions.filter((opt) => opt.category === category);
 }
 
-export function getModifiedCount(configOptions?: Record<string, string>): number {
+export function getModifiedCount(
+  configOptions?: Record<string, string>,
+): number {
   if (!configOptions) return 0;
   return Object.keys(configOptions).filter((key) => {
     const opt = configOptionsMap[key];

@@ -1,7 +1,16 @@
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { ModalForm } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
-import { App, Button, Divider, Popconfirm, Radio, Select, Space, Tag } from 'antd';
+import {
+  App,
+  Button,
+  Divider,
+  Popconfirm,
+  Radio,
+  Select,
+  Space,
+  Tag,
+} from 'antd';
 import React, { useEffect, useState } from 'react';
 import {
   assignStrategy,
@@ -22,11 +31,21 @@ interface AssignModalProps {
 
 const targetTypeOptions: { label: React.ReactNode; value: TargetType }[] = [
   {
-    label: <FormattedMessage id="pages.strategies.assignDevice" defaultMessage="Device" />,
+    label: (
+      <FormattedMessage
+        id="pages.strategies.assignDevice"
+        defaultMessage="Device"
+      />
+    ),
     value: 'device',
   },
   {
-    label: <FormattedMessage id="pages.strategies.assignUser" defaultMessage="User" />,
+    label: (
+      <FormattedMessage
+        id="pages.strategies.assignUser"
+        defaultMessage="User"
+      />
+    ),
     value: 'user',
   },
   {
@@ -49,12 +68,14 @@ const AssignModal: React.FC<AssignModalProps> = ({
   const intl = useIntl();
   const { message: msgApi } = App.useApp();
   const [targetType, setTargetType] = useState<TargetType>('device');
-  const [selectedGuid, setSelectedGuid] = useState<string | undefined>(undefined);
+  const [selectedGuids, setSelectedGuids] = useState<string[]>([]);
   const [assignLoading, setAssignLoading] = useState(false);
 
   const [deviceList, setDeviceList] = useState<API.DeviceItem[]>([]);
   const [userList, setUserList] = useState<API.UserItem[]>([]);
-  const [deviceGroupList, setDeviceGroupList] = useState<API.DeviceGroupItem[]>([]);
+  const [deviceGroupList, setDeviceGroupList] = useState<API.DeviceGroupItem[]>(
+    [],
+  );
   const [optionsLoading, setOptionsLoading] = useState(false);
 
   useEffect(() => {
@@ -74,7 +95,10 @@ const AssignModal: React.FC<AssignModalProps> = ({
             break;
           }
           case 'device_group': {
-            const result = await getDeviceGroupList({ current: 1, pageSize: 200 });
+            const result = await getDeviceGroupList({
+              current: 1,
+              pageSize: 200,
+            });
             setDeviceGroupList(result.data || []);
             break;
           }
@@ -94,20 +118,38 @@ const AssignModal: React.FC<AssignModalProps> = ({
   }, [open, targetType]);
 
   const handleAssign = async () => {
-    if (!record || !selectedGuid) return;
+    if (!record || selectedGuids.length === 0) return;
     setAssignLoading(true);
     try {
-      await assignStrategy(record.guid, {
+      const result = await assignStrategy(record.guid, {
         target_type: targetType,
-        target_guid: selectedGuid,
+        target_guids: selectedGuids,
       });
-      msgApi.success(
-        intl.formatMessage({
-          id: 'pages.strategies.assignSuccess',
-          defaultMessage: 'Strategy assigned successfully',
-        }),
-      );
-      setSelectedGuid(undefined);
+      if (result.errors && result.errors.length > 0) {
+        const errorNames = result.errors.map((e) => e.reason).join(', ');
+        msgApi.warning(
+          intl.formatMessage(
+            {
+              id: 'pages.strategies.assignPartialFailed',
+              defaultMessage:
+                'Assigned {success} target(s), {failed} failed: {errors}',
+            },
+            {
+              success: result.success?.length || 0,
+              failed: result.errors.length,
+              errors: errorNames,
+            },
+          ),
+        );
+      } else {
+        msgApi.success(
+          intl.formatMessage({
+            id: 'pages.strategies.assignSuccess',
+            defaultMessage: 'Strategy assigned successfully',
+          }),
+        );
+      }
+      setSelectedGuids([]);
       onSuccess();
     } catch {
       msgApi.error(
@@ -122,18 +164,26 @@ const AssignModal: React.FC<AssignModalProps> = ({
   };
 
   const handleUnassign = async (tType: TargetType, targetGuid: string) => {
-    if (!record) return;
     try {
-      await unassignStrategy(record.guid, {
+      const result = await unassignStrategy({
         target_type: tType,
-        target_guid: targetGuid,
+        target_guids: [targetGuid],
       });
-      msgApi.success(
-        intl.formatMessage({
-          id: 'pages.strategies.unassignSuccess',
-          defaultMessage: 'Strategy unassigned successfully',
-        }),
-      );
+      if (result.errors && result.errors.length > 0) {
+        msgApi.warning(
+          intl.formatMessage({
+            id: 'pages.strategies.unassignFailed',
+            defaultMessage: 'Failed to unassign strategy',
+          }),
+        );
+      } else {
+        msgApi.success(
+          intl.formatMessage({
+            id: 'pages.strategies.unassignSuccess',
+            defaultMessage: 'Strategy unassigned successfully',
+          }),
+        );
+      }
       onSuccess();
     } catch {
       msgApi.error(
@@ -174,23 +224,24 @@ const AssignModal: React.FC<AssignModalProps> = ({
     const assignedUsers = (record as any).assigned_users || [];
     const assignedDeviceGroups = (record as any).assigned_device_groups || [];
 
-    const allAssigned: Array<{ type: TargetType; guid: string; name: string }> = [
-      ...assignedDevices.map((d: any) => ({
-        type: 'device' as TargetType,
-        guid: d.uuid || d.guid,
-        name: d.id || d.name || d.guid,
-      })),
-      ...assignedUsers.map((u: any) => ({
-        type: 'user' as TargetType,
-        guid: u.guid,
-        name: u.name || u.email || u.guid,
-      })),
-      ...assignedDeviceGroups.map((g: any) => ({
-        type: 'device_group' as TargetType,
-        guid: g.guid,
-        name: g.name || g.guid,
-      })),
-    ];
+    const allAssigned: Array<{ type: TargetType; guid: string; name: string }> =
+      [
+        ...assignedDevices.map((d: any) => ({
+          type: 'device' as TargetType,
+          guid: d.uuid || d.guid,
+          name: d.id || d.name || d.guid,
+        })),
+        ...assignedUsers.map((u: any) => ({
+          type: 'user' as TargetType,
+          guid: u.guid,
+          name: u.name || u.email || u.guid,
+        })),
+        ...assignedDeviceGroups.map((g: any) => ({
+          type: 'device_group' as TargetType,
+          guid: g.guid,
+          name: g.name || g.guid,
+        })),
+      ];
 
     if (allAssigned.length === 0) {
       return (
@@ -258,7 +309,12 @@ const AssignModal: React.FC<AssignModalProps> = ({
                 defaultMessage: 'No',
               })}
             >
-              <Button type="text" size="small" danger icon={<DeleteOutlined />} />
+              <Button
+                type="text"
+                size="small"
+                danger
+                icon={<DeleteOutlined />}
+              />
             </Popconfirm>
           </div>
         ))}
@@ -304,7 +360,7 @@ const AssignModal: React.FC<AssignModalProps> = ({
           value={targetType}
           onChange={(e) => {
             setTargetType(e.target.value);
-            setSelectedGuid(undefined);
+            setSelectedGuids([]);
           }}
           optionType="button"
           buttonStyle="solid"
@@ -312,12 +368,14 @@ const AssignModal: React.FC<AssignModalProps> = ({
         />
         <div style={{ display: 'flex', gap: 8 }}>
           <Select
-            value={selectedGuid}
-            onChange={setSelectedGuid}
+            mode="multiple"
+            value={selectedGuids}
+            onChange={setSelectedGuids}
             options={getSelectOptions()}
             loading={optionsLoading}
             showSearch
             optionFilterProp="label"
+            maxCount={200}
             placeholder={intl.formatMessage({
               id: 'pages.strategies.selectTarget',
               defaultMessage: 'Select target',
@@ -328,7 +386,7 @@ const AssignModal: React.FC<AssignModalProps> = ({
             type="primary"
             icon={<PlusOutlined />}
             loading={assignLoading}
-            disabled={!selectedGuid}
+            disabled={selectedGuids.length === 0}
             onClick={handleAssign}
           >
             <FormattedMessage

@@ -38,9 +38,15 @@ export async function deleteStrategy(guid: string) {
 }
 
 export async function assignStrategy(guid: string, data: API.StrategyAssignParams) {
-  return request(`/api/strategies/${guid}/assign`, { method: 'POST', data });
+  return request<API.StrategyBatchResult>(`/api/strategies/${guid}/assign`, {
+    method: 'POST',
+    data,
+  });
 }
 
-export async function unassignStrategy(guid: string, data: API.StrategyAssignParams) {
-  return request(`/api/strategies/${guid}/unassign`, { method: 'POST', data });
+export async function unassignStrategy(data: API.StrategyAssignParams) {
+  return request<API.StrategyBatchResult>('/api/strategies/unassign', {
+    method: 'POST',
+    data,
+  });
 }

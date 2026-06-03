@@ -22,11 +22,17 @@ const StrategyList: React.FC = () => {
 
   const [createModalVisible, setCreateModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
-  const [currentRecord, setCurrentRecord] = useState<API.StrategyItem | null>(null);
+  const [currentRecord, setCurrentRecord] = useState<API.StrategyItem | null>(
+    null,
+  );
   const [assignModalVisible, setAssignModalVisible] = useState(false);
-  const [assignRecord, setAssignRecord] = useState<API.StrategyItem | null>(null);
+  const [assignRecord, setAssignRecord] = useState<API.StrategyItem | null>(
+    null,
+  );
 
-  const handleCreate = async (values: API.CreateStrategyParams | API.UpdateStrategyParams) => {
+  const handleCreate = async (
+    values: API.CreateStrategyParams | API.UpdateStrategyParams,
+  ) => {
     try {
       await createStrategy(values as API.CreateStrategyParams);
       msgApi.success(

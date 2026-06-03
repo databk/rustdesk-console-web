@@ -1,5 +1,13 @@
 import { FormattedMessage, useIntl } from '@umijs/max';
-import { Button, Input, InputNumber, Select, Switch, Tabs, Tooltip } from 'antd';
+import {
+  Button,
+  Input,
+  InputNumber,
+  Select,
+  Switch,
+  Tabs,
+  Tooltip,
+} from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
 import {
   type ConfigOption,
@@ -29,7 +37,9 @@ const ConfigOptionControl: React.FC<{
   const labelNode = (
     <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
       <Tooltip title={option.description || `${option.defaultValue}`}>
-        <span style={{ fontFamily: 'monospace', fontSize: 13 }}>{option.label}</span>
+        <span style={{ fontFamily: 'monospace', fontSize: 13 }}>
+          {option.label}
+        </span>
       </Tooltip>
       {!isDefault && (
         <span
@@ -49,32 +59,48 @@ const ConfigOptionControl: React.FC<{
   let control: React.ReactNode;
 
   switch (option.type) {
-    case 'switch':
+    case 'switch': {
+      const displayValue = value ?? option.defaultValue;
       control = (
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <Switch
-            checked={value === 'Y'}
+            checked={displayValue === 'Y'}
             onChange={(checked) => onChange?.(checked ? 'Y' : 'N')}
             checkedChildren="Y"
             unCheckedChildren="N"
           />
           <span style={{ color: '#999', fontSize: 12 }}>
-            {intl.formatMessage(
-              { id: 'pages.strategies.defaultValue', defaultMessage: 'Default: {value}' },
-              { value: option.defaultValue },
-            )}
+            {isDefault
+              ? intl.formatMessage({
+                  id: 'pages.strategies.defaultLabel',
+                  defaultMessage: 'Default',
+                })
+              : intl.formatMessage(
+                  {
+                    id: 'pages.strategies.defaultValue',
+                    defaultMessage: 'Default: {value}',
+                  },
+                  { value: option.defaultValue },
+                )}
           </span>
         </div>
       );
       break;
-    case 'select':
+    }
+    case 'select': {
+      const selectValue = value ?? option.defaultValue;
       control = (
         <Select
-          value={value}
-          onChange={(v) => onChange?.(v)}
+          value={selectValue}
+          onChange={(v) =>
+            onChange?.(v === option.defaultValue ? undefined : v)
+          }
           allowClear
           placeholder={intl.formatMessage(
-            { id: 'pages.strategies.defaultValue', defaultMessage: 'Default: {value}' },
+            {
+              id: 'pages.strategies.defaultValue',
+              defaultMessage: 'Default: {value}',
+            },
             { value: option.defaultValue },
           )}
           style={{ width: '100%' }}
@@ -87,23 +113,34 @@ const ConfigOptionControl: React.FC<{
         </Select>
       );
       break;
-    case 'number':
+    }
+    case 'number': {
+      const numValue =
+        value !== undefined ? Number(value) : Number(option.defaultValue);
       control = (
         <InputNumber
-          value={value !== undefined ? Number(value) : undefined}
+          value={numValue}
           onChange={(v) =>
-            onChange?.(v !== null && v !== undefined ? String(v) : undefined)
+            onChange?.(
+              v !== null && v !== undefined && String(v) !== option.defaultValue
+                ? String(v)
+                : undefined,
+            )
           }
           min={option.min}
           max={option.max}
           style={{ width: '100%' }}
           placeholder={intl.formatMessage(
-            { id: 'pages.strategies.defaultValue', defaultMessage: 'Default: {value}' },
+            {
+              id: 'pages.strategies.defaultValue',
+              defaultMessage: 'Default: {value}',
+            },
             { value: option.defaultValue },
           )}
         />
       );
       break;
+    }
     case 'text':
     default:
       control = (
@@ -111,7 +148,10 @@ const ConfigOptionControl: React.FC<{
           value={value || ''}
           onChange={(e) => onChange?.(e.target.value || undefined)}
           placeholder={intl.formatMessage(
-            { id: 'pages.strategies.defaultValue', defaultMessage: 'Default: {value}' },
+            {
+              id: 'pages.strategies.defaultValue',
+              defaultMessage: 'Default: {value}',
+            },
             { value: option.defaultValue || '-' },
           )}
         />
@@ -151,9 +191,14 @@ const ConfigOptionControl: React.FC<{
   );
 };
 
-const ConfigOptionsForm: React.FC<ConfigOptionsFormProps> = ({ value = {}, onChange }) => {
+const ConfigOptionsForm: React.FC<ConfigOptionsFormProps> = ({
+  value = {},
+  onChange,
+}) => {
   const intl = useIntl();
-  const [localValue, setLocalValue] = useState<Record<string, string>>({ ...value });
+  const [localValue, setLocalValue] = useState<Record<string, string>>({
+    ...value,
+  });
 
   useEffect(() => {
     setLocalValue({ ...value });

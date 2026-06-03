@@ -8,7 +8,9 @@ interface StrategyFormProps {
   mode: 'create' | 'edit';
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onFinish: (values: API.CreateStrategyParams | API.UpdateStrategyParams) => Promise<boolean>;
+  onFinish: (
+    values: API.CreateStrategyParams | API.UpdateStrategyParams,
+  ) => Promise<boolean>;
   currentRecord?: API.StrategyItem | null;
 }
 
@@ -22,7 +24,9 @@ const StrategyForm: React.FC<StrategyFormProps> = ({
   const intl = useIntl();
   const [form] = Form.useForm();
   const isEdit = mode === 'edit';
-  const [configOptions, setConfigOptions] = useState<Record<string, string>>({});
+  const [configOptions, setConfigOptions] = useState<Record<string, string>>(
+    {},
+  );
 
   useEffect(() => {
     if (open) {
@@ -45,7 +49,8 @@ const StrategyForm: React.FC<StrategyFormProps> = ({
       const submitData = {
         name: values.name,
         note: values.note || undefined,
-        config_options: Object.keys(configOptions).length > 0 ? configOptions : undefined,
+        config_options:
+          Object.keys(configOptions).length > 0 ? configOptions : undefined,
       };
       return await onFinish(submitData);
     } catch {
@@ -72,7 +77,10 @@ const StrategyForm: React.FC<StrategyFormProps> = ({
       <Form.Item
         name="name"
         label={
-          <FormattedMessage id="pages.strategies.name" defaultMessage="Strategy Name" />
+          <FormattedMessage
+            id="pages.strategies.name"
+            defaultMessage="Strategy Name"
+          />
         }
         rules={[{ required: true }]}
       >
@@ -85,7 +93,9 @@ const StrategyForm: React.FC<StrategyFormProps> = ({
       </Form.Item>
       <Form.Item
         name="note"
-        label={<FormattedMessage id="pages.strategies.note" defaultMessage="Note" />}
+        label={
+          <FormattedMessage id="pages.strategies.note" defaultMessage="Note" />
+        }
       >
         <Input.TextArea
           rows={2}
