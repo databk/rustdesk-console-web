@@ -1,0 +1,114 @@
+access-mode custom custom, full, view
+enable-keyboard Y Y, N
+enable-clipboard Y Y, N
+enable-file-transfer Y Y, N
+enable-camera Y Y, N
+enable-terminal Y Y, N
+enable-remote-printer Y Y, N
+enable-audio Y Y, N
+enable-tunnel Y Y, N
+enable-remote-restart Y Y, N
+enable-record-session Y Y, N
+enable-block-input Y Y, N
+allow-remote-config-modification N Y, N
+enable-lan-discovery Y Y, N
+direct-server N Y, N
+whitelist , 逗号分隔的IP列表
+allow-auto-disconnect N Y, N
+auto-disconnect-timeout 10 超时分钟数
+allow-only-conn-window-open N Y, N
+approve-mode password-click password, click, password-click
+verification-method use-both-passwords use-temporary-password, use-permanent-password, use-both-passwords
+temporary-password-length 6 6, 8, 10
+theme system dark, light, system
+lang default 语言代码列表
+allow-auto-record-incoming N Y, N
+allow-auto-record-outgoing N Y, N
+allow-auto-update N Y, N
+enable-confirm-closing-tabs Y Y, N
+enable-abr Y Y, N
+allow-remove-wallpaper N Y, N
+enable-open-new-connections-in-tabs Y Y, N
+allow-always-software-render N Y, N
+allow-linux-headless N Y, N
+enable-hwcodec Y Y, N
+peer-card-ui-type 0 0, 1, 2
+peer-sorting Remote ID Remote ID, Remote Host, Username
+sync-ab-with-recent-sessions N Y, N
+sync-ab-tags N Y, N
+filter-ab-by-intersection N Y, N
+use-texture-render 平台相关 Y, N
+enable-udp-punch Y Y, N
+enable-ipv6-punch 自建服务器:N, 其它:Y Y, N
+view-only N Y, N
+show-monitors-toolbar N Y, N
+collapse-toolbar N Y, N
+show-remote-cursor N Y, N
+follow-remote-cursor N Y, N
+follow-remote-window N Y, N
+zoom-cursor N Y, N
+show-quality-monitor N Y, N
+disable-audio N Y, N
+enable-file-copy-paste N Y, N
+disable-clipboard N Y, N
+lock-after-session-end N Y, N
+privacy-mode N Y, N
+i444 N Y, N
+reverse-mouse-wheel N Y, N
+swap-left-right-mouse N Y, N
+displays-as-individual-windows N Y, N
+use-all-my-displays-for-the-remote-session N Y, N
+view-style original original, adaptive
+scroll-style scrollauto scrollauto, scrollbar, scrolledge
+edge-scroll-edge-thickness 100 20-150
+image-quality balanced best, balanced, low, custom
+custom-image-quality 50 10.0-2000.0
+custom-fps 30 5-120
+terminal-persistent N Y, N
+trackpad-speed 100 10-1000
+disable-group-panel N Y, N
+pre-elevate-service N Y, N
+disable-floating-window N Y, N
+floating-window-size 120 32-320
+floating-window-untouchable N Y, N
+floating-window-transparency 10 0-10
+keep-screen-on during-controlled never, during-controlled, service-on
+keep-awake-during-incoming-sessions Y Y, N
+keep-awake-during-outgoing-sessions Y Y, N
+enable-directx-capture Y Y, N
+enable-android-software-encoding-half-scale Y Y, N
+allow-remote-cm-modification N Y, N
+remove-preset-password-warning Y Y, N
+hide-security-settings N Y, N
+hide-network-settings N Y, N
+hide-server-settings N Y, N
+hide-proxy-settings N Y, N
+hide-websocket-settings N Y, N
+hide-remote-printer-settings N Y, N
+hide-username-on-card N Y, N
+hide-help-cards N Y, N
+disable-udp N Y, N
+enable-trusted-devices Y Y, N
+hide-tray N Y, N
+hide-stop-service N Y, N
+one-way-clipboard-redirection N Y, N
+one-way-file-transfer N Y, N
+sync-init-clipboard N Y, N
+allow-logon-screen-password N Y, N
+allow-https-21114 N Y, N
+allow-d3d-render N Y, N
+allow-hostname-as-id N Y, N
+allow-websocket N Y, N
+allow-numeric-one-time-password N Y, N
+register-device Y Y, N
+main-window-always-on-top N Y, N
+disable-discovery-panel N Y, N
+touch-mode N Y, N
+show-virtual-mouse N Y, N
+show-virtual-joystick N Y, N
+allow-insecure-tls-fallback N Y, N
+allow-ask-for-note N Y, N
+disable-change-permanent-password N Y, N
+disable-change-id N Y, N
+disable-unlock-pin N Y, N
+allow-command-line-settings-when-settings-disabled N Y, N

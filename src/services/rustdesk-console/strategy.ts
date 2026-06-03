@@ -44,8 +44,8 @@ export async function assignStrategy(guid: string, data: API.StrategyAssignParam
   });
 }
 
-export async function unassignStrategy(data: API.StrategyAssignParams) {
-  return request<API.StrategyBatchResult>('/api/strategies/unassign', {
+export async function unassignStrategy(guid: string, data: API.StrategyAssignParams) {
+  return request<API.StrategyBatchResult>(`/api/strategies/${guid}/unassign`, {
     method: 'POST',
     data,
   });

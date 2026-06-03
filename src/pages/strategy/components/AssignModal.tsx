@@ -164,8 +164,9 @@ const AssignModal: React.FC<AssignModalProps> = ({
   };
 
   const handleUnassign = async (tType: TargetType, targetGuid: string) => {
+    if (!record) return;
     try {
-      const result = await unassignStrategy({
+      const result = await unassignStrategy(record.guid, {
         target_type: tType,
         target_guids: [targetGuid],
       });
