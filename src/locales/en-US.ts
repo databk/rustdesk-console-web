@@ -12,6 +12,7 @@ export default {
   'layout.user.link.privacy': 'Privacy',
   'layout.user.link.terms': 'Terms',
   'layout.user.logout': 'Logout',
+  'layout.user.accountCenter': 'Account Center',
   ...globalHeader,
   ...menu,
   ...settingDrawer,

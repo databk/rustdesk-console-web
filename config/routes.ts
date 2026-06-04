@@ -20,6 +20,23 @@ export default [
     ],
   },
   {
+    path: '/account',
+    name: 'account',
+    icon: 'user',
+    hideInMenu: true,
+    routes: [
+      {
+        path: '/account',
+        redirect: '/account/center',
+      },
+      {
+        name: 'center',
+        path: '/account/center',
+        component: './account/center',
+      },
+    ],
+  },
+  {
     path: '/dashboard',
     name: 'dashboard',
     icon: 'dashboard',

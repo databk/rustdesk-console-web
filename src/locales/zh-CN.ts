@@ -12,6 +12,7 @@ export default {
   'layout.user.link.privacy': '隐私',
   'layout.user.link.terms': '条款',
   'layout.user.logout': '退出登录',
+  'layout.user.accountCenter': '个人中心',
   ...pages,
   ...globalHeader,
   ...menu,

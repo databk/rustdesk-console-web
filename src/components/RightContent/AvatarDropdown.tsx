@@ -1,4 +1,4 @@
-import { LogoutOutlined, UserOutlined } from '@ant-design/icons';
+import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
 import { history, useModel } from '@umijs/max';
 import type { MenuProps } from 'antd';
 import { Spin } from 'antd';
@@ -73,6 +73,10 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({
       loginOut();
       return;
     }
+    if (key === 'accountCenter') {
+      history.push('/account/center');
+      return;
+    }
   };
 
   const loading = (
@@ -106,6 +110,13 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({
     },
     {
       type: 'divider' as const,
+    },
+    {
+      key: 'accountCenter',
+      icon: <SettingOutlined />,
+      label: (
+        <FormattedMessage id="layout.user.accountCenter" defaultMessage="Account Center" />
+      ),
     },
     {
       key: 'logout',

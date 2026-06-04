@@ -65,6 +65,7 @@
     "classnames": "^2.5.1",
     "dayjs": "^1.11.13",
     "numeral": "^2.0.6",
+    "qrcode.react": "^4.2.0",
     "rc-util": "^5.44.4",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",

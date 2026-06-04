@@ -1,4 +1,6 @@
 export default {
+  'menu.account': '个人中心',
+  'menu.account.center': '个人信息',
   'menu.dashboard': '仪表盘',
   'menu.devices': '设备管理',
   'menu.devices.list': '设备列表',

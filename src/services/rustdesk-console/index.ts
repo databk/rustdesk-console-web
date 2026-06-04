@@ -1,4 +1,12 @@
 export { login, logout, currentUser } from './auth';
+export {
+  updateProfile,
+  uploadAvatar,
+  deleteAvatar,
+  setup2FA,
+  verify2FA,
+  disable2FA,
+} from './account';
 export { getDeviceList, batchUpdateDeviceStatus, deleteDevice, assignDevice } from './device';
 export {
   getUserList,

@@ -3,13 +3,38 @@ declare namespace API {
     name?: string;
     email?: string;
     note?: string;
+    avatar?: string;
     status?: number;
     is_admin?: boolean;
+    tfa_enabled?: boolean;
     info?: {
       email_verification?: boolean;
       email_alarm_notification?: boolean;
       other?: Record<string, any>;
     };
+  };
+
+  type UpdateProfileParams = {
+    name?: string;
+    email?: string;
+    note?: string;
+  };
+
+  type Setup2FAResponse = {
+    secret: string;
+    otpauth_url: string;
+  };
+
+  type Verify2FAParams = {
+    code: string;
+  };
+
+  type Setup2FAParams = {
+    current_code?: string;
+  };
+
+  type Disable2FAParams = {
+    code: string;
   };
 
   type DeviceInfo = {
