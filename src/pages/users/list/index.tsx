@@ -453,13 +453,6 @@ const UserList: React.FC = () => {
       render: (_: unknown, record: API.UserItem) => record.note || '-',
     },
     {
-      title: <FormattedMessage id="pages.users.createdAt" defaultMessage="Created At" />,
-      dataIndex: 'created_at',
-      valueType: 'dateTime',
-      width: 170,
-      search: false,
-    },
-    {
       title: <FormattedMessage id="pages.common.action" defaultMessage="Action" />,
       valueType: 'option',
       width: 220,
