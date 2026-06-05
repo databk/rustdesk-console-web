@@ -9,15 +9,16 @@ export {
 } from './account';
 export { getDeviceList, batchUpdateDeviceStatus, deleteDevice, assignDevice } from './device';
 export {
-  getUserList,
+  getAdminUserList,
   createUser,
   inviteUser,
-  enableUser,
-  disableUser,
+  updateUser,
   deleteUser,
-  forceLogout,
-  enforce2FA,
-  disableLoginVerification,
+  updateUserSecurity,
+  forceLogoutUser,
+  batchUpdateUserStatus,
+  batchUpdateUserSecurity,
+  batchForceLogout,
 } from './user';
 export {
   getDeviceGroupList,

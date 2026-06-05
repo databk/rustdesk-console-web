@@ -1,22 +1,13 @@
 import { request } from '@umijs/max';
 
-export async function getUserList(
-  params: {
-    current?: number;
-    pageSize?: number;
-    search?: string;
-    status?: string;
-  },
+// Admin user list (management panel)
+export async function getAdminUserList(
+  params: API.AdminUserListParams,
   options?: { [key: string]: any },
 ) {
-  return request<API.PaginatedResult<API.UserItem>>('/api/users', {
+  return request<API.PaginatedResult<API.UserItem>>('/api/admin/users', {
     method: 'GET',
-    params: {
-      current: params.current || 1,
-      pageSize: params.pageSize || 20,
-      search: params.search,
-      status: params.status,
-    },
+    params,
     ...(options || {}),
   });
 }
@@ -29,26 +20,41 @@ export async function inviteUser(data: API.InviteUserParams) {
   return request('/api/users/invite', { method: 'POST', data });
 }
 
-export async function enableUser(guid: string) {
-  return request(`/api/users/${guid}/enable`, { method: 'POST' });
-}
-
-export async function disableUser(guid: string) {
-  return request(`/api/users/${guid}/disable`, { method: 'POST' });
+export async function updateUser(guid: string, data: API.UpdateUserParams) {
+  return request(`/api/users/${guid}`, { method: 'PATCH', data });
 }
 
 export async function deleteUser(guid: string) {
   return request(`/api/users/${guid}`, { method: 'DELETE' });
 }
 
-export async function forceLogout(data: { guid: string }) {
-  return request('/api/users/force-logout', { method: 'POST', data });
+export async function updateUserSecurity(
+  guid: string,
+  data: API.UpdateUserSecurityParams,
+) {
+  return request(`/api/users/${guid}/security`, { method: 'PATCH', data });
 }
 
-export async function enforce2FA(data: { enforce: boolean }) {
-  return request('/api/users/tfa/totp/enforce', { method: 'PUT', data });
+export async function forceLogoutUser(guid: string) {
+  return request(`/api/users/${guid}/sessions`, { method: 'DELETE' });
 }
 
-export async function disableLoginVerification() {
-  return request('/api/users/disable_login_verification', { method: 'PUT' });
+// Batch operations
+export async function batchUpdateUserStatus(
+  data: API.BatchUpdateUserStatusParams,
+) {
+  return request<API.BatchResult>('/api/users/batch/status', {
+    method: 'PATCH',
+    data,
+  });
+}
+
+export async function batchUpdateUserSecurity(
+  data: API.BatchUpdateUserSecurityParams,
+) {
+  return request('/api/users/batch/security', { method: 'PATCH', data });
+}
+
+export async function batchForceLogout(data: API.BatchForceLogoutParams) {
+  return request('/api/users/batch/sessions', { method: 'DELETE', data });
 }

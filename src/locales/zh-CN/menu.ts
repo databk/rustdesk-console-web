@@ -10,7 +10,6 @@ export default {
   'menu.deviceGroups': '设备组',
   'menu.deviceGroups.list': '设备组列表',
   'menu.users': '用户管理',
-  'menu.users.list': '用户列表',
   'menu.audits': '审计日志',
   'menu.audits.conn': '连接审计',
   'menu.audits.file': '文件审计',

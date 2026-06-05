@@ -108,20 +108,9 @@ export default [
   {
     path: '/users',
     name: 'users',
-    icon: 'team',
+    icon: 'user',
     access: 'canAdmin',
-    routes: [
-      {
-        path: '/users',
-        redirect: '/users/list',
-      },
-      {
-        name: 'list',
-        icon: 'user-switch',
-        path: '/users/list',
-        component: './users/list',
-      },
-    ],
+    component: './users/list',
   },
   {
     path: '/roles',

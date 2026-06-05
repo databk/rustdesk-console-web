@@ -10,7 +10,6 @@ export default {
   'menu.deviceGroups': 'Device Groups',
   'menu.deviceGroups.list': 'Device Groups',
   'menu.users': 'Users',
-  'menu.users.list': 'User List',
   'menu.audits': 'Audit Logs',
   'menu.audits.conn': 'Connection',
   'menu.audits.file': 'File Transfer',

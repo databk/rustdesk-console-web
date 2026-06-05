@@ -102,21 +102,76 @@ declare namespace API {
     name: string;
     email: string;
     note: string;
-    status: number;
+    status: number; // -1=未验证, 0=禁用, 1=正常
     is_admin: boolean;
+    third_auth_type?: string;
+    strategy_guid?: string;
+    strategy_name?: string;
+    avatar?: string;
+    created_at?: string;
+    updated_at?: string;
   };
 
   type CreateUserParams = {
     name: string;
-    email: string;
     password: string;
+    email?: string;
     note?: string;
-    is_admin?: boolean;
+    group_name?: string;
   };
 
   type InviteUserParams = {
     email: string;
+    name: string;
     note?: string;
+    group_name?: string;
+  };
+
+  type UpdateUserParams = {
+    name?: string;
+    email?: string;
+    note?: string;
+    status?: number;
+    is_admin?: boolean;
+  };
+
+  type BatchUpdateUserStatusParams = {
+    user_guids: string[];
+    status: number; // -1=未验证, 0=禁用, 1=正常
+  };
+
+  type BatchUpdateUserSecurityParams = {
+    user_guids: string[];
+    tfa_enforce?: boolean;
+    email_verification?: boolean;
+  };
+
+  type BatchForceLogoutParams = {
+    user_guids: string[];
+  };
+
+  type UpdateUserSecurityParams = {
+    tfa_enforce?: boolean;
+    email_verification?: boolean;
+  };
+
+  type BatchResult = {
+    succeeded: string[];
+    failed: Array<{ guid: string; reason: string }>;
+    total: number;
+    succeededCount: number;
+    failedCount: number;
+  };
+
+  type AdminUserListParams = {
+    current: number;
+    pageSize: number;
+    status?: number;
+    name?: string;
+    email?: string;
+    is_admin?: boolean;
+    third_auth_type?: string;
+    strategy_name?: string;
   };
 
   type DeviceItem = {
