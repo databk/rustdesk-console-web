@@ -1,4 +1,8 @@
-import { LockOutlined, SafetyCertificateOutlined, UnlockOutlined } from '@ant-design/icons';
+import {
+  LockOutlined,
+  SafetyCertificateOutlined,
+  UnlockOutlined,
+} from '@ant-design/icons';
 import { useIntl, FormattedMessage, useModel } from '@umijs/max';
 import {
   Button,

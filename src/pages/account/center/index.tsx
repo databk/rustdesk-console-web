@@ -10,17 +10,32 @@ const AccountCenter: React.FC = () => {
   const items = [
     {
       key: 'basic',
-      label: <FormattedMessage id="pages.account.tab.basic" defaultMessage="Basic Information" />,
+      label: (
+        <FormattedMessage
+          id="pages.account.tab.basic"
+          defaultMessage="Basic Information"
+        />
+      ),
       children: <BasicInfo />,
     },
     {
       key: 'avatar',
-      label: <FormattedMessage id="pages.account.tab.avatar" defaultMessage="Avatar" />,
+      label: (
+        <FormattedMessage
+          id="pages.account.tab.avatar"
+          defaultMessage="Avatar"
+        />
+      ),
       children: <AvatarSetting />,
     },
     {
       key: 'security',
-      label: <FormattedMessage id="pages.account.tab.security" defaultMessage="Security" />,
+      label: (
+        <FormattedMessage
+          id="pages.account.tab.security"
+          defaultMessage="Security"
+        />
+      ),
       children: <SecuritySetting />,
     },
   ];

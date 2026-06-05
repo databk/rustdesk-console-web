@@ -1,4 +1,8 @@
-import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
+import {
+  LogoutOutlined,
+  SettingOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
 import { history, useModel } from '@umijs/max';
 import type { MenuProps } from 'antd';
 import { Spin } from 'antd';
@@ -115,7 +119,10 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({
       key: 'accountCenter',
       icon: <SettingOutlined />,
       label: (
-        <FormattedMessage id="layout.user.accountCenter" defaultMessage="Account Center" />
+        <FormattedMessage
+          id="layout.user.accountCenter"
+          defaultMessage="Account Center"
+        />
       ),
     },
     {

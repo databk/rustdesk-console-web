@@ -483,7 +483,8 @@ export default {
   'pages.account.basicInfo.updateSuccess': '用户信息已更新',
   'pages.account.basicInfo.updateFailed': '更新用户信息失败',
   'pages.account.avatar.title': '头像设置',
-  'pages.account.avatar.hint': '支持 JPG、PNG、WebP 格式，最大 2MB，将自动缩放为 256x256',
+  'pages.account.avatar.hint':
+    '支持 JPG、PNG、WebP 格式，最大 2MB，将自动缩放为 256x256',
   'pages.account.avatar.upload': '上传头像',
   'pages.account.avatar.delete': '删除头像',
   'pages.account.avatar.deleteConfirm': '确定要删除头像吗？',
@@ -502,7 +503,8 @@ export default {
   'pages.account.security.disable2FA': '禁用 2FA',
   'pages.account.security.setup2FA': '设置双因素认证',
   'pages.account.security.setupFailed': '设置 2FA 失败',
-  'pages.account.security.scanQRCode': '请使用认证器应用扫描二维码，然后输入验证码完成绑定。',
+  'pages.account.security.scanQRCode':
+    '请使用认证器应用扫描二维码，然后输入验证码完成绑定。',
   'pages.account.security.secretKey': '密钥',
   'pages.account.security.verificationCode': '验证码',
   'pages.account.security.enterCode': '请输入验证码',

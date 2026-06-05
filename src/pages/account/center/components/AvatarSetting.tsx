@@ -1,6 +1,19 @@
-import { DeleteOutlined, UploadOutlined, UserOutlined } from '@ant-design/icons';
+import {
+  DeleteOutlined,
+  UploadOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
 import { useIntl, FormattedMessage, useModel } from '@umijs/max';
-import { Avatar, Button, Card, message as messageApi, Popconfirm, Space, Upload, Typography } from 'antd';
+import {
+  Avatar,
+  Button,
+  Card,
+  message as messageApi,
+  Popconfirm,
+  Space,
+  Upload,
+  Typography,
+} from 'antd';
 import React, { useState } from 'react';
 import { uploadAvatar, deleteAvatar } from '@/services/rustdesk-console';
 
@@ -92,7 +105,12 @@ const AvatarSetting: React.FC = () => {
         />
       }
     >
-      <Space direction="vertical" align="center" style={{ width: '100%' }} size="large">
+      <Space
+        direction="vertical"
+        align="center"
+        style={{ width: '100%' }}
+        size="large"
+      >
         <Avatar
           size={128}
           src={avatarUrl}
@@ -128,10 +146,16 @@ const AvatarSetting: React.FC = () => {
               }
               onConfirm={handleDelete}
               okText={
-                <FormattedMessage id="pages.common.confirm" defaultMessage="Yes" />
+                <FormattedMessage
+                  id="pages.common.confirm"
+                  defaultMessage="Yes"
+                />
               }
               cancelText={
-                <FormattedMessage id="pages.common.cancel" defaultMessage="No" />
+                <FormattedMessage
+                  id="pages.common.cancel"
+                  defaultMessage="No"
+                />
               }
             >
               <Button icon={<DeleteOutlined />} danger loading={deleting}>

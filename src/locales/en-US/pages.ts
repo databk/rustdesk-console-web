@@ -502,7 +502,8 @@ export default {
   'pages.account.basicInfo.updateSuccess': 'Profile updated successfully',
   'pages.account.basicInfo.updateFailed': 'Failed to update profile',
   'pages.account.avatar.title': 'Avatar Settings',
-  'pages.account.avatar.hint': 'Supports JPG, PNG, WebP, max 2MB, will be resized to 256x256',
+  'pages.account.avatar.hint':
+    'Supports JPG, PNG, WebP, max 2MB, will be resized to 256x256',
   'pages.account.avatar.upload': 'Upload Avatar',
   'pages.account.avatar.delete': 'Delete Avatar',
   'pages.account.avatar.deleteConfirm': 'Are you sure to delete your avatar?',
@@ -511,7 +512,8 @@ export default {
   'pages.account.avatar.deleteSuccess': 'Avatar deleted successfully',
   'pages.account.avatar.deleteFailed': 'Failed to delete avatar',
   'pages.account.avatar.fileTooLarge': 'File size cannot exceed 2MB',
-  'pages.account.avatar.invalidFormat': 'Only JPG, PNG, WebP formats are supported',
+  'pages.account.avatar.invalidFormat':
+    'Only JPG, PNG, WebP formats are supported',
   'pages.account.security.title': 'Security Settings',
   'pages.account.security.2faStatus': '2FA Status',
   'pages.account.security.2faAction': 'Action',
@@ -521,7 +523,8 @@ export default {
   'pages.account.security.disable2FA': 'Disable 2FA',
   'pages.account.security.setup2FA': 'Setup Two-Factor Authentication',
   'pages.account.security.setupFailed': 'Failed to setup 2FA',
-  'pages.account.security.scanQRCode': 'Scan the QR code with your authenticator app, then enter the verification code below.',
+  'pages.account.security.scanQRCode':
+    'Scan the QR code with your authenticator app, then enter the verification code below.',
   'pages.account.security.secretKey': 'Secret Key',
   'pages.account.security.verificationCode': 'Verification Code',
   'pages.account.security.enterCode': 'Please enter verification code',
