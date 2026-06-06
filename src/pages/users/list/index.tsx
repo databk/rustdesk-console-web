@@ -462,7 +462,13 @@ const UserList: React.FC = () => {
           }),
           status: 'Processing',
         },
-        false: { text: '-', status: 'Default' },
+        false: {
+          text: intl.formatMessage({
+            id: 'pages.users.normalUser',
+            defaultMessage: 'Normal',
+          }),
+          status: 'Default',
+        },
       },
       render: (_: unknown, record: API.UserItem) =>
         record.is_admin ? (
@@ -688,7 +694,12 @@ const UserList: React.FC = () => {
             status: params.status,
             name: params.name,
             email: params.email,
-            is_admin: params.is_admin,
+            is_admin:
+              params.is_admin === 'true'
+                ? 1
+                : params.is_admin === 'false'
+                  ? 0
+                  : undefined,
           });
           return {
             data: result.data || [],

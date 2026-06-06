@@ -321,6 +321,7 @@ export default {
   'pages.users.invite': '邀请用户',
   'pages.users.password': '密码',
   'pages.users.isAdmin': '管理员',
+  'pages.users.normalUser': '普通用户',
   'pages.users.statusInfo': '用户账户状态',
   'pages.users.edit': '编辑用户',
   'pages.users.updateSuccess': '用户已更新',

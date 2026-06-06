@@ -169,7 +169,7 @@ declare namespace API {
     status?: number;
     name?: string;
     email?: string;
-    is_admin?: boolean;
+    is_admin?: 0 | 1;
     third_auth_type?: string;
     strategy_name?: string;
   };

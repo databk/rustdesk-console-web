@@ -337,6 +337,7 @@ export default {
   'pages.users.invite': 'Invite User',
   'pages.users.password': 'Password',
   'pages.users.isAdmin': 'Admin',
+  'pages.users.normalUser': 'Normal',
   'pages.users.statusInfo': 'User account status',
   'pages.users.edit': 'Edit User',
   'pages.users.updateSuccess': 'User updated',
