@@ -9,6 +9,7 @@ import {
   batchUpdateDeviceStatus,
   deleteDevice,
   getDeviceList,
+  updateDevice,
 } from '@/services/rustdesk-console/device';
 import {
   addDeviceToGroup,
@@ -17,7 +18,7 @@ import {
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
-import { App, Button, Divider, Modal, Popconfirm, Space } from 'antd';
+import { App, Button, Divider, Form, Input, Modal, Popconfirm, Space } from 'antd';
 import React, { useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Settings from '../../../../config/defaultSettings';
@@ -43,6 +44,11 @@ const DeviceList: React.FC<DeviceListProps> = ({
     useState(false);
   const [selectedDeviceKeys, setSelectedDeviceKeys] = useState<React.Key[]>([]);
   const [importing, setImporting] = useState(false);
+
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [editingRecord, setEditingRecord] =
+    useState<API.DeviceItem | null>(null);
+  const [editForm] = Form.useForm();
 
   const handleEnable = async (guid: string) => {
     try {
@@ -123,6 +129,50 @@ const DeviceList: React.FC<DeviceListProps> = ({
         intl.formatMessage({
           id: 'pages.devices.deleteFailed',
           defaultMessage: 'Failed to delete device',
+        }),
+      );
+    }
+  };
+
+  const handleEdit = async (values: Record<string, string | null>) => {
+    if (!editingRecord) return;
+    try {
+      const data: API.UpdateDeviceParams = {};
+      const original: Record<string, string | undefined> = {
+        userName: editingRecord.user_name,
+        deviceGroupName: editingRecord.device_group_name,
+        strategyName: editingRecord.strategy_name,
+        note: editingRecord.note,
+      };
+      const fieldMap: Record<string, keyof API.UpdateDeviceParams> = {
+        userName: 'userName',
+        deviceGroupName: 'deviceGroupName',
+        strategyName: 'strategyName',
+        note: 'note',
+      };
+      for (const [formKey, paramKey] of Object.entries(fieldMap)) {
+        const originalValue = original[formKey] || '';
+        const newValue = values[formKey] ?? '';
+        if (newValue !== originalValue) {
+          data[paramKey] = newValue === '' ? null : newValue;
+        }
+      }
+      await updateDevice(editingRecord.guid, data);
+      msgApi.success(
+        intl.formatMessage({
+          id: 'pages.devices.updateSuccess',
+          defaultMessage: 'Device updated',
+        }),
+      );
+      setEditModalVisible(false);
+      setEditingRecord(null);
+      editForm.resetFields();
+      actionRef.current?.reload();
+    } catch {
+      msgApi.error(
+        intl.formatMessage({
+          id: 'pages.devices.updateFailed',
+          defaultMessage: 'Failed to update device',
         }),
       );
     }
@@ -361,7 +411,22 @@ const DeviceList: React.FC<DeviceListProps> = ({
       // Normal device list (not in device group context)
       return (
         <Space size={0} split={<Divider type="vertical" />}>
-          <Button key="edit" type="link" size="small" icon={<EditOutlined />}>
+          <Button
+            key="edit"
+            type="link"
+            size="small"
+            icon={<EditOutlined />}
+            onClick={() => {
+              setEditingRecord(record);
+              editForm.setFieldsValue({
+                userName: record.user_name || '',
+                deviceGroupName: record.device_group_name || '',
+                strategyName: record.strategy_name || '',
+                note: record.note || '',
+              });
+              setEditModalVisible(true);
+            }}
+          >
             <FormattedMessage id="pages.common.edit" defaultMessage="Edit" />
           </Button>
           {isDisabled ? (
@@ -642,6 +707,84 @@ const DeviceList: React.FC<DeviceListProps> = ({
             />
           </Modal>
         )}
+
+        <Modal
+          title={
+            <FormattedMessage
+              id="pages.devices.edit"
+              defaultMessage="Edit Device"
+            />
+          }
+          open={editModalVisible}
+          onCancel={() => {
+            setEditModalVisible(false);
+            setEditingRecord(null);
+            editForm.resetFields();
+          }}
+          onOk={() => editForm.submit()}
+        >
+          <Form form={editForm} onFinish={handleEdit} layout="vertical">
+            <Form.Item
+              name="userName"
+              label={
+                <FormattedMessage
+                  id="pages.devices.user"
+                  defaultMessage="User"
+                />
+              }
+            >
+              <Input
+                placeholder={intl.formatMessage({
+                  id: 'pages.devices.enterUserName',
+                  defaultMessage: 'Enter username to associate',
+                })}
+              />
+            </Form.Item>
+            <Form.Item
+              name="deviceGroupName"
+              label={
+                <FormattedMessage
+                  id="pages.devices.deviceGroup"
+                  defaultMessage="Group"
+                />
+              }
+            >
+              <Input
+                placeholder={intl.formatMessage({
+                  id: 'pages.devices.enterDeviceGroupName',
+                  defaultMessage: 'Enter device group name to associate',
+                })}
+              />
+            </Form.Item>
+            <Form.Item
+              name="strategyName"
+              label={
+                <FormattedMessage
+                  id="pages.devices.strategy"
+                  defaultMessage="Strategy"
+                />
+              }
+            >
+              <Input
+                placeholder={intl.formatMessage({
+                  id: 'pages.devices.enterStrategyName',
+                  defaultMessage: 'Enter strategy name to associate',
+                })}
+              />
+            </Form.Item>
+            <Form.Item
+              name="note"
+              label={
+                <FormattedMessage
+                  id="pages.devices.note"
+                  defaultMessage="Note"
+                />
+              }
+            >
+              <Input.TextArea />
+            </Form.Item>
+          </Form>
+        </Modal>
       </PageContainer>
     </>
   );

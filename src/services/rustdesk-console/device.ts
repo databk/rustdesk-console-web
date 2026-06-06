@@ -48,7 +48,17 @@ export async function batchUpdateDeviceStatus(params: {
 }
 
 export async function deleteDevice(guid: string) {
-  return request(`/api/peers/${guid}`, { method: 'DELETE' });
+  return request(`/api/devices/${guid}`, { method: 'DELETE' });
+}
+
+export async function updateDevice(
+  guid: string,
+  data: API.UpdateDeviceParams,
+) {
+  return request(`/api/devices/${guid}`, {
+    method: 'PATCH',
+    data,
+  });
 }
 
 export async function assignDevice(guid: string, data: Record<string, any>) {

@@ -200,6 +200,13 @@ declare namespace API {
     [key: string]: any;
   };
 
+  type UpdateDeviceParams = {
+    userName?: string | null;
+    deviceGroupName?: string | null;
+    strategyName?: string | null;
+    note?: string | null;
+  };
+
   type DeviceGroupItem = {
     guid: string;
     name: string;

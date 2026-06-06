@@ -81,6 +81,12 @@ export default {
   'pages.devices.batchDisableFailed': 'Failed to disable devices',
   'pages.devices.batchDisablePartialFailed':
     'Successfully disabled {success} device(s), {failed} failed',
+  'pages.devices.edit': 'Edit Device',
+  'pages.devices.updateSuccess': 'Device updated',
+  'pages.devices.updateFailed': 'Failed to update device',
+  'pages.devices.enterUserName': 'Enter username to associate',
+  'pages.devices.enterDeviceGroupName': 'Enter device group name to associate',
+  'pages.devices.enterStrategyName': 'Enter strategy name to associate',
   'pages.addressBook.name': 'Name',
   'pages.addressBook.note': 'Note',
   'pages.addressBook.shared': 'Shared Address Books',

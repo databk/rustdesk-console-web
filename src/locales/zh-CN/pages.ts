@@ -70,6 +70,12 @@ export default {
   'pages.devices.batchDisableFailed': '禁用设备失败',
   'pages.devices.batchDisablePartialFailed':
     '成功禁用 {success} 个设备，{failed} 个失败',
+  'pages.devices.edit': '编辑设备',
+  'pages.devices.updateSuccess': '设备已更新',
+  'pages.devices.updateFailed': '更新设备失败',
+  'pages.devices.enterUserName': '输入关联用户名',
+  'pages.devices.enterDeviceGroupName': '输入关联设备组名',
+  'pages.devices.enterStrategyName': '输入关联策略名',
   'pages.addressBook.name': '名称',
   'pages.addressBook.note': '备注',
   'pages.addressBook.shared': '共享地址簿',

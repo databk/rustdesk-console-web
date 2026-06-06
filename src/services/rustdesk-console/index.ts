@@ -7,7 +7,7 @@ export {
   verify2FA,
   disable2FA,
 } from './account';
-export { getDeviceList, batchUpdateDeviceStatus, deleteDevice, assignDevice } from './device';
+export { getDeviceList, batchUpdateDeviceStatus, deleteDevice, updateDevice, assignDevice } from './device';
 export {
   getAdminUserList,
   createUser,
