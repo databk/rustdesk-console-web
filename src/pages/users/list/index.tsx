@@ -210,7 +210,10 @@ const UserList: React.FC = () => {
     setBatchStatusUpdating(true);
     try {
       const userGuids = selectedRows.map((row) => row.guid);
-      const result = await batchUpdateUserStatus({ user_guids: userGuids, status: 1 });
+      const result = await batchUpdateUserStatus({
+        user_guids: userGuids,
+        status: 1,
+      });
       if (result.failedCount > 0) {
         msgApi.warning(
           intl.formatMessage(
@@ -254,7 +257,10 @@ const UserList: React.FC = () => {
     setBatchStatusUpdating(true);
     try {
       const userGuids = selectedRows.map((row) => row.guid);
-      const result = await batchUpdateUserStatus({ user_guids: userGuids, status: 0 });
+      const result = await batchUpdateUserStatus({
+        user_guids: userGuids,
+        status: 0,
+      });
       if (result.failedCount > 0) {
         msgApi.warning(
           intl.formatMessage(
@@ -352,14 +358,20 @@ const UserList: React.FC = () => {
     if (status === 0) {
       return (
         <Tag icon={<MinusCircleOutlined />} color="red">
-          <FormattedMessage id="pages.users.disabled" defaultMessage="Disabled" />
+          <FormattedMessage
+            id="pages.users.disabled"
+            defaultMessage="Disabled"
+          />
         </Tag>
       );
     }
     if (status === -1) {
       return (
         <Tag color="orange">
-          <FormattedMessage id="pages.users.unverified" defaultMessage="Unverified" />
+          <FormattedMessage
+            id="pages.users.unverified"
+            defaultMessage="Unverified"
+          />
         </Tag>
       );
     }
@@ -368,7 +380,9 @@ const UserList: React.FC = () => {
 
   const columns: ProColumns<API.UserItem>[] = [
     {
-      title: <FormattedMessage id="pages.users.name" defaultMessage="Username" />,
+      title: (
+        <FormattedMessage id="pages.users.name" defaultMessage="Username" />
+      ),
       dataIndex: 'name',
       width: 150,
       ellipsis: true,
@@ -401,24 +415,53 @@ const UserList: React.FC = () => {
       render: (_: unknown, record: API.UserItem) => record.email || '-',
     },
     {
-      title: <FormattedMessage id="pages.users.status" defaultMessage="Status" />,
+      title: (
+        <FormattedMessage id="pages.users.status" defaultMessage="Status" />
+      ),
       dataIndex: 'status',
       width: 100,
       valueType: 'select',
       valueEnum: {
-        1: { text: intl.formatMessage({ id: 'pages.users.active', defaultMessage: 'Active' }), status: 'Success' },
-        0: { text: intl.formatMessage({ id: 'pages.users.disabled', defaultMessage: 'Disabled' }), status: 'Error' },
-        [-1]: { text: intl.formatMessage({ id: 'pages.users.unverified', defaultMessage: 'Unverified' }), status: 'Warning' },
+        1: {
+          text: intl.formatMessage({
+            id: 'pages.users.active',
+            defaultMessage: 'Active',
+          }),
+          status: 'Success',
+        },
+        0: {
+          text: intl.formatMessage({
+            id: 'pages.users.disabled',
+            defaultMessage: 'Disabled',
+          }),
+          status: 'Error',
+        },
+        [-1]: {
+          text: intl.formatMessage({
+            id: 'pages.users.unverified',
+            defaultMessage: 'Unverified',
+          }),
+          status: 'Warning',
+        },
       },
-      render: (_: unknown, record: API.UserItem) => renderStatusTag(record.status),
+      render: (_: unknown, record: API.UserItem) =>
+        renderStatusTag(record.status),
     },
     {
-      title: <FormattedMessage id="pages.users.isAdmin" defaultMessage="Admin" />,
+      title: (
+        <FormattedMessage id="pages.users.isAdmin" defaultMessage="Admin" />
+      ),
       dataIndex: 'is_admin',
       width: 80,
       valueType: 'select',
       valueEnum: {
-        true: { text: intl.formatMessage({ id: 'pages.users.admin', defaultMessage: 'Admin' }), status: 'Processing' },
+        true: {
+          text: intl.formatMessage({
+            id: 'pages.users.admin',
+            defaultMessage: 'Admin',
+          }),
+          status: 'Processing',
+        },
         false: { text: '-', status: 'Default' },
       },
       render: (_: unknown, record: API.UserItem) =>
@@ -431,18 +474,26 @@ const UserList: React.FC = () => {
         ),
     },
     {
-      title: <FormattedMessage id="pages.users.strategy" defaultMessage="Strategy" />,
+      title: (
+        <FormattedMessage id="pages.users.strategy" defaultMessage="Strategy" />
+      ),
       dataIndex: 'strategy_name',
       width: 120,
       search: false,
       render: (_: unknown, record: API.UserItem) => record.strategy_name || '-',
     },
     {
-      title: <FormattedMessage id="pages.users.thirdAuthType" defaultMessage="Auth Type" />,
+      title: (
+        <FormattedMessage
+          id="pages.users.thirdAuthType"
+          defaultMessage="Auth Type"
+        />
+      ),
       dataIndex: 'third_auth_type',
       width: 100,
       search: false,
-      render: (_: unknown, record: API.UserItem) => record.third_auth_type || '-',
+      render: (_: unknown, record: API.UserItem) =>
+        record.third_auth_type || '-',
     },
     {
       title: <FormattedMessage id="pages.users.note" defaultMessage="Note" />,
@@ -453,7 +504,9 @@ const UserList: React.FC = () => {
       render: (_: unknown, record: API.UserItem) => record.note || '-',
     },
     {
-      title: <FormattedMessage id="pages.common.action" defaultMessage="Action" />,
+      title: (
+        <FormattedMessage id="pages.common.action" defaultMessage="Action" />
+      ),
       valueType: 'option',
       width: 220,
       fixed: 'right',
@@ -475,7 +528,10 @@ const UserList: React.FC = () => {
             icon={<SafetyOutlined />}
             onClick={() => openSecurityModal(record)}
           >
-            <FormattedMessage id="pages.users.security" defaultMessage="Security" />
+            <FormattedMessage
+              id="pages.users.security"
+              defaultMessage="Security"
+            />
           </Button>
           <Button
             key="logout"
@@ -484,7 +540,10 @@ const UserList: React.FC = () => {
             icon={<LogoutOutlined />}
             onClick={() => handleForceLogout(record.guid)}
           >
-            <FormattedMessage id="pages.users.forceLogout" defaultMessage="Logout" />
+            <FormattedMessage
+              id="pages.users.forceLogout"
+              defaultMessage="Logout"
+            />
           </Button>
           <Popconfirm
             key="delete"
@@ -505,7 +564,10 @@ const UserList: React.FC = () => {
             })}
           >
             <Button type="link" size="small" danger icon={<DeleteOutlined />}>
-              <FormattedMessage id="pages.common.delete" defaultMessage="Delete" />
+              <FormattedMessage
+                id="pages.common.delete"
+                defaultMessage="Delete"
+              />
             </Button>
           </Popconfirm>
         </Space>
@@ -676,7 +738,10 @@ const UserList: React.FC = () => {
       {/* Create User Modal */}
       <Modal
         title={
-          <FormattedMessage id="pages.users.create" defaultMessage="Create User" />
+          <FormattedMessage
+            id="pages.users.create"
+            defaultMessage="Create User"
+          />
         }
         open={createModalVisible}
         onCancel={() => setCreateModalVisible(false)}
@@ -686,7 +751,10 @@ const UserList: React.FC = () => {
           <Form.Item
             name="name"
             label={
-              <FormattedMessage id="pages.users.name" defaultMessage="Username" />
+              <FormattedMessage
+                id="pages.users.name"
+                defaultMessage="Username"
+              />
             }
             rules={[
               {
@@ -703,7 +771,10 @@ const UserList: React.FC = () => {
           <Form.Item
             name="password"
             label={
-              <FormattedMessage id="pages.users.password" defaultMessage="Password" />
+              <FormattedMessage
+                id="pages.users.password"
+                defaultMessage="Password"
+              />
             }
             rules={[
               {
@@ -745,7 +816,10 @@ const UserList: React.FC = () => {
           <Form.Item
             name="group_name"
             label={
-              <FormattedMessage id="pages.users.groupName" defaultMessage="Device Group" />
+              <FormattedMessage
+                id="pages.users.groupName"
+                defaultMessage="Device Group"
+              />
             }
           >
             <Input />
@@ -756,7 +830,10 @@ const UserList: React.FC = () => {
       {/* Invite User Modal */}
       <Modal
         title={
-          <FormattedMessage id="pages.users.invite" defaultMessage="Invite User" />
+          <FormattedMessage
+            id="pages.users.invite"
+            defaultMessage="Invite User"
+          />
         }
         open={inviteModalVisible}
         onCancel={() => setInviteModalVisible(false)}
@@ -766,7 +843,10 @@ const UserList: React.FC = () => {
           <Form.Item
             name="name"
             label={
-              <FormattedMessage id="pages.users.name" defaultMessage="Username" />
+              <FormattedMessage
+                id="pages.users.name"
+                defaultMessage="Username"
+              />
             }
             rules={[
               {
@@ -815,7 +895,10 @@ const UserList: React.FC = () => {
           <Form.Item
             name="group_name"
             label={
-              <FormattedMessage id="pages.users.groupName" defaultMessage="Device Group" />
+              <FormattedMessage
+                id="pages.users.groupName"
+                defaultMessage="Device Group"
+              />
             }
           >
             <Input />
@@ -840,7 +923,10 @@ const UserList: React.FC = () => {
           <Form.Item
             name="name"
             label={
-              <FormattedMessage id="pages.users.name" defaultMessage="Username" />
+              <FormattedMessage
+                id="pages.users.name"
+                defaultMessage="Username"
+              />
             }
             rules={[
               {
@@ -882,21 +968,45 @@ const UserList: React.FC = () => {
           <Form.Item
             name="status"
             label={
-              <FormattedMessage id="pages.users.status" defaultMessage="Status" />
+              <FormattedMessage
+                id="pages.users.status"
+                defaultMessage="Status"
+              />
             }
           >
             <Select
               options={[
-                { label: intl.formatMessage({ id: 'pages.users.active', defaultMessage: 'Active' }), value: 1 },
-                { label: intl.formatMessage({ id: 'pages.users.disabled', defaultMessage: 'Disabled' }), value: 0 },
-                { label: intl.formatMessage({ id: 'pages.users.unverified', defaultMessage: 'Unverified' }), value: -1 },
+                {
+                  label: intl.formatMessage({
+                    id: 'pages.users.active',
+                    defaultMessage: 'Active',
+                  }),
+                  value: 1,
+                },
+                {
+                  label: intl.formatMessage({
+                    id: 'pages.users.disabled',
+                    defaultMessage: 'Disabled',
+                  }),
+                  value: 0,
+                },
+                {
+                  label: intl.formatMessage({
+                    id: 'pages.users.unverified',
+                    defaultMessage: 'Unverified',
+                  }),
+                  value: -1,
+                },
               ]}
             />
           </Form.Item>
           <Form.Item
             name="is_admin"
             label={
-              <FormattedMessage id="pages.users.isAdmin" defaultMessage="Admin" />
+              <FormattedMessage
+                id="pages.users.isAdmin"
+                defaultMessage="Admin"
+              />
             }
             valuePropName="checked"
           >
@@ -921,7 +1031,11 @@ const UserList: React.FC = () => {
         }}
         onOk={() => securityForm.submit()}
       >
-        <Form form={securityForm} onFinish={handleUpdateSecurity} layout="vertical">
+        <Form
+          form={securityForm}
+          onFinish={handleUpdateSecurity}
+          layout="vertical"
+        >
           <Form.Item
             name="tfa_enforce"
             label={

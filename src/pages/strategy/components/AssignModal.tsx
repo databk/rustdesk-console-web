@@ -90,7 +90,10 @@ const AssignModal: React.FC<AssignModalProps> = ({
             break;
           }
           case 'user': {
-            const result = await getAdminUserList({ current: 1, pageSize: 200 });
+            const result = await getAdminUserList({
+              current: 1,
+              pageSize: 200,
+            });
             setUserList(result.data || []);
             break;
           }

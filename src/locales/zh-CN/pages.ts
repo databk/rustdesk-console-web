@@ -344,10 +344,12 @@ export default {
   'pages.users.batchForceLogoutConfirm': '确定要强制登出选中的用户吗？',
   'pages.users.batchEnableSuccess': '成功启用 {count} 个用户',
   'pages.users.batchEnableFailed': '启用用户失败',
-  'pages.users.batchEnablePartialFailed': '成功启用 {success} 个用户，{failed} 个失败',
+  'pages.users.batchEnablePartialFailed':
+    '成功启用 {success} 个用户，{failed} 个失败',
   'pages.users.batchDisableSuccess': '成功禁用 {count} 个用户',
   'pages.users.batchDisableFailed': '禁用用户失败',
-  'pages.users.batchDisablePartialFailed': '成功禁用 {success} 个用户，{failed} 个失败',
+  'pages.users.batchDisablePartialFailed':
+    '成功禁用 {success} 个用户，{failed} 个失败',
   'pages.users.batchForceLogoutSuccess': '批量强制登出成功',
   'pages.users.batchForceLogoutFailed': '批量强制登出失败',
   'pages.dashboard.totalUsers': '用户总数',
