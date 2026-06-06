@@ -19,7 +19,12 @@ import {
 } from 'antd';
 import { QRCodeSVG } from 'qrcode.react';
 import React, { useState } from 'react';
-import { setup2FA, verify2FA, disable2FA, changePassword } from '@/services/rustdesk-console';
+import {
+  setup2FA,
+  verify2FA,
+  disable2FA,
+  changePassword,
+} from '@/services/rustdesk-console';
 
 const { Text, Paragraph } = Typography;
 
@@ -464,12 +469,10 @@ const SecuritySetting: React.FC = () => {
         }}
         onOk={() => passwordForm.submit()}
         confirmLoading={passwordLoading}
-        okText={
-          intl.formatMessage({
-            id: 'pages.account.security.changePassword',
-            defaultMessage: 'Change Password',
-          })
-        }
+        okText={intl.formatMessage({
+          id: 'pages.account.security.changePassword',
+          defaultMessage: 'Change Password',
+        })}
       >
         <Form
           form={passwordForm}
@@ -509,7 +512,8 @@ const SecuritySetting: React.FC = () => {
                 required: true,
                 message: intl.formatMessage({
                   id: 'pages.account.security.enterNewPassword',
-                  defaultMessage: 'Please enter new password (min 6 characters)',
+                  defaultMessage:
+                    'Please enter new password (min 6 characters)',
                 }),
               },
               {
