@@ -1,4 +1,9 @@
-import { DeleteOutlined, PlusCircleOutlined, MinusCircleOutlined, SelectOutlined } from '@ant-design/icons';
+import {
+  DeleteOutlined,
+  PlusCircleOutlined,
+  MinusCircleOutlined,
+  SelectOutlined,
+} from '@ant-design/icons';
 import {
   batchUpdateDeviceStatus,
   deleteDevice,
@@ -33,7 +38,9 @@ const DeviceList: React.FC<DeviceListProps> = ({
   const actionRef = useRef<ActionType>(null);
 
   const [editModalVisible, setEditModalVisible] = useState(false);
-  const [editingRecord, setEditingRecord] = useState<API.DeviceItem | null>(null);
+  const [editingRecord, setEditingRecord] = useState<API.DeviceItem | null>(
+    null,
+  );
   const [importModalVisible, setImportModalVisible] = useState(false);
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);

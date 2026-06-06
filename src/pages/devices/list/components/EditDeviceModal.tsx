@@ -22,9 +22,15 @@ const EditDeviceModal: React.FC<EditDeviceModalProps> = ({
   const intl = useIntl();
   const { message: msgApi } = App.useApp();
   const [form] = Form.useForm();
-  const [userOptions, setUserOptions] = useState<{ label: string; value: string }[]>([]);
-  const [deviceGroupOptions, setDeviceGroupOptions] = useState<{ label: string; value: string }[]>([]);
-  const [strategyOptions, setStrategyOptions] = useState<{ label: string; value: string }[]>([]);
+  const [userOptions, setUserOptions] = useState<
+    { label: string; value: string }[]
+  >([]);
+  const [deviceGroupOptions, setDeviceGroupOptions] = useState<
+    { label: string; value: string }[]
+  >([]);
+  const [strategyOptions, setStrategyOptions] = useState<
+    { label: string; value: string }[]
+  >([]);
 
   useEffect(() => {
     if (open) {
@@ -125,10 +131,7 @@ const EditDeviceModal: React.FC<EditDeviceModalProps> = ({
         <Form.Item
           name="userName"
           label={
-            <FormattedMessage
-              id="pages.devices.user"
-              defaultMessage="User"
-            />
+            <FormattedMessage id="pages.devices.user" defaultMessage="User" />
           }
         >
           <Select
@@ -182,10 +185,7 @@ const EditDeviceModal: React.FC<EditDeviceModalProps> = ({
         <Form.Item
           name="note"
           label={
-            <FormattedMessage
-              id="pages.devices.note"
-              defaultMessage="Note"
-            />
+            <FormattedMessage id="pages.devices.note" defaultMessage="Note" />
           }
         >
           <Input.TextArea />
