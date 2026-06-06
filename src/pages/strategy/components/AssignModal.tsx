@@ -9,14 +9,16 @@ import {
   Radio,
   Select,
   Space,
+  Spin,
   Tag,
 } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   assignStrategy,
   getDeviceGroupList,
   getDeviceList,
   getAdminUserList,
+  getStrategyAssignments,
   unassignStrategy,
 } from '@/services/rustdesk-console';
 
@@ -59,6 +61,15 @@ const targetTypeOptions: { label: React.ReactNode; value: TargetType }[] = [
   },
 ];
 
+const ASSIGNMENT_PAGE_SIZE = 200;
+
+interface AssignedItem {
+  type: TargetType;
+  guid: string;
+  name: string;
+  extra?: string;
+}
+
 const AssignModal: React.FC<AssignModalProps> = ({
   open,
   onOpenChange,
@@ -77,6 +88,79 @@ const AssignModal: React.FC<AssignModalProps> = ({
     [],
   );
   const [optionsLoading, setOptionsLoading] = useState(false);
+
+  const [assignedItems, setAssignedItems] = useState<AssignedItem[]>([]);
+  const [assignedLoading, setAssignedLoading] = useState(false);
+
+  const loadAssignedTargets = useCallback(async () => {
+    if (!open || !record) return;
+    setAssignedLoading(true);
+    try {
+      const [deviceResult, userResult, groupResult] = await Promise.all([
+        getStrategyAssignments(record.guid, {
+          target_type: 'device',
+          current: 1,
+          pageSize: ASSIGNMENT_PAGE_SIZE,
+        }),
+        getStrategyAssignments(record.guid, {
+          target_type: 'user',
+          current: 1,
+          pageSize: ASSIGNMENT_PAGE_SIZE,
+        }),
+        getStrategyAssignments(record.guid, {
+          target_type: 'device_group',
+          current: 1,
+          pageSize: ASSIGNMENT_PAGE_SIZE,
+        }),
+      ]);
+
+      const items: AssignedItem[] = [];
+
+      (deviceResult.data || []).forEach((d) => {
+        const device = d as API.StrategyAssignmentDeviceItem;
+        items.push({
+          type: 'device',
+          guid: device.uuid,
+          name: device.id,
+        });
+      });
+
+      (userResult.data || []).forEach((u) => {
+        const user = u as API.StrategyAssignmentUserItem;
+        items.push({
+          type: 'user',
+          guid: user.guid,
+          name: user.username,
+          extra: user.email,
+        });
+      });
+
+      (groupResult.data || []).forEach((g) => {
+        const group = g as API.StrategyAssignmentDeviceGroupItem;
+        items.push({
+          type: 'device_group',
+          guid: group.guid,
+          name: group.name,
+          extra: group.note,
+        });
+      });
+
+      setAssignedItems(items);
+    } catch {
+      msgApi.error(
+        intl.formatMessage({
+          id: 'pages.strategies.loadAssignedFailed',
+          defaultMessage: 'Failed to load assigned targets',
+        }),
+      );
+    } finally {
+      setAssignedLoading(false);
+    }
+  }, [open, record, intl, msgApi]);
+
+  useEffect(() => {
+    loadAssignedTargets();
+  }, [loadAssignedTargets]);
 
   useEffect(() => {
     if (!open) return;
@@ -153,6 +237,7 @@ const AssignModal: React.FC<AssignModalProps> = ({
         );
       }
       setSelectedGuids([]);
+      loadAssignedTargets();
       onSuccess();
     } catch {
       msgApi.error(
@@ -188,6 +273,7 @@ const AssignModal: React.FC<AssignModalProps> = ({
           }),
         );
       }
+      loadAssignedTargets();
       onSuccess();
     } catch {
       msgApi.error(
@@ -222,32 +308,15 @@ const AssignModal: React.FC<AssignModalProps> = ({
   };
 
   const renderAssignedList = () => {
-    if (!record) return null;
+    if (assignedLoading) {
+      return (
+        <div style={{ textAlign: 'center', padding: '20px 0' }}>
+          <Spin />
+        </div>
+      );
+    }
 
-    const assignedDevices = (record as any).assigned_devices || [];
-    const assignedUsers = (record as any).assigned_users || [];
-    const assignedDeviceGroups = (record as any).assigned_device_groups || [];
-
-    const allAssigned: Array<{ type: TargetType; guid: string; name: string }> =
-      [
-        ...assignedDevices.map((d: any) => ({
-          type: 'device' as TargetType,
-          guid: d.uuid || d.guid,
-          name: d.id || d.name || d.guid,
-        })),
-        ...assignedUsers.map((u: any) => ({
-          type: 'user' as TargetType,
-          guid: u.guid,
-          name: u.name || u.email || u.guid,
-        })),
-        ...assignedDeviceGroups.map((g: any) => ({
-          type: 'device_group' as TargetType,
-          guid: g.guid,
-          name: g.name || g.guid,
-        })),
-      ];
-
-    if (allAssigned.length === 0) {
+    if (assignedItems.length === 0) {
       return (
         <div style={{ color: '#999', textAlign: 'center', padding: '20px 0' }}>
           <FormattedMessage
@@ -260,7 +329,7 @@ const AssignModal: React.FC<AssignModalProps> = ({
 
     return (
       <div style={{ maxHeight: 200, overflow: 'auto' }}>
-        {allAssigned.map((item) => (
+        {assignedItems.map((item) => (
           <div
             key={`${item.type}-${item.guid}`}
             style={{
@@ -297,6 +366,11 @@ const AssignModal: React.FC<AssignModalProps> = ({
                       })}
               </Tag>
               <span>{item.name}</span>
+              {item.extra && (
+                <span style={{ color: '#999', fontSize: 12 }}>
+                  {item.extra}
+                </span>
+              )}
             </Space>
             <Popconfirm
               title={intl.formatMessage({

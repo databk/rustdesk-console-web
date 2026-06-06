@@ -50,3 +50,21 @@ export async function unassignStrategy(guid: string, data: API.StrategyAssignPar
     data,
   });
 }
+
+export async function getStrategyAssignments(
+  guid: string,
+  params: API.StrategyAssignmentParams,
+) {
+  return request<API.PaginatedResult<
+    | API.StrategyAssignmentDeviceItem
+    | API.StrategyAssignmentUserItem
+    | API.StrategyAssignmentDeviceGroupItem
+  >>(`/api/strategies/${guid}/assignments`, {
+    method: 'GET',
+    params: {
+      target_type: params.target_type,
+      current: params.current,
+      pageSize: params.pageSize,
+    },
+  });
+}

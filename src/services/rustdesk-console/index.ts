@@ -84,4 +84,5 @@ export {
   deleteStrategy,
   assignStrategy,
   unassignStrategy,
+  getStrategyAssignments,
 } from './strategy';

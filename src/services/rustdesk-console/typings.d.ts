@@ -451,6 +451,32 @@ declare namespace API {
     }>;
   };
 
+  type StrategyAssignmentDeviceItem = {
+    uuid: string;
+    id: string;
+    status: number;
+  };
+
+  type StrategyAssignmentUserItem = {
+    guid: string;
+    username: string;
+    email: string;
+    status: number;
+    is_admin: boolean;
+  };
+
+  type StrategyAssignmentDeviceGroupItem = {
+    guid: string;
+    name: string;
+    note: string;
+  };
+
+  type StrategyAssignmentParams = {
+    target_type: 'device' | 'user' | 'device_group';
+    current: number;
+    pageSize: number;
+  };
+
   type UserGroupItem = {
     guid: string;
     name: string;
