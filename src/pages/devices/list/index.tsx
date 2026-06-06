@@ -18,7 +18,16 @@ import {
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
-import { App, Button, Divider, Form, Input, Modal, Popconfirm, Space } from 'antd';
+import {
+  App,
+  Button,
+  Divider,
+  Form,
+  Input,
+  Modal,
+  Popconfirm,
+  Space,
+} from 'antd';
 import React, { useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Settings from '../../../../config/defaultSettings';
@@ -46,8 +55,9 @@ const DeviceList: React.FC<DeviceListProps> = ({
   const [importing, setImporting] = useState(false);
 
   const [editModalVisible, setEditModalVisible] = useState(false);
-  const [editingRecord, setEditingRecord] =
-    useState<API.DeviceItem | null>(null);
+  const [editingRecord, setEditingRecord] = useState<API.DeviceItem | null>(
+    null,
+  );
   const [editForm] = Form.useForm();
 
   const handleEnable = async (guid: string) => {
