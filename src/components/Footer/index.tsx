@@ -1,4 +1,4 @@
-import { GithubOutlined, GlobalOutlined } from '@ant-design/icons';
+import { GithubOutlined } from '@ant-design/icons';
 import { DefaultFooter } from '@ant-design/pro-components';
 import React from 'react';
 
@@ -8,18 +8,12 @@ const Footer: React.FC = () => {
       style={{
         background: 'none',
       }}
-      copyright="2026 Purslane Ltd. Produced"
+      copyright="2026 Data Block"
       links={[
         {
           key: 'github',
           title: <GithubOutlined />,
-          href: 'https://github.com/rustdesk/rustdesk',
-          blankTarget: true,
-        },
-        {
-          key: 'RustDesk',
-          title: <GlobalOutlined />,
-          href: 'https://rustdesk.com',
+          href: 'https://github.com/databk/rustdesk-console',
           blankTarget: true,
         },
       ]}
