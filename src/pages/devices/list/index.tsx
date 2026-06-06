@@ -1,38 +1,21 @@
-import {
-  DeleteOutlined,
-  EditOutlined,
-  MinusCircleOutlined,
-  PlusCircleOutlined,
-  SelectOutlined,
-} from '@ant-design/icons';
+import { DeleteOutlined, PlusCircleOutlined, MinusCircleOutlined, SelectOutlined } from '@ant-design/icons';
 import {
   batchUpdateDeviceStatus,
   deleteDevice,
   getDeviceList,
-  updateDevice,
 } from '@/services/rustdesk-console/device';
-import {
-  addDeviceToGroup,
-  removeDeviceFromGroup,
-} from '@/services/rustdesk-console/deviceGroup';
-import type { ActionType, ProColumns } from '@ant-design/pro-components';
+import { removeDeviceFromGroup } from '@/services/rustdesk-console/deviceGroup';
+import type { ActionType } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
-import {
-  App,
-  Button,
-  Divider,
-  Form,
-  Input,
-  Modal,
-  Popconfirm,
-  Space,
-} from 'antd';
+import { App, Button, Popconfirm, Space } from 'antd';
 import React, { useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Settings from '../../../../config/defaultSettings';
 import { getDeviceColumns } from '@/components/DeviceSelectTable/columns';
-import DeviceSelectTable from '@/components/DeviceSelectTable';
+import { getActionColumn } from './columns';
+import EditDeviceModal from './components/EditDeviceModal';
+import ImportDevicesModal from './components/ImportDevicesModal';
 
 export interface DeviceListProps {
   deviceGroupGuid?: string;
@@ -49,16 +32,14 @@ const DeviceList: React.FC<DeviceListProps> = ({
   const { message: msgApi } = App.useApp();
   const actionRef = useRef<ActionType>(null);
 
-  const [importDevicesModalVisible, setImportDevicesModalVisible] =
-    useState(false);
-  const [selectedDeviceKeys, setSelectedDeviceKeys] = useState<React.Key[]>([]);
-  const [importing, setImporting] = useState(false);
-
   const [editModalVisible, setEditModalVisible] = useState(false);
-  const [editingRecord, setEditingRecord] = useState<API.DeviceItem | null>(
-    null,
-  );
-  const [editForm] = Form.useForm();
+  const [editingRecord, setEditingRecord] = useState<API.DeviceItem | null>(null);
+  const [importModalVisible, setImportModalVisible] = useState(false);
+
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [selectedRows, setSelectedRows] = useState<API.DeviceItem[]>([]);
+  const [batchRemoving, setBatchRemoving] = useState(false);
+  const [batchStatusUpdating, setBatchStatusUpdating] = useState(false);
 
   const handleEnable = async (guid: string) => {
     try {
@@ -144,50 +125,6 @@ const DeviceList: React.FC<DeviceListProps> = ({
     }
   };
 
-  const handleEdit = async (values: Record<string, string | null>) => {
-    if (!editingRecord) return;
-    try {
-      const data: API.UpdateDeviceParams = {};
-      const original: Record<string, string | undefined> = {
-        userName: editingRecord.user_name,
-        deviceGroupName: editingRecord.device_group_name,
-        strategyName: editingRecord.strategy_name,
-        note: editingRecord.note,
-      };
-      const fieldMap: Record<string, keyof API.UpdateDeviceParams> = {
-        userName: 'userName',
-        deviceGroupName: 'deviceGroupName',
-        strategyName: 'strategyName',
-        note: 'note',
-      };
-      for (const [formKey, paramKey] of Object.entries(fieldMap)) {
-        const originalValue = original[formKey] || '';
-        const newValue = values[formKey] ?? '';
-        if (newValue !== originalValue) {
-          data[paramKey] = newValue === '' ? null : newValue;
-        }
-      }
-      await updateDevice(editingRecord.guid, data);
-      msgApi.success(
-        intl.formatMessage({
-          id: 'pages.devices.updateSuccess',
-          defaultMessage: 'Device updated',
-        }),
-      );
-      setEditModalVisible(false);
-      setEditingRecord(null);
-      editForm.resetFields();
-      actionRef.current?.reload();
-    } catch {
-      msgApi.error(
-        intl.formatMessage({
-          id: 'pages.devices.updateFailed',
-          defaultMessage: 'Failed to update device',
-        }),
-      );
-    }
-  };
-
   const handleRemoveFromGroup = async (deviceId: string) => {
     if (!deviceGroupGuid) return;
     try {
@@ -208,11 +145,6 @@ const DeviceList: React.FC<DeviceListProps> = ({
       );
     }
   };
-
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const [selectedRows, setSelectedRows] = useState<API.DeviceItem[]>([]);
-  const [batchRemoving, setBatchRemoving] = useState(false);
-  const [batchStatusUpdating, setBatchStatusUpdating] = useState(false);
 
   const handleBatchEnable = async () => {
     if (selectedRows.length === 0) return;
@@ -336,35 +268,6 @@ const DeviceList: React.FC<DeviceListProps> = ({
     }
   };
 
-  const handleImportDevices = async () => {
-    if (!deviceGroupGuid || selectedDeviceKeys.length === 0) return;
-    setImporting(true);
-    try {
-      await addDeviceToGroup(deviceGroupGuid, selectedDeviceKeys as string[]);
-      msgApi.success(
-        intl.formatMessage(
-          {
-            id: 'pages.deviceGroups.importSuccess',
-            defaultMessage: 'Successfully imported {count} device(s)',
-          },
-          { count: selectedDeviceKeys.length },
-        ),
-      );
-      setImportDevicesModalVisible(false);
-      setSelectedDeviceKeys([]);
-      actionRef.current?.reload();
-    } catch {
-      msgApi.error(
-        intl.formatMessage({
-          id: 'pages.deviceGroups.importFailed',
-          defaultMessage: 'Failed to import devices',
-        }),
-      );
-    } finally {
-      setImporting(false);
-    }
-  };
-
   // Use shared columns definition and add action column
   const baseColumns = getDeviceColumns();
 
@@ -377,126 +280,18 @@ const DeviceList: React.FC<DeviceListProps> = ({
       )
     : baseColumns;
 
-  const actionColumn: ProColumns<API.DeviceItem> = {
-    title: (
-      <FormattedMessage id="pages.common.action" defaultMessage="Action" />
-    ),
-    valueType: 'option',
-    width: '15%',
-    fixed: 'right',
-    render: (_: unknown, record: API.DeviceItem) => {
-      const isDisabled = record.status === 0;
-
-      // When in device group context, only show remove button
-      if (deviceGroupGuid) {
-        return (
-          <Popconfirm
-            key="remove"
-            title={
-              <FormattedMessage
-                id="pages.devices.removeFromGroupConfirm"
-                defaultMessage="Are you sure to remove this device from the group?"
-              />
-            }
-            onConfirm={() => handleRemoveFromGroup(record.id)}
-            okText={intl.formatMessage({
-              id: 'pages.common.confirm',
-              defaultMessage: 'Yes',
-            })}
-            cancelText={intl.formatMessage({
-              id: 'pages.common.cancel',
-              defaultMessage: 'No',
-            })}
-          >
-            <Button type="link" size="small" danger icon={<DeleteOutlined />}>
-              <FormattedMessage
-                id="pages.devices.remove"
-                defaultMessage="Remove"
-              />
-            </Button>
-          </Popconfirm>
-        );
-      }
-
-      // Normal device list (not in device group context)
-      return (
-        <Space size={0} split={<Divider type="vertical" />}>
-          <Button
-            key="edit"
-            type="link"
-            size="small"
-            icon={<EditOutlined />}
-            onClick={() => {
-              setEditingRecord(record);
-              editForm.setFieldsValue({
-                userName: record.user_name || '',
-                deviceGroupName: record.device_group_name || '',
-                strategyName: record.strategy_name || '',
-                note: record.note || '',
-              });
-              setEditModalVisible(true);
-            }}
-          >
-            <FormattedMessage id="pages.common.edit" defaultMessage="Edit" />
-          </Button>
-          {isDisabled ? (
-            <Button
-              key="enable"
-              type="link"
-              size="small"
-              icon={<PlusCircleOutlined />}
-              onClick={() => handleEnable(record.guid)}
-            >
-              <FormattedMessage
-                id="pages.devices.enable"
-                defaultMessage="Enable"
-              />
-            </Button>
-          ) : (
-            <Button
-              key="disable"
-              type="link"
-              size="small"
-              icon={<MinusCircleOutlined />}
-              onClick={() => handleDisable(record.guid)}
-            >
-              <FormattedMessage
-                id="pages.devices.disable"
-                defaultMessage="Disable"
-              />
-            </Button>
-          )}
-          {isDisabled && (
-            <Popconfirm
-              key="delete"
-              title={
-                <FormattedMessage
-                  id="pages.devices.deleteConfirm"
-                  defaultMessage="Are you sure to delete this device?"
-                />
-              }
-              onConfirm={() => handleDelete(record.guid)}
-              okText={intl.formatMessage({
-                id: 'pages.common.confirm',
-                defaultMessage: 'Yes',
-              })}
-              cancelText={intl.formatMessage({
-                id: 'pages.common.cancel',
-                defaultMessage: 'No',
-              })}
-            >
-              <Button type="link" size="small" danger icon={<DeleteOutlined />}>
-                <FormattedMessage
-                  id="pages.common.delete"
-                  defaultMessage="Delete"
-                />
-              </Button>
-            </Popconfirm>
-          )}
-        </Space>
-      );
+  const actionColumn = getActionColumn({
+    onEdit: (record) => {
+      setEditingRecord(record);
+      setEditModalVisible(true);
     },
-  };
+    onEnable: handleEnable,
+    onDisable: handleDisable,
+    onDelete: handleDelete,
+    onRemoveFromGroup: handleRemoveFromGroup,
+    deviceGroupGuid,
+  });
+
   const columns = [...filteredColumns, actionColumn];
 
   return (
@@ -671,7 +466,7 @@ const DeviceList: React.FC<DeviceListProps> = ({
                   <Button
                     key="import"
                     icon={<SelectOutlined />}
-                    onClick={() => setImportDevicesModalVisible(true)}
+                    onClick={() => setImportModalVisible(true)}
                   >
                     <FormattedMessage
                       id="pages.deviceGroups.import"
@@ -692,109 +487,23 @@ const DeviceList: React.FC<DeviceListProps> = ({
         />
 
         {deviceGroupGuid && (
-          <Modal
-            title={
-              <FormattedMessage
-                id="pages.deviceGroups.importDevices"
-                defaultMessage="Import Devices"
-              />
-            }
-            open={importDevicesModalVisible}
-            onCancel={() => {
-              setImportDevicesModalVisible(false);
-              setSelectedDeviceKeys([]);
-            }}
-            onOk={handleImportDevices}
-            okButtonProps={{
-              loading: importing,
-              disabled: selectedDeviceKeys.length === 0,
-            }}
-            width={1000}
-          >
-            <DeviceSelectTable
-              selectedRowKeys={selectedDeviceKeys}
-              onSelectionChange={setSelectedDeviceKeys}
-            />
-          </Modal>
+          <ImportDevicesModal
+            open={importModalVisible}
+            deviceGroupGuid={deviceGroupGuid}
+            onCancel={() => setImportModalVisible(false)}
+            onSuccess={() => actionRef.current?.reload()}
+          />
         )}
 
-        <Modal
-          title={
-            <FormattedMessage
-              id="pages.devices.edit"
-              defaultMessage="Edit Device"
-            />
-          }
+        <EditDeviceModal
           open={editModalVisible}
+          record={editingRecord}
           onCancel={() => {
             setEditModalVisible(false);
             setEditingRecord(null);
-            editForm.resetFields();
           }}
-          onOk={() => editForm.submit()}
-        >
-          <Form form={editForm} onFinish={handleEdit} layout="vertical">
-            <Form.Item
-              name="userName"
-              label={
-                <FormattedMessage
-                  id="pages.devices.user"
-                  defaultMessage="User"
-                />
-              }
-            >
-              <Input
-                placeholder={intl.formatMessage({
-                  id: 'pages.devices.enterUserName',
-                  defaultMessage: 'Enter username to associate',
-                })}
-              />
-            </Form.Item>
-            <Form.Item
-              name="deviceGroupName"
-              label={
-                <FormattedMessage
-                  id="pages.devices.deviceGroup"
-                  defaultMessage="Group"
-                />
-              }
-            >
-              <Input
-                placeholder={intl.formatMessage({
-                  id: 'pages.devices.enterDeviceGroupName',
-                  defaultMessage: 'Enter device group name to associate',
-                })}
-              />
-            </Form.Item>
-            <Form.Item
-              name="strategyName"
-              label={
-                <FormattedMessage
-                  id="pages.devices.strategy"
-                  defaultMessage="Strategy"
-                />
-              }
-            >
-              <Input
-                placeholder={intl.formatMessage({
-                  id: 'pages.devices.enterStrategyName',
-                  defaultMessage: 'Enter strategy name to associate',
-                })}
-              />
-            </Form.Item>
-            <Form.Item
-              name="note"
-              label={
-                <FormattedMessage
-                  id="pages.devices.note"
-                  defaultMessage="Note"
-                />
-              }
-            >
-              <Input.TextArea />
-            </Form.Item>
-          </Form>
-        </Modal>
+          onSuccess={() => actionRef.current?.reload()}
+        />
       </PageContainer>
     </>
   );
