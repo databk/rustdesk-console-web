@@ -2,6 +2,7 @@ import {
   LockOutlined,
   SafetyCertificateOutlined,
   UnlockOutlined,
+  KeyOutlined,
 } from '@ant-design/icons';
 import { useIntl, FormattedMessage, useModel } from '@umijs/max';
 import {
@@ -18,7 +19,7 @@ import {
 } from 'antd';
 import { QRCodeSVG } from 'qrcode.react';
 import React, { useState } from 'react';
-import { setup2FA, verify2FA, disable2FA } from '@/services/rustdesk-console';
+import { setup2FA, verify2FA, disable2FA, changePassword } from '@/services/rustdesk-console';
 
 const { Text, Paragraph } = Typography;
 
@@ -27,6 +28,8 @@ const SecuritySetting: React.FC = () => {
   const { initialState, refresh } = useModel('@@initialState');
   const { currentUser } = initialState || {};
   const is2FAEnabled = currentUser?.tfa_enabled === true;
+  const isThirdPartyUser = !!currentUser?.third_auth_type;
+  const hasPassword = currentUser?.has_password !== false;
 
   // Enable 2FA states
   const [setupModalOpen, setSetupModalOpen] = useState(false);
@@ -39,6 +42,11 @@ const SecuritySetting: React.FC = () => {
   const [disableModalOpen, setDisableModalOpen] = useState(false);
   const [disableLoading, setDisableLoading] = useState(false);
   const [disableForm] = Form.useForm();
+
+  // Change password states
+  const [passwordModalOpen, setPasswordModalOpen] = useState(false);
+  const [passwordLoading, setPasswordLoading] = useState(false);
+  const [passwordForm] = Form.useForm();
 
   const handleSetup2FA = async () => {
     try {
@@ -116,6 +124,58 @@ const SecuritySetting: React.FC = () => {
     }
   };
 
+  const handleChangePassword = async () => {
+    try {
+      const values = await passwordForm.validateFields();
+      setPasswordLoading(true);
+      await changePassword({
+        current_password: values.current_password,
+        new_password: values.new_password,
+      });
+      messageApi.success(
+        intl.formatMessage({
+          id: 'pages.account.security.changePasswordSuccess',
+          defaultMessage: 'Password changed successfully',
+        }),
+      );
+      setPasswordModalOpen(false);
+      passwordForm.resetFields();
+    } catch (error: any) {
+      if (error?.errorFields) return;
+      messageApi.error(
+        error?.data?.message ||
+          intl.formatMessage({
+            id: 'pages.account.security.changePasswordFailed',
+            defaultMessage: 'Failed to change password',
+          }),
+      );
+    } finally {
+      setPasswordLoading(false);
+    }
+  };
+
+  const handleChangePasswordClick = () => {
+    if (isThirdPartyUser) {
+      messageApi.warning(
+        intl.formatMessage({
+          id: 'pages.account.security.thirdPartyUser',
+          defaultMessage: 'Third-party login users cannot change password',
+        }),
+      );
+      return;
+    }
+    if (!hasPassword) {
+      messageApi.warning(
+        intl.formatMessage({
+          id: 'pages.account.security.noPasswordUser',
+          defaultMessage: 'No password set for this account',
+        }),
+      );
+      return;
+    }
+    setPasswordModalOpen(true);
+  };
+
   return (
     <>
       <Card
@@ -185,6 +245,72 @@ const SecuritySetting: React.FC = () => {
                 />
               </Button>
             )}
+          </Descriptions.Item>
+        </Descriptions>
+      </Card>
+
+      <Card
+        title={
+          <FormattedMessage
+            id="pages.account.security.password"
+            defaultMessage="Login Password"
+          />
+        }
+        style={{ marginTop: 24 }}
+      >
+        <Descriptions column={1}>
+          <Descriptions.Item
+            label={
+              <FormattedMessage
+                id="pages.account.security.password"
+                defaultMessage="Login Password"
+              />
+            }
+          >
+            <Space>
+              {isThirdPartyUser ? (
+                <Tag color="warning">
+                  <FormattedMessage
+                    id="pages.account.security.thirdPartyUser"
+                    defaultMessage="Third-party login users cannot change password"
+                  />
+                </Tag>
+              ) : hasPassword ? (
+                <Tag icon={<KeyOutlined />} color="success">
+                  <FormattedMessage
+                    id="pages.account.security.passwordSet"
+                    defaultMessage="Set"
+                  />
+                </Tag>
+              ) : (
+                <Tag icon={<UnlockOutlined />} color="default">
+                  <FormattedMessage
+                    id="pages.account.security.passwordNotSet"
+                    defaultMessage="Not Set"
+                  />
+                </Tag>
+              )}
+            </Space>
+          </Descriptions.Item>
+          <Descriptions.Item
+            label={
+              <FormattedMessage
+                id="pages.account.security.2faAction"
+                defaultMessage="Action"
+              />
+            }
+          >
+            <Button
+              type="primary"
+              icon={<KeyOutlined />}
+              onClick={handleChangePasswordClick}
+              disabled={isThirdPartyUser || !hasPassword}
+            >
+              <FormattedMessage
+                id="pages.account.security.changePassword"
+                defaultMessage="Change Password"
+              />
+            </Button>
           </Descriptions.Item>
         </Descriptions>
       </Card>
@@ -319,6 +445,119 @@ const SecuritySetting: React.FC = () => {
                 defaultMessage="Confirm Disable"
               />
             </Button>
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      {/* Change Password Modal */}
+      <Modal
+        title={
+          <FormattedMessage
+            id="pages.account.security.changePassword"
+            defaultMessage="Change Password"
+          />
+        }
+        open={passwordModalOpen}
+        onCancel={() => {
+          setPasswordModalOpen(false);
+          passwordForm.resetFields();
+        }}
+        onOk={() => passwordForm.submit()}
+        confirmLoading={passwordLoading}
+        okText={
+          intl.formatMessage({
+            id: 'pages.account.security.changePassword',
+            defaultMessage: 'Change Password',
+          })
+        }
+      >
+        <Form
+          form={passwordForm}
+          layout="vertical"
+          onFinish={handleChangePassword}
+        >
+          <Form.Item
+            name="current_password"
+            label={
+              <FormattedMessage
+                id="pages.account.security.currentPassword"
+                defaultMessage="Current Password"
+              />
+            }
+            rules={[
+              {
+                required: true,
+                message: intl.formatMessage({
+                  id: 'pages.account.security.enterCurrentPassword',
+                  defaultMessage: 'Please enter current password',
+                }),
+              },
+            ]}
+          >
+            <Input.Password />
+          </Form.Item>
+          <Form.Item
+            name="new_password"
+            label={
+              <FormattedMessage
+                id="pages.account.security.newPassword"
+                defaultMessage="New Password"
+              />
+            }
+            rules={[
+              {
+                required: true,
+                message: intl.formatMessage({
+                  id: 'pages.account.security.enterNewPassword',
+                  defaultMessage: 'Please enter new password (min 6 characters)',
+                }),
+              },
+              {
+                min: 6,
+                message: intl.formatMessage({
+                  id: 'pages.account.security.passwordMinLength',
+                  defaultMessage: 'Password must be at least 6 characters',
+                }),
+              },
+            ]}
+          >
+            <Input.Password />
+          </Form.Item>
+          <Form.Item
+            name="confirm_password"
+            label={
+              <FormattedMessage
+                id="pages.account.security.confirmNewPassword"
+                defaultMessage="Confirm New Password"
+              />
+            }
+            dependencies={['new_password']}
+            rules={[
+              {
+                required: true,
+                message: intl.formatMessage({
+                  id: 'pages.account.security.confirmNewPasswordPlaceholder',
+                  defaultMessage: 'Please re-enter new password',
+                }),
+              },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue('new_password') === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(
+                    new Error(
+                      intl.formatMessage({
+                        id: 'pages.account.security.passwordMismatch',
+                        defaultMessage: 'The two passwords do not match',
+                      }),
+                    ),
+                  );
+                },
+              }),
+            ]}
+          >
+            <Input.Password />
           </Form.Item>
         </Form>
       </Modal>

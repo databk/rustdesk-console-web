@@ -6,6 +6,7 @@ export {
   setup2FA,
   verify2FA,
   disable2FA,
+  changePassword,
 } from './account';
 export { getDeviceList, batchUpdateDeviceStatus, deleteDevice, updateDevice, assignDevice } from './device';
 export {

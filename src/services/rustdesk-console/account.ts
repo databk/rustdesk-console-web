@@ -42,3 +42,10 @@ export async function disable2FA(body: API.Disable2FAParams) {
     data: body,
   });
 }
+
+export async function changePassword(body: API.ChangePasswordParams) {
+  return request('/api/users/me/password', {
+    method: 'PATCH',
+    data: body,
+  });
+}

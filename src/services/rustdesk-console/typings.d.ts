@@ -7,11 +7,18 @@ declare namespace API {
     status?: number;
     is_admin?: boolean;
     tfa_enabled?: boolean;
+    third_auth_type?: string;
+    has_password?: boolean;
     info?: {
       email_verification?: boolean;
       email_alarm_notification?: boolean;
       other?: Record<string, any>;
     };
+  };
+
+  type ChangePasswordParams = {
+    current_password: string;
+    new_password: string;
   };
 
   type UpdateProfileParams = {
