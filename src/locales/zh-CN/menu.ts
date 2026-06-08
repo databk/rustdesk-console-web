@@ -29,4 +29,5 @@ export default {
   'menu.list.audit-list': '审计列表',
   'menu.list.audit-list.File': '文件传输',
   'menu.list.audit-list.Connection': '连接审计',
+  'menu.list.audit-list.Alarm': '告警审计',
 };

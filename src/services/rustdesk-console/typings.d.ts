@@ -362,13 +362,14 @@ declare namespace API {
   };
 
   type AlarmAuditItem = {
-    id?: string;
-    from?: string;
-    from_name?: string;
-    to?: string;
-    to_name?: string;
-    alarm_type?: string;
-    time?: string;
+    id?: number;
+    deviceId?: string;
+    deviceUuid?: string;
+    typ?: number;
+    infoId?: string;
+    infoIp?: string;
+    infoName?: string;
+    createdAt?: string;
     [key: string]: any;
   };
 

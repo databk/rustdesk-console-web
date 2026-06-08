@@ -29,4 +29,5 @@ export default {
   'menu.list.audit-list': 'Audit List',
   'menu.list.audit-list.File': 'File Transfer',
   'menu.list.audit-list.Connection': 'Connection',
+  'menu.list.audit-list.Alarm': 'Alarm',
 };
