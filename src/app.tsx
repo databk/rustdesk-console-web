@@ -13,6 +13,7 @@ import {
 } from '@/components';
 import { currentUser as queryCurrentUser } from '@/services/rustdesk-console/auth';
 import { getToken, TOKEN_KEY } from '@/utils/auth';
+import { getAvatarUrl } from '@/utils/avatar';
 import defaultSettings from '../config/defaultSettings';
 import { errorConfig } from './requestErrorConfig';
 import '@ant-design/v5-patch-for-react-19';
@@ -123,7 +124,7 @@ export const layout: RunTimeLayoutConfig = ({
       <SelectLang key="SelectLang" />,
     ],
     avatarProps: {
-      src: undefined,
+      src: getAvatarUrl(initialState?.currentUser?.avatar),
       title: <AvatarName />,
       render: (_, avatarChildren) => {
         return <AvatarDropdown>{avatarChildren}</AvatarDropdown>;
