@@ -226,7 +226,6 @@ const AlarmAudit: React.FC = () => {
       ),
       dataIndex: 'local',
       search: false,
-      width: 200,
       render: (_, record) => renderNameIp(record.infoName, record.infoIp),
     },
     {
