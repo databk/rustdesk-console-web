@@ -212,11 +212,16 @@ export default {
   'pages.audits.startTime': 'Start Time',
   'pages.audits.endTime': 'End Time',
   'pages.audits.alarmType.ipWhitelist': 'IP Not in Whitelist',
-  'pages.audits.alarmType.exceedThirtyAttempts': 'Same IP Exceeds 30 Failed Attempts',
-  'pages.audits.alarmType.sixAttemptsWithinOneMinute': 'More Than 6 Attempts Within 1 Minute',
-  'pages.audits.alarmType.exceedIpv6PrefixAttempts': 'IPv6 Prefix Attempt Limit Exceeded',
-  'pages.audits.alarmType.terminalOsLoginBackoff': 'Terminal OS Login Blocked by Backoff',
-  'pages.audits.alarmType.terminalOsLoginConcurrency': 'Terminal OS Login Concurrency Limit Exceeded',
+  'pages.audits.alarmType.exceedThirtyAttempts':
+    'Same IP Exceeds 30 Failed Attempts',
+  'pages.audits.alarmType.sixAttemptsWithinOneMinute':
+    'More Than 6 Attempts Within 1 Minute',
+  'pages.audits.alarmType.exceedIpv6PrefixAttempts':
+    'IPv6 Prefix Attempt Limit Exceeded',
+  'pages.audits.alarmType.terminalOsLoginBackoff':
+    'Terminal OS Login Blocked by Backoff',
+  'pages.audits.alarmType.terminalOsLoginConcurrency':
+    'Terminal OS Login Concurrency Limit Exceeded',
   'pages.common.action': 'Action',
   'pages.common.delete': 'Delete',
   'pages.common.edit': 'Edit',

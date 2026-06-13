@@ -11,10 +11,22 @@ import { renderNameIp } from '@/utils/audit';
 const ALARM_TYPE_MAP: Record<number, { msgId: string; color: string }> = {
   0: { msgId: 'pages.audits.alarmType.ipWhitelist', color: 'red' },
   1: { msgId: 'pages.audits.alarmType.exceedThirtyAttempts', color: 'orange' },
-  2: { msgId: 'pages.audits.alarmType.sixAttemptsWithinOneMinute', color: 'orange' },
-  6: { msgId: 'pages.audits.alarmType.exceedIpv6PrefixAttempts', color: 'orange' },
-  7: { msgId: 'pages.audits.alarmType.terminalOsLoginBackoff', color: 'volcano' },
-  8: { msgId: 'pages.audits.alarmType.terminalOsLoginConcurrency', color: 'volcano' },
+  2: {
+    msgId: 'pages.audits.alarmType.sixAttemptsWithinOneMinute',
+    color: 'orange',
+  },
+  6: {
+    msgId: 'pages.audits.alarmType.exceedIpv6PrefixAttempts',
+    color: 'orange',
+  },
+  7: {
+    msgId: 'pages.audits.alarmType.terminalOsLoginBackoff',
+    color: 'volcano',
+  },
+  8: {
+    msgId: 'pages.audits.alarmType.terminalOsLoginConcurrency',
+    color: 'volcano',
+  },
 };
 
 const getAlarmTypeMsgId = (typ?: number): string => {
@@ -39,14 +51,16 @@ const AlarmAudit: React.FC = () => {
   const actionRef = useRef<ActionType>(null);
   const intl = useIntl();
   const { message: msgApi, modal } = App.useApp();
-  const [pageParams, setPageParams] = useState<Partial<AlarmAuditSearchParams>>();
+  const [pageParams, setPageParams] =
+    useState<Partial<AlarmAuditSearchParams>>();
 
-  const alarmTypeValueEnum: Record<number, { text: string }> = Object.fromEntries(
-    Object.entries(ALARM_TYPE_MAP).map(([key, val]) => [
-      Number(key),
-      { text: intl.formatMessage({ id: val.msgId }) },
-    ]),
-  );
+  const alarmTypeValueEnum: Record<number, { text: string }> =
+    Object.fromEntries(
+      Object.entries(ALARM_TYPE_MAP).map(([key, val]) => [
+        Number(key),
+        { text: intl.formatMessage({ id: val.msgId }) },
+      ]),
+    );
 
   const fetchExportData = async (): Promise<API.AlarmAuditItem[]> => {
     let allItems: API.AlarmAuditItem[] = [];
@@ -174,9 +188,7 @@ const AlarmAudit: React.FC = () => {
 
   const columns: ProColumns<API.AlarmAuditItem>[] = [
     {
-      title: (
-        <FormattedMessage id="pages.audits.type" defaultMessage="Type" />
-      ),
+      title: <FormattedMessage id="pages.audits.type" defaultMessage="Type" />,
       dataIndex: 'type',
       valueType: 'select',
       width: 200,
