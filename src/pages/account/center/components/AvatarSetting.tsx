@@ -16,7 +16,6 @@ import {
 } from 'antd';
 import React, { useState } from 'react';
 import { uploadAvatar, deleteAvatar } from '@/services/rustdesk-console';
-import { getAvatarUrl } from '@/utils/avatar';
 
 const { Text } = Typography;
 
@@ -27,7 +26,7 @@ const AvatarSetting: React.FC = () => {
   const [uploading, setUploading] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
-  const avatarUrl = getAvatarUrl(currentUser?.avatar);
+  const avatarUrl = currentUser?.avatar;
 
   const handleUpload = async (file: File) => {
     if (file.size > 2 * 1024 * 1024) {
