@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: release
+  group: release-${{ github.ref }}
   cancel-in-progress: true
 
 permissions:
@@ -12,14 +12,12 @@ permissions:
   packages: write
 
 jobs:
-  release:
-    name: Create Release
+  build:
+    name: Build Release Artifacts
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
@@ -30,25 +28,42 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run linter
-        run: npm run lint
-
-      - name: Generate changelog
-        uses: TriPSs/conventional-changelog-action@v6
-        id: changelog
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          git-user-name: 'DataBK Auto Release'
-          git-user-email: 'databk.auto.release@github.com'
-          tag-prefix: ''
-          skip-version-file: false
-          version-file: package.json
-
-      - name: Build application
-        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+      - name: Build
         run: npm run build
         env:
           NODE_ENV: production
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: release-dist
+          path: dist/
+          retention-days: 30
+
+  release:
+    name: Create GitHub Release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Generate changelog
+        id: changelog
+        uses: TriPSs/conventional-changelog-action@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          output-file: false
+          skip-git-pull: true
+          version-file: package.json
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: release-dist
+          path: dist/
 
       - name: Create release archive
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
@@ -63,26 +78,9 @@ jobs:
         with:
           tag_name: ${{ steps.changelog.outputs.version }}
           name: ${{ steps.changelog.outputs.version }}
-          body: |
-            ${{ steps.changelog.outputs.changelog }}
-
-            ## Docker Images
-
-            This release is available on:
-
-            ### Docker Hub
-            ```bash
-            docker pull databk/rustdesk-console-web:${{ steps.changelog.outputs.version }}
-            docker pull databk/rustdesk-console-web:latest
-            ```
-
-            ### GitHub Container Registry
-            ```bash
-            docker pull ghcr.io/databk/rustdesk-console-web:${{ steps.changelog.outputs.version }}
-            docker pull ghcr.io/databk/rustdesk-console-web:latest
-            ```
+          body: ${{ steps.changelog.outputs.clean_changelog }}
           draft: false
-          prerelease: false
+          prerelease: ${{ contains(steps.changelog.outputs.version, '-') }}
           files: |
             rustdesk-console-web-${{ steps.changelog.outputs.version }}.tar.gz
 
@@ -102,8 +100,6 @@ jobs:
         run: |
           VERSION=$(git describe --tags --abbrev=0)
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-          MAJOR=$(echo $VERSION | cut -d. -f1)
-          echo "major=$MAJOR" >> "$GITHUB_OUTPUT"
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
@@ -122,18 +118,26 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v6
+        with:
+          images: |
+            ghcr.io/${{ github.repository }}
+            docker.io/${{ secrets.DOCKERHUB_USERNAME }}/rustdesk-console-web
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=raw,value=latest
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v7
         with:
           context: .
           push: true
-          tags: |
-            ghcr.io/${{ github.repository }}:latest
-            ghcr.io/${{ github.repository }}:${{ steps.version.outputs.version }}
-            ghcr.io/${{ github.repository }}:${{ steps.version.outputs.major }}
-            docker.io/${{ secrets.DOCKERHUB_USERNAME }}/rustdesk-console-web:latest
-            docker.io/${{ secrets.DOCKERHUB_USERNAME }}/rustdesk-console-web:${{ steps.version.outputs.version }}
-            docker.io/${{ secrets.DOCKERHUB_USERNAME }}/rustdesk-console-web:${{ steps.version.outputs.major }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -169,6 +173,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
           publish_branch: gh-pages
-          user_name: 'DataBK Auto Release'
-          user_email: 'databk.auto.release@github.com'
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
           commit_message: 'release: ${{ github.ref_name }}'
