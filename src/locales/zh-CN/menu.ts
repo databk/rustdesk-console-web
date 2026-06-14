@@ -24,6 +24,7 @@ export default {
   'menu.settings': '设置',
   'menu.settings.smtp': 'SMTP 配置',
   'menu.settings.oidcProviders': 'OIDC 提供商',
+  'menu.settings.ldap': 'LDAP 配置',
   'menu.customClients': '自定义客户端',
   'menu.addressBooks': '地址簿',
   'menu.list.audit-list': '审计列表',

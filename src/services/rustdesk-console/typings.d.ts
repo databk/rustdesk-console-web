@@ -756,4 +756,54 @@ declare namespace API {
     message: string;
     endpoints?: OidcTestEndpoints;
   };
+
+  type LdapTlsOptions = {
+    ca?: string;
+    cert?: string;
+    key?: string;
+    servername?: string;
+  };
+
+  type LdapConfig = {
+    urls?: string[];
+    bindDN?: string;
+    bindCredentials?: string;
+    searchBase?: string;
+    searchFilter?: string;
+    searchAttributes?: string[];
+    groupSearchBase?: string;
+    groupSearchFilter?: string;
+    adminGroups?: string[];
+    tlsOptions?: LdapTlsOptions;
+    enabled?: boolean;
+    createdAt?: string;
+    updatedAt?: string;
+  };
+
+  type UpdateLdapConfigParams = {
+    urls?: string[];
+    bindDN?: string;
+    bindCredentials?: string;
+    searchBase?: string;
+    searchFilter?: string;
+    searchAttributes?: string[];
+    groupSearchBase?: string;
+    groupSearchFilter?: string;
+    adminGroups?: string[];
+    tlsOptions?: LdapTlsOptions;
+    enabled?: boolean;
+  };
+
+  type TestLdapConfigParams = {
+    urls?: string[];
+    bindDN?: string;
+    bindCredentials?: string;
+    searchBase?: string;
+    searchFilter?: string;
+  };
+
+  type TestLdapResult = {
+    success: boolean;
+    message: string;
+  };
 }

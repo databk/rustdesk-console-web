@@ -68,6 +68,7 @@ export {
   getDashboardRealtime,
 } from './dashboard';
 export { getSMTPConfig, updateSMTPConfig, testSMTPConfig } from './smtp';
+export { getLdapConfig, updateLdapConfig, testLdapConfig } from './ldap';
 export {
   getOidcProviderList,
   getOidcProvider,
