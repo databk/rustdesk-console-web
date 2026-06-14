@@ -98,6 +98,8 @@ jobs:
         run: |
           VERSION=$(git describe --tags --abbrev=0)
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          MAJOR=$(echo $VERSION | cut -d. -f1)
+          echo "major=$MAJOR" >> "$GITHUB_OUTPUT"
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
@@ -116,26 +118,18 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Extract Docker metadata
-        id: meta
-        uses: docker/metadata-action@v6
-        with:
-          images: |
-            ghcr.io/${{ github.repository }}
-            docker.io/${{ secrets.DOCKERHUB_USERNAME }}/rustdesk-console-web
-          tags: |
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
-            type=raw,value=latest
-
       - name: Build and push Docker image
         uses: docker/build-push-action@v7
         with:
           context: .
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: |
+            ghcr.io/${{ github.repository }}:${{ steps.version.outputs.version }}
+            ghcr.io/${{ github.repository }}:${{ steps.version.outputs.major }}
+            ghcr.io/${{ github.repository }}:latest
+            docker.io/${{ secrets.DOCKERHUB_USERNAME }}/rustdesk-console-web:${{ steps.version.outputs.version }}
+            docker.io/${{ secrets.DOCKERHUB_USERNAME }}/rustdesk-console-web:${{ steps.version.outputs.major }}
+            docker.io/${{ secrets.DOCKERHUB_USERNAME }}/rustdesk-console-web:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
