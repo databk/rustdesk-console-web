@@ -82,8 +82,8 @@ const LDAPSettings: React.FC = () => {
         bindDN: values.bindDN,
         searchBase: values.searchBase,
         searchFilter: values.searchFilter,
-        searchAttributes: values.searchAttributes?.filter(
-          (a: string) => a?.trim(),
+        searchAttributes: values.searchAttributes?.filter((a: string) =>
+          a?.trim(),
         ),
         groupSearchBase: values.groupSearchBase,
         groupSearchFilter: values.groupSearchFilter,
@@ -92,10 +92,7 @@ const LDAPSettings: React.FC = () => {
         enabled: values.enabled,
       };
 
-      if (
-        values.bindCredentials &&
-        values.bindCredentials !== '******'
-      ) {
+      if (values.bindCredentials && values.bindCredentials !== '******') {
         submitData.bindCredentials = values.bindCredentials;
       }
 
@@ -235,7 +232,12 @@ const LDAPSettings: React.FC = () => {
           <Form
             form={form}
             layout="vertical"
-            initialValues={{ enabled: false, urls: [''], searchAttributes: [''], adminGroups: [''] }}
+            initialValues={{
+              enabled: false,
+              urls: [''],
+              searchAttributes: [''],
+              adminGroups: [''],
+            }}
           >
             {/* Server URLs */}
             <Form.Item
@@ -259,7 +261,8 @@ const LDAPSettings: React.FC = () => {
                             required: index === 0,
                             message: intl.formatMessage({
                               id: 'pages.ldap.urlsRequired',
-                              defaultMessage: 'Please enter at least one LDAP server URL',
+                              defaultMessage:
+                                'Please enter at least one LDAP server URL',
                             }),
                           },
                         ]}
@@ -273,7 +276,8 @@ const LDAPSettings: React.FC = () => {
                                 required: index === 0,
                                 message: intl.formatMessage({
                                   id: 'pages.ldap.urlsRequired',
-                                  defaultMessage: 'Please enter at least one LDAP server URL',
+                                  defaultMessage:
+                                    'Please enter at least one LDAP server URL',
                                 }),
                               },
                             ]}
@@ -282,7 +286,8 @@ const LDAPSettings: React.FC = () => {
                               style={{ width: 500 }}
                               placeholder={intl.formatMessage({
                                 id: 'pages.ldap.urlPlaceholder',
-                                defaultMessage: 'e.g. ldaps://ad.example.com:636',
+                                defaultMessage:
+                                  'e.g. ldaps://ad.example.com:636',
                               })}
                             />
                           </Form.Item>
@@ -331,7 +336,8 @@ const LDAPSettings: React.FC = () => {
               <Input
                 placeholder={intl.formatMessage({
                   id: 'pages.ldap.bindDNPlaceholder',
-                  defaultMessage: 'e.g. CN=svc-ldap,OU=ServiceAccounts,DC=example,DC=com',
+                  defaultMessage:
+                    'e.g. CN=svc-ldap,OU=ServiceAccounts,DC=example,DC=com',
                 })}
               />
             </Form.Item>
@@ -408,14 +414,17 @@ const LDAPSettings: React.FC = () => {
               extra={
                 <FormattedMessage
                   id="pages.ldap.searchFilterHelp"
-                  defaultMessage='Use {{username}} as the username placeholder. AD: (sAMAccountName={{username}}), OpenLDAP: (uid={{username}})'
+                  defaultMessage="Use {{username}} as the username placeholder. AD: (sAMAccountName={{username}}), OpenLDAP: (uid={{username}})"
                   values={{ username: '{{username}}' }}
                 />
               }
             >
               <Input
                 placeholder={intl.formatMessage(
-                  { id: 'pages.ldap.searchFilterPlaceholder', defaultMessage: 'e.g. (sAMAccountName={{username}})' },
+                  {
+                    id: 'pages.ldap.searchFilterPlaceholder',
+                    defaultMessage: 'e.g. (sAMAccountName={{username}})',
+                  },
                   { username: '{{username}}' },
                 )}
               />
@@ -444,7 +453,8 @@ const LDAPSettings: React.FC = () => {
                             style={{ width: 300 }}
                             placeholder={intl.formatMessage({
                               id: 'pages.ldap.searchAttributePlaceholder',
-                              defaultMessage: 'e.g. dn, sAMAccountName, mail, displayName',
+                              defaultMessage:
+                                'e.g. dn, sAMAccountName, mail, displayName',
                             })}
                           />
                         </Form.Item>
@@ -500,14 +510,17 @@ const LDAPSettings: React.FC = () => {
               extra={
                 <FormattedMessage
                   id="pages.ldap.groupSearchFilterHelp"
-                  defaultMessage='Use {{dn}} as the user DN placeholder. e.g. (member={{dn}})'
+                  defaultMessage="Use {{dn}} as the user DN placeholder. e.g. (member={{dn}})"
                   values={{ dn: '{{dn}}' }}
                 />
               }
             >
               <Input
                 placeholder={intl.formatMessage(
-                  { id: 'pages.ldap.groupSearchFilterPlaceholder', defaultMessage: 'e.g. (member={{dn}})' },
+                  {
+                    id: 'pages.ldap.groupSearchFilterPlaceholder',
+                    defaultMessage: 'e.g. (member={{dn}})',
+                  },
                   { dn: '{{dn}}' },
                 )}
               />
@@ -542,7 +555,8 @@ const LDAPSettings: React.FC = () => {
                             style={{ width: 500 }}
                             placeholder={intl.formatMessage({
                               id: 'pages.ldap.adminGroupPlaceholder',
-                              defaultMessage: 'e.g. CN=Admins,OU=Groups,DC=example,DC=com',
+                              defaultMessage:
+                                'e.g. CN=Admins,OU=Groups,DC=example,DC=com',
                             })}
                           />
                         </Form.Item>
