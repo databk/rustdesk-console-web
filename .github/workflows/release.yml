@@ -54,10 +54,9 @@ jobs:
         id: changelog
         uses: TriPSs/conventional-changelog-action@v6
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          output-file: false
-          skip-git-pull: true
-          version-file: package.json
+          git-user-name: 'DataBK Auto Release'
+          git-user-email: 'databk.auto.release@github.com'
+          tag-prefix: ''
 
       - name: Download build artifact
         uses: actions/download-artifact@v8
@@ -87,7 +86,6 @@ jobs:
   docker:
     name: Publish Docker Image
     needs: release
-    if: ${{ needs.release.result == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -144,7 +142,6 @@ jobs:
   deploy:
     name: Deploy Release
     needs: release
-    if: ${{ needs.release.result == 'success' }}
     runs-on: ubuntu-latest
     environment:
       name: production
