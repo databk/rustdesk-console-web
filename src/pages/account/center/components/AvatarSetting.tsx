@@ -26,7 +26,7 @@ const AvatarSetting: React.FC = () => {
   const [uploading, setUploading] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
-  const avatarUrl = currentUser?.avatar || undefined;
+  const avatarUrl = currentUser?.avatar;
 
   const handleUpload = async (file: File) => {
     if (file.size > 2 * 1024 * 1024) {

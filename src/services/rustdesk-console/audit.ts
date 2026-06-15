@@ -40,7 +40,10 @@ export async function getAlarmAudits(
   params: {
     current?: number;
     pageSize?: number;
-    created_at?: string;
+    deviceId?: string;
+    type?: number;
+    startTime?: string;
+    endTime?: string;
   },
   options?: { [key: string]: any },
 ) {

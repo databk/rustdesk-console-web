@@ -1,6 +1,6 @@
 {
   "name": "rustdesk-console-web",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "private": false,
   "description": "Web frontend for RustDesk Console",
   "keywords": [

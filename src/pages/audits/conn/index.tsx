@@ -32,6 +32,7 @@ import {
   getConnectionAudits,
   updateConnectionAudit,
 } from '@/services/rustdesk-console/audit';
+import { renderNameIp } from '@/utils/audit';
 
 const { Text } = Typography;
 
@@ -40,14 +41,8 @@ const DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 const formatDateTime = (val?: string): string =>
   val ? dayjs(val).format(DATE_FORMAT) : '-';
 
-const renderLocalField = (record: API.ConnectionAuditItem): string => {
-  const name = record.peerName || '';
-  const ip = (record.ip || '').replace('::ffff:', '');
-  let txt = '';
-  if (name) txt = name;
-  if (ip) txt += `@${ip}`;
-  return txt || '-';
-};
+const renderLocalField = (record: API.ConnectionAuditItem): string =>
+  renderNameIp(record.peerName, record.ip);
 
 const sanitizeCsvCell = (cell: string): string => {
   let safe = cell.replace(/"/g, '""');

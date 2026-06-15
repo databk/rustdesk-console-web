@@ -1,9 +1,7 @@
 name: Release
 
 on:
-  push:
-    tags:
-      - '[0-9]+.*'
+  workflow_dispatch:
 
 concurrency:
   group: release-${{ github.ref }}
@@ -11,7 +9,6 @@ concurrency:
 
 permissions:
   contents: write
-  discussions: write
   packages: write
 
 jobs:
@@ -53,17 +50,13 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Determine version
-        id: version
-        run: echo "version=${GITHUB_REF#refs/tags/}" >> "$GITHUB_OUTPUT"
-
       - name: Generate changelog
         id: changelog
         uses: TriPSs/conventional-changelog-action@v6
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          output-file: false
-          skip-git-pull: true
+          git-user-name: 'DataBK Auto Release'
+          git-user-email: 'databk.auto.release@github.com'
+          tag-prefix: ''
 
       - name: Download build artifact
         uses: actions/download-artifact@v8
@@ -72,35 +65,44 @@ jobs:
           path: dist/
 
       - name: Create release archive
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
         run: |
           cd dist
-          tar -czf ../rustdesk-console-web-${{ steps.version.outputs.version }}.tar.gz .
+          tar -czf ../rustdesk-console-web-${{ steps.changelog.outputs.version }}.tar.gz .
           cd ..
 
       - name: Create GitHub Release
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
         uses: softprops/action-gh-release@v3
         with:
-          name: ${{ steps.version.outputs.version }}
+          tag_name: ${{ steps.changelog.outputs.version }}
+          name: ${{ steps.changelog.outputs.version }}
           body: ${{ steps.changelog.outputs.clean_changelog }}
           draft: false
-          prerelease: ${{ contains(steps.version.outputs.version, '-') }}
+          prerelease: ${{ contains(steps.changelog.outputs.version, '-') }}
           files: |
-            rustdesk-console-web-${{ steps.version.outputs.version }}.tar.gz
-          discussion_category_name: Releases
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            rustdesk-console-web-${{ steps.changelog.outputs.version }}.tar.gz
 
   docker:
     name: Publish Docker Image
-    needs: build
+    needs: release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
 
       - name: Determine version
         id: version
-        run: echo "version=${GITHUB_REF#refs/tags/}" >> "$GITHUB_OUTPUT"
+        run: |
+          VERSION=$(git describe --tags --abbrev=0)
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          MAJOR=$(echo $VERSION | cut -d. -f1)
+          MINOR=$(echo $VERSION | cut -d. -f2)
+          echo "major=$MAJOR" >> "$GITHUB_OUTPUT"
+          echo "major_minor=$MAJOR.$MINOR" >> "$GITHUB_OUTPUT"
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
@@ -119,26 +121,20 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Extract Docker metadata
-        id: meta
-        uses: docker/metadata-action@v6
-        with:
-          images: |
-            ghcr.io/${{ github.repository }}
-            docker.io/${{ secrets.DOCKERHUB_USERNAME }}/rustdesk-console-web
-          tags: |
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
-            type=raw,value=latest
-
       - name: Build and push Docker image
         uses: docker/build-push-action@v7
         with:
           context: .
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: |
+            ghcr.io/${{ github.repository }}:${{ steps.version.outputs.version }}
+            ghcr.io/${{ github.repository }}:${{ steps.version.outputs.major_minor }}
+            ghcr.io/${{ github.repository }}:${{ steps.version.outputs.major }}
+            ghcr.io/${{ github.repository }}:latest
+            docker.io/${{ secrets.DOCKERHUB_USERNAME }}/rustdesk-console-web:${{ steps.version.outputs.version }}
+            docker.io/${{ secrets.DOCKERHUB_USERNAME }}/rustdesk-console-web:${{ steps.version.outputs.major_minor }}
+            docker.io/${{ secrets.DOCKERHUB_USERNAME }}/rustdesk-console-web:${{ steps.version.outputs.major }}
+            docker.io/${{ secrets.DOCKERHUB_USERNAME }}/rustdesk-console-web:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 

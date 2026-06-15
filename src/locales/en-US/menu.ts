@@ -24,9 +24,11 @@ export default {
   'menu.settings': 'Settings',
   'menu.settings.smtp': 'SMTP Configuration',
   'menu.settings.oidcProviders': 'OIDC Providers',
+  'menu.settings.ldap': 'LDAP Configuration',
   'menu.customClients': 'Custom Clients',
   'menu.addressBooks': 'Address Books',
   'menu.list.audit-list': 'Audit List',
   'menu.list.audit-list.File': 'File Transfer',
   'menu.list.audit-list.Connection': 'Connection',
+  'menu.list.audit-list.Alarm': 'Alarm',
 };

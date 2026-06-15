@@ -12,6 +12,7 @@ import { PageContainer } from '@ant-design/pro-components';
 import type { ProColumns, ActionType } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
 import { getFileAudits } from '@/services/rustdesk-console/audit';
+import { renderNameIp } from '@/utils/audit';
 import {
   ArrowLeftOutlined,
   ArrowRightOutlined,
@@ -140,8 +141,7 @@ const FileAudit: React.FC = () => {
     items.forEach((record) => {
       const row: string[] = [];
       row.push(record.deviceId || '');
-      const localTxt = `${record.clientName || ''}@${record.clientIp || ''}`;
-      row.push(localTxt);
+      row.push(renderNameIp(record.clientName, record.clientIp));
       row.push(record.createdAt || '');
       row.push(directionEnumMap(record.type || 0));
       row.push(record.path || '');
@@ -313,14 +313,7 @@ const FileAudit: React.FC = () => {
       dataIndex: 'local',
       search: false,
       width: 200,
-      render: (_, record) => {
-        let txt = '';
-        const name = record.clientName || '';
-        const ip = (record.clientIp || '').replace('::ffff:', '');
-        if (name) txt = name;
-        if (ip) txt += '@' + ip;
-        return txt || '-';
-      },
+      render: (_, record) => renderNameIp(record.clientName, record.clientIp),
     },
     {
       title: <FormattedMessage id="pages.audits.time" defaultMessage="Time" />,

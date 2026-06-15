@@ -362,13 +362,14 @@ declare namespace API {
   };
 
   type AlarmAuditItem = {
-    id?: string;
-    from?: string;
-    from_name?: string;
-    to?: string;
-    to_name?: string;
-    alarm_type?: string;
-    time?: string;
+    id?: number;
+    deviceId?: string;
+    deviceUuid?: string;
+    typ?: number;
+    infoId?: string;
+    infoIp?: string;
+    infoName?: string;
+    createdAt?: string;
     [key: string]: any;
   };
 
@@ -754,5 +755,55 @@ declare namespace API {
     success: boolean;
     message: string;
     endpoints?: OidcTestEndpoints;
+  };
+
+  type LdapTlsOptions = {
+    ca?: string;
+    cert?: string;
+    key?: string;
+    servername?: string;
+  };
+
+  type LdapConfig = {
+    urls?: string[];
+    bindDN?: string;
+    bindCredentials?: string;
+    searchBase?: string;
+    searchFilter?: string;
+    searchAttributes?: string[];
+    groupSearchBase?: string;
+    groupSearchFilter?: string;
+    adminGroups?: string[];
+    tlsOptions?: LdapTlsOptions;
+    enabled?: boolean;
+    createdAt?: string;
+    updatedAt?: string;
+  };
+
+  type UpdateLdapConfigParams = {
+    urls?: string[];
+    bindDN?: string;
+    bindCredentials?: string;
+    searchBase?: string;
+    searchFilter?: string;
+    searchAttributes?: string[];
+    groupSearchBase?: string;
+    groupSearchFilter?: string;
+    adminGroups?: string[];
+    tlsOptions?: LdapTlsOptions;
+    enabled?: boolean;
+  };
+
+  type TestLdapConfigParams = {
+    urls?: string[];
+    bindDN?: string;
+    bindCredentials?: string;
+    searchBase?: string;
+    searchFilter?: string;
+  };
+
+  type TestLdapResult = {
+    success: boolean;
+    message: string;
   };
 }

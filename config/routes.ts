@@ -191,6 +191,12 @@ export default [
         path: '/settings/oidc-providers',
         component: './settings/oidc-providers',
       },
+      {
+        name: 'ldap',
+        icon: 'safety',
+        path: '/settings/ldap',
+        component: './settings/ldap',
+      },
     ],
   },
   {
