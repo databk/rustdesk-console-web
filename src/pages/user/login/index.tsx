@@ -27,7 +27,7 @@ import {
   Input,
   Typography,
 } from 'antd';
-import { createStyles } from 'antd-style';
+import { createStyles, keyframes } from 'antd-style';
 import React, {
   useCallback,
   useEffect,
@@ -80,6 +80,11 @@ const OIDC_LABELS: Record<string, string> = {
 };
 
 // --- Styles ---
+const fadeInAnimation = keyframes`
+  from { opacity: 0; }
+  to { opacity: 1; }
+`;
+
 const useStyles = createStyles(({ token }) => ({
   lang: {
     width: 42,
@@ -119,7 +124,7 @@ const useStyles = createStyles(({ token }) => ({
   verifySection: {
     marginTop: 8,
     opacity: 0,
-    animation: `fadeIn ${token.motionDurationSlow} ${token.motionEaseInOut} forwards`,
+    animation: `${fadeInAnimation} ${token.motionDurationSlow} ${token.motionEaseInOut} forwards`,
   },
   verifyHint: {
     color: token.colorTextSecondary,
@@ -150,10 +155,6 @@ const useStyles = createStyles(({ token }) => ({
     fontSize: 40,
     color: token.colorPrimary,
     marginBottom: 12,
-  },
-  '@keyframes fadeIn': {
-    from: { opacity: 0 },
-    to: { opacity: 1 },
   },
 }));
 
