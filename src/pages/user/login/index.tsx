@@ -506,7 +506,8 @@ const Login: React.FC = () => {
             message.info(
               intl.formatMessage({
                 id: 'pages.login.emailCheck.sent',
-                defaultMessage: 'A verification code has been sent to your email',
+                defaultMessage:
+                  'A verification code has been sent to your email',
               }),
             );
           }
@@ -595,7 +596,8 @@ const Login: React.FC = () => {
             message.info(
               intl.formatMessage({
                 id: 'pages.login.emailCheck.sent',
-                defaultMessage: 'A verification code has been sent to your email',
+                defaultMessage:
+                  'A verification code has been sent to your email',
               }),
             );
           }
