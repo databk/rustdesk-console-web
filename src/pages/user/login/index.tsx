@@ -495,18 +495,21 @@ const Login: React.FC = () => {
         }
 
         if (msg.type === 'email_check') {
+          const actualType = msg.tfa_type || 'email_check';
           setVerifySession({
             username: values.username?.trim() || '',
             secret: msg.secret || '',
             emailHint: msg.user?.email,
           });
-          setAuthStep('email_check');
-          message.info(
-            intl.formatMessage({
-              id: 'pages.login.emailCheck.sent',
-              defaultMessage: 'A verification code has been sent to your email',
-            }),
-          );
+          setAuthStep(actualType);
+          if (actualType === 'email_check') {
+            message.info(
+              intl.formatMessage({
+                id: 'pages.login.emailCheck.sent',
+                defaultMessage: 'A verification code has been sent to your email',
+              }),
+            );
+          }
           return;
         }
 
@@ -577,6 +580,7 @@ const Login: React.FC = () => {
         }
 
         if (msg.type === 'email_check') {
+          const actualType = msg.tfa_type || 'email_check';
           setVerifySession((prev) =>
             prev
               ? {
@@ -586,7 +590,15 @@ const Login: React.FC = () => {
                 }
               : null,
           );
-          setAuthStep('email_check');
+          setAuthStep(actualType);
+          if (actualType === 'email_check') {
+            message.info(
+              intl.formatMessage({
+                id: 'pages.login.emailCheck.sent',
+                defaultMessage: 'A verification code has been sent to your email',
+              }),
+            );
+          }
           return;
         }
 
