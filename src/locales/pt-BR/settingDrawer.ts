@@ -21,7 +21,8 @@ export default {
   'app.setting.fixedsidebar': 'Barra lateral fixa',
   'app.setting.fixedsidebar.hint': 'Funciona no layout com menu lateral',
   'app.setting.hideheader': 'Ocultar cabeçalho ao rolar',
-  'app.setting.hideheader.hint': 'Funciona quando o cabeçalho oculto está ativado',
+  'app.setting.hideheader.hint':
+    'Funciona quando o cabeçalho oculto está ativado',
   'app.setting.othersettings': 'Outras configurações',
   'app.setting.weakmode': 'Modo amigável para daltônicos',
   'app.setting.copy': 'Copiar configuração',

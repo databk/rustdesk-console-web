@@ -44,7 +44,8 @@ export default {
   'pages.devices.disableFailed': 'Falha ao desativar o dispositivo',
   'pages.devices.deleteSuccess': 'Dispositivo removido',
   'pages.devices.deleteFailed': 'Falha ao remover o dispositivo',
-  'pages.devices.deleteConfirm': 'Tem certeza de que deseja remover este dispositivo?',
+  'pages.devices.deleteConfirm':
+    'Tem certeza de que deseja remover este dispositivo?',
   'pages.devices.deviceInfo': 'username@device_name',
   'pages.devices.strategyInfo': 'Informações da Estratégia',
   'pages.devices.device': 'Dispositivo',
@@ -53,10 +54,12 @@ export default {
   'pages.devices.statusNormal': 'Normal',
   'pages.devices.statusDisabled': 'Desativado',
   'pages.devices.onlineStatus': 'Status Online',
-  'pages.devices.deviceGroupSearchTip': 'Filtrar pelo nome do grupo de dispositivos',
+  'pages.devices.deviceGroupSearchTip':
+    'Filtrar pelo nome do grupo de dispositivos',
   'pages.devices.remove': 'Remover',
   'pages.devices.removeFromGroupSuccess': 'Dispositivo removido do grupo',
-  'pages.devices.removeFromGroupFailed': 'Falha ao remover o dispositivo do grupo',
+  'pages.devices.removeFromGroupFailed':
+    'Falha ao remover o dispositivo do grupo',
   'pages.devices.removeFromGroupConfirm':
     'Tem certeza de que deseja remover este dispositivo do grupo?',
   'pages.devices.batchRemove': 'Remoção em Lote',
@@ -72,7 +75,8 @@ export default {
     'Tem certeza de que deseja ativar os dispositivos selecionados?',
   'pages.devices.batchDisableConfirm':
     'Tem certeza de que deseja desativar os dispositivos selecionados?',
-  'pages.devices.batchEnableSuccess': '{count} dispositivo(s) ativado(s) com sucesso',
+  'pages.devices.batchEnableSuccess':
+    '{count} dispositivo(s) ativado(s) com sucesso',
   'pages.devices.batchEnableFailed': 'Falha ao ativar dispositivos',
   'pages.devices.batchEnablePartialFailed':
     '{success} dispositivo(s) ativado(s) com sucesso, {failed} falharam',
@@ -100,16 +104,20 @@ export default {
   'pages.addressBook.tagAddFailed': 'Falha ao adicionar tag',
   'pages.addressBook.tagDeleted': 'Tag removida',
   'pages.addressBook.tagDeleteFailed': 'Falha ao remover a tag',
-  'pages.addressBook.deleteTagConfirm': 'Tem certeza de que deseja remover esta tag?',
+  'pages.addressBook.deleteTagConfirm':
+    'Tem certeza de que deseja remover esta tag?',
   'pages.addressBook.tagModeUnion': 'Qualquer',
   'pages.addressBook.tagModeIntersection': 'Todos',
   'pages.addressBook.importDevices': 'Importar Dispositivos',
-  'pages.addressBook.importSuccess': '{count} dispositivo(s) importado(s) com sucesso',
-  'pages.addressBook.importPartialFailed': '{count} dispositivo(s) falharam na importação',
+  'pages.addressBook.importSuccess':
+    '{count} dispositivo(s) importado(s) com sucesso',
+  'pages.addressBook.importPartialFailed':
+    '{count} dispositivo(s) falharam na importação',
   'pages.addressBook.createSuccess': 'Catálogo de endereços criado',
   'pages.addressBook.createFailed': 'Falha ao criar o catálogo de endereços',
   'pages.addressBook.updateSuccess': 'Catálogo de endereços atualizado',
-  'pages.addressBook.updateFailed': 'Falha ao atualizar o catálogo de endereços',
+  'pages.addressBook.updateFailed':
+    'Falha ao atualizar o catálogo de endereços',
   'pages.addressBook.deleteSuccess': 'Catálogo(s) de endereços removido(s)',
   'pages.addressBook.deleteFailed': 'Falha ao remover catálogo(s) de endereços',
   'pages.addressBook.deleteConfirm':
@@ -123,7 +131,8 @@ export default {
   'pages.addressBook.peerAddFailed': 'Falha ao adicionar contato',
   'pages.addressBook.peerDeleted': 'Contato removido',
   'pages.addressBook.peerDeleteFailed': 'Falha ao remover contato',
-  'pages.addressBook.deletePeerConfirm': 'Tem certeza de que deseja remover este contato?',
+  'pages.addressBook.deletePeerConfirm':
+    'Tem certeza de que deseja remover este contato?',
   'pages.addressBook.import': 'Importar',
   'pages.addressBook.recycleBin': 'Lixeira',
   'pages.deviceGroups.list': 'Grupos de Dispositivos',
@@ -141,7 +150,8 @@ export default {
     'Tem certeza de que deseja remover este grupo de dispositivos?',
   'pages.deviceGroups.import': 'Importar',
   'pages.deviceGroups.importDevices': 'Importar Dispositivos',
-  'pages.deviceGroups.importSuccess': '{count} dispositivo(s) importado(s) com sucesso',
+  'pages.deviceGroups.importSuccess':
+    '{count} dispositivo(s) importado(s) com sucesso',
   'pages.deviceGroups.importFailed': 'Falha ao importar dispositivos',
   'pages.users.list': 'Lista de Usuários',
   'pages.users.name': 'Nome',
@@ -159,7 +169,8 @@ export default {
   'pages.users.createFailed': 'Falha ao criar usuário',
   'pages.users.deleteSuccess': 'Usuário removido',
   'pages.users.deleteFailed': 'Falha ao remover usuário',
-  'pages.users.deleteConfirm': 'Tem certeza de que deseja remover este usuário?',
+  'pages.users.deleteConfirm':
+    'Tem certeza de que deseja remover este usuário?',
   'pages.audits.conn': 'Auditoria de Conexões',
   'pages.audits.file': 'Logs de Transferência de Arquivos',
   'pages.audits.alarm': 'Auditoria de Alarmes',
@@ -198,13 +209,15 @@ export default {
   'pages.audits.exportSuccess': 'Exportação concluída com sucesso',
   'pages.audits.exportFailed': 'Falha na exportação',
   'pages.audits.exportConfirmTitle': 'Exportar CSV',
-  'pages.audits.exportConfirmContent': 'Exportar até 1000 registros. Deseja continuar?',
+  'pages.audits.exportConfirmContent':
+    'Exportar até 1000 registros. Deseja continuar?',
   'pages.audits.remote': 'Remoto',
   'pages.audits.local': 'Local',
   'pages.audits.direction': 'Direção',
   'pages.audits.files': 'Arquivos',
   'pages.audits.remoteTip': 'Computador ou terminal controlado remotamente',
-  'pages.audits.remoteSearchTip': 'Pesquisar por ID do dispositivo remoto (correspondência parcial)',
+  'pages.audits.remoteSearchTip':
+    'Pesquisar por ID do dispositivo remoto (correspondência parcial)',
   'pages.audits.remotePlaceholder': 'Digite o ID do dispositivo remoto',
   'pages.audits.pathTip': 'Caminho do Dispositivo Remoto',
   'pages.audits.exportCsvTip': 'Exporte até 1000 registros por vez',
@@ -240,7 +253,8 @@ export default {
   'pages.customClients.createSuccess': 'Cliente personalizado criado',
   'pages.customClients.createFailed': 'Falha ao criar cliente personalizado',
   'pages.customClients.updateSuccess': 'Cliente personalizado atualizado',
-  'pages.customClients.updateFailed': 'Falha ao atualizar cliente personalizado',
+  'pages.customClients.updateFailed':
+    'Falha ao atualizar cliente personalizado',
   'pages.customClients.deleteSuccess': 'Cliente personalizado excluído',
   'pages.customClients.deleteFailed': 'Falha ao excluir cliente personalizado',
   'pages.customClients.downloadFailed': 'Falha ao baixar o cliente',
@@ -250,7 +264,8 @@ export default {
   'pages.userGroups.userCount': 'Quantidade de Usuários',
   'pages.userGroups.create': 'Criar Grupo de Usuários',
   'pages.userGroups.edit': 'Editar Grupo de Usuários',
-  'pages.userGroups.deleteConfirm': 'Tem certeza de que deseja excluir este grupo de usuários?',
+  'pages.userGroups.deleteConfirm':
+    'Tem certeza de que deseja excluir este grupo de usuários?',
   'pages.userGroups.createSuccess': 'Grupo de usuários criado',
   'pages.userGroups.createFailed': 'Falha ao criar grupo de usuários',
   'pages.userGroups.updateSuccess': 'Grupo de usuários atualizado',
@@ -294,7 +309,8 @@ export default {
   'pages.strategies.status': 'Status',
   'pages.strategies.create': 'Criar Estratégia',
   'pages.strategies.edit': 'Editar Estratégia',
-  'pages.strategies.deleteConfirm': 'Tem certeza de que deseja excluir esta estratégia?',
+  'pages.strategies.deleteConfirm':
+    'Tem certeza de que deseja excluir esta estratégia?',
   'pages.strategies.createSuccess': 'Estratégia criada',
   'pages.strategies.createFailed': 'Falha ao criar estratégia',
   'pages.strategies.updateSuccess': 'Estratégia atualizada',
@@ -326,7 +342,8 @@ export default {
   'pages.strategies.assignPartialFailed':
     '{success} destino(s) atribuído(s), {failed} falharam: {errors}',
   'pages.strategies.unassignSuccess': 'Estratégia removida com sucesso',
-  'pages.strategies.unassignFailed': 'Falha ao remover atribuição da estratégia',
+  'pages.strategies.unassignFailed':
+    'Falha ao remover atribuição da estratégia',
   'pages.strategies.unassignConfirm': 'Remover atribuição deste destino?',
   'pages.strategies.fetchDetailFailed': 'Falha ao obter detalhes da estratégia',
   'pages.strategies.updatedAt': 'Atualizado em',
@@ -362,7 +379,8 @@ export default {
   'pages.users.security': 'Segurança',
   'pages.users.securitySettings': 'Configurações de Segurança',
   'pages.users.securityUpdateSuccess': 'Configurações de segurança atualizadas',
-  'pages.users.securityUpdateFailed': 'Falha ao atualizar configurações de segurança',
+  'pages.users.securityUpdateFailed':
+    'Falha ao atualizar configurações de segurança',
   'pages.users.tfaEnforce': 'Exigir Autenticação em Dois Fatores',
   'pages.users.emailVerification': 'Exigir Verificação por E-mail',
   'pages.users.forceLogout': 'Encerrar Sessão',
@@ -373,20 +391,25 @@ export default {
   'pages.users.batchEnable': 'Ativar em Lote',
   'pages.users.batchDisable': 'Desativar em Lote',
   'pages.users.batchForceLogout': 'Encerrar Sessões em Lote',
-  'pages.users.batchEnableConfirm': 'Tem certeza de que deseja ativar os usuários selecionados?',
-  'pages.users.batchDisableConfirm': 'Tem certeza de que deseja desativar os usuários selecionados?',
+  'pages.users.batchEnableConfirm':
+    'Tem certeza de que deseja ativar os usuários selecionados?',
+  'pages.users.batchDisableConfirm':
+    'Tem certeza de que deseja desativar os usuários selecionados?',
   'pages.users.batchForceLogoutConfirm':
     'Tem certeza de que deseja encerrar a sessão dos usuários selecionados?',
   'pages.users.batchEnableSuccess': '{count} usuário(s) ativado(s) com sucesso',
   'pages.users.batchEnableFailed': 'Falha ao ativar usuários',
   'pages.users.batchEnablePartialFailed':
     '{success} usuário(s) ativado(s) com sucesso, {failed} falharam',
-  'pages.users.batchDisableSuccess': '{count} usuário(s) desativado(s) com sucesso',
+  'pages.users.batchDisableSuccess':
+    '{count} usuário(s) desativado(s) com sucesso',
   'pages.users.batchDisableFailed': 'Falha ao desativar usuários',
   'pages.users.batchDisablePartialFailed':
     '{success} usuário(s) desativado(s) com sucesso, {failed} falharam',
-  'pages.users.batchForceLogoutSuccess': 'Encerramento de sessões em lote realizado com sucesso',
-  'pages.users.batchForceLogoutFailed': 'Falha ao encerrar sessões dos usuários',
+  'pages.users.batchForceLogoutSuccess':
+    'Encerramento de sessões em lote realizado com sucesso',
+  'pages.users.batchForceLogoutFailed':
+    'Falha ao encerrar sessões dos usuários',
   'pages.dashboard.totalUsers': 'Total de Usuários',
   'pages.dashboard.activeUsers': 'Usuários Ativos',
   'pages.dashboard.totalDevices': 'Total de Dispositivos',
@@ -533,16 +556,19 @@ export default {
   'pages.oidcProviders.updateFailed': 'Falha ao atualizar provedor OIDC',
   'pages.oidcProviders.deleteSuccess': 'Provedor OIDC removido',
   'pages.oidcProviders.deleteFailed': 'Falha ao remover provedor OIDC',
-  'pages.oidcProviders.deleteConfirm': 'Tem certeza de que deseja remover este provedor?',
+  'pages.oidcProviders.deleteConfirm':
+    'Tem certeza de que deseja remover este provedor?',
   'pages.oidcProviders.enableSuccess': 'Provedor OIDC ativado',
   'pages.oidcProviders.enableFailed': 'Falha ao ativar provedor OIDC',
   'pages.oidcProviders.disableSuccess': 'Provedor OIDC desativado',
   'pages.oidcProviders.disableFailed': 'Falha ao desativar provedor OIDC',
-  'pages.oidcProviders.enableConfirm': 'Tem certeza de que deseja ativar este provedor?',
+  'pages.oidcProviders.enableConfirm':
+    'Tem certeza de que deseja ativar este provedor?',
   'pages.oidcProviders.disableConfirm':
     'Tem certeza de que deseja desativar este provedor?',
   'pages.oidcProviders.testFailed': 'Falha ao testar conexão OIDC',
-  'pages.oidcProviders.fetchDetailFailed': 'Falha ao obter detalhes do provedor',
+  'pages.oidcProviders.fetchDetailFailed':
+    'Falha ao obter detalhes do provedor',
   'pages.account.tab.basic': 'Informações Básicas',
   'pages.account.tab.avatar': 'Avatar',
   'pages.account.tab.security': 'Segurança',
@@ -557,12 +583,14 @@ export default {
     'Suporta JPG, PNG e WebP, tamanho máximo de 2 MB, será redimensionado para 256x256',
   'pages.account.avatar.upload': 'Enviar Avatar',
   'pages.account.avatar.delete': 'Remover Avatar',
-  'pages.account.avatar.deleteConfirm': 'Tem certeza de que deseja remover seu avatar?',
+  'pages.account.avatar.deleteConfirm':
+    'Tem certeza de que deseja remover seu avatar?',
   'pages.account.avatar.uploadSuccess': 'Avatar enviado com sucesso',
   'pages.account.avatar.uploadFailed': 'Falha ao enviar avatar',
   'pages.account.avatar.deleteSuccess': 'Avatar removido com sucesso',
   'pages.account.avatar.deleteFailed': 'Falha ao remover avatar',
-  'pages.account.avatar.fileTooLarge': 'O tamanho do arquivo não pode exceder 2 MB',
+  'pages.account.avatar.fileTooLarge':
+    'O tamanho do arquivo não pode exceder 2 MB',
   'pages.account.avatar.invalidFormat':
     'Apenas os formatos JPG, PNG e WebP são suportados',
   'pages.account.security.title': 'Configurações de Segurança',
@@ -591,8 +619,7 @@ export default {
   'pages.account.security.passwordNotSet': 'Não Configurada',
   'pages.account.security.changePassword': 'Alterar Senha',
   'pages.account.security.currentPassword': 'Senha Atual',
-  'pages.account.security.enterCurrentPassword':
-    'Informe a senha atual',
+  'pages.account.security.enterCurrentPassword': 'Informe a senha atual',
   'pages.account.security.newPassword': 'Nova Senha',
   'pages.account.security.enterNewPassword':
     'Informe a nova senha (mínimo de 6 caracteres)',
@@ -602,12 +629,12 @@ export default {
   'pages.account.security.passwordMinLength':
     'A senha deve ter pelo menos 6 caracteres',
   'pages.account.security.passwordMismatch': 'As duas senhas não coincidem',
-  'pages.account.security.changePasswordSuccess':
-    'Senha alterada com sucesso',
+  'pages.account.security.changePasswordSuccess': 'Senha alterada com sucesso',
   'pages.account.security.changePasswordFailed': 'Falha ao alterar senha',
   'pages.account.security.thirdPartyUser':
     'Usuários autenticados por terceiros não podem alterar a senha',
-  'pages.account.security.noPasswordUser': 'Nenhuma senha configurada para esta conta',
+  'pages.account.security.noPasswordUser':
+    'Nenhuma senha configurada para esta conta',
   'pages.ldap.title': 'Configuração LDAP',
   'pages.ldap.description':
     'Configure a autenticação LDAP/Active Directory. Quando ativado, os usuários serão autenticados automaticamente via LDAP.',
@@ -620,8 +647,7 @@ export default {
   'pages.ldap.bindDNPlaceholder':
     'ex.: CN=svc-ldap,OU=ServiceAccounts,DC=example,DC=com',
   'pages.ldap.bindCredentials': 'Senha de Vinculação',
-  'pages.ldap.bindCredentialsRequired':
-    'Informe a senha da conta de serviço',
+  'pages.ldap.bindCredentialsRequired': 'Informe a senha da conta de serviço',
   'pages.ldap.bindCredentialsPlaceholder':
     'Informe a senha da conta de serviço',
   'pages.ldap.searchBase': 'DN Base de Pesquisa',
@@ -656,7 +682,8 @@ export default {
   'pages.ldap.tlsKey': 'Chave Privada do Cliente (PEM)',
   'pages.ldap.tlsKeyPlaceholder': '-----BEGIN PRIVATE KEY-----\n...',
   'pages.ldap.tlsServername': 'Nome do Servidor SNI',
-  'pages.ldap.tlsServernamePlaceholder': 'Indicação do Nome do Servidor para TLS',
+  'pages.ldap.tlsServernamePlaceholder':
+    'Indicação do Nome do Servidor para TLS',
   'pages.ldap.enabled': 'Ativar Autenticação LDAP',
   'pages.ldap.enabledHelp':
     'Quando ativado, os usuários serão autenticados no servidor LDAP. Usuários já vinculados ao LDAP sempre utilizarão autenticação LDAP independentemente desta configuração.',

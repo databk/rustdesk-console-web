@@ -7,12 +7,12 @@ import settingDrawer from './pt-BR/settingDrawer';
 import settings from './pt-BR/settings';
 
 export default {
-'navBar.lang': 'Idiomas',
-'layout.user.link.help': 'Ajuda',
-'layout.user.link.privacy': 'Privacidade',
-'layout.user.link.terms': 'Termos',
-'layout.user.logout': 'Sair',
-'layout.user.accountCenter': 'Gerenciar Conta',
+  'navBar.lang': 'Idiomas',
+  'layout.user.link.help': 'Ajuda',
+  'layout.user.link.privacy': 'Privacidade',
+  'layout.user.link.terms': 'Termos',
+  'layout.user.logout': 'Sair',
+  'layout.user.accountCenter': 'Gerenciar Conta',
   ...globalHeader,
   ...menu,
   ...settingDrawer,

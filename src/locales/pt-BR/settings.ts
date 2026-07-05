@@ -10,12 +10,14 @@ export default {
   'app.settings.basic.nickname': 'Apelido',
   'app.settings.basic.nickname-message': 'Por favor, informe seu apelido!',
   'app.settings.basic.profile': 'Perfil pessoal',
-  'app.settings.basic.profile-message': 'Por favor, informe seu perfil pessoal!',
+  'app.settings.basic.profile-message':
+    'Por favor, informe seu perfil pessoal!',
   'app.settings.basic.profile-placeholder': 'Breve apresentação sobre você',
   'app.settings.basic.country': 'País/Região',
   'app.settings.basic.country-message': 'Por favor, informe seu país!',
   'app.settings.basic.geographic': 'Estado ou cidade',
-  'app.settings.basic.geographic-message': 'Por favor, informe sua localização!',
+  'app.settings.basic.geographic-message':
+    'Por favor, informe sua localização!',
   'app.settings.basic.address': 'Endereço',
   'app.settings.basic.address-message': 'Por favor, informe seu endereço!',
   'app.settings.basic.phone': 'Número de telefone',
