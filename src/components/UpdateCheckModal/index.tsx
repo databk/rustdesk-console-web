@@ -1,4 +1,8 @@
-import { CheckCircleOutlined, ExclamationCircleOutlined, LinkOutlined } from '@ant-design/icons';
+import {
+  CheckCircleOutlined,
+  ExclamationCircleOutlined,
+  LinkOutlined,
+} from '@ant-design/icons';
 import { useIntl } from '@umijs/max';
 import { Button, Card, Modal, Space, Spin, Tag, Typography } from 'antd';
 import dayjs from 'dayjs';
@@ -46,7 +50,9 @@ const UpdateCard: React.FC<{
                 lineHeight: 1.6,
               }}
             >
-              <Markdown remarkPlugins={[remarkGfm]}>{data.release_note}</Markdown>
+              <Markdown remarkPlugins={[remarkGfm]}>
+                {data.release_note}
+              </Markdown>
             </div>
           )}
           {data.release_url && (
@@ -81,7 +87,9 @@ const UpdateCheckModal: React.FC<{
 }> = ({ open, onClose, cachedResult }) => {
   const intl = useIntl();
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<API.UpdateCheckResult | null>(cachedResult || null);
+  const [result, setResult] = useState<API.UpdateCheckResult | null>(
+    cachedResult || null,
+  );
 
   const doCheck = useCallback(async () => {
     setLoading(true);
@@ -103,7 +111,8 @@ const UpdateCheckModal: React.FC<{
     }
   }, [open, cachedResult, doCheck]);
 
-  const hasAnyUpdate = result && (result.backend?.has_update || result.frontend?.has_update);
+  const hasAnyUpdate =
+    result && (result.backend?.has_update || result.frontend?.has_update);
 
   return (
     <Modal
@@ -111,10 +120,19 @@ const UpdateCheckModal: React.FC<{
       open={open}
       onCancel={onClose}
       footer={[
-        <Button key="recheck" onClick={doCheck} loading={loading} disabled={loading}>
+        <Button
+          key="recheck"
+          onClick={doCheck}
+          loading={loading}
+          disabled={loading}
+        >
           {intl.formatMessage({ id: 'app.updateCheck.recheck' })}
         </Button>,
-        <Button key="close" type={hasAnyUpdate ? 'primary' : 'default'} onClick={onClose}>
+        <Button
+          key="close"
+          type={hasAnyUpdate ? 'primary' : 'default'}
+          onClick={onClose}
+        >
           {intl.formatMessage({ id: 'app.updateCheck.close' })}
         </Button>,
       ]}
@@ -135,7 +153,9 @@ const UpdateCheckModal: React.FC<{
         ) : (
           !loading && (
             <div style={{ textAlign: 'center', padding: '20px 0' }}>
-              <ExclamationCircleOutlined style={{ fontSize: 24, color: '#faad14' }} />
+              <ExclamationCircleOutlined
+                style={{ fontSize: 24, color: '#faad14' }}
+              />
               <Paragraph type="secondary" style={{ marginTop: 8 }}>
                 {intl.formatMessage({ id: 'app.updateCheck.failed' })}
               </Paragraph>

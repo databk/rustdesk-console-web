@@ -6,7 +6,8 @@ import UpdateCheckModal from '@/components/UpdateCheckModal';
 
 const Footer: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
-  const [cachedResult, setCachedResult] = useState<API.UpdateCheckResult | null>(null);
+  const [cachedResult, setCachedResult] =
+    useState<API.UpdateCheckResult | null>(null);
   const autoChecked = useRef(false);
 
   const doAutoCheck = useCallback(async () => {
