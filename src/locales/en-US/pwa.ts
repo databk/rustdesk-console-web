@@ -4,7 +4,6 @@ export default {
   'app.pwa.serviceworker.updated.hint':
     'Please press the "Refresh" button to reload current page',
   'app.pwa.serviceworker.updated.ok': 'Refresh',
-  'app.updateCheck.button': 'Check Update',
   'app.updateCheck.title': 'Update Check',
   'app.updateCheck.backend': 'Backend',
   'app.updateCheck.frontend': 'Frontend',

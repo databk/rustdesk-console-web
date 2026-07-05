@@ -3,6 +3,8 @@ import { useIntl } from '@umijs/max';
 import { Button, Card, Modal, Space, Spin, Tag, Typography } from 'antd';
 import dayjs from 'dayjs';
 import React, { useCallback, useEffect, useState } from 'react';
+import Markdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { checkUpdate } from '@/services/rustdesk-console/system';
 
 const { Paragraph, Text, Title } = Typography;
@@ -43,8 +45,9 @@ const UpdateCard: React.FC<{
                 fontSize: 13,
                 lineHeight: 1.6,
               }}
-              dangerouslySetInnerHTML={{ __html: data.release_note }}
-            />
+            >
+              <Markdown remarkPlugins={[remarkGfm]}>{data.release_note}</Markdown>
+            </div>
           )}
           {data.release_url && (
             <Button

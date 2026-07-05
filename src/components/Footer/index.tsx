@@ -1,16 +1,12 @@
-import { GithubOutlined, SyncOutlined } from '@ant-design/icons';
-import { useIntl } from '@umijs/max';
+import { GithubOutlined } from '@ant-design/icons';
 import { DefaultFooter } from '@ant-design/pro-components';
-import { Badge, Button } from 'antd';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { checkUpdate } from '@/services/rustdesk-console/system';
 import UpdateCheckModal from '@/components/UpdateCheckModal';
 
 const Footer: React.FC = () => {
-  const intl = useIntl();
   const [modalOpen, setModalOpen] = useState(false);
   const [cachedResult, setCachedResult] = useState<API.UpdateCheckResult | null>(null);
-  const [hasUpdate, setHasUpdate] = useState(false);
   const autoChecked = useRef(false);
 
   const doAutoCheck = useCallback(async () => {
@@ -18,7 +14,7 @@ const Footer: React.FC = () => {
       const res = await checkUpdate({ frontend_version: FRONTEND_VERSION });
       setCachedResult(res);
       if (res?.backend?.has_update || res?.frontend?.has_update) {
-        setHasUpdate(true);
+        setModalOpen(true);
       }
     } catch {
       // silent fail for auto check
@@ -40,26 +36,6 @@ const Footer: React.FC = () => {
         }}
         copyright="2026 Data Block"
         links={[
-          {
-            key: 'check-update',
-            title: (
-              <Badge dot={hasUpdate} offset={[6, 0]}>
-                <Button
-                  type="text"
-                  size="small"
-                  icon={<SyncOutlined />}
-                  style={{ color: 'rgba(0, 0, 0, 0.45)', fontSize: 12 }}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setModalOpen(true);
-                  }}
-                >
-                  {intl.formatMessage({ id: 'app.updateCheck.button' })}
-                </Button>
-              </Badge>
-            ),
-            href: '#',
-          },
           {
             key: 'github',
             title: <GithubOutlined />,
