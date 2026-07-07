@@ -167,7 +167,24 @@ export default [
     name: 'customClients',
     icon: 'form',
     access: 'canAdmin',
-    component: './custom-client',
+    routes: [
+      {
+        path: '/custom-client',
+        redirect: '/custom-client/list',
+      },
+      {
+        name: 'list',
+        icon: 'unordered-list',
+        path: '/custom-client/list',
+        component: './custom-client/list',
+      },
+      {
+        name: 'generate',
+        icon: 'build',
+        path: '/custom-client/generate',
+        component: './custom-client/generate',
+      },
+    ],
   },
   {
     path: '/settings',

@@ -26,6 +26,8 @@ export default {
   'menu.settings.oidcProviders': 'OIDC 提供商',
   'menu.settings.ldap': 'LDAP 配置',
   'menu.customClients': '自定义客户端',
+  'menu.customClients.list': '客户端列表',
+  'menu.customClients.generate': '生成客户端',
   'menu.addressBooks': '地址簿',
   'menu.list.audit-list': '审计列表',
   'menu.list.audit-list.File': '文件传输',

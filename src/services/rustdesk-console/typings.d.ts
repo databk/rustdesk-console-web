@@ -821,4 +821,44 @@ declare namespace API {
     success: boolean;
     message: string;
   };
+
+  // Nexus types
+
+  type NexusLoginResult = {
+    login_id: string;
+    auth_url: string;
+    expires_in: number;
+  };
+
+  type NexusLoginStatus = {
+    state: 'pending' | 'completed' | 'failed';
+    nexus_username?: string;
+    expires_in?: number;
+    error?: string;
+  };
+
+  type NexusBindStatus = {
+    bound: boolean;
+    nexus_username?: string;
+    expired?: boolean;
+  };
+
+  type GenerateClientParams = {
+    os: 'windows' | 'linux' | 'macos';
+    arch: 'x64' | 'arm64';
+    app_name: string;
+  };
+
+  type GenerateClientResult = {
+    request_id: string;
+    status: 'pending';
+    message: string;
+  };
+
+  type ClientBuildStatus = {
+    request_id: string;
+    status: 'pending' | 'building' | 'completed' | 'failed' | 'cancelled';
+    download_url?: string;
+    message?: string;
+  };
 }
