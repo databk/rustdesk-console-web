@@ -51,8 +51,8 @@ const SMTPSettings: React.FC = () => {
           host: config.host,
           port: config.port,
           secure: config.secure,
-          user: config.user,
-          pass: '******', // 显示脱敏占位符
+          user: config.user || '',
+          pass: config.user ? '******' : '', // 有用户名时显示脱敏占位符，无认证时为空
           from: config.from,
           enabled: config.enabled,
         });
@@ -81,10 +81,13 @@ const SMTPSettings: React.FC = () => {
         host: values.host,
         port: values.port,
         secure: values.secure,
-        user: values.user,
         from: values.from,
         enabled: values.enabled,
       };
+
+      if (values.user) {
+        submitData.user = values.user;
+      }
 
       if (values.pass && values.pass !== '******') {
         submitData.pass = values.pass;
@@ -123,7 +126,6 @@ const SMTPSettings: React.FC = () => {
         'host',
         'port',
         'secure',
-        'user',
         'from',
       ]);
       setTesting(true);
@@ -133,9 +135,12 @@ const SMTPSettings: React.FC = () => {
         host: values.host,
         port: values.port,
         secure: values.secure,
-        user: values.user,
         from: values.from,
       };
+
+      if (values.user) {
+        testData.user = values.user;
+      }
 
       // 如果密码不是脱敏占位符，使用表单中的密码
       const password = form.getFieldValue('pass');
@@ -302,12 +307,6 @@ const SMTPSettings: React.FC = () => {
                   defaultMessage="Username"
                 />
               }
-              rules={[
-                {
-                  required: true,
-                  message: 'Please enter SMTP authentication username',
-                },
-              ]}
             >
               <Input
                 placeholder={intl.formatMessage({
@@ -325,12 +324,6 @@ const SMTPSettings: React.FC = () => {
                   defaultMessage="Password"
                 />
               }
-              rules={[
-                {
-                  required: !configExists,
-                  message: 'Please enter SMTP authentication password',
-                },
-              ]}
             >
               <Input.Password
                 placeholder={intl.formatMessage({
