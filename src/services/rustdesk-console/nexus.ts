@@ -27,29 +27,42 @@ export async function unbindNexus() {
   });
 }
 
-// Client Build APIs
+// Build APIs
 
-export async function generateCustomClientBuild(data: API.GenerateClientParams) {
-  return request<API.GenerateClientResult>('/api/nexus/client/generate', {
+export async function getBuildList() {
+  return request<API.BuildRecord[]>('/api/nexus/builds', {
+    method: 'GET',
+  });
+}
+
+export async function submitBuild(data: API.SubmitBuildParams) {
+  return request<API.SubmitBuildResult>('/api/nexus/builds', {
     method: 'POST',
     data,
   });
 }
 
-export async function getClientBuildStatus() {
-  return request<API.ClientBuildStatus>('/api/nexus/client/status', {
+export async function getBuildStatus(requestId: string) {
+  return request<API.BuildStatusResponse>('/api/nexus/builds/' + requestId + '/status', {
     method: 'GET',
   });
 }
 
-export async function downloadCustomClientBuild(
-  requestId?: string,
-  options?: { [key: string]: any },
-) {
-  return request('/api/nexus/client/download', {
+export async function deleteBuild(requestId: string) {
+  return request('/api/nexus/builds/' + requestId, {
+    method: 'DELETE',
+  });
+}
+
+export async function getBuildFiles(requestId: string) {
+  return request<string[]>('/api/nexus/builds/' + requestId + '/files', {
     method: 'GET',
-    params: requestId ? { request_id: requestId } : undefined,
+  });
+}
+
+export async function downloadBuildFile(requestId: string, filename: string) {
+  return request('/api/nexus/builds/' + requestId + '/files/' + encodeURIComponent(filename), {
+    method: 'GET',
     responseType: 'blob',
-    ...(options || {}),
   });
 }

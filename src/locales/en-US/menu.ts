@@ -26,8 +26,6 @@ export default {
   'menu.settings.oidcProviders': 'OIDC Providers',
   'menu.settings.ldap': 'LDAP Configuration',
   'menu.customClients': 'Custom Clients',
-  'menu.customClients.list': 'Client List',
-  'menu.customClients.generate': 'Generate Client',
   'menu.addressBooks': 'Address Books',
   'menu.list.audit-list': 'Audit List',
   'menu.list.audit-list.File': 'File Transfer',

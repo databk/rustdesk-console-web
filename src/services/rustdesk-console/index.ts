@@ -94,7 +94,10 @@ export {
   pollNexusLoginStatus,
   getNexusBindStatus,
   unbindNexus,
-  generateCustomClientBuild,
-  getClientBuildStatus,
-  downloadCustomClientBuild,
+  getBuildList,
+  submitBuild,
+  getBuildStatus,
+  deleteBuild,
+  getBuildFiles,
+  downloadBuildFile,
 } from './nexus';

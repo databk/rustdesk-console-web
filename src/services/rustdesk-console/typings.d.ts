@@ -843,22 +843,50 @@ declare namespace API {
     expired?: boolean;
   };
 
-  type GenerateClientParams = {
-    os: 'windows' | 'linux' | 'macos';
-    arch: 'x64' | 'arm64';
-    app_name: string;
+  type BuildCustomConfig = {
+    password?: string;
+    salt?: string;
+    'conn-type'?: 'incoming' | 'outgoing' | 'both';
+    'disable-installation'?: 'Y' | 'N';
+    'disable-settings'?: 'Y' | 'N';
+    'disable-account'?: 'Y' | 'N';
+    'disable-ab'?: 'Y' | 'N';
+    'disable-tcp-listen'?: 'Y' | 'N';
+    'app-name'?: string;
+    'override-settings'?: Record<string, string>;
+    'default-settings'?: Record<string, string>;
   };
 
-  type GenerateClientResult = {
+  type SubmitBuildParams = {
+    os: 'windows';
+    arch: 'x64' | 'arm64' | 'x86';
+    custom: BuildCustomConfig;
+  };
+
+  type SubmitBuildResult = {
     request_id: string;
     status: 'pending';
     message: string;
   };
 
-  type ClientBuildStatus = {
+  type BuildRecord = {
+    requestId: string;
+    userGuid: string;
+    os: string;
+    arch: string;
+    appName: string;
+    custom: string | null;
+    status: 'pending' | 'building' | 'completed' | 'failed' | 'cancelled';
+    files: string | null;
+    message: string | null;
+    createdAt: string;
+    updatedAt: string;
+  };
+
+  type BuildStatusResponse = {
     request_id: string;
     status: 'pending' | 'building' | 'completed' | 'failed' | 'cancelled';
-    download_url?: string;
+    files?: string[];
     message?: string;
   };
 }
