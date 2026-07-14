@@ -1,6 +1,6 @@
 import { GithubOutlined } from '@ant-design/icons';
 import { FormattedMessage, useIntl } from '@umijs/max';
-import { Button, Result } from 'antd';
+import { Alert, Button, Result, Space } from 'antd';
 import React from 'react';
 
 interface BindPromptProps {
@@ -32,15 +32,27 @@ const BindPrompt: React.FC<BindPromptProps> = ({ loginLoading, onLogin }) => {
             'You need to bind your GitHub account to generate custom clients. Click the button below to authorize via GitHub.',
         })}
         extra={
-          <Button
-            type="primary"
-            size="large"
-            icon={<GithubOutlined />}
-            loading={loginLoading}
-            onClick={onLogin}
-          >
-            <FormattedMessage id="pages.nexus.bindGithub" defaultMessage="Authorize with GitHub" />
-          </Button>
+          <Space direction="vertical" size="large" style={{ alignItems: 'center' }}>
+            <Alert
+              type="info"
+              showIcon
+              style={{ maxWidth: 560, textAlign: 'left' }}
+              message={intl.formatMessage({
+                id: 'pages.nexus.bindWhyLogin',
+                defaultMessage:
+                  'GitHub authentication helps us verify that you are a real user, preventing automated abuse of build resources. We only request your public username - no access to your repositories, personal data, or any other permissions is needed.',
+              })}
+            />
+            <Button
+              type="primary"
+              size="large"
+              icon={<GithubOutlined />}
+              loading={loginLoading}
+              onClick={onLogin}
+            >
+              <FormattedMessage id="pages.nexus.bindGithub" defaultMessage="Authorize with GitHub" />
+            </Button>
+          </Space>
         }
       />
     </div>

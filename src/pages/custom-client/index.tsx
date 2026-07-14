@@ -1,6 +1,7 @@
+import type { ActionType } from '@ant-design/pro-components';
 import { PageContainer } from '@ant-design/pro-components';
 import { useIntl } from '@umijs/max';
-import { App } from 'antd';
+import { App, Space, Tag } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
@@ -31,6 +32,7 @@ const CustomClientPage: React.FC = () => {
   const [pendingBuildConfig, setPendingBuildConfig] = useState<Record<string, any> | null>(null);
 
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const buildListActionRef = useRef<ActionType | null>(null);
 
   const fetchBindStatus = useCallback(async () => {
     try {
@@ -208,6 +210,7 @@ const CustomClientPage: React.FC = () => {
       setCreateModalOpen(false);
       setPendingBuildConfig(null);
       setPageState('ready');
+      buildListActionRef.current?.reload();
     } catch (error: any) {
       if (isRepoRequiredError(error)) {
         setCreateModalOpen(false);
@@ -252,6 +255,7 @@ const CustomClientPage: React.FC = () => {
         msgApi.success(result.message || 'Build request submitted');
         setPendingBuildConfig(null);
         setPageState('ready');
+        buildListActionRef.current?.reload();
       } catch (error: any) {
         if (isRepoRequiredError(error)) {
           msgApi.warning(
@@ -297,9 +301,16 @@ const CustomClientPage: React.FC = () => {
     setPendingBuildConfig(null);
   };
 
+  const pageTitle = (
+    <Space>
+      {intl.formatMessage({ id: 'menu.customClients', defaultMessage: 'Custom Clients' })}
+      <Tag color="blue">Beta</Tag>
+    </Space>
+  );
+
   if (pageState === 'loading') {
     return (
-      <PageContainer>
+      <PageContainer title={pageTitle}>
         <div style={{ textAlign: 'center', padding: 80 }}>
           <LoadingOutlined style={{ fontSize: 48, color: '#1890ff' }} />
         </div>
@@ -308,7 +319,7 @@ const CustomClientPage: React.FC = () => {
   }
 
   return (
-    <PageContainer>
+    <PageContainer title={pageTitle}>
       {pageState === 'bind' && (
         <BindPrompt loginLoading={loginLoading} onLogin={handleLogin} />
       )}
@@ -327,6 +338,7 @@ const CustomClientPage: React.FC = () => {
       )}
       {pageState === 'ready' && (
         <BuildList
+          actionRef={buildListActionRef}
           bindStatus={bindStatus}
           onUnbind={handleUnbind}
           onCreate={() => setCreateModalOpen(true)}

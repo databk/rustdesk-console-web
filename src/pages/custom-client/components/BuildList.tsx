@@ -8,10 +8,10 @@ import {
   WarningOutlined,
 } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
-import { PageContainer, ProTable } from '@ant-design/pro-components';
+import { ProTable } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
 import { App, Button, Popconfirm, Space, Tag, Typography } from 'antd';
-import React, { useRef } from 'react';
+import React from 'react';
 import {
   deleteBuild,
   downloadBuildFile,
@@ -21,6 +21,7 @@ import {
 const { Text, Title } = Typography;
 
 interface BuildListProps {
+  actionRef: React.MutableRefObject<ActionType | null>;
   bindStatus: API.NexusBindStatus | null;
   onUnbind: () => void;
   onCreate: () => void;
@@ -36,6 +37,7 @@ const statusConfig: Record<string, { color: string; icon: React.ReactNode }> = {
 };
 
 const BuildList: React.FC<BuildListProps> = ({
+  actionRef,
   bindStatus,
   onUnbind,
   onCreate,
@@ -43,8 +45,7 @@ const BuildList: React.FC<BuildListProps> = ({
 }) => {
   const intl = useIntl();
   const { message: msgApi } = App.useApp();
-  const actionRef = useRef<ActionType>(null);
-  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const pollRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
   const [downloadLoading, setDownloadLoading] = React.useState<Set<string>>(new Set());
 
   const statusLabel = (status: string) => {
@@ -231,69 +232,68 @@ const BuildList: React.FC<BuildListProps> = ({
   ];
 
   return (
-    <PageContainer>
-      <ProTable<API.BuildRecord>
-        headerTitle={
-          <Space>
-            <Title level={5} style={{ margin: 0 }}>
-              <FormattedMessage id="pages.nexus.buildList" defaultMessage="Build History" />
-            </Title>
-            {bindStatus?.bound && (
-              <Text type="secondary">
-                <GithubOutlined /> {bindStatus.nexus_username}
-              </Text>
-            )}
-          </Space>
-        }
-        actionRef={actionRef}
-        rowKey="requestId"
-        search={false}
-        columns={columns}
-        pagination={{
-          defaultPageSize: 20,
-          showSizeChanger: true,
-          showQuickJumper: true,
-        }}
-        scroll={{ x: 1200 }}
-        options={{
-          density: true,
-          setting: { listsHeight: 400 },
-          fullScreen: false,
-          reload: true,
-        }}
-        toolBarRender={() => [
-          <Button key="unbind" size="small" danger onClick={onUnbind}>
-            <FormattedMessage id="pages.nexus.unbind" defaultMessage="Unbind" />
-          </Button>,
-          <Button
-            key="create"
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={onCreate}
-          >
-            <FormattedMessage id="pages.nexus.createBuild" defaultMessage="Create New Client" />
-          </Button>,
-        ]}
-        request={async () => {
-          try {
-            const records = await getBuildList();
-            managePolling(records);
-            return {
-              data: records,
-              success: true,
-            };
-          } catch (error: any) {
-            if (error?.response?.status === 403) {
-              onRepoRequired();
-            }
-            return {
-              data: [],
-              success: false,
-            };
+    <ProTable<API.BuildRecord>
+      headerTitle={
+        <Space>
+          <Title level={5} style={{ margin: 0 }}>
+            <FormattedMessage id="pages.nexus.buildList" defaultMessage="Build History" />
+          </Title>
+          <Tag color="blue">Beta</Tag>
+          {bindStatus?.bound && (
+            <Text type="secondary">
+              <GithubOutlined /> {bindStatus.nexus_username}
+            </Text>
+          )}
+        </Space>
+      }
+      actionRef={actionRef}
+      rowKey="requestId"
+      search={false}
+      columns={columns}
+      pagination={{
+        defaultPageSize: 20,
+        showSizeChanger: true,
+        showQuickJumper: true,
+      }}
+      scroll={{ x: 1200 }}
+      options={{
+        density: true,
+        setting: { listsHeight: 400 },
+        fullScreen: false,
+        reload: true,
+      }}
+      toolBarRender={() => [
+        <Button key="unbind" size="small" danger onClick={onUnbind}>
+          <FormattedMessage id="pages.nexus.unbind" defaultMessage="Unbind" />
+        </Button>,
+        <Button
+          key="create"
+          type="primary"
+          icon={<PlusOutlined />}
+          onClick={onCreate}
+        >
+          <FormattedMessage id="pages.nexus.createBuild" defaultMessage="Create New Client" />
+        </Button>,
+      ]}
+      request={async () => {
+        try {
+          const records = await getBuildList();
+          managePolling(records);
+          return {
+            data: records,
+            success: true,
+          };
+        } catch (error: any) {
+          if (error?.response?.status === 403) {
+            onRepoRequired();
           }
-        }}
-      />
-    </PageContainer>
+          return {
+            data: [],
+            success: false,
+          };
+        }
+      }}
+    />
   );
 };
 
