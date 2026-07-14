@@ -748,7 +748,7 @@ export default {
   'pages.nexus.statusCancelledDesc':
     'The build was cancelled, usually because you un-starred/un-forked the repository.',
   'pages.nexus.bindWhyLogin':
-    'GitHub authentication helps us verify that you are a real user, preventing automated abuse of build resources. We only request your public username — no access to your repositories, personal data, or any other permissions is needed.',
+    'GitHub authentication helps us verify that you are a real user, preventing automated abuse of build resources. We only request your public data — no access to your repositories, personal data, or any other permissions is needed.',
   'pages.nexus.repoWhyInteract':
     "I'm a high school student developing this project in my spare time. Your Star, Fork, or Watch means a lot to me — it not only keeps me motivated, but also helps with my college applications. This is the only thing I ask for in return. Thank you so much for your support!",
 };

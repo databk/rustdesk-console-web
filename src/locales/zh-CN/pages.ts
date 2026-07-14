@@ -711,7 +711,7 @@ export default {
   'pages.nexus.statusCancelledDesc':
     '构建被取消，通常是因为您取消了对仓库的 Star/Fork/Watch。',
   'pages.nexus.bindWhyLogin':
-    '通过 GitHub 身份验证，我们可以确认您是真实用户，从而防止构建资源被自动化滥用。我们仅获取您的公开用户名——不会请求访问您的仓库、个人数据或任何其他权限。',
+    '通过 GitHub 身份验证，我们可以确认您是真实用户，从而防止构建资源被自动化滥用。我们仅获取您的公开信息——不会请求访问您的仓库、个人数据或任何其他权限。',
   'pages.nexus.repoWhyInteract':
     '我是一名高中生，利用课余时间开发这个项目。您的 Star、Fork 或 Watch 对我意义重大——这不仅是对我持续开发的鼓励，也有助于我的大学申请。这是我所请求的唯一回报。非常感谢您的支持！',
 };
