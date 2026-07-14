@@ -7,6 +7,8 @@ export default {
   'app.updateCheck.backend': '后端',
   'app.updateCheck.frontend': '前端',
   'app.updateCheck.upToDate': '已是最新版本',
+  'app.updateCheck.newVersionAvailable': '发现 {count} 个新版本可用',
+  'app.updateCheck.allUpToDate': '所有组件均为最新版本',
   'app.updateCheck.viewRelease': '查看发布详情',
   'app.updateCheck.recheck': '重新检查',
   'app.updateCheck.close': '关闭',

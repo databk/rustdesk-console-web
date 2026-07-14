@@ -8,6 +8,9 @@ export default {
   'app.updateCheck.backend': 'Backend',
   'app.updateCheck.frontend': 'Frontend',
   'app.updateCheck.upToDate': 'Up to date',
+  'app.updateCheck.newVersionAvailable':
+    '{count} new update{count, plural, =1 { is} other {s are}} available',
+  'app.updateCheck.allUpToDate': 'All components are up to date',
   'app.updateCheck.viewRelease': 'View Release',
   'app.updateCheck.recheck': 'Recheck',
   'app.updateCheck.close': 'Close',

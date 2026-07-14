@@ -1,17 +1,27 @@
 import {
-  CheckCircleOutlined,
-  ExclamationCircleOutlined,
+  CheckCircleFilled,
+  ExclamationCircleFilled,
   LinkOutlined,
+  SyncOutlined,
 } from '@ant-design/icons';
 import { useIntl } from '@umijs/max';
-import { Button, Card, Modal, Space, Spin, Tag, Typography } from 'antd';
+import {
+  Alert,
+  Button,
+  Modal,
+  Skeleton,
+  Space,
+  Spin,
+  Tag,
+  Typography,
+} from 'antd';
 import dayjs from 'dayjs';
 import React, { useCallback, useEffect, useState } from 'react';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { checkUpdate } from '@/services/rustdesk-console/system';
 
-const { Paragraph, Text, Title } = Typography;
+const { Paragraph, Text } = Typography;
 
 interface UpdateCheckComponent extends API.UpdateCheckComponent {
   has_update: boolean;
@@ -20,6 +30,25 @@ interface UpdateCheckComponent extends API.UpdateCheckComponent {
   release_note?: string;
   published_at?: string;
 }
+
+const StatusBadge: React.FC<{ hasUpdate: boolean }> = ({ hasUpdate }) => (
+  <div
+    style={{
+      width: 36,
+      height: 36,
+      borderRadius: '50%',
+      flexShrink: 0,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontSize: 18,
+      background: hasUpdate ? '#e6f4ff' : '#f6ffed',
+      color: hasUpdate ? '#1677ff' : '#52c41a',
+    }}
+  >
+    {hasUpdate ? <SyncOutlined /> : <CheckCircleFilled />}
+  </div>
+);
 
 const UpdateCard: React.FC<{
   title: string;
@@ -30,53 +59,84 @@ const UpdateCard: React.FC<{
   if (!data) return null;
 
   return (
-    <Card size="small" title={title} style={{ marginBottom: 12 }}>
-      {data.has_update ? (
-        <Space direction="vertical" style={{ width: '100%' }}>
-          <Space>
-            <Tag color="blue">{data.version}</Tag>
+    <div
+      style={{
+        display: 'flex',
+        gap: 12,
+        padding: '12px 16px',
+        borderRadius: 8,
+        background: '#fafafa',
+        border: `1px solid ${data.has_update ? '#d6e4ff' : '#f0f0f0'}`,
+        borderLeft: `3px solid ${data.has_update ? '#1677ff' : '#52c41a'}`,
+      }}
+    >
+      <StatusBadge hasUpdate={data.has_update} />
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: 4,
+            marginBottom: 4,
+          }}
+        >
+          <Text strong>{title}</Text>
+          {data.version && (
+            <Tag
+              color={data.has_update ? 'processing' : 'success'}
+              style={{ margin: 0 }}
+            >
+              {data.version}
+            </Tag>
+          )}
+        </div>
+        {data.has_update ? (
+          <Space direction="vertical" size={8} style={{ width: '100%' }}>
             {data.published_at && (
               <Text type="secondary" style={{ fontSize: 12 }}>
                 {dayjs(data.published_at).format('YYYY-MM-DD')}
               </Text>
             )}
+            {data.release_note && (
+              <div
+                style={{
+                  background: '#fff',
+                  borderRadius: 6,
+                  padding: '8px 12px',
+                  maxHeight: 180,
+                  overflow: 'auto',
+                  fontSize: 13,
+                  lineHeight: 1.6,
+                  border: '1px solid #f0f0f0',
+                }}
+              >
+                <Markdown remarkPlugins={[remarkGfm]}>
+                  {data.release_note}
+                </Markdown>
+              </div>
+            )}
+            {data.release_url && (
+              <Button
+                type="link"
+                size="small"
+                icon={<LinkOutlined />}
+                href={data.release_url}
+                target="_blank"
+                style={{ padding: 0, height: 'auto' }}
+              >
+                {intl.formatMessage({ id: 'app.updateCheck.viewRelease' })}
+              </Button>
+            )}
           </Space>
-          {data.release_note && (
-            <div
-              style={{
-                maxHeight: 200,
-                overflow: 'auto',
-                fontSize: 13,
-                lineHeight: 1.6,
-              }}
-            >
-              <Markdown remarkPlugins={[remarkGfm]}>
-                {data.release_note}
-              </Markdown>
-            </div>
-          )}
-          {data.release_url && (
-            <Button
-              type="link"
-              size="small"
-              icon={<LinkOutlined />}
-              href={data.release_url}
-              target="_blank"
-              style={{ padding: 0 }}
-            >
-              {intl.formatMessage({ id: 'app.updateCheck.viewRelease' })}
-            </Button>
-          )}
-        </Space>
-      ) : (
-        <Space>
-          <CheckCircleOutlined style={{ color: '#52c41a' }} />
-          <Text type="secondary">
+        ) : (
+          <Text type="secondary" style={{ fontSize: 13 }}>
             {intl.formatMessage({ id: 'app.updateCheck.upToDate' })}
           </Text>
-        </Space>
-      )}
-    </Card>
+        )}
+      </div>
+    </div>
   );
 };
 
@@ -114,6 +174,12 @@ const UpdateCheckModal: React.FC<{
   const hasAnyUpdate =
     result && (result.backend?.has_update || result.frontend?.has_update);
 
+  const updateCount = result
+    ? [result.backend?.has_update, result.frontend?.has_update].filter(
+        Boolean,
+      ).length
+    : 0;
+
   return (
     <Modal
       title={intl.formatMessage({ id: 'app.updateCheck.title' })}
@@ -122,9 +188,9 @@ const UpdateCheckModal: React.FC<{
       footer={[
         <Button
           key="recheck"
+          icon={<SyncOutlined />}
           onClick={doCheck}
           loading={loading}
-          disabled={loading}
         >
           {intl.formatMessage({ id: 'app.updateCheck.recheck' })}
         </Button>,
@@ -136,11 +202,23 @@ const UpdateCheckModal: React.FC<{
           {intl.formatMessage({ id: 'app.updateCheck.close' })}
         </Button>,
       ]}
-      width={520}
+      width={560}
     >
       <Spin spinning={loading}>
         {result ? (
-          <div>
+          <Space direction="vertical" size={12} style={{ width: '100%' }}>
+            <Alert
+              type={hasAnyUpdate ? 'info' : 'success'}
+              showIcon
+              message={
+                hasAnyUpdate
+                  ? intl.formatMessage(
+                      { id: 'app.updateCheck.newVersionAvailable' },
+                      { count: updateCount },
+                    )
+                  : intl.formatMessage({ id: 'app.updateCheck.allUpToDate' })
+              }
+            />
             <UpdateCard
               title={intl.formatMessage({ id: 'app.updateCheck.backend' })}
               data={result.backend}
@@ -149,18 +227,35 @@ const UpdateCheckModal: React.FC<{
               title={intl.formatMessage({ id: 'app.updateCheck.frontend' })}
               data={result.frontend}
             />
-          </div>
+          </Space>
+        ) : loading ? (
+          <Skeleton active paragraph={{ rows: 4 }} />
         ) : (
-          !loading && (
-            <div style={{ textAlign: 'center', padding: '20px 0' }}>
-              <ExclamationCircleOutlined
-                style={{ fontSize: 24, color: '#faad14' }}
-              />
-              <Paragraph type="secondary" style={{ marginTop: 8 }}>
-                {intl.formatMessage({ id: 'app.updateCheck.failed' })}
-              </Paragraph>
-            </div>
-          )
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 8,
+              padding: '32px 0',
+            }}
+          >
+            <ExclamationCircleFilled
+              style={{ fontSize: 40, color: '#faad14' }}
+            />
+            <Paragraph type="secondary" style={{ margin: 0, textAlign: 'center' }}>
+              {intl.formatMessage({ id: 'app.updateCheck.failed' })}
+            </Paragraph>
+            <Button
+              type="primary"
+              ghost
+              size="small"
+              icon={<SyncOutlined />}
+              onClick={doCheck}
+            >
+              {intl.formatMessage({ id: 'app.updateCheck.recheck' })}
+            </Button>
+          </div>
         )}
       </Spin>
     </Modal>
