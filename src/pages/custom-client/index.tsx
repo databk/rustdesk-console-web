@@ -697,7 +697,7 @@ const CustomClientPage: React.FC = () => {
         layout="vertical"
         onFinish={handleCreate}
         initialValues={{
-          arch: 'x64',
+          arch: 'x86_64',
           'conn-type': 'both',
         }}
         style={{ maxHeight: '60vh', overflowY: 'auto', paddingRight: 8 }}
