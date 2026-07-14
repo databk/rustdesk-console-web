@@ -698,7 +698,6 @@ export default {
   'pages.nexus.deleteFailed': 'Failed to delete build record',
   'pages.nexus.pollingBuildStatus': 'Polling build status...',
   'pages.nexus.requestId': 'Request ID',
-  'pages.nexus.monthlyLimit': 'Monthly build limit',
   'pages.nexus.concurrentLimit': 'Only one build at a time',
   'pages.nexus.os': 'Operating System',
   'pages.nexus.arch': 'Architecture',

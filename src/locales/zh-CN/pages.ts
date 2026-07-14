@@ -664,7 +664,6 @@ export default {
   'pages.nexus.deleteFailed': '删除构建记录失败',
   'pages.nexus.pollingBuildStatus': '正在轮询构建状态...',
   'pages.nexus.requestId': '请求 ID',
-  'pages.nexus.monthlyLimit': '每月构建次数限制',
   'pages.nexus.concurrentLimit': '同时只能有一个构建任务',
   'pages.nexus.os': '操作系统',
   'pages.nexus.arch': '架构',

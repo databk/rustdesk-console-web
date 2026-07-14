@@ -221,12 +221,6 @@ const CreateBuildModal: React.FC<CreateBuildModalProps> = ({
         <Divider orientation="left" plain>
           <FormattedMessage id="pages.nexus.serverConfig" defaultMessage="Server Configuration" />
         </Divider>
-        <Paragraph type="secondary" style={{ marginBottom: 16 }}>
-          <FormattedMessage
-            id="pages.nexus.monthlyLimit"
-            defaultMessage="Monthly build limit: 15 per user. Concurrent builds: 1."
-          />
-        </Paragraph>
 
         {SERVER_FIELDS.map(({ key, labelKey }) => (
           <Form.Item
