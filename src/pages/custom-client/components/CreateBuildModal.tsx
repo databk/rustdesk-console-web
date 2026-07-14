@@ -1,14 +1,54 @@
+import { AppstoreOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { FormattedMessage, useIntl } from '@umijs/max';
-import { Form, Input, Modal, Radio, Select, Typography } from 'antd';
+import {
+  Col,
+  Divider,
+  Form,
+  Input,
+  Modal,
+  Radio,
+  Row,
+  Segmented,
+  Switch,
+  Tooltip,
+  Typography,
+} from 'antd';
 import React from 'react';
 import {
   ARCH_OPTIONS,
   CONN_TYPE_OPTIONS,
-  DISABLE_OPTIONS,
   SERVER_FIELDS,
 } from '../constants';
 
-const { Title, Paragraph } = Typography;
+const { Paragraph } = Typography;
+
+const DISABLE_FIELDS = [
+  {
+    name: 'disable-installation',
+    labelKey: 'pages.nexus.disableInstallation',
+    defaultMessage: 'Disable Installation',
+  },
+  {
+    name: 'disable-settings',
+    labelKey: 'pages.nexus.disableSettings',
+    defaultMessage: 'Disable Settings',
+  },
+  {
+    name: 'disable-account',
+    labelKey: 'pages.nexus.disableAccount',
+    defaultMessage: 'Disable Account',
+  },
+  {
+    name: 'disable-ab',
+    labelKey: 'pages.nexus.disableAb',
+    defaultMessage: 'Disable AB',
+  },
+  {
+    name: 'disable-tcp-listen',
+    labelKey: 'pages.nexus.disableTcpListen',
+    defaultMessage: 'Disable TCP Listen',
+  },
+];
 
 interface CreateBuildModalProps {
   open: boolean;
@@ -39,6 +79,20 @@ const CreateBuildModal: React.FC<CreateBuildModalProps> = ({
     }
   }, [open, initialValues, form]);
 
+  const renderDisableField = (field: typeof DISABLE_FIELDS[number]) => (
+    <Col key={field.name} span={12}>
+      <Form.Item
+        name={field.name}
+        valuePropName="checked"
+        getValueFromEvent={(checked: boolean) => (checked ? 'Y' : 'N')}
+        getValueProps={(value: string) => ({ checked: value === 'Y' })}
+        label={intl.formatMessage({ id: field.labelKey, defaultMessage: field.defaultMessage })}
+      >
+        <Switch checkedChildren="Yes" unCheckedChildren="No" />
+      </Form.Item>
+    </Col>
+  );
+
   return (
     <Modal
       title={intl.formatMessage({
@@ -49,7 +103,7 @@ const CreateBuildModal: React.FC<CreateBuildModalProps> = ({
       onCancel={onCancel}
       onOk={() => form.submit()}
       confirmLoading={loading}
-      width={720}
+      width={800}
       destroyOnClose
     >
       <Form
@@ -62,24 +116,30 @@ const CreateBuildModal: React.FC<CreateBuildModalProps> = ({
         }}
         style={{ maxHeight: '60vh', overflowY: 'auto', paddingRight: 8 }}
       >
-        <Title level={5} style={{ marginTop: 0 }}>
+        {/* Section: OS & Architecture */}
+        <Divider orientation="left" plain>
           <FormattedMessage id="pages.nexus.os" defaultMessage="Operating System" /> &{' '}
           <FormattedMessage id="pages.nexus.arch" defaultMessage="Architecture" />
-        </Title>
+        </Divider>
 
-        <Form.Item
-          label={intl.formatMessage({ id: 'pages.nexus.os', defaultMessage: 'Operating System' })}
-        >
-          <Select value="windows" disabled options={[{ value: 'windows', label: 'Windows' }]} />
-        </Form.Item>
-
-        <Form.Item
-          name="arch"
-          label={intl.formatMessage({ id: 'pages.nexus.arch', defaultMessage: 'Architecture' })}
-          rules={[{ required: true }]}
-        >
-          <Select options={ARCH_OPTIONS} />
-        </Form.Item>
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item
+              label={intl.formatMessage({ id: 'pages.nexus.os', defaultMessage: 'Operating System' })}
+            >
+              <Input value="Windows" disabled />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              name="arch"
+              label={intl.formatMessage({ id: 'pages.nexus.arch', defaultMessage: 'Architecture' })}
+              rules={[{ required: true }]}
+            >
+              <Segmented options={ARCH_OPTIONS} block />
+            </Form.Item>
+          </Col>
+        </Row>
 
         <Form.Item
           name="app-name"
@@ -95,6 +155,7 @@ const CreateBuildModal: React.FC<CreateBuildModalProps> = ({
           ]}
         >
           <Input
+            prefix={<AppstoreOutlined />}
             placeholder={intl.formatMessage({
               id: 'pages.nexus.appNamePlaceholder',
               defaultMessage: 'e.g. my-rustdesk',
@@ -102,92 +163,65 @@ const CreateBuildModal: React.FC<CreateBuildModalProps> = ({
           />
         </Form.Item>
 
-        <Title level={5}>
+        {/* Section: Custom Configuration */}
+        <Divider orientation="left" plain>
           <FormattedMessage id="pages.nexus.customConfig" defaultMessage="Custom Configuration" />
-        </Title>
+        </Divider>
 
-        <Form.Item
-          name="password"
-          label={intl.formatMessage({ id: 'pages.nexus.password', defaultMessage: 'Password' })}
-        >
-          <Input.Password
-            placeholder={intl.formatMessage({
-              id: 'pages.nexus.passwordPlaceholder',
-              defaultMessage: 'Enter password',
-            })}
-          />
-        </Form.Item>
-
-        <Form.Item
-          name="salt"
-          label={intl.formatMessage({ id: 'pages.nexus.salt', defaultMessage: 'Salt' })}
-        >
-          <Input
-            placeholder={intl.formatMessage({
-              id: 'pages.nexus.saltPlaceholder',
-              defaultMessage: 'Enter salt',
-            })}
-          />
-        </Form.Item>
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item
+              name="password"
+              label={intl.formatMessage({ id: 'pages.nexus.password', defaultMessage: 'Password' })}
+            >
+              <Input.Password
+                placeholder={intl.formatMessage({
+                  id: 'pages.nexus.passwordPlaceholder',
+                  defaultMessage: 'Enter password',
+                })}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              name="salt"
+              label={intl.formatMessage({ id: 'pages.nexus.salt', defaultMessage: 'Salt' })}
+            >
+              <Input.Password
+                placeholder={intl.formatMessage({
+                  id: 'pages.nexus.saltPlaceholder',
+                  defaultMessage: 'Enter salt',
+                })}
+              />
+            </Form.Item>
+          </Col>
+        </Row>
 
         <Form.Item
           name="conn-type"
           label={intl.formatMessage({ id: 'pages.nexus.connType', defaultMessage: 'Connection Type' })}
         >
-          <Select options={CONN_TYPE_OPTIONS} allowClear />
+          <Radio.Group optionType="button" buttonStyle="solid" options={CONN_TYPE_OPTIONS} />
         </Form.Item>
 
-        <Form.Item
-          name="disable-installation"
-          label={intl.formatMessage({
-            id: 'pages.nexus.disableInstallation',
-            defaultMessage: 'Disable Installation',
-          })}
-        >
-          <Select options={DISABLE_OPTIONS} allowClear />
-        </Form.Item>
+        {/* Disable options - 2 per row */}
+        <Row gutter={16}>
+          {renderDisableField(DISABLE_FIELDS[0])}
+          {renderDisableField(DISABLE_FIELDS[1])}
+        </Row>
+        <Row gutter={16}>
+          {renderDisableField(DISABLE_FIELDS[2])}
+          {renderDisableField(DISABLE_FIELDS[3])}
+        </Row>
+        <Row gutter={16}>
+          {renderDisableField(DISABLE_FIELDS[4])}
+        </Row>
 
-        <Form.Item
-          name="disable-settings"
-          label={intl.formatMessage({
-            id: 'pages.nexus.disableSettings',
-            defaultMessage: 'Disable Settings',
-          })}
-        >
-          <Select options={DISABLE_OPTIONS} allowClear />
-        </Form.Item>
-
-        <Form.Item
-          name="disable-account"
-          label={intl.formatMessage({
-            id: 'pages.nexus.disableAccount',
-            defaultMessage: 'Disable Account',
-          })}
-        >
-          <Select options={DISABLE_OPTIONS} allowClear />
-        </Form.Item>
-
-        <Form.Item
-          name="disable-ab"
-          label={intl.formatMessage({ id: 'pages.nexus.disableAb', defaultMessage: 'Disable AB' })}
-        >
-          <Select options={DISABLE_OPTIONS} allowClear />
-        </Form.Item>
-
-        <Form.Item
-          name="disable-tcp-listen"
-          label={intl.formatMessage({
-            id: 'pages.nexus.disableTcpListen',
-            defaultMessage: 'Disable TCP Listen',
-          })}
-        >
-          <Select options={DISABLE_OPTIONS} allowClear />
-        </Form.Item>
-
-        <Title level={5} style={{ marginTop: 24 }}>
+        {/* Section: Server Configuration */}
+        <Divider orientation="left" plain>
           <FormattedMessage id="pages.nexus.serverConfig" defaultMessage="Server Configuration" />
-        </Title>
-        <Paragraph type="secondary">
+        </Divider>
+        <Paragraph type="secondary" style={{ marginBottom: 16 }}>
           <FormattedMessage
             id="pages.nexus.monthlyLimit"
             defaultMessage="Monthly build limit: 15 per user. Concurrent builds: 1."
@@ -195,41 +229,54 @@ const CreateBuildModal: React.FC<CreateBuildModalProps> = ({
         </Paragraph>
 
         {SERVER_FIELDS.map(({ key, labelKey }) => (
-          <div key={key} style={{ marginBottom: 16 }}>
-            <Form.Item
-              name={key}
-              label={intl.formatMessage({ id: labelKey, defaultMessage: key })}
-              style={{ marginBottom: 4 }}
-            >
-              <Input placeholder={intl.formatMessage({ id: labelKey, defaultMessage: key })} />
-            </Form.Item>
-            <Form.Item
-              name={`${key}_type`}
-              initialValue="override"
-              style={{ marginBottom: 0 }}
-            >
-              <Radio.Group
-                optionType="button"
-                size="small"
-                options={[
-                  {
-                    value: 'override',
-                    label: intl.formatMessage({
-                      id: 'pages.nexus.overrideSettings',
-                      defaultMessage: 'Override Settings',
-                    }),
-                  },
-                  {
-                    value: 'default',
-                    label: intl.formatMessage({
-                      id: 'pages.nexus.defaultSettings',
-                      defaultMessage: 'Default Settings',
-                    }),
-                  },
-                ]}
-              />
-            </Form.Item>
-          </div>
+          <Form.Item
+            key={key}
+            label={
+              <span>
+                {intl.formatMessage({ id: labelKey, defaultMessage: key })}
+                <Tooltip
+                  title={intl.formatMessage({
+                    id: 'pages.nexus.serverConfigTooltip',
+                    defaultMessage:
+                      "Override replaces the user's setting. Default applies only if the user hasn't set a value.",
+                  })}
+                >
+                  <QuestionCircleOutlined style={{ marginLeft: 4, color: '#999' }} />
+                </Tooltip>
+              </span>
+            }
+          >
+            <Row gutter={8} align="middle">
+              <Col flex="auto">
+                <Form.Item name={key} noStyle>
+                  <Input placeholder={intl.formatMessage({ id: labelKey, defaultMessage: key })} />
+                </Form.Item>
+              </Col>
+              <Col flex="none">
+                <Form.Item name={`${key}_type`} initialValue="override" noStyle>
+                  <Segmented
+                    size="small"
+                    options={[
+                      {
+                        value: 'override',
+                        label: intl.formatMessage({
+                          id: 'pages.nexus.overrideSettings',
+                          defaultMessage: 'Override',
+                        }),
+                      },
+                      {
+                        value: 'default',
+                        label: intl.formatMessage({
+                          id: 'pages.nexus.defaultSettings',
+                          defaultMessage: 'Default',
+                        }),
+                      },
+                    ]}
+                  />
+                </Form.Item>
+              </Col>
+            </Row>
+          </Form.Item>
         ))}
       </Form>
     </Modal>

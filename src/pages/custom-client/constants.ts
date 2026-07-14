@@ -6,11 +6,6 @@ export const CONN_TYPE_OPTIONS = [
   { value: 'outgoing', label: 'Outgoing' },
 ];
 
-export const DISABLE_OPTIONS = [
-  { value: 'N', label: 'No' },
-  { value: 'Y', label: 'Yes' },
-];
-
 export const ARCH_OPTIONS = [
   { value: 'x86_64', label: 'x86_64' },
   { value: 'aarch64', label: 'aarch64' },

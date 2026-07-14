@@ -150,11 +150,11 @@ const CustomClientPage: React.FC = () => {
     if (values.password) custom.password = values.password;
     if (values.salt) custom.salt = values.salt;
     if (values['conn-type']) custom['conn-type'] = values['conn-type'];
-    if (values['disable-installation']) custom['disable-installation'] = values['disable-installation'];
-    if (values['disable-settings']) custom['disable-settings'] = values['disable-settings'];
-    if (values['disable-account']) custom['disable-account'] = values['disable-account'];
-    if (values['disable-ab']) custom['disable-ab'] = values['disable-ab'];
-    if (values['disable-tcp-listen']) custom['disable-tcp-listen'] = values['disable-tcp-listen'];
+    if (values['disable-installation'] === 'Y') custom['disable-installation'] = values['disable-installation'];
+    if (values['disable-settings'] === 'Y') custom['disable-settings'] = values['disable-settings'];
+    if (values['disable-account'] === 'Y') custom['disable-account'] = values['disable-account'];
+    if (values['disable-ab'] === 'Y') custom['disable-ab'] = values['disable-ab'];
+    if (values['disable-tcp-listen'] === 'Y') custom['disable-tcp-listen'] = values['disable-tcp-listen'];
     if (values['app-name']) custom['app-name'] = values['app-name'];
 
     const overrideSettings: Record<string, string> = {};
