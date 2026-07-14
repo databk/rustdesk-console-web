@@ -155,7 +155,7 @@ const BuildList: React.FC<BuildListProps> = ({
       width: 100,
     },
     {
-      title: 'Status',
+      title: intl.formatMessage({ id: 'pages.nexus.status', defaultMessage: 'Status' }),
       dataIndex: 'status',
       key: 'status',
       width: 160,
@@ -167,14 +167,6 @@ const BuildList: React.FC<BuildListProps> = ({
           </Tag>
         );
       },
-    },
-    {
-      title: 'Message',
-      dataIndex: 'message',
-      key: 'message',
-      ellipsis: true,
-      width: 200,
-      render: (dom: React.ReactNode) => dom || '-',
     },
     {
       title: intl.formatMessage({ id: 'pages.customClients.createdAt', defaultMessage: 'Created At' }),

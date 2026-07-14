@@ -693,6 +693,7 @@ export default {
   'pages.nexus.downloadFailed': '下载自定义客户端失败',
   'pages.nexus.download': '下载',
   'pages.nexus.buildAgain': '再次构建',
+  'pages.nexus.status': '状态',
   'pages.nexus.statusPending': '等待构建',
   'pages.nexus.statusPendingDesc': '构建请求已提交，正在等待处理...',
   'pages.nexus.statusBuilding': '构建中',

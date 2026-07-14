@@ -727,6 +727,7 @@ export default {
   'pages.nexus.downloadFailed': 'Failed to download custom client',
   'pages.nexus.download': 'Download',
   'pages.nexus.buildAgain': 'Build Again',
+  'pages.nexus.status': 'Status',
   'pages.nexus.statusPending': 'Build Pending',
   'pages.nexus.statusPendingDesc': 'Your build request has been submitted and is waiting to be processed...',
   'pages.nexus.statusBuilding': 'Building',
