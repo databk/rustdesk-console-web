@@ -133,32 +133,31 @@ const BuildList: React.FC<BuildListProps> = ({
       dataIndex: 'requestId',
       key: 'requestId',
       ellipsis: true,
-      width: 200,
     },
     {
       title: intl.formatMessage({ id: 'pages.nexus.appName', defaultMessage: 'Application Name' }),
       dataIndex: 'appName',
       key: 'appName',
-      width: 150,
+      ellipsis: true,
       render: (dom: React.ReactNode) => dom || '-',
     },
     {
       title: intl.formatMessage({ id: 'pages.nexus.os', defaultMessage: 'OS' }),
       dataIndex: 'os',
       key: 'os',
-      width: 100,
+      width: 80,
     },
     {
       title: intl.formatMessage({ id: 'pages.nexus.arch', defaultMessage: 'Arch' }),
       dataIndex: 'arch',
       key: 'arch',
-      width: 100,
+      width: 90,
     },
     {
       title: intl.formatMessage({ id: 'pages.nexus.status', defaultMessage: 'Status' }),
       dataIndex: 'status',
       key: 'status',
-      width: 160,
+      width: 140,
       render: (_: React.ReactNode, record: API.BuildRecord) => {
         const config = statusConfig[record.status] || { color: 'default', icon: null };
         return (
@@ -172,14 +171,14 @@ const BuildList: React.FC<BuildListProps> = ({
       title: intl.formatMessage({ id: 'pages.customClients.createdAt', defaultMessage: 'Created At' }),
       dataIndex: 'createdAt',
       key: 'createdAt',
-      width: 180,
+      ellipsis: true,
       render: (_: React.ReactNode, record: API.BuildRecord) =>
         record.createdAt ? new Date(record.createdAt).toLocaleString() : '-',
     },
     {
       title: intl.formatMessage({ id: 'pages.common.action', defaultMessage: 'Action' }),
       key: 'action',
-      width: 250,
+      width: 200,
       search: false,
       render: (_: any, record: API.BuildRecord) => {
         const isDownloading = downloadLoading.has(record.requestId);
@@ -246,7 +245,7 @@ const BuildList: React.FC<BuildListProps> = ({
         showSizeChanger: true,
         showQuickJumper: true,
       }}
-      scroll={{ x: 1200 }}
+      scroll={{ x: 'max-content' }}
       options={{
         density: true,
         setting: { listsHeight: 400 },
