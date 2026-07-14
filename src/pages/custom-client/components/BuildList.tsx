@@ -238,7 +238,6 @@ const BuildList: React.FC<BuildListProps> = ({
           <Title level={5} style={{ margin: 0 }}>
             <FormattedMessage id="pages.nexus.buildList" defaultMessage="Build History" />
           </Title>
-          <Tag color="blue">Beta</Tag>
           {bindStatus?.bound && (
             <Text type="secondary">
               <GithubOutlined /> {bindStatus.nexus_username}
