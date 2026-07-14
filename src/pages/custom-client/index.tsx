@@ -1,71 +1,22 @@
-import {
-  CheckCircleOutlined,
-  CloudDownloadOutlined,
-  DeleteOutlined,
-  GithubOutlined,
-  LoadingOutlined,
-  PlusOutlined,
-  ReloadOutlined,
-  WarningOutlined,
-} from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
-import { FormattedMessage, useIntl } from '@umijs/max';
-import {
-  App,
-  Button,
-  Card,
-  Form,
-  Input,
-  Modal,
-  Popconfirm,
-  Radio,
-  Result,
-  Select,
-  Space,
-  Table,
-  Tag,
-  Typography,
-} from 'antd';
+import { useIntl } from '@umijs/max';
+import { App } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   createNexusLogin,
-  deleteBuild,
-  downloadBuildFile,
   getBuildList,
-  getBuildStatus,
   getNexusBindStatus,
   pollNexusLoginStatus,
   submitBuild,
   unbindNexus,
 } from '@/services/rustdesk-console/nexus';
-
-const { Text, Paragraph, Title } = Typography;
-
-type PageState = 'loading' | 'bind' | 'tokenExpired' | 'repoRequired' | 'ready';
-
-const CONN_TYPE_OPTIONS = [
-  { value: 'both', label: 'Both' },
-  { value: 'incoming', label: 'Incoming' },
-  { value: 'outgoing', label: 'Outgoing' },
-];
-
-const DISABLE_OPTIONS = [
-  { value: 'N', label: 'No' },
-  { value: 'Y', label: 'Yes' },
-];
-
-const ARCH_OPTIONS = [
-  { value: 'x86_64', label: 'x86_64' },
-  { value: 'aarch64', label: 'aarch64' },
-  { value: 'x86', label: 'x86 (sciter)' },
-];
-
-const SERVER_FIELDS = [
-  { key: 'custom-rendezvous-server', labelKey: 'pages.nexus.rendezvousServer' },
-  { key: 'relay-server', labelKey: 'pages.nexus.relayServer' },
-  { key: 'key', labelKey: 'pages.nexus.key' },
-  { key: 'api-server', labelKey: 'pages.nexus.apiServer' },
-] as const;
+import { SERVER_FIELDS, type PageState } from './constants';
+import BindPrompt from './components/BindPrompt';
+import TokenExpiredPrompt from './components/TokenExpiredPrompt';
+import RepoRequiredPrompt from './components/RepoRequiredPrompt';
+import BuildList from './components/BuildList';
+import CreateBuildModal from './components/CreateBuildModal';
 
 const CustomClientPage: React.FC = () => {
   const intl = useIntl();
@@ -74,16 +25,12 @@ const CustomClientPage: React.FC = () => {
   const [pageState, setPageState] = useState<PageState>('loading');
   const [bindStatus, setBindStatus] = useState<API.NexusBindStatus | null>(null);
   const [loginLoading, setLoginLoading] = useState(false);
-  const [buildRecords, setBuildRecords] = useState<API.BuildRecord[]>([]);
-  const [buildListLoading, setBuildListLoading] = useState(false);
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [buildLoading, setBuildLoading] = useState(false);
-  const [pollingRecords, setPollingRecords] = useState<Set<string>>(new Set());
-  const [downloadLoading, setDownloadLoading] = useState<Set<string>>(new Set());
+  const [buildAgainLoading, setBuildAgainLoading] = useState(false);
+  const [pendingBuildConfig, setPendingBuildConfig] = useState<Record<string, any> | null>(null);
 
-  const [form] = Form.useForm();
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const buildPollRefs = useRef<Map<string, ReturnType<typeof setInterval>>>(new Map());
 
   const fetchBindStatus = useCallback(async () => {
     try {
@@ -95,34 +42,19 @@ const CustomClientPage: React.FC = () => {
       } else if (status.expired) {
         setPageState('tokenExpired');
       } else {
-        await fetchBuildList();
+        try {
+          await getBuildList();
+          setPageState('ready');
+        } catch (error: any) {
+          if (error?.response?.status === 403) {
+            setPageState('repoRequired');
+          } else {
+            setPageState('ready');
+          }
+        }
       }
     } catch {
       setPageState('bind');
-    }
-  }, []);
-
-  const fetchBuildList = useCallback(async () => {
-    try {
-      setBuildListLoading(true);
-      const records = await getBuildList();
-      setBuildRecords(records);
-      setPageState('ready');
-
-      // Start polling for records that are still in progress
-      records.forEach((r) => {
-        if (r.status === 'pending' || r.status === 'building') {
-          startPollingBuild(r.requestId);
-        }
-      });
-    } catch (error: any) {
-      if (error?.response?.status === 403) {
-        setPageState('repoRequired');
-      } else {
-        setPageState('ready');
-      }
-    } finally {
-      setBuildListLoading(false);
     }
   }, []);
 
@@ -130,7 +62,6 @@ const CustomClientPage: React.FC = () => {
     fetchBindStatus();
     return () => {
       if (pollRef.current) clearInterval(pollRef.current);
-      buildPollRefs.current.forEach((interval) => clearInterval(interval));
     };
   }, [fetchBindStatus]);
 
@@ -145,6 +76,7 @@ const CustomClientPage: React.FC = () => {
           const status = await pollNexusLoginStatus(result.login_id);
           if (status.state === 'completed') {
             if (pollRef.current) clearInterval(pollRef.current);
+            setLoginLoading(false);
             msgApi.success(
               intl.formatMessage({
                 id: 'pages.nexus.bindSuccess',
@@ -154,6 +86,7 @@ const CustomClientPage: React.FC = () => {
             await fetchBindStatus();
           } else if (status.state === 'failed') {
             if (pollRef.current) clearInterval(pollRef.current);
+            setLoginLoading(false);
             msgApi.error(
               status.error ||
                 intl.formatMessage({
@@ -161,7 +94,6 @@ const CustomClientPage: React.FC = () => {
                   defaultMessage: 'Failed to bind Nexus account',
                 }),
             );
-            setLoginLoading(false);
           }
         } catch {
           if (pollRef.current) clearInterval(pollRef.current);
@@ -212,90 +144,59 @@ const CustomClientPage: React.FC = () => {
     });
   };
 
-  const startPollingBuild = (requestId: string) => {
-    if (buildPollRefs.current.has(requestId)) return;
-    setPollingRecords((prev) => new Set(prev).add(requestId));
+  const buildCustomConfig = (values: Record<string, any>): API.BuildCustomConfig => {
+    const custom: API.BuildCustomConfig = {};
 
-    const interval = setInterval(async () => {
-      try {
-        const status = await getBuildStatus(requestId);
-        setBuildRecords((prev) =>
-          prev.map((r) =>
-            r.requestId === requestId
-              ? {
-                  ...r,
-                  status: status.status,
-                  files: status.files ? JSON.stringify(status.files) : r.files,
-                  message: status.message || r.message,
-                }
-              : r,
-          ),
-        );
-        if (['completed', 'failed', 'cancelled'].includes(status.status)) {
-          const ref = buildPollRefs.current.get(requestId);
-          if (ref) clearInterval(ref);
-          buildPollRefs.current.delete(requestId);
-          setPollingRecords((prev) => {
-            const next = new Set(prev);
-            next.delete(requestId);
-            return next;
-          });
+    if (values.password) custom.password = values.password;
+    if (values.salt) custom.salt = values.salt;
+    if (values['conn-type']) custom['conn-type'] = values['conn-type'];
+    if (values['disable-installation']) custom['disable-installation'] = values['disable-installation'];
+    if (values['disable-settings']) custom['disable-settings'] = values['disable-settings'];
+    if (values['disable-account']) custom['disable-account'] = values['disable-account'];
+    if (values['disable-ab']) custom['disable-ab'] = values['disable-ab'];
+    if (values['disable-tcp-listen']) custom['disable-tcp-listen'] = values['disable-tcp-listen'];
+    if (values['app-name']) custom['app-name'] = values['app-name'];
+
+    const overrideSettings: Record<string, string> = {};
+    const defaultSettings: Record<string, string> = {};
+
+    SERVER_FIELDS.forEach(({ key }) => {
+      const value = values[key];
+      const settingType = values[`${key}_type`];
+      if (value) {
+        if (settingType === 'override') {
+          overrideSettings[key] = value;
+        } else {
+          defaultSettings[key] = value;
         }
-      } catch {
-        const ref = buildPollRefs.current.get(requestId);
-        if (ref) clearInterval(ref);
-        buildPollRefs.current.delete(requestId);
-        setPollingRecords((prev) => {
-          const next = new Set(prev);
-          next.delete(requestId);
-          return next;
-        });
       }
-    }, 5000);
+    });
 
-    buildPollRefs.current.set(requestId, interval);
+    if (Object.keys(overrideSettings).length > 0) {
+      custom['override-settings'] = overrideSettings;
+    }
+    if (Object.keys(defaultSettings).length > 0) {
+      custom['default-settings'] = defaultSettings;
+    }
+
+    return custom;
+  };
+
+  const isRepoRequiredError = (error: any): boolean => {
+    const errMsg = error?.data?.message || error?.message || '';
+    return (
+      errMsg.includes('Star') ||
+      errMsg.includes('Fork') ||
+      errMsg.includes('Watch') ||
+      error?.response?.status === 403
+    );
   };
 
   const handleCreate = async (values: Record<string, any>) => {
     try {
       setBuildLoading(true);
 
-      const custom: API.BuildCustomConfig = {};
-
-      // Basic custom fields
-      if (values.password) custom.password = values.password;
-      if (values.salt) custom.salt = values.salt;
-      if (values['conn-type']) custom['conn-type'] = values['conn-type'];
-      if (values['disable-installation']) custom['disable-installation'] = values['disable-installation'];
-      if (values['disable-settings']) custom['disable-settings'] = values['disable-settings'];
-      if (values['disable-account']) custom['disable-account'] = values['disable-account'];
-      if (values['disable-ab']) custom['disable-ab'] = values['disable-ab'];
-      if (values['disable-tcp-listen']) custom['disable-tcp-listen'] = values['disable-tcp-listen'];
-      if (values['app-name']) custom['app-name'] = values['app-name'];
-
-      // Server fields
-      const overrideSettings: Record<string, string> = {};
-      const defaultSettings: Record<string, string> = {};
-
-      SERVER_FIELDS.forEach(({ key }) => {
-        const value = values[key];
-        const settingType = values[`${key}_type`];
-        if (value) {
-          if (settingType === 'override') {
-            overrideSettings[key] = value;
-          } else {
-            defaultSettings[key] = value;
-          }
-        }
-      });
-
-      if (Object.keys(overrideSettings).length > 0) {
-        custom['override-settings'] = overrideSettings;
-      }
-      if (Object.keys(defaultSettings).length > 0) {
-        custom['default-settings'] = defaultSettings;
-      }
-
+      const custom = buildCustomConfig(values);
       const result = await submitBuild({
         os: 'windows',
         arch: values.arch,
@@ -305,22 +206,16 @@ const CustomClientPage: React.FC = () => {
       msgApi.success(result.message || 'Build request submitted');
 
       setCreateModalOpen(false);
-      form.resetFields();
-
-      // Refresh build list
-      await fetchBuildList();
+      setPendingBuildConfig(null);
+      setPageState('ready');
     } catch (error: any) {
-      const errMsg = error?.data?.message || error?.message || '';
-      if (
-        errMsg.includes('Star') ||
-        errMsg.includes('Fork') ||
-        errMsg.includes('Watch') ||
-        error?.response?.status === 403
-      ) {
+      if (isRepoRequiredError(error)) {
+        setCreateModalOpen(false);
+        setPendingBuildConfig(values);
         setPageState('repoRequired');
       } else if (
-        errMsg.includes('进行中') ||
-        errMsg.includes('ongoing') ||
+        error?.data?.message?.includes('进行中') ||
+        error?.data?.message?.includes('ongoing') ||
         error?.response?.status === 409
       ) {
         msgApi.error(
@@ -342,541 +237,66 @@ const CustomClientPage: React.FC = () => {
     }
   };
 
-  const handleDelete = async (requestId: string) => {
-    try {
-      await deleteBuild(requestId);
-      msgApi.success(
-        intl.formatMessage({
-          id: 'pages.nexus.deleteSuccess',
-          defaultMessage: 'Build record deleted',
-        }),
-      );
-      await fetchBuildList();
-    } catch {
-      msgApi.error(
-        intl.formatMessage({
-          id: 'pages.nexus.deleteFailed',
-          defaultMessage: 'Failed to delete build record',
-        }),
-      );
+  const handleBuildAgain = async () => {
+    if (pendingBuildConfig) {
+      try {
+        setBuildAgainLoading(true);
+
+        const custom = buildCustomConfig(pendingBuildConfig);
+        const result = await submitBuild({
+          os: 'windows',
+          arch: pendingBuildConfig.arch,
+          custom,
+        });
+
+        msgApi.success(result.message || 'Build request submitted');
+        setPendingBuildConfig(null);
+        setPageState('ready');
+      } catch (error: any) {
+        if (isRepoRequiredError(error)) {
+          msgApi.warning(
+            intl.formatMessage({
+              id: 'pages.nexus.repoInteractionRequired',
+              defaultMessage:
+                'Please Star, Fork or Watch the databk/rustdesk-console repository on GitHub first. It may take up to 5 minutes for the cache to refresh.',
+            }),
+          );
+        } else if (
+          error?.data?.message?.includes('进行中') ||
+          error?.data?.message?.includes('ongoing') ||
+          error?.response?.status === 409
+        ) {
+          msgApi.error(
+            intl.formatMessage({
+              id: 'pages.nexus.buildAlreadyRunning',
+              defaultMessage: 'You already have a build in progress',
+            }),
+          );
+          setPendingBuildConfig(null);
+          setPageState('ready');
+        } else {
+          msgApi.error(
+            intl.formatMessage({
+              id: 'pages.nexus.generateFailed',
+              defaultMessage: 'Failed to submit build request',
+            }),
+          );
+          setPendingBuildConfig(null);
+          setPageState('ready');
+        }
+      } finally {
+        setBuildAgainLoading(false);
+      }
+    } else {
+      await fetchBindStatus();
     }
   };
 
-  const handleDownload = async (requestId: string, filename: string) => {
-    setDownloadLoading((prev) => new Set(prev).add(requestId));
-    try {
-      const blob = await downloadBuildFile(requestId, filename);
-      const url = window.URL.createObjectURL(new Blob([blob]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', filename);
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      window.URL.revokeObjectURL(url);
-    } catch {
-      msgApi.error(
-        intl.formatMessage({
-          id: 'pages.nexus.downloadFailed',
-          defaultMessage: 'Failed to download custom client',
-        }),
-      );
-    } finally {
-      setDownloadLoading((prev) => {
-        const next = new Set(prev);
-        next.delete(requestId);
-        return next;
-      });
-    }
+  const handleCancelCreate = () => {
+    setCreateModalOpen(false);
+    setPendingBuildConfig(null);
   };
 
-  const statusConfig: Record<string, { color: string; icon: React.ReactNode }> = {
-    pending: { color: 'processing', icon: <LoadingOutlined /> },
-    building: { color: 'processing', icon: <LoadingOutlined /> },
-    completed: { color: 'success', icon: <CheckCircleOutlined /> },
-    failed: { color: 'error', icon: <WarningOutlined /> },
-    cancelled: { color: 'warning', icon: <WarningOutlined /> },
-  };
-
-  const statusLabel = (status: string) => {
-    const map: Record<string, string> = {
-      pending: intl.formatMessage({ id: 'pages.nexus.statusPending', defaultMessage: 'Build Pending' }),
-      building: intl.formatMessage({ id: 'pages.nexus.statusBuilding', defaultMessage: 'Building' }),
-      completed: intl.formatMessage({ id: 'pages.nexus.statusCompleted', defaultMessage: 'Build Completed' }),
-      failed: intl.formatMessage({ id: 'pages.nexus.statusFailed', defaultMessage: 'Build Failed' }),
-      cancelled: intl.formatMessage({ id: 'pages.nexus.statusCancelled', defaultMessage: 'Build Cancelled' }),
-    };
-    return map[status] || status;
-  };
-
-  // Render bind prompt (full page)
-  const renderBindPrompt = () => (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: '60vh',
-      }}
-    >
-      <Result
-        icon={<GithubOutlined style={{ color: '#24292e', fontSize: 72 }} />}
-        title={intl.formatMessage({
-          id: 'pages.nexus.bindTitle',
-          defaultMessage: 'Bind Nexus Account',
-        })}
-        subTitle={intl.formatMessage({
-          id: 'pages.nexus.bindDesc',
-          defaultMessage:
-            'You need to bind your GitHub account to generate custom clients. Click the button below to authorize via GitHub.',
-        })}
-        extra={
-          <Button type="primary" size="large" icon={<GithubOutlined />} loading={loginLoading} onClick={handleLogin}>
-            <FormattedMessage id="pages.nexus.bindGithub" defaultMessage="Authorize with GitHub" />
-          </Button>
-        }
-      />
-    </div>
-  );
-
-  // Render token expired prompt (full page)
-  const renderTokenExpiredPrompt = () => (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: '60vh',
-      }}
-    >
-      <Result
-        icon={<WarningOutlined style={{ color: '#faad14', fontSize: 72 }} />}
-        title={intl.formatMessage({
-          id: 'pages.nexus.tokenExpired',
-          defaultMessage: 'Nexus Token Expired',
-        })}
-        subTitle={intl.formatMessage(
-          {
-            id: 'pages.nexus.tokenExpiredDesc',
-            defaultMessage: 'Your Nexus token for {username} has expired. Please re-bind your account.',
-          },
-          { username: bindStatus?.nexus_username },
-        )}
-        extra={
-          <Button type="primary" size="large" icon={<GithubOutlined />} loading={loginLoading} onClick={handleLogin}>
-            <FormattedMessage id="pages.nexus.rebind" defaultMessage="Re-bind Nexus Account" />
-          </Button>
-        }
-      />
-    </div>
-  );
-
-  // Render repo required prompt (full page)
-  const renderRepoRequiredPrompt = () => (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: '60vh',
-      }}
-    >
-      <Result
-        icon={<GithubOutlined style={{ color: '#faad14', fontSize: 72 }} />}
-        title={intl.formatMessage({
-          id: 'pages.nexus.repoRequired',
-          defaultMessage: 'Repository Interaction Required',
-        })}
-        subTitle={intl.formatMessage({
-          id: 'pages.nexus.repoRequiredDesc',
-          defaultMessage:
-            'You need to Star, Fork or Watch the databk/rustdesk-console repository on GitHub before generating custom clients. It may take up to 5 minutes for the cache to refresh.',
-        })}
-        extra={
-          <Space>
-            <Button
-              type="primary"
-              size="large"
-              icon={<GithubOutlined />}
-              href="https://github.com/databk/rustdesk-console"
-              target="_blank"
-            >
-              <FormattedMessage id="pages.nexus.goToRepo" defaultMessage="Go to GitHub Repository" />
-            </Button>
-            <Button size="large" icon={<ReloadOutlined />} onClick={fetchBindStatus}>
-              <FormattedMessage id="pages.nexus.buildAgain" defaultMessage="Refresh" />
-            </Button>
-          </Space>
-        }
-      />
-    </div>
-  );
-
-  // Render build list
-  const renderBuildList = () => {
-    const columns = [
-      {
-        title: intl.formatMessage({ id: 'pages.nexus.requestId', defaultMessage: 'Request ID' }),
-        dataIndex: 'requestId',
-        key: 'requestId',
-        ellipsis: true,
-        width: 200,
-      },
-      {
-        title: intl.formatMessage({ id: 'pages.nexus.appName', defaultMessage: 'Application Name' }),
-        dataIndex: 'appName',
-        key: 'appName',
-        width: 150,
-        render: (text: string) => text || '-',
-      },
-      {
-        title: intl.formatMessage({ id: 'pages.nexus.os', defaultMessage: 'OS' }),
-        dataIndex: 'os',
-        key: 'os',
-        width: 100,
-      },
-      {
-        title: intl.formatMessage({ id: 'pages.nexus.arch', defaultMessage: 'Arch' }),
-        dataIndex: 'arch',
-        key: 'arch',
-        width: 100,
-      },
-      {
-        title: 'Status',
-        dataIndex: 'status',
-        key: 'status',
-        width: 160,
-        render: (status: string) => {
-          const config = statusConfig[status] || { color: 'default', icon: null };
-          return (
-            <Tag color={config.color} icon={config.icon}>
-              {statusLabel(status)}
-            </Tag>
-          );
-        },
-      },
-      {
-        title: 'Message',
-        dataIndex: 'message',
-        key: 'message',
-        ellipsis: true,
-        width: 200,
-        render: (text: string | null) => text || '-',
-      },
-      {
-        title: intl.formatMessage({ id: 'pages.customClients.createdAt', defaultMessage: 'Created At' }),
-        dataIndex: 'createdAt',
-        key: 'createdAt',
-        width: 180,
-        render: (text: string) => (text ? new Date(text).toLocaleString() : '-'),
-      },
-      {
-        title: intl.formatMessage({ id: 'pages.common.action', defaultMessage: 'Action' }),
-        key: 'action',
-        width: 250,
-        render: (_: any, record: API.BuildRecord) => {
-          const isPolling = pollingRecords.has(record.requestId);
-          const isDownloading = downloadLoading.has(record.requestId);
-          const files: string[] = record.files ? JSON.parse(record.files) : [];
-
-          return (
-            <Space size={0} split={<span style={{ color: '#d9d9d9' }}>|</span>}>
-              {isPolling && (
-                <Button type="link" size="small" disabled>
-                  <LoadingOutlined />{' '}
-                  {intl.formatMessage({
-                    id: 'pages.nexus.pollingBuildStatus',
-                    defaultMessage: 'Polling...',
-                  })}
-                </Button>
-              )}
-              {record.status === 'completed' &&
-                files.map((file) => (
-                  <Button
-                    key={file}
-                    type="link"
-                    size="small"
-                    icon={isDownloading ? <LoadingOutlined /> : <CloudDownloadOutlined />}
-                    loading={isDownloading}
-                    onClick={() => handleDownload(record.requestId, file)}
-                  >
-                    {file}
-                  </Button>
-                ))}
-              {(record.status === 'failed' || record.status === 'cancelled' || record.status === 'completed') && (
-                <Popconfirm
-                  title={intl.formatMessage({
-                    id: 'pages.nexus.deleteBuildConfirm',
-                    defaultMessage: 'Delete this build record?',
-                  })}
-                  onConfirm={() => handleDelete(record.requestId)}
-                  okText={intl.formatMessage({ id: 'pages.common.confirm', defaultMessage: 'Yes' })}
-                  cancelText={intl.formatMessage({ id: 'pages.common.cancel', defaultMessage: 'No' })}
-                >
-                  <Button type="link" size="small" danger icon={<DeleteOutlined />}>
-                    <FormattedMessage id="pages.common.delete" defaultMessage="Delete" />
-                  </Button>
-                </Popconfirm>
-              )}
-            </Space>
-          );
-        },
-      },
-    ];
-
-    return (
-      <>
-        <Card
-          style={{ marginBottom: 16 }}
-          styles={{ body: { padding: '12px 24px' } }}
-        >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Space>
-              <Title level={5} style={{ margin: 0 }}>
-                <FormattedMessage id="pages.nexus.buildList" defaultMessage="Build History" />
-              </Title>
-              {bindStatus?.bound && (
-                <Text type="secondary">
-                  <GithubOutlined /> {bindStatus.nexus_username}
-                </Text>
-              )}
-            </Space>
-            <Space>
-              <Button size="small" danger onClick={handleUnbind}>
-                <FormattedMessage id="pages.nexus.unbind" defaultMessage="Unbind" />
-              </Button>
-              <Button icon={<ReloadOutlined />} onClick={fetchBuildList} loading={buildListLoading}>
-                <FormattedMessage id="pages.nexus.buildAgain" defaultMessage="Refresh" />
-              </Button>
-              <Button type="primary" icon={<PlusOutlined />} onClick={() => setCreateModalOpen(true)}>
-                <FormattedMessage id="pages.nexus.createBuild" defaultMessage="Create New Client" />
-              </Button>
-            </Space>
-          </div>
-        </Card>
-
-        <Card>
-          <Table
-            dataSource={buildRecords}
-            columns={columns}
-            rowKey="requestId"
-            loading={buildListLoading}
-            locale={{
-              emptyText: intl.formatMessage({
-                id: 'pages.nexus.noBuilds',
-                defaultMessage: 'No build records',
-              }),
-            }}
-            pagination={{ pageSize: 20, showSizeChanger: true, showQuickJumper: true }}
-            scroll={{ x: 1200 }}
-          />
-        </Card>
-      </>
-    );
-  };
-
-  // Render create modal
-  const renderCreateModal = () => (
-    <Modal
-      title={intl.formatMessage({
-        id: 'pages.nexus.createBuildTitle',
-        defaultMessage: 'Create Custom Client',
-      })}
-      open={createModalOpen}
-      onCancel={() => {
-        setCreateModalOpen(false);
-        form.resetFields();
-      }}
-      onOk={() => form.submit()}
-      confirmLoading={buildLoading}
-      width={720}
-      destroyOnClose
-    >
-      <Form
-        form={form}
-        layout="vertical"
-        onFinish={handleCreate}
-        initialValues={{
-          arch: 'x86_64',
-          'conn-type': 'both',
-        }}
-        style={{ maxHeight: '60vh', overflowY: 'auto', paddingRight: 8 }}
-      >
-        <Title level={5} style={{ marginTop: 0 }}>
-          <FormattedMessage id="pages.nexus.os" defaultMessage="Operating System" /> &{' '}
-          <FormattedMessage id="pages.nexus.arch" defaultMessage="Architecture" />
-        </Title>
-
-        <Form.Item label={intl.formatMessage({ id: 'pages.nexus.os', defaultMessage: 'Operating System' })}>
-          <Select value="windows" disabled options={[{ value: 'windows', label: 'Windows' }]} />
-        </Form.Item>
-
-        <Form.Item
-          name="arch"
-          label={intl.formatMessage({ id: 'pages.nexus.arch', defaultMessage: 'Architecture' })}
-          rules={[{ required: true }]}
-        >
-          <Select options={ARCH_OPTIONS} />
-        </Form.Item>
-
-        <Form.Item
-          name="app-name"
-          label={intl.formatMessage({ id: 'pages.nexus.appName', defaultMessage: 'Application Name' })}
-          rules={[
-            {
-              pattern: /^[a-zA-Z]+$/,
-              message: intl.formatMessage({
-                id: 'pages.nexus.appNameHint',
-                defaultMessage: 'Only English letters allowed',
-              }),
-            },
-          ]}
-        >
-          <Input
-            placeholder={intl.formatMessage({
-              id: 'pages.nexus.appNamePlaceholder',
-              defaultMessage: 'e.g. my-rustdesk',
-            })}
-          />
-        </Form.Item>
-
-        <Title level={5}>
-          <FormattedMessage id="pages.nexus.customConfig" defaultMessage="Custom Configuration" />
-        </Title>
-
-        <Form.Item
-          name="password"
-          label={intl.formatMessage({ id: 'pages.nexus.password', defaultMessage: 'Password' })}
-        >
-          <Input.Password
-            placeholder={intl.formatMessage({
-              id: 'pages.nexus.passwordPlaceholder',
-              defaultMessage: 'Enter password',
-            })}
-          />
-        </Form.Item>
-
-        <Form.Item
-          name="salt"
-          label={intl.formatMessage({ id: 'pages.nexus.salt', defaultMessage: 'Salt' })}
-        >
-          <Input
-            placeholder={intl.formatMessage({
-              id: 'pages.nexus.saltPlaceholder',
-              defaultMessage: 'Enter salt',
-            })}
-          />
-        </Form.Item>
-
-        <Form.Item
-          name="conn-type"
-          label={intl.formatMessage({ id: 'pages.nexus.connType', defaultMessage: 'Connection Type' })}
-        >
-          <Select options={CONN_TYPE_OPTIONS} allowClear />
-        </Form.Item>
-
-        <Form.Item
-          name="disable-installation"
-          label={intl.formatMessage({
-            id: 'pages.nexus.disableInstallation',
-            defaultMessage: 'Disable Installation',
-          })}
-        >
-          <Select options={DISABLE_OPTIONS} allowClear />
-        </Form.Item>
-
-        <Form.Item
-          name="disable-settings"
-          label={intl.formatMessage({
-            id: 'pages.nexus.disableSettings',
-            defaultMessage: 'Disable Settings',
-          })}
-        >
-          <Select options={DISABLE_OPTIONS} allowClear />
-        </Form.Item>
-
-        <Form.Item
-          name="disable-account"
-          label={intl.formatMessage({
-            id: 'pages.nexus.disableAccount',
-            defaultMessage: 'Disable Account',
-          })}
-        >
-          <Select options={DISABLE_OPTIONS} allowClear />
-        </Form.Item>
-
-        <Form.Item
-          name="disable-ab"
-          label={intl.formatMessage({
-            id: 'pages.nexus.disableAb',
-            defaultMessage: 'Disable AB',
-          })}
-        >
-          <Select options={DISABLE_OPTIONS} allowClear />
-        </Form.Item>
-
-        <Form.Item
-          name="disable-tcp-listen"
-          label={intl.formatMessage({
-            id: 'pages.nexus.disableTcpListen',
-            defaultMessage: 'Disable TCP Listen',
-          })}
-        >
-          <Select options={DISABLE_OPTIONS} allowClear />
-        </Form.Item>
-
-        <Title level={5} style={{ marginTop: 24 }}>
-          <FormattedMessage id="pages.nexus.serverConfig" defaultMessage="Server Configuration" />
-        </Title>
-        <Paragraph type="secondary">
-          <FormattedMessage
-            id="pages.nexus.monthlyLimit"
-            defaultMessage="Monthly build limit: 15 per user. Concurrent builds: 1."
-          />
-        </Paragraph>
-
-        {SERVER_FIELDS.map(({ key, labelKey }) => (
-          <div key={key} style={{ marginBottom: 16 }}>
-            <Form.Item
-              name={key}
-              label={intl.formatMessage({ id: labelKey, defaultMessage: key })}
-              style={{ marginBottom: 4 }}
-            >
-              <Input placeholder={intl.formatMessage({ id: labelKey, defaultMessage: key })} />
-            </Form.Item>
-            <Form.Item
-              name={`${key}_type`}
-              initialValue="override"
-              style={{ marginBottom: 0 }}
-            >
-              <Radio.Group
-                optionType="button"
-                size="small"
-                options={[
-                  {
-                    value: 'override',
-                    label: intl.formatMessage({
-                      id: 'pages.nexus.overrideSettings',
-                      defaultMessage: 'Override Settings',
-                    }),
-                  },
-                  {
-                    value: 'default',
-                    label: intl.formatMessage({
-                      id: 'pages.nexus.defaultSettings',
-                      defaultMessage: 'Default Settings',
-                    }),
-                  },
-                ]}
-              />
-            </Form.Item>
-          </div>
-        ))}
-      </Form>
-    </Modal>
-  );
-
-  // Loading state
   if (pageState === 'loading') {
     return (
       <PageContainer>
@@ -889,11 +309,36 @@ const CustomClientPage: React.FC = () => {
 
   return (
     <PageContainer>
-      {pageState === 'bind' && renderBindPrompt()}
-      {pageState === 'tokenExpired' && renderTokenExpiredPrompt()}
-      {pageState === 'repoRequired' && renderRepoRequiredPrompt()}
-      {pageState === 'ready' && renderBuildList()}
-      {renderCreateModal()}
+      {pageState === 'bind' && (
+        <BindPrompt loginLoading={loginLoading} onLogin={handleLogin} />
+      )}
+      {pageState === 'tokenExpired' && (
+        <TokenExpiredPrompt
+          username={bindStatus?.nexus_username}
+          loginLoading={loginLoading}
+          onLogin={handleLogin}
+        />
+      )}
+      {pageState === 'repoRequired' && (
+        <RepoRequiredPrompt
+          buildAgainLoading={buildAgainLoading}
+          onBuildAgain={handleBuildAgain}
+        />
+      )}
+      {pageState === 'ready' && (
+        <BuildList
+          bindStatus={bindStatus}
+          onUnbind={handleUnbind}
+          onCreate={() => setCreateModalOpen(true)}
+          onRepoRequired={() => setPageState('repoRequired')}
+        />
+      )}
+      <CreateBuildModal
+        open={createModalOpen}
+        loading={buildLoading}
+        onCancel={handleCancelCreate}
+        onSubmit={handleCreate}
+      />
     </PageContainer>
   );
 };
