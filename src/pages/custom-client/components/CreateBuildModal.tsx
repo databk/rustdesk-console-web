@@ -228,15 +228,6 @@ const CreateBuildModal: React.FC<CreateBuildModalProps> = ({
             label={
               <span>
                 {intl.formatMessage({ id: labelKey, defaultMessage: key })}
-                <Tooltip
-                  title={intl.formatMessage({
-                    id: 'pages.nexus.serverConfigTooltip',
-                    defaultMessage:
-                      "Override replaces the user's setting. Default applies only if the user hasn't set a value.",
-                  })}
-                >
-                  <QuestionCircleOutlined style={{ marginLeft: 4, color: '#999' }} />
-                </Tooltip>
               </span>
             }
           >
