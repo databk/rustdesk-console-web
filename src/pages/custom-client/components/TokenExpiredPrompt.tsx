@@ -34,7 +34,8 @@ const TokenExpiredPrompt: React.FC<TokenExpiredPromptProps> = ({
         subTitle={intl.formatMessage(
           {
             id: 'pages.nexus.tokenExpiredDesc',
-            defaultMessage: 'Your Nexus token for {username} has expired. Please re-bind your account.',
+            defaultMessage:
+              'Your Nexus token for {username} has expired. Please re-bind your account.',
           },
           { username },
         )}
@@ -46,7 +47,10 @@ const TokenExpiredPrompt: React.FC<TokenExpiredPromptProps> = ({
             loading={loginLoading}
             onClick={onLogin}
           >
-            <FormattedMessage id="pages.nexus.rebind" defaultMessage="Re-bind Nexus Account" />
+            <FormattedMessage
+              id="pages.nexus.rebind"
+              defaultMessage="Re-bind Nexus Account"
+            />
           </Button>
         }
       />

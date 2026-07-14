@@ -634,7 +634,8 @@ export default {
   'pages.ldap.createdAt': '创建时间',
   'pages.ldap.updatedAt': '更新时间',
   'pages.nexus.repoRequired': '需要仓库互动',
-  'pages.nexus.repoRequiredDesc': '您需要对 databk/rustdesk-console GitHub 仓库进行 Star、Fork 或 Watch 操作后才能生成自定义客户端。操作后最长需等待 5 分钟缓存刷新。',
+  'pages.nexus.repoRequiredDesc':
+    '您需要对 databk/rustdesk-console GitHub 仓库进行 Star、Fork 或 Watch 操作后才能生成自定义客户端。操作后最长需等待 5 分钟缓存刷新。',
   'pages.nexus.goToRepo': '前往 GitHub 仓库',
   'pages.nexus.buildList': '构建历史',
   'pages.nexus.createBuild': '创建新客户端',
@@ -676,17 +677,21 @@ export default {
   'pages.nexus.bindFailed': 'Github 账号绑定失败',
   'pages.nexus.createLoginFailed': '创建登录会话失败',
   'pages.nexus.unbindConfirm': '解绑 Github 账号',
-  'pages.nexus.unbindConfirmContent': '确定要解绑 Github 账号吗？解绑后需要重新绑定才能生成自定义客户端。',
+  'pages.nexus.unbindConfirmContent':
+    '确定要解绑 Github 账号吗？解绑后需要重新绑定才能生成自定义客户端。',
   'pages.nexus.unbindSuccess': 'Github 账号已解绑',
   'pages.nexus.unbindFailed': '解绑 Github 账号失败',
   'pages.nexus.tokenExpired': 'Github Token 已过期',
-  'pages.nexus.tokenExpiredDesc': 'Github 账号 {username} 的 Token 已过期，请重新绑定。',
+  'pages.nexus.tokenExpiredDesc':
+    'Github 账号 {username} 的 Token 已过期，请重新绑定。',
   'pages.nexus.rebind': '重新绑定 Github 账号',
   'pages.nexus.bindTitle': '绑定 Github 账号',
-  'pages.nexus.bindDesc': '您需要绑定 GitHub 账号才能生成自定义客户端。点击下方按钮通过 GitHub 授权。',
+  'pages.nexus.bindDesc':
+    '您需要绑定 GitHub 账号才能生成自定义客户端。点击下方按钮通过 GitHub 授权。',
   'pages.nexus.bindGithub': '通过 GitHub 授权',
   'pages.nexus.unbind': '解绑',
-  'pages.nexus.repoInteractionRequired': '请先对 databk/rustdesk-console 仓库进行 Star、Fork 或 Watch 操作。操作后最长需等待 5 分钟缓存刷新。',
+  'pages.nexus.repoInteractionRequired':
+    '请先对 databk/rustdesk-console 仓库进行 Star、Fork 或 Watch 操作。操作后最长需等待 5 分钟缓存刷新。',
   'pages.nexus.buildAlreadyRunning': '已有一个正在进行的构建任务',
   'pages.nexus.generateFailed': '提交构建请求失败',
   'pages.nexus.downloadFailed': '下载自定义客户端失败',
@@ -696,13 +701,17 @@ export default {
   'pages.nexus.statusPending': '等待构建',
   'pages.nexus.statusPendingDesc': '构建请求已提交，正在等待处理...',
   'pages.nexus.statusBuilding': '构建中',
-  'pages.nexus.statusBuildingDesc': 'GitHub Actions 正在构建自定义客户端，可能需要几分钟...',
+  'pages.nexus.statusBuildingDesc':
+    'GitHub Actions 正在构建自定义客户端，可能需要几分钟...',
   'pages.nexus.statusCompleted': '构建完成',
   'pages.nexus.statusCompletedDesc': '自定义客户端已就绪，可以下载。',
   'pages.nexus.statusFailed': '构建失败',
   'pages.nexus.statusFailedDesc': '构建过程遇到错误。',
   'pages.nexus.statusCancelled': '构建已取消',
-  'pages.nexus.statusCancelledDesc': '构建被取消，通常是因为您取消了对仓库的 Star/Fork/Watch。',
-  'pages.nexus.bindWhyLogin': '通过 GitHub 身份验证，我们可以确认您是真实用户，从而防止构建资源被自动化滥用。我们仅获取您的公开用户名——不会请求访问您的仓库、个人数据或任何其他权限。',
-  'pages.nexus.repoWhyInteract': '我是一名高中生，利用课余时间开发这个项目。您的 Star、Fork 或 Watch 对我意义重大——这不仅是对我持续开发的鼓励，也有助于我的大学申请。这是我所请求的唯一回报。非常感谢您的支持！',
+  'pages.nexus.statusCancelledDesc':
+    '构建被取消，通常是因为您取消了对仓库的 Star/Fork/Watch。',
+  'pages.nexus.bindWhyLogin':
+    '通过 GitHub 身份验证，我们可以确认您是真实用户，从而防止构建资源被自动化滥用。我们仅获取您的公开用户名——不会请求访问您的仓库、个人数据或任何其他权限。',
+  'pages.nexus.repoWhyInteract':
+    '我是一名高中生，利用课余时间开发这个项目。您的 Star、Fork 或 Watch 对我意义重大——这不仅是对我持续开发的鼓励，也有助于我的大学申请。这是我所请求的唯一回报。非常感谢您的支持！',
 };

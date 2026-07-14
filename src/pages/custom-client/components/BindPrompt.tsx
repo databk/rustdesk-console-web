@@ -32,7 +32,11 @@ const BindPrompt: React.FC<BindPromptProps> = ({ loginLoading, onLogin }) => {
             'You need to bind your GitHub account to generate custom clients. Click the button below to authorize via GitHub.',
         })}
         extra={
-          <Space direction="vertical" size="large" style={{ alignItems: 'center' }}>
+          <Space
+            direction="vertical"
+            size="large"
+            style={{ alignItems: 'center' }}
+          >
             <Alert
               type="info"
               showIcon
@@ -50,7 +54,10 @@ const BindPrompt: React.FC<BindPromptProps> = ({ loginLoading, onLogin }) => {
               loading={loginLoading}
               onClick={onLogin}
             >
-              <FormattedMessage id="pages.nexus.bindGithub" defaultMessage="Authorize with GitHub" />
+              <FormattedMessage
+                id="pages.nexus.bindGithub"
+                defaultMessage="Authorize with GitHub"
+              />
             </Button>
           </Space>
         }

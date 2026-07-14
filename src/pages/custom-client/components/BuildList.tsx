@@ -46,15 +46,32 @@ const BuildList: React.FC<BuildListProps> = ({
   const intl = useIntl();
   const { message: msgApi } = App.useApp();
   const pollRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
-  const [downloadLoading, setDownloadLoading] = React.useState<Set<string>>(new Set());
+  const [downloadLoading, setDownloadLoading] = React.useState<Set<string>>(
+    new Set(),
+  );
 
   const statusLabel = (status: string) => {
     const map: Record<string, string> = {
-      pending: intl.formatMessage({ id: 'pages.nexus.statusPending', defaultMessage: 'Build Pending' }),
-      building: intl.formatMessage({ id: 'pages.nexus.statusBuilding', defaultMessage: 'Building' }),
-      completed: intl.formatMessage({ id: 'pages.nexus.statusCompleted', defaultMessage: 'Build Completed' }),
-      failed: intl.formatMessage({ id: 'pages.nexus.statusFailed', defaultMessage: 'Build Failed' }),
-      cancelled: intl.formatMessage({ id: 'pages.nexus.statusCancelled', defaultMessage: 'Build Cancelled' }),
+      pending: intl.formatMessage({
+        id: 'pages.nexus.statusPending',
+        defaultMessage: 'Build Pending',
+      }),
+      building: intl.formatMessage({
+        id: 'pages.nexus.statusBuilding',
+        defaultMessage: 'Building',
+      }),
+      completed: intl.formatMessage({
+        id: 'pages.nexus.statusCompleted',
+        defaultMessage: 'Build Completed',
+      }),
+      failed: intl.formatMessage({
+        id: 'pages.nexus.statusFailed',
+        defaultMessage: 'Build Failed',
+      }),
+      cancelled: intl.formatMessage({
+        id: 'pages.nexus.statusCancelled',
+        defaultMessage: 'Build Cancelled',
+      }),
     };
     return map[status] || status;
   };
@@ -129,13 +146,19 @@ const BuildList: React.FC<BuildListProps> = ({
 
   const columns: ProColumns<API.BuildRecord>[] = [
     {
-      title: intl.formatMessage({ id: 'pages.nexus.requestId', defaultMessage: 'Request ID' }),
+      title: intl.formatMessage({
+        id: 'pages.nexus.requestId',
+        defaultMessage: 'Request ID',
+      }),
       dataIndex: 'requestId',
       key: 'requestId',
       ellipsis: true,
     },
     {
-      title: intl.formatMessage({ id: 'pages.nexus.appName', defaultMessage: 'Application Name' }),
+      title: intl.formatMessage({
+        id: 'pages.nexus.appName',
+        defaultMessage: 'Application Name',
+      }),
       dataIndex: 'appName',
       key: 'appName',
       ellipsis: true,
@@ -148,18 +171,27 @@ const BuildList: React.FC<BuildListProps> = ({
       width: 80,
     },
     {
-      title: intl.formatMessage({ id: 'pages.nexus.arch', defaultMessage: 'Arch' }),
+      title: intl.formatMessage({
+        id: 'pages.nexus.arch',
+        defaultMessage: 'Arch',
+      }),
       dataIndex: 'arch',
       key: 'arch',
       width: 90,
     },
     {
-      title: intl.formatMessage({ id: 'pages.nexus.status', defaultMessage: 'Status' }),
+      title: intl.formatMessage({
+        id: 'pages.nexus.status',
+        defaultMessage: 'Status',
+      }),
       dataIndex: 'status',
       key: 'status',
       width: 140,
       render: (_: React.ReactNode, record: API.BuildRecord) => {
-        const config = statusConfig[record.status] || { color: 'default', icon: null };
+        const config = statusConfig[record.status] || {
+          color: 'default',
+          icon: null,
+        };
         return (
           <Tag color={config.color} icon={config.icon}>
             {statusLabel(record.status)}
@@ -168,7 +200,10 @@ const BuildList: React.FC<BuildListProps> = ({
       },
     },
     {
-      title: intl.formatMessage({ id: 'pages.customClients.createdAt', defaultMessage: 'Created At' }),
+      title: intl.formatMessage({
+        id: 'pages.customClients.createdAt',
+        defaultMessage: 'Created At',
+      }),
       dataIndex: 'createdAt',
       key: 'createdAt',
       ellipsis: true,
@@ -176,7 +211,10 @@ const BuildList: React.FC<BuildListProps> = ({
         record.createdAt ? new Date(record.createdAt).toLocaleString() : '-',
     },
     {
-      title: intl.formatMessage({ id: 'pages.common.action', defaultMessage: 'Action' }),
+      title: intl.formatMessage({
+        id: 'pages.common.action',
+        defaultMessage: 'Action',
+      }),
       key: 'action',
       width: 200,
       search: false,
@@ -192,7 +230,13 @@ const BuildList: React.FC<BuildListProps> = ({
                   key={file}
                   type="link"
                   size="small"
-                  icon={isDownloading ? <LoadingOutlined /> : <CloudDownloadOutlined />}
+                  icon={
+                    isDownloading ? (
+                      <LoadingOutlined />
+                    ) : (
+                      <CloudDownloadOutlined />
+                    )
+                  }
                   loading={isDownloading}
                   onClick={() => handleDownload(record.requestId, file)}
                 >
@@ -205,14 +249,29 @@ const BuildList: React.FC<BuildListProps> = ({
               <Popconfirm
                 title={intl.formatMessage({
                   id: 'pages.nexus.deleteBuildConfirm',
-                  defaultMessage: 'Are you sure you want to delete this build record?',
+                  defaultMessage:
+                    'Are you sure you want to delete this build record?',
                 })}
                 onConfirm={() => handleDelete(record.requestId)}
-                okText={intl.formatMessage({ id: 'pages.common.confirm', defaultMessage: 'Yes' })}
-                cancelText={intl.formatMessage({ id: 'pages.common.cancel', defaultMessage: 'No' })}
+                okText={intl.formatMessage({
+                  id: 'pages.common.confirm',
+                  defaultMessage: 'Yes',
+                })}
+                cancelText={intl.formatMessage({
+                  id: 'pages.common.cancel',
+                  defaultMessage: 'No',
+                })}
               >
-                <Button type="link" size="small" danger icon={<DeleteOutlined />}>
-                  <FormattedMessage id="pages.common.delete" defaultMessage="Delete" />
+                <Button
+                  type="link"
+                  size="small"
+                  danger
+                  icon={<DeleteOutlined />}
+                >
+                  <FormattedMessage
+                    id="pages.common.delete"
+                    defaultMessage="Delete"
+                  />
                 </Button>
               </Popconfirm>
             )}
@@ -227,7 +286,10 @@ const BuildList: React.FC<BuildListProps> = ({
       headerTitle={
         <Space>
           <Title level={5} style={{ margin: 0 }}>
-            <FormattedMessage id="pages.nexus.buildList" defaultMessage="Build History" />
+            <FormattedMessage
+              id="pages.nexus.buildList"
+              defaultMessage="Build History"
+            />
           </Title>
           {bindStatus?.bound && (
             <Text type="secondary">
@@ -262,7 +324,10 @@ const BuildList: React.FC<BuildListProps> = ({
           icon={<PlusOutlined />}
           onClick={onCreate}
         >
-          <FormattedMessage id="pages.nexus.createBuild" defaultMessage="Create New Client" />
+          <FormattedMessage
+            id="pages.nexus.createBuild"
+            defaultMessage="Create New Client"
+          />
         </Button>,
       ]}
       request={async () => {

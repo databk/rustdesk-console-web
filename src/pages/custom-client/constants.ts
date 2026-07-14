@@ -1,4 +1,9 @@
-export type PageState = 'loading' | 'bind' | 'tokenExpired' | 'repoRequired' | 'ready';
+export type PageState =
+  | 'loading'
+  | 'bind'
+  | 'tokenExpired'
+  | 'repoRequired'
+  | 'ready';
 
 export const CONN_TYPE_OPTIONS = [
   { value: 'both', label: 'Both' },

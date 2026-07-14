@@ -35,7 +35,11 @@ const RepoRequiredPrompt: React.FC<RepoRequiredPromptProps> = ({
             'You need to Star, Fork or Watch the databk/rustdesk-console repository on GitHub before generating custom clients. It may take up to 5 minutes for the cache to refresh.',
         })}
         extra={
-          <Space direction="vertical" size="large" style={{ alignItems: 'center' }}>
+          <Space
+            direction="vertical"
+            size="large"
+            style={{ alignItems: 'center' }}
+          >
             <Alert
               type="info"
               showIcon
@@ -54,7 +58,10 @@ const RepoRequiredPrompt: React.FC<RepoRequiredPromptProps> = ({
                 href="https://github.com/databk/rustdesk-console"
                 target="_blank"
               >
-                <FormattedMessage id="pages.nexus.goToRepo" defaultMessage="Go to GitHub Repository" />
+                <FormattedMessage
+                  id="pages.nexus.goToRepo"
+                  defaultMessage="Go to GitHub Repository"
+                />
               </Button>
               <Button
                 size="large"
@@ -62,7 +69,10 @@ const RepoRequiredPrompt: React.FC<RepoRequiredPromptProps> = ({
                 loading={buildAgainLoading}
                 onClick={onBuildAgain}
               >
-                <FormattedMessage id="pages.nexus.buildAgain" defaultMessage="Build Again" />
+                <FormattedMessage
+                  id="pages.nexus.buildAgain"
+                  defaultMessage="Build Again"
+                />
               </Button>
             </Space>
           </Space>

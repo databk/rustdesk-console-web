@@ -14,11 +14,7 @@ import {
   Typography,
 } from 'antd';
 import React from 'react';
-import {
-  ARCH_OPTIONS,
-  CONN_TYPE_OPTIONS,
-  SERVER_FIELDS,
-} from '../constants';
+import { ARCH_OPTIONS, CONN_TYPE_OPTIONS, SERVER_FIELDS } from '../constants';
 
 const { Paragraph } = Typography;
 
@@ -70,23 +66,28 @@ const CreateBuildModal: React.FC<CreateBuildModalProps> = ({
 
   React.useEffect(() => {
     if (open) {
-      form.setFieldsValue(initialValues || {
-        arch: 'x86_64',
-        'conn-type': 'both',
-      });
+      form.setFieldsValue(
+        initialValues || {
+          arch: 'x86_64',
+          'conn-type': 'both',
+        },
+      );
     } else {
       form.resetFields();
     }
   }, [open, initialValues, form]);
 
-  const renderDisableField = (field: typeof DISABLE_FIELDS[number]) => (
+  const renderDisableField = (field: (typeof DISABLE_FIELDS)[number]) => (
     <Col key={field.name} span={12}>
       <Form.Item
         name={field.name}
         valuePropName="checked"
         getValueFromEvent={(checked: boolean) => (checked ? 'Y' : 'N')}
         getValueProps={(value: string) => ({ checked: value === 'Y' })}
-        label={intl.formatMessage({ id: field.labelKey, defaultMessage: field.defaultMessage })}
+        label={intl.formatMessage({
+          id: field.labelKey,
+          defaultMessage: field.defaultMessage,
+        })}
       >
         <Switch checkedChildren="Yes" unCheckedChildren="No" />
       </Form.Item>
@@ -110,22 +111,34 @@ const CreateBuildModal: React.FC<CreateBuildModalProps> = ({
         form={form}
         layout="vertical"
         onFinish={onSubmit}
-        initialValues={initialValues || {
-          arch: 'x86_64',
-          'conn-type': 'both',
-        }}
+        initialValues={
+          initialValues || {
+            arch: 'x86_64',
+            'conn-type': 'both',
+          }
+        }
         style={{ maxHeight: '60vh', overflowY: 'auto', paddingRight: 8 }}
       >
         {/* Section: OS & Architecture */}
         <Divider orientation="left" plain>
-          <FormattedMessage id="pages.nexus.os" defaultMessage="Operating System" /> &{' '}
-          <FormattedMessage id="pages.nexus.arch" defaultMessage="Architecture" />
+          <FormattedMessage
+            id="pages.nexus.os"
+            defaultMessage="Operating System"
+          />{' '}
+          &{' '}
+          <FormattedMessage
+            id="pages.nexus.arch"
+            defaultMessage="Architecture"
+          />
         </Divider>
 
         <Row gutter={16}>
           <Col span={12}>
             <Form.Item
-              label={intl.formatMessage({ id: 'pages.nexus.os', defaultMessage: 'Operating System' })}
+              label={intl.formatMessage({
+                id: 'pages.nexus.os',
+                defaultMessage: 'Operating System',
+              })}
             >
               <Input value="Windows" disabled />
             </Form.Item>
@@ -133,7 +146,10 @@ const CreateBuildModal: React.FC<CreateBuildModalProps> = ({
           <Col span={12}>
             <Form.Item
               name="arch"
-              label={intl.formatMessage({ id: 'pages.nexus.arch', defaultMessage: 'Architecture' })}
+              label={intl.formatMessage({
+                id: 'pages.nexus.arch',
+                defaultMessage: 'Architecture',
+              })}
               rules={[{ required: true }]}
             >
               <Segmented options={ARCH_OPTIONS} block />
@@ -143,7 +159,10 @@ const CreateBuildModal: React.FC<CreateBuildModalProps> = ({
 
         <Form.Item
           name="app-name"
-          label={intl.formatMessage({ id: 'pages.nexus.appName', defaultMessage: 'Application Name' })}
+          label={intl.formatMessage({
+            id: 'pages.nexus.appName',
+            defaultMessage: 'Application Name',
+          })}
           rules={[
             {
               pattern: /^[a-zA-Z]+$/,
@@ -165,14 +184,20 @@ const CreateBuildModal: React.FC<CreateBuildModalProps> = ({
 
         {/* Section: Custom Configuration */}
         <Divider orientation="left" plain>
-          <FormattedMessage id="pages.nexus.customConfig" defaultMessage="Custom Configuration" />
+          <FormattedMessage
+            id="pages.nexus.customConfig"
+            defaultMessage="Custom Configuration"
+          />
         </Divider>
 
         <Row gutter={16}>
           <Col span={12}>
             <Form.Item
               name="password"
-              label={intl.formatMessage({ id: 'pages.nexus.password', defaultMessage: 'Password' })}
+              label={intl.formatMessage({
+                id: 'pages.nexus.password',
+                defaultMessage: 'Password',
+              })}
             >
               <Input.Password
                 placeholder={intl.formatMessage({
@@ -185,7 +210,10 @@ const CreateBuildModal: React.FC<CreateBuildModalProps> = ({
           <Col span={12}>
             <Form.Item
               name="salt"
-              label={intl.formatMessage({ id: 'pages.nexus.salt', defaultMessage: 'Salt' })}
+              label={intl.formatMessage({
+                id: 'pages.nexus.salt',
+                defaultMessage: 'Salt',
+              })}
             >
               <Input.Password
                 placeholder={intl.formatMessage({
@@ -199,9 +227,16 @@ const CreateBuildModal: React.FC<CreateBuildModalProps> = ({
 
         <Form.Item
           name="conn-type"
-          label={intl.formatMessage({ id: 'pages.nexus.connType', defaultMessage: 'Connection Type' })}
+          label={intl.formatMessage({
+            id: 'pages.nexus.connType',
+            defaultMessage: 'Connection Type',
+          })}
         >
-          <Radio.Group optionType="button" buttonStyle="solid" options={CONN_TYPE_OPTIONS} />
+          <Radio.Group
+            optionType="button"
+            buttonStyle="solid"
+            options={CONN_TYPE_OPTIONS}
+          />
         </Form.Item>
 
         {/* Disable options - 2 per row */}
@@ -213,13 +248,14 @@ const CreateBuildModal: React.FC<CreateBuildModalProps> = ({
           {renderDisableField(DISABLE_FIELDS[2])}
           {renderDisableField(DISABLE_FIELDS[3])}
         </Row>
-        <Row gutter={16}>
-          {renderDisableField(DISABLE_FIELDS[4])}
-        </Row>
+        <Row gutter={16}>{renderDisableField(DISABLE_FIELDS[4])}</Row>
 
         {/* Section: Server Configuration */}
         <Divider orientation="left" plain>
-          <FormattedMessage id="pages.nexus.serverConfig" defaultMessage="Server Configuration" />
+          <FormattedMessage
+            id="pages.nexus.serverConfig"
+            defaultMessage="Server Configuration"
+          />
         </Divider>
 
         {SERVER_FIELDS.map(({ key, labelKey }) => (
@@ -234,7 +270,12 @@ const CreateBuildModal: React.FC<CreateBuildModalProps> = ({
             <Row gutter={8} align="middle">
               <Col flex="auto">
                 <Form.Item name={key} noStyle>
-                  <Input placeholder={intl.formatMessage({ id: labelKey, defaultMessage: key })} />
+                  <Input
+                    placeholder={intl.formatMessage({
+                      id: labelKey,
+                      defaultMessage: key,
+                    })}
+                  />
                 </Form.Item>
               </Col>
               <Col flex="none">

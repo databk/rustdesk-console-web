@@ -24,12 +24,17 @@ const CustomClientPage: React.FC = () => {
   const { message: msgApi, modal } = App.useApp();
 
   const [pageState, setPageState] = useState<PageState>('loading');
-  const [bindStatus, setBindStatus] = useState<API.NexusBindStatus | null>(null);
+  const [bindStatus, setBindStatus] = useState<API.NexusBindStatus | null>(
+    null,
+  );
   const [loginLoading, setLoginLoading] = useState(false);
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [buildLoading, setBuildLoading] = useState(false);
   const [buildAgainLoading, setBuildAgainLoading] = useState(false);
-  const [pendingBuildConfig, setPendingBuildConfig] = useState<Record<string, any> | null>(null);
+  const [pendingBuildConfig, setPendingBuildConfig] = useState<Record<
+    string,
+    any
+  > | null>(null);
 
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const buildListActionRef = useRef<ActionType | null>(null);
@@ -146,17 +151,24 @@ const CustomClientPage: React.FC = () => {
     });
   };
 
-  const buildCustomConfig = (values: Record<string, any>): API.BuildCustomConfig => {
+  const buildCustomConfig = (
+    values: Record<string, any>,
+  ): API.BuildCustomConfig => {
     const custom: API.BuildCustomConfig = {};
 
     if (values.password) custom.password = values.password;
     if (values.salt) custom.salt = values.salt;
     if (values['conn-type']) custom['conn-type'] = values['conn-type'];
-    if (values['disable-installation'] === 'Y') custom['disable-installation'] = values['disable-installation'];
-    if (values['disable-settings'] === 'Y') custom['disable-settings'] = values['disable-settings'];
-    if (values['disable-account'] === 'Y') custom['disable-account'] = values['disable-account'];
-    if (values['disable-ab'] === 'Y') custom['disable-ab'] = values['disable-ab'];
-    if (values['disable-tcp-listen'] === 'Y') custom['disable-tcp-listen'] = values['disable-tcp-listen'];
+    if (values['disable-installation'] === 'Y')
+      custom['disable-installation'] = values['disable-installation'];
+    if (values['disable-settings'] === 'Y')
+      custom['disable-settings'] = values['disable-settings'];
+    if (values['disable-account'] === 'Y')
+      custom['disable-account'] = values['disable-account'];
+    if (values['disable-ab'] === 'Y')
+      custom['disable-ab'] = values['disable-ab'];
+    if (values['disable-tcp-listen'] === 'Y')
+      custom['disable-tcp-listen'] = values['disable-tcp-listen'];
     if (values['app-name']) custom['app-name'] = values['app-name'];
 
     const overrideSettings: Record<string, string> = {};
@@ -303,7 +315,10 @@ const CustomClientPage: React.FC = () => {
 
   const pageTitle = (
     <Space>
-      {intl.formatMessage({ id: 'menu.customClients', defaultMessage: 'Custom Clients' })}
+      {intl.formatMessage({
+        id: 'menu.customClients',
+        defaultMessage: 'Custom Clients',
+      })}
       <Tag color="blue">Beta</Tag>
     </Space>
   );

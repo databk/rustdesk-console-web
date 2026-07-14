@@ -668,7 +668,8 @@ export default {
   'pages.ldap.createdAt': 'Created At',
   'pages.ldap.updatedAt': 'Updated At',
   'pages.nexus.repoRequired': 'Repository Interaction Required',
-  'pages.nexus.repoRequiredDesc': 'You need to Star, Fork or Watch the databk/rustdesk-console repository on GitHub before generating custom clients. It may take up to 5 minutes for the cache to refresh.',
+  'pages.nexus.repoRequiredDesc':
+    'You need to Star, Fork or Watch the databk/rustdesk-console repository on GitHub before generating custom clients. It may take up to 5 minutes for the cache to refresh.',
   'pages.nexus.goToRepo': 'Go to GitHub Repository',
   'pages.nexus.buildList': 'Build History',
   'pages.nexus.createBuild': 'Create New Client',
@@ -693,7 +694,8 @@ export default {
   'pages.nexus.overrideSettings': 'Override Settings',
   'pages.nexus.defaultSettings': 'Default Settings',
   'pages.nexus.settingType': 'Setting Type',
-  'pages.nexus.deleteBuildConfirm': 'Are you sure you want to delete this build record?',
+  'pages.nexus.deleteBuildConfirm':
+    'Are you sure you want to delete this build record?',
   'pages.nexus.deleteSuccess': 'Build record deleted',
   'pages.nexus.deleteFailed': 'Failed to delete build record',
   'pages.nexus.pollingBuildStatus': 'Polling build status...',
@@ -710,17 +712,21 @@ export default {
   'pages.nexus.bindFailed': 'Failed to bind Github account',
   'pages.nexus.createLoginFailed': 'Failed to create login session',
   'pages.nexus.unbindConfirm': 'Unbind Github Account',
-  'pages.nexus.unbindConfirmContent': 'Are you sure you want to unbind your Github account? You will need to re-bind to generate custom clients.',
+  'pages.nexus.unbindConfirmContent':
+    'Are you sure you want to unbind your Github account? You will need to re-bind to generate custom clients.',
   'pages.nexus.unbindSuccess': 'Github account unbound',
   'pages.nexus.unbindFailed': 'Failed to unbind Github account',
   'pages.nexus.tokenExpired': 'Github Token Expired',
-  'pages.nexus.tokenExpiredDesc': 'Your Github token for {username} has expired. Please re-bind your account.',
+  'pages.nexus.tokenExpiredDesc':
+    'Your Github token for {username} has expired. Please re-bind your account.',
   'pages.nexus.rebind': 'Re-bind Github Account',
   'pages.nexus.bindTitle': 'Bind Github Account',
-  'pages.nexus.bindDesc': 'You need to bind your GitHub account to generate custom clients. Click the button below to authorize via GitHub.',
+  'pages.nexus.bindDesc':
+    'You need to bind your GitHub account to generate custom clients. Click the button below to authorize via GitHub.',
   'pages.nexus.bindGithub': 'Authorize with GitHub',
   'pages.nexus.unbind': 'Unbind',
-  'pages.nexus.repoInteractionRequired': 'Please Star, Fork or Watch the databk/rustdesk-console repository on GitHub first. It may take up to 5 minutes for the cache to refresh.',
+  'pages.nexus.repoInteractionRequired':
+    'Please Star, Fork or Watch the databk/rustdesk-console repository on GitHub first. It may take up to 5 minutes for the cache to refresh.',
   'pages.nexus.buildAlreadyRunning': 'You already have a build in progress',
   'pages.nexus.generateFailed': 'Failed to submit build request',
   'pages.nexus.downloadFailed': 'Failed to download custom client',
@@ -728,15 +734,21 @@ export default {
   'pages.nexus.buildAgain': 'Build Again',
   'pages.nexus.status': 'Status',
   'pages.nexus.statusPending': 'Build Pending',
-  'pages.nexus.statusPendingDesc': 'Your build request has been submitted and is waiting to be processed...',
+  'pages.nexus.statusPendingDesc':
+    'Your build request has been submitted and is waiting to be processed...',
   'pages.nexus.statusBuilding': 'Building',
-  'pages.nexus.statusBuildingDesc': 'GitHub Actions is building your custom client. This may take several minutes...',
+  'pages.nexus.statusBuildingDesc':
+    'GitHub Actions is building your custom client. This may take several minutes...',
   'pages.nexus.statusCompleted': 'Build Completed',
-  'pages.nexus.statusCompletedDesc': 'Your custom client is ready for download.',
+  'pages.nexus.statusCompletedDesc':
+    'Your custom client is ready for download.',
   'pages.nexus.statusFailed': 'Build Failed',
   'pages.nexus.statusFailedDesc': 'The build process encountered an error.',
   'pages.nexus.statusCancelled': 'Build Cancelled',
-  'pages.nexus.statusCancelledDesc': 'The build was cancelled, usually because you un-starred/un-forked the repository.',
-  'pages.nexus.bindWhyLogin': 'GitHub authentication helps us verify that you are a real user, preventing automated abuse of build resources. We only request your public username — no access to your repositories, personal data, or any other permissions is needed.',
-  'pages.nexus.repoWhyInteract': "I'm a high school student developing this project in my spare time. Your Star, Fork, or Watch means a lot to me — it not only keeps me motivated, but also helps with my college applications. This is the only thing I ask for in return. Thank you so much for your support!",
+  'pages.nexus.statusCancelledDesc':
+    'The build was cancelled, usually because you un-starred/un-forked the repository.',
+  'pages.nexus.bindWhyLogin':
+    'GitHub authentication helps us verify that you are a real user, preventing automated abuse of build resources. We only request your public username — no access to your repositories, personal data, or any other permissions is needed.',
+  'pages.nexus.repoWhyInteract':
+    "I'm a high school student developing this project in my spare time. Your Star, Fork, or Watch means a lot to me — it not only keeps me motivated, but also helps with my college applications. This is the only thing I ask for in return. Thank you so much for your support!",
 };
