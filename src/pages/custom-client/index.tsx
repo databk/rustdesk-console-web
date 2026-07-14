@@ -55,9 +55,9 @@ const DISABLE_OPTIONS = [
 ];
 
 const ARCH_OPTIONS = [
-  { value: 'x64', label: 'x64 (x86_64)' },
-  { value: 'arm64', label: 'arm64 (aarch64)' },
-  { value: 'x86', label: 'x86 (32-bit)' },
+  { value: 'x86_64', label: 'x86_64' },
+  { value: 'aarch64', label: 'aarch64' },
+  { value: 'x86', label: 'x86 (sciter)' },
 ];
 
 const SERVER_FIELDS = [
