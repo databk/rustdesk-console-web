@@ -96,9 +96,9 @@ const BuildList: React.FC<BuildListProps> = ({
     };
   }, []);
 
-  const handleDelete = async (requestId: string) => {
+  const handleDelete = async (uuid: string) => {
     try {
-      await deleteBuild(requestId);
+      await deleteBuild(uuid);
       msgApi.success(
         intl.formatMessage({
           id: 'pages.nexus.deleteSuccess',
@@ -116,10 +116,10 @@ const BuildList: React.FC<BuildListProps> = ({
     }
   };
 
-  const handleDownload = async (requestId: string, filename: string) => {
-    setDownloadLoading((prev) => new Set(prev).add(requestId));
+  const handleDownload = async (uuid: string, filename: string) => {
+    setDownloadLoading((prev) => new Set(prev).add(uuid));
     try {
-      const blob = await downloadBuildFile(requestId, filename);
+      const blob = await downloadBuildFile(uuid, filename);
       const url = window.URL.createObjectURL(new Blob([blob]));
       const link = document.createElement('a');
       link.href = url;
@@ -138,7 +138,7 @@ const BuildList: React.FC<BuildListProps> = ({
     } finally {
       setDownloadLoading((prev) => {
         const next = new Set(prev);
-        next.delete(requestId);
+        next.delete(uuid);
         return next;
       });
     }
@@ -147,11 +147,11 @@ const BuildList: React.FC<BuildListProps> = ({
   const columns: ProColumns<API.BuildRecord>[] = [
     {
       title: intl.formatMessage({
-        id: 'pages.nexus.requestId',
-        defaultMessage: 'Request ID',
+        id: 'pages.nexus.uuid',
+        defaultMessage: 'UUID',
       }),
-      dataIndex: 'requestId',
-      key: 'requestId',
+      dataIndex: 'uuid',
+      key: 'uuid',
       ellipsis: true,
     },
     {
@@ -219,7 +219,7 @@ const BuildList: React.FC<BuildListProps> = ({
       width: 200,
       search: false,
       render: (_: any, record: API.BuildRecord) => {
-        const isDownloading = downloadLoading.has(record.requestId);
+        const isDownloading = downloadLoading.has(record.uuid);
         const files: string[] = record.files ? JSON.parse(record.files) : [];
 
         return (
@@ -238,7 +238,7 @@ const BuildList: React.FC<BuildListProps> = ({
                     )
                   }
                   loading={isDownloading}
-                  onClick={() => handleDownload(record.requestId, file)}
+                  onClick={() => handleDownload(record.uuid, file)}
                 >
                   {file}
                 </Button>
@@ -252,7 +252,7 @@ const BuildList: React.FC<BuildListProps> = ({
                   defaultMessage:
                     'Are you sure you want to delete this build record?',
                 })}
-                onConfirm={() => handleDelete(record.requestId)}
+                onConfirm={() => handleDelete(record.uuid)}
                 okText={intl.formatMessage({
                   id: 'pages.common.confirm',
                   defaultMessage: 'Yes',
@@ -299,7 +299,7 @@ const BuildList: React.FC<BuildListProps> = ({
         </Space>
       }
       actionRef={actionRef}
-      rowKey="requestId"
+      rowKey="uuid"
       search={false}
       columns={columns}
       pagination={{

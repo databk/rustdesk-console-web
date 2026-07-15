@@ -42,26 +42,26 @@ export async function submitBuild(data: API.SubmitBuildParams) {
   });
 }
 
-export async function getBuildStatus(requestId: string) {
-  return request<API.BuildStatusResponse>('/api/nexus/builds/' + requestId + '/status', {
+export async function getBuildStatus(uuid: string) {
+  return request<API.BuildStatusResponse>('/api/nexus/builds/' + uuid + '/status', {
     method: 'GET',
   });
 }
 
-export async function deleteBuild(requestId: string) {
-  return request('/api/nexus/builds/' + requestId, {
+export async function deleteBuild(uuid: string) {
+  return request('/api/nexus/builds/' + uuid, {
     method: 'DELETE',
   });
 }
 
-export async function getBuildFiles(requestId: string) {
-  return request<string[]>('/api/nexus/builds/' + requestId + '/files', {
+export async function getBuildFiles(uuid: string) {
+  return request<string[]>('/api/nexus/builds/' + uuid + '/files', {
     method: 'GET',
   });
 }
 
-export async function downloadBuildFile(requestId: string, filename: string) {
-  return request('/api/nexus/builds/' + requestId + '/files/' + encodeURIComponent(filename), {
+export async function downloadBuildFile(uuid: string, filename: string) {
+  return request('/api/nexus/builds/' + uuid + '/files/' + encodeURIComponent(filename), {
     method: 'GET',
     responseType: 'blob',
   });

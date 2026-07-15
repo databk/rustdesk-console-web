@@ -699,7 +699,7 @@ export default {
   'pages.nexus.deleteSuccess': 'Build record deleted',
   'pages.nexus.deleteFailed': 'Failed to delete build record',
   'pages.nexus.pollingBuildStatus': 'Polling build status...',
-  'pages.nexus.requestId': 'Request ID',
+  'pages.nexus.uuid': 'UUID',
   'pages.nexus.concurrentLimit': 'Only one build at a time',
   'pages.nexus.os': 'Operating System',
   'pages.nexus.arch': 'Architecture',

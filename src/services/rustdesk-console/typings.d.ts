@@ -864,13 +864,13 @@ declare namespace API {
   };
 
   type SubmitBuildResult = {
-    request_id: string;
+    uuid: string;
     status: 'pending';
     message: string;
   };
 
   type BuildRecord = {
-    requestId: string;
+    uuid: string;
     userGuid: string;
     os: string;
     arch: string;
@@ -884,7 +884,7 @@ declare namespace API {
   };
 
   type BuildStatusResponse = {
-    request_id: string;
+    uuid: string;
     status: 'pending' | 'building' | 'completed' | 'failed' | 'cancelled';
     files?: string[];
     message?: string;
