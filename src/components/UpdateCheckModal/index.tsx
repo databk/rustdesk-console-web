@@ -175,9 +175,8 @@ const UpdateCheckModal: React.FC<{
     result && (result.backend?.has_update || result.frontend?.has_update);
 
   const updateCount = result
-    ? [result.backend?.has_update, result.frontend?.has_update].filter(
-        Boolean,
-      ).length
+    ? [result.backend?.has_update, result.frontend?.has_update].filter(Boolean)
+        .length
     : 0;
 
   return (
@@ -243,7 +242,10 @@ const UpdateCheckModal: React.FC<{
             <ExclamationCircleFilled
               style={{ fontSize: 40, color: '#faad14' }}
             />
-            <Paragraph type="secondary" style={{ margin: 0, textAlign: 'center' }}>
+            <Paragraph
+              type="secondary"
+              style={{ margin: 0, textAlign: 'center' }}
+            >
               {intl.formatMessage({ id: 'app.updateCheck.failed' })}
             </Paragraph>
             <Button
