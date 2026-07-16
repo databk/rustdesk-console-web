@@ -104,11 +104,29 @@ export async function deleteTag(guid: string, data: string[]) {
   return request(`/api/ab/tag/${guid}`, { method: 'DELETE', data });
 }
 
-export async function getRules() {
-  return request<API.RuleItem[]>('/api/ab/rules', { method: 'GET' });
+export async function getRules(params: {
+  ab: string;
+  current?: number;
+  pageSize?: number;
+}) {
+  return request<API.PaginatedResult<API.RuleItem>>('/api/ab/rules', {
+    method: 'GET',
+    params,
+  });
 }
 
-export async function deleteRules(data: { ids: string[] }) {
+export async function getAllRules(ab: string) {
+  const first = await getRules({ ab, current: 1, pageSize: 100 });
+  const rules = [...(first.data || [])];
+  for (let current = 2; rules.length < first.total; current += 1) {
+    const page = await getRules({ ab, current, pageSize: 100 });
+    if (!page.data?.length) break;
+    rules.push(...page.data);
+  }
+  return rules;
+}
+
+export async function deleteRules(data: string[]) {
   return request('/api/ab/rules', { method: 'DELETE', data });
 }
 

@@ -1,6 +1,12 @@
+import {
+  DeleteOutlined,
+  EditOutlined,
+  PlusOutlined,
+  ShareAltOutlined,
+} from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { FormattedMessage, history, useIntl } from '@umijs/max';
+import { FormattedMessage, history, useIntl, useModel } from '@umijs/max';
 import {
   App,
   Button,
@@ -18,14 +24,16 @@ import {
   getSharedAddressBooks,
   updateSharedAddressBook,
 } from '@/services/rustdesk-console/addressBook';
+import UserGroupAccessModal from './components/UserGroupAccessModal';
 
 const SharedAddressBook: React.FC = () => {
   const intl = useIntl();
   const { message: msgApi } = App.useApp();
+  const { initialState } = useModel('@@initialState');
   const actionRef = useRef<ActionType>(null);
   const [createModalVisible, setCreateModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
-  const [editingRecord, setEditingRecord] =
+  const [accessRecord, setAccessRecord] =
     useState<API.SharedAddressBook | null>(null);
   const [createForm] = Form.useForm();
   const [editForm] = Form.useForm();
@@ -63,7 +71,6 @@ const SharedAddressBook: React.FC = () => {
         }),
       );
       setEditModalVisible(false);
-      setEditingRecord(null);
       editForm.resetFields();
       actionRef.current?.reload();
     } catch {
@@ -128,15 +135,29 @@ const SharedAddressBook: React.FC = () => {
         <FormattedMessage id="pages.common.action" defaultMessage="Action" />
       ),
       valueType: 'option',
-      width: 180,
+      width: 280,
       render: (_, record) => (
         <Space size={0} split={<Divider type="vertical" />}>
+          {initialState?.currentUser?.is_admin && record.rule === 3 && (
+            <Button
+              key="groupAccess"
+              type="link"
+              size="small"
+              icon={<ShareAltOutlined />}
+              onClick={() => setAccessRecord(record)}
+            >
+              <FormattedMessage
+                id="pages.addressBook.groupAccess"
+                defaultMessage="Group access"
+              />
+            </Button>
+          )}
           <Button
             key="edit"
             type="link"
             size="small"
+            icon={<EditOutlined />}
             onClick={() => {
-              setEditingRecord(record);
               editForm.setFieldsValue(record);
               setEditModalVisible(true);
             }}
@@ -161,7 +182,7 @@ const SharedAddressBook: React.FC = () => {
               defaultMessage: 'No',
             })}
           >
-            <Button type="link" size="small" danger>
+            <Button type="link" size="small" danger icon={<DeleteOutlined />}>
               <FormattedMessage
                 id="pages.common.delete"
                 defaultMessage="Delete"
@@ -209,6 +230,7 @@ const SharedAddressBook: React.FC = () => {
           <Button
             key="create"
             type="primary"
+            icon={<PlusOutlined />}
             onClick={() => setCreateModalVisible(true)}
           >
             <FormattedMessage
@@ -235,7 +257,7 @@ const SharedAddressBook: React.FC = () => {
                 defaultMessage: 'No',
               })}
             >
-              <Button danger>
+              <Button danger icon={<DeleteOutlined />}>
                 <FormattedMessage
                   id="pages.common.batchDelete"
                   defaultMessage="Batch Delete"
@@ -322,7 +344,6 @@ const SharedAddressBook: React.FC = () => {
         open={editModalVisible}
         onCancel={() => {
           setEditModalVisible(false);
-          setEditingRecord(null);
         }}
         onOk={() => editForm.submit()}
       >
@@ -363,6 +384,12 @@ const SharedAddressBook: React.FC = () => {
           </Form.Item>
         </Form>
       </Modal>
+
+      <UserGroupAccessModal
+        open={!!accessRecord}
+        addressBook={accessRecord}
+        onOpenChange={(open) => !open && setAccessRecord(null)}
+      />
     </PageContainer>
   );
 };

@@ -30,3 +30,38 @@ export async function updateUserGroup(guid: string, data: API.UpdateUserGroupPar
 export async function deleteUserGroup(guid: string) {
   return request(`/api/user-groups/${guid}`, { method: 'DELETE' });
 }
+
+export async function getUserGroupUsers(
+  guid: string,
+  params?: {
+    current?: number;
+    pageSize?: number;
+    search?: string;
+  },
+) {
+  return request<API.PaginatedResult<API.UserItem>>(
+    `/api/user-groups/${guid}/users`,
+    {
+      method: 'GET',
+      params,
+    },
+  );
+}
+
+export async function moveUsersToGroup(guid: string, userGuids: string[]) {
+  return request<API.UserGroupMoveResult>(`/api/user-groups/${guid}/users`, {
+    method: 'POST',
+    data: { user_guids: userGuids },
+  });
+}
+
+export async function getAllUserGroups() {
+  const first = await getUserGroupList({ current: 1, pageSize: 100 });
+  const groups = [...(first.data || [])];
+  for (let current = 2; groups.length < first.total; current += 1) {
+    const page = await getUserGroupList({ current, pageSize: 100 });
+    if (!page.data?.length) break;
+    groups.push(...page.data);
+  }
+  return groups;
+}

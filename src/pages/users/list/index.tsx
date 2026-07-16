@@ -7,6 +7,7 @@ import {
   PlusCircleOutlined,
   PlusOutlined,
   SafetyOutlined,
+  TeamOutlined,
 } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
@@ -37,6 +38,7 @@ import {
   updateUser,
   updateUserSecurity,
 } from '@/services/rustdesk-console/user';
+import { getAllUserGroups } from '@/services/rustdesk-console/userGroup';
 
 const UserList: React.FC = () => {
   const intl = useIntl();
@@ -62,9 +64,47 @@ const UserList: React.FC = () => {
   const [selectedRows, setSelectedRows] = useState<API.UserItem[]>([]);
   const [batchStatusUpdating, setBatchStatusUpdating] = useState(false);
   const [batchForceLoggingOut, setBatchForceLoggingOut] = useState(false);
+  const [userGroups, setUserGroups] = useState<API.UserGroupItem[]>([]);
+  const [userGroupsLoading, setUserGroupsLoading] = useState(false);
 
   // Current user being edited
   const [editingUser, setEditingUser] = useState<API.UserItem | null>(null);
+
+  const loadUserGroups = async () => {
+    if (userGroups.length > 0) return userGroups;
+    setUserGroupsLoading(true);
+    try {
+      const groups = await getAllUserGroups();
+      setUserGroups(groups);
+      return groups;
+    } catch {
+      msgApi.error(
+        intl.formatMessage({
+          id: 'pages.userGroups.loadFailed',
+          defaultMessage: 'Failed to load user groups',
+        }),
+      );
+      return [];
+    } finally {
+      setUserGroupsLoading(false);
+    }
+  };
+
+  const openCreateModal = () => {
+    setCreateModalVisible(true);
+    void loadUserGroups().then((groups) => {
+      const defaultGroup = groups.find((group) => group.is_default);
+      createForm.setFieldValue('user_group_guid', defaultGroup?.guid);
+    });
+  };
+
+  const openInviteModal = () => {
+    setInviteModalVisible(true);
+    void loadUserGroups().then((groups) => {
+      const defaultGroup = groups.find((group) => group.is_default);
+      inviteForm.setFieldValue('user_group_guid', defaultGroup?.guid);
+    });
+  };
 
   // Create user
   const handleCreate = async (values: API.CreateUserParams) => {
@@ -579,6 +619,23 @@ const UserList: React.FC = () => {
         </Space>
       ),
     },
+    {
+      title: (
+        <FormattedMessage
+          id="pages.users.userGroup"
+          defaultMessage="User Group"
+        />
+      ),
+      dataIndex: 'user_group_name',
+      width: 140,
+      search: false,
+      render: (_: unknown, record: API.UserItem) => (
+        <Space>
+          <TeamOutlined />
+          <span>{record.user_group_name || '-'}</span>
+        </Space>
+      ),
+    },
   ];
 
   return (
@@ -718,20 +775,20 @@ const UserList: React.FC = () => {
           showSizeChanger: true,
           showQuickJumper: true,
         }}
-        scroll={{ x: 1400 }}
+        scroll={{ x: 1540 }}
         toolBarRender={() => [
           <Button
             key="create"
             type="primary"
             icon={<PlusOutlined />}
-            onClick={() => setCreateModalVisible(true)}
+            onClick={openCreateModal}
           >
             <FormattedMessage id="pages.users.create" defaultMessage="Create" />
           </Button>,
           <Button
             key="invite"
             icon={<PlusOutlined />}
-            onClick={() => setInviteModalVisible(true)}
+            onClick={openInviteModal}
           >
             <FormattedMessage id="pages.users.invite" defaultMessage="Invite" />
           </Button>,
@@ -825,15 +882,28 @@ const UserList: React.FC = () => {
             <Input.TextArea />
           </Form.Item>
           <Form.Item
-            name="group_name"
+            name="user_group_guid"
             label={
               <FormattedMessage
-                id="pages.users.groupName"
-                defaultMessage="Device Group"
+                id="pages.users.userGroup"
+                defaultMessage="User Group"
               />
             }
           >
-            <Input />
+            <Select
+              allowClear
+              showSearch
+              optionFilterProp="label"
+              loading={userGroupsLoading}
+              placeholder={intl.formatMessage({
+                id: 'pages.users.selectUserGroup',
+                defaultMessage: 'Select user group',
+              })}
+              options={userGroups.map((group) => ({
+                label: group.name,
+                value: group.guid,
+              }))}
+            />
           </Form.Item>
         </Form>
       </Modal>
@@ -904,15 +974,28 @@ const UserList: React.FC = () => {
             <Input.TextArea />
           </Form.Item>
           <Form.Item
-            name="group_name"
+            name="user_group_guid"
             label={
               <FormattedMessage
-                id="pages.users.groupName"
-                defaultMessage="Device Group"
+                id="pages.users.userGroup"
+                defaultMessage="User Group"
               />
             }
           >
-            <Input />
+            <Select
+              allowClear
+              showSearch
+              optionFilterProp="label"
+              loading={userGroupsLoading}
+              placeholder={intl.formatMessage({
+                id: 'pages.users.selectUserGroup',
+                defaultMessage: 'Select user group',
+              })}
+              options={userGroups.map((group) => ({
+                label: group.name,
+                value: group.guid,
+              }))}
+            />
           </Form.Item>
         </Form>
       </Modal>

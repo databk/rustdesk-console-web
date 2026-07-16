@@ -114,6 +114,8 @@ declare namespace API {
     third_auth_type?: string;
     strategy_guid?: string;
     strategy_name?: string;
+    user_group_guid?: string;
+    user_group_name?: string;
     avatar?: string;
     created_at?: string;
     updated_at?: string;
@@ -124,14 +126,14 @@ declare namespace API {
     password: string;
     email?: string;
     note?: string;
-    group_name?: string;
+    user_group_guid?: string;
   };
 
   type InviteUserParams = {
     email: string;
     name: string;
     note?: string;
-    group_name?: string;
+    user_group_guid?: string;
   };
 
   type UpdateUserParams = {
@@ -238,7 +240,7 @@ declare namespace API {
     name: string;
     owner?: string;
     note?: string;
-    rule?: number;
+    rule?: 1 | 2 | 3;
     info?: Record<string, any>;
     [key: string]: any;
   };
@@ -310,21 +312,29 @@ declare namespace API {
   };
 
   type RuleItem = {
-    id?: string;
-    name?: string;
-    [key: string]: any;
+    guid: string;
+    addressBook: {
+      guid: string;
+      name?: string;
+    };
+    user?: string;
+    group?: string;
+    rule: 1 | 2 | 3;
+    ruleType: 'user' | 'group' | 'everyone';
+    createdAt?: string;
+    updatedAt?: string;
   };
 
   type CreateRuleParams = {
     guid: string;
     user?: string;
     group?: string;
-    rule?: number;
+    rule?: 1 | 2 | 3;
   };
 
   type UpdateRuleParams = {
     guid: string;
-    rule: number;
+    rule: 1 | 2 | 3;
   };
 
   type ConnectionAuditItem = {
@@ -512,6 +522,7 @@ declare namespace API {
     name: string;
     note?: string;
     user_count?: number;
+    is_default?: boolean;
     created_at?: string;
     updated_at?: string;
     [key: string]: any;
@@ -525,6 +536,11 @@ declare namespace API {
   type UpdateUserGroupParams = {
     name?: string;
     note?: string;
+  };
+
+  type UserGroupMoveResult = {
+    message: string;
+    moved_user_count: number;
   };
 
   type CustomClientItem = {

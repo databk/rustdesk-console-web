@@ -7,7 +7,16 @@ import {
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { ModalForm, PageContainer, ProTable } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
-import { App, Button, Divider, Form, Input, Popconfirm, Space } from 'antd';
+import {
+  App,
+  Button,
+  Divider,
+  Form,
+  Input,
+  Popconfirm,
+  Space,
+  Tag,
+} from 'antd';
 import React, { useRef, useState } from 'react';
 import {
   createUserGroup,
@@ -15,6 +24,7 @@ import {
   getUserGroupList,
   updateUserGroup,
 } from '@/services/rustdesk-console/userGroup';
+import UserGroupMembersModal from './components/UserGroupMembersModal';
 
 const UserGroupList: React.FC = () => {
   const intl = useIntl();
@@ -23,6 +33,9 @@ const UserGroupList: React.FC = () => {
   const [createModalVisible, setCreateModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [currentGroup, setCurrentGroup] = useState<API.UserGroupItem | null>(
+    null,
+  );
+  const [membersGroup, setMembersGroup] = useState<API.UserGroupItem | null>(
     null,
   );
   const [form] = Form.useForm();
@@ -39,13 +52,15 @@ const UserGroupList: React.FC = () => {
       setCreateModalVisible(false);
       form.resetFields();
       actionRef.current?.reload();
-    } catch (error) {
+      return true;
+    } catch {
       msgApi.error(
         intl.formatMessage({
           id: 'pages.userGroups.createFailed',
           defaultMessage: 'Failed to create user group',
         }),
       );
+      return false;
     }
   };
 
@@ -63,13 +78,15 @@ const UserGroupList: React.FC = () => {
       setCurrentGroup(null);
       form.resetFields();
       actionRef.current?.reload();
-    } catch (error) {
+      return true;
+    } catch {
       msgApi.error(
         intl.formatMessage({
           id: 'pages.userGroups.updateFailed',
           defaultMessage: 'Failed to update user group',
         }),
       );
+      return false;
     }
   };
 
@@ -83,7 +100,7 @@ const UserGroupList: React.FC = () => {
         }),
       );
       actionRef.current?.reload();
-    } catch (error) {
+    } catch {
       msgApi.error(
         intl.formatMessage({
           id: 'pages.userGroups.deleteFailed',
@@ -113,6 +130,14 @@ const UserGroupList: React.FC = () => {
         <Space>
           <TeamOutlined style={{ color: '#13c2c2' }} />
           <span>{record.name}</span>
+          {record.is_default && (
+            <Tag color="blue">
+              <FormattedMessage
+                id="pages.userGroups.default"
+                defaultMessage="Default"
+              />
+            </Tag>
+          )}
         </Space>
       ),
     },
@@ -141,10 +166,21 @@ const UserGroupList: React.FC = () => {
         <FormattedMessage id="pages.common.action" defaultMessage="Action" />
       ),
       valueType: 'option',
-      width: 180,
+      width: 280,
       fixed: 'right',
       render: (_, record) => (
         <Space size={0} split={<Divider type="vertical" />}>
+          <Button
+            type="link"
+            size="small"
+            icon={<TeamOutlined />}
+            onClick={() => setMembersGroup(record)}
+          >
+            <FormattedMessage
+              id="pages.userGroups.members"
+              defaultMessage="Members"
+            />
+          </Button>
           <Button
             type="link"
             size="small"
@@ -157,28 +193,43 @@ const UserGroupList: React.FC = () => {
           >
             <FormattedMessage id="pages.common.edit" defaultMessage="Edit" />
           </Button>
-          <Popconfirm
-            title={intl.formatMessage({
-              id: 'pages.userGroups.deleteConfirm',
-              defaultMessage: 'Delete this user group?',
-            })}
-            onConfirm={() => handleDelete(record.guid)}
-            okText={intl.formatMessage({
-              id: 'pages.common.confirm',
-              defaultMessage: 'Yes',
-            })}
-            cancelText={intl.formatMessage({
-              id: 'pages.common.cancel',
-              defaultMessage: 'No',
-            })}
-          >
-            <Button type="link" size="small" danger icon={<DeleteOutlined />}>
+          {record.is_default ? (
+            <Button
+              type="link"
+              size="small"
+              danger
+              disabled
+              icon={<DeleteOutlined />}
+            >
               <FormattedMessage
                 id="pages.common.delete"
                 defaultMessage="Delete"
               />
             </Button>
-          </Popconfirm>
+          ) : (
+            <Popconfirm
+              title={intl.formatMessage({
+                id: 'pages.userGroups.deleteConfirm',
+                defaultMessage: 'Delete this user group?',
+              })}
+              onConfirm={() => handleDelete(record.guid)}
+              okText={intl.formatMessage({
+                id: 'pages.common.confirm',
+                defaultMessage: 'Yes',
+              })}
+              cancelText={intl.formatMessage({
+                id: 'pages.common.cancel',
+                defaultMessage: 'No',
+              })}
+            >
+              <Button type="link" size="small" danger icon={<DeleteOutlined />}>
+                <FormattedMessage
+                  id="pages.common.delete"
+                  defaultMessage="Delete"
+                />
+              </Button>
+            </Popconfirm>
+          )}
         </Space>
       ),
     },
@@ -247,7 +298,7 @@ const UserGroupList: React.FC = () => {
         onFinish={handleCreate}
         form={form}
         layout="vertical"
-        modalProps={{ destroyOnClose: true }}
+        modalProps={{ destroyOnHidden: true }}
       >
         <Form.Item
           name="name"
@@ -297,7 +348,7 @@ const UserGroupList: React.FC = () => {
         onFinish={handleUpdate}
         form={form}
         layout="vertical"
-        modalProps={{ destroyOnClose: true }}
+        modalProps={{ destroyOnHidden: true }}
       >
         <Form.Item
           name="name"
@@ -334,6 +385,13 @@ const UserGroupList: React.FC = () => {
           />
         </Form.Item>
       </ModalForm>
+
+      <UserGroupMembersModal
+        open={!!membersGroup}
+        group={membersGroup}
+        onOpenChange={(open) => !open && setMembersGroup(null)}
+        onChanged={() => actionRef.current?.reload()}
+      />
     </PageContainer>
   );
 };
