@@ -1,4 +1,4 @@
-import { configUmiAlias, createConfig } from '@umijs/max/test';
+import { configUmiAlias, createConfig } from '@umijs/max/test.js';
 
 export default async (): Promise<any> => {
   const config = await configUmiAlias({
@@ -12,7 +12,7 @@ export default async (): Promise<any> => {
       ...(config?.testEnvironmentOptions || {}),
       url: 'http://localhost:8000',
     },
-    setupFiles: [...(config.setupFiles || []), './tests/setupTests.jsx'],
+    setupFiles: config.setupFiles || [],
     globals: {
       ...config.globals,
       localStorage: null,
