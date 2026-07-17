@@ -35,6 +35,10 @@ import { Helmet } from 'react-helmet-async';
 import Settings from '../../../../config/defaultSettings';
 import {
   getPersonalAddressBook,
+  getCustomAddressBooks,
+  addCustomAddressBook,
+  updateCustomAddressBook,
+  deleteCustomAddressBooks,
   getPeers,
   addPeer,
   updatePeer,
@@ -81,12 +85,14 @@ export interface PersonalAddressBookProps {
   guid?: string;
   title?: string;
   onBack?: () => void;
+  canWrite?: boolean;
 }
 
 const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
   guid: propGuid,
   title: propTitle,
   onBack,
+  canWrite = true,
 }) => {
   const intl = useIntl();
   const { message: msgApi, modal } = App.useApp();
@@ -105,6 +111,7 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
   const [editPeerForm] = Form.useForm();
   const [addTagForm] = Form.useForm();
   const [renameTagForm] = Form.useForm();
+  const [addressBookForm] = Form.useForm();
 
   const [addPeerError, setAddPeerError] = useState('');
   const [editPeerError, setEditPeerError] = useState('');
@@ -112,6 +119,14 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
 
   const [abGuid, setAbGuid] = useState<string | undefined>(propGuid);
   const [abLoading, setAbLoading] = useState(!propGuid);
+  const [addressBooks, setAddressBooks] = useState<API.AddressBookProfile[]>(
+    [],
+  );
+  const [defaultAbGuid, setDefaultAbGuid] = useState<string>();
+  const [addressBookModalMode, setAddressBookModalMode] = useState<
+    'create' | 'edit' | null
+  >(null);
+  const [addressBookSaving, setAddressBookSaving] = useState(false);
   const [tags, setTags] = useState<API.TagItem[]>([]);
   const [pendingColorUpdates, setPendingColorUpdates] = useState<
     Record<string, number>
@@ -122,6 +137,49 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
   const colorPickerCloseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
     null,
   );
+  const tagLoadIdRef = useRef(0);
+
+  const loadAddressBooks = useCallback(
+    async (preferredGuid?: string) => {
+      setAbLoading(true);
+      try {
+        const [personal, custom] = await Promise.all([
+          getPersonalAddressBook(),
+          getCustomAddressBooks({ current: 1, pageSize: 100 }),
+        ]);
+        const profiles: API.AddressBookProfile[] = [
+          {
+            guid: personal.guid,
+            name: intl.formatMessage({
+              id: 'pages.addressBook.myAddressBook',
+              defaultMessage: 'My address book',
+            }),
+            is_personal: true,
+          },
+          ...(custom.data || []),
+        ];
+        setAddressBooks(profiles);
+        setDefaultAbGuid(personal.guid);
+        setAbGuid((currentGuid) => {
+          const nextGuid = preferredGuid || currentGuid;
+          return profiles.some((profile) => profile.guid === nextGuid)
+            ? nextGuid
+            : personal.guid;
+        });
+      } catch (error) {
+        console.error('Failed to fetch address books:', error);
+        msgApi.error(
+          intl.formatMessage({
+            id: 'pages.addressBook.loadFailed',
+            defaultMessage: 'Failed to load address books',
+          }),
+        );
+      } finally {
+        setAbLoading(false);
+      }
+    },
+    [intl, msgApi],
+  );
 
   useEffect(() => {
     if (propGuid) {
@@ -129,35 +187,32 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
       setAbLoading(false);
       return;
     }
-    const fetchAbGuid = async () => {
-      setAbLoading(true);
-      try {
-        const result = await getPersonalAddressBook();
-        setAbGuid(result.guid);
-      } catch (error) {
-        console.error('Failed to fetch personal address book:', error);
-      } finally {
-        setAbLoading(false);
-      }
-    };
-    fetchAbGuid();
-  }, [propGuid]);
+    void loadAddressBooks();
+  }, [loadAddressBooks, propGuid]);
 
   const fetchTags = useCallback(async () => {
     if (!abGuid) return;
+    const loadId = ++tagLoadIdRef.current;
     try {
       const result = await getTags(abGuid);
-      setTags(result || []);
+      if (loadId === tagLoadIdRef.current) {
+        setTags(result || []);
+      }
     } catch (error) {
       console.error('Failed to fetch tags:', error);
-      setTags([]);
+      if (loadId === tagLoadIdRef.current) {
+        setTags([]);
+      }
     }
   }, [abGuid]);
 
   useEffect(() => {
     if (abGuid) {
-      fetchTags();
+      void fetchTags();
     }
+    return () => {
+      tagLoadIdRef.current += 1;
+    };
   }, [abGuid, fetchTags]);
 
   useEffect(() => {
@@ -172,6 +227,123 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
       addPeerForm.resetFields();
     }
   }, [addPeerModalVisible, addPeerForm]);
+
+  const currentAddressBook = addressBooks.find(
+    (profile) => profile.guid === abGuid,
+  );
+  const isDefaultAddressBook = !abGuid || abGuid === defaultAbGuid;
+
+  const selectAddressBook = (guid: string) => {
+    tagLoadIdRef.current += 1;
+    setTags([]);
+    setSelectedTags([]);
+    setPendingColorUpdates({});
+    setTagMode('union');
+    setSelectedDeviceKeys([]);
+    setAbGuid(guid);
+  };
+
+  const openCreateAddressBook = () => {
+    addressBookForm.resetFields();
+    setAddressBookModalMode('create');
+  };
+
+  const openEditAddressBook = () => {
+    if (!currentAddressBook || isDefaultAddressBook) return;
+    addressBookForm.setFieldsValue({
+      name: currentAddressBook.name,
+      note: currentAddressBook.note || '',
+    });
+    setAddressBookModalMode('edit');
+  };
+
+  const handleAddressBookSubmit = async (values: {
+    name: string;
+    note?: string;
+  }) => {
+    setAddressBookSaving(true);
+    try {
+      if (addressBookModalMode === 'create') {
+        const created = await addCustomAddressBook(values);
+        await loadAddressBooks(created.guid);
+        msgApi.success(
+          intl.formatMessage({
+            id: 'pages.addressBook.createSuccess',
+            defaultMessage: 'Address book created',
+          }),
+        );
+      } else if (abGuid) {
+        await updateCustomAddressBook({ guid: abGuid, ...values });
+        await loadAddressBooks(abGuid);
+        msgApi.success(
+          intl.formatMessage({
+            id: 'pages.addressBook.updateSuccess',
+            defaultMessage: 'Address book updated',
+          }),
+        );
+      }
+      setAddressBookModalMode(null);
+      addressBookForm.resetFields();
+    } catch {
+      msgApi.error(
+        intl.formatMessage({
+          id:
+            addressBookModalMode === 'create'
+              ? 'pages.addressBook.createFailed'
+              : 'pages.addressBook.updateFailed',
+          defaultMessage:
+            addressBookModalMode === 'create'
+              ? 'Failed to create address book'
+              : 'Failed to update address book',
+        }),
+      );
+    } finally {
+      setAddressBookSaving(false);
+    }
+  };
+
+  const handleDeleteAddressBook = async () => {
+    if (!abGuid || isDefaultAddressBook) return;
+    setAddressBookSaving(true);
+    try {
+      await deleteCustomAddressBooks([abGuid]);
+      await loadAddressBooks(defaultAbGuid);
+      msgApi.success(
+        intl.formatMessage({
+          id: 'pages.addressBook.deleteSuccess',
+          defaultMessage: 'Address book deleted',
+        }),
+      );
+    } catch {
+      msgApi.error(
+        intl.formatMessage({
+          id: 'pages.addressBook.deleteFailed',
+          defaultMessage: 'Failed to delete address book',
+        }),
+      );
+    } finally {
+      setAddressBookSaving(false);
+    }
+  };
+
+  const confirmDeleteAddressBook = () => {
+    modal.confirm({
+      title: intl.formatMessage({
+        id: 'pages.addressBook.deleteConfirm',
+        defaultMessage: 'Are you sure to delete this address book?',
+      }),
+      okText: intl.formatMessage({
+        id: 'pages.common.confirm',
+        defaultMessage: 'Yes',
+      }),
+      cancelText: intl.formatMessage({
+        id: 'pages.common.cancel',
+        defaultMessage: 'No',
+      }),
+      okButtonProps: { danger: true },
+      onOk: handleDeleteAddressBook,
+    });
+  };
 
   const handleAddPeer = async (values: API.AddPeerParams) => {
     if (!abGuid) return;
@@ -408,7 +580,12 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
 
   const columns: ProColumns<API.PeerItem>[] = [
     {
-      title: <FormattedMessage id="pages.common.id" defaultMessage="ID" />,
+      title: (
+        <FormattedMessage
+          id="pages.addressBook.rustDeskId"
+          defaultMessage="RustDesk ID"
+        />
+      ),
       dataIndex: 'id',
       width: '15%',
       ellipsis: true,
@@ -699,6 +876,100 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
         </Helmet>
       )}
       <PageContainer title={propTitle} onBack={onBack}>
+        {!propGuid && (
+          <div
+            style={{
+              marginBottom: 16,
+              display: 'flex',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: 8,
+            }}
+          >
+            <Text strong>
+              <FormattedMessage
+                id="pages.addressBook.currentAddressBook"
+                defaultMessage="Address book"
+              />
+            </Text>
+            <Select
+              aria-label={intl.formatMessage({
+                id: 'pages.addressBook.currentAddressBook',
+                defaultMessage: 'Address book',
+              })}
+              value={abGuid}
+              loading={abLoading}
+              showSearch
+              optionFilterProp="label"
+              options={addressBooks.map((profile) => ({
+                value: profile.guid,
+                label: profile.name,
+              }))}
+              onChange={selectAddressBook}
+              style={{ width: 280, maxWidth: '100%' }}
+            />
+            <Tooltip
+              title={intl.formatMessage({
+                id: 'pages.addressBook.create',
+                defaultMessage: 'Create address book',
+              })}
+            >
+              <Button
+                aria-label={intl.formatMessage({
+                  id: 'pages.addressBook.create',
+                  defaultMessage: 'Create address book',
+                })}
+                type="text"
+                icon={<PlusOutlined />}
+                disabled={addressBookSaving}
+                onClick={openCreateAddressBook}
+                style={{ width: 32 }}
+              />
+            </Tooltip>
+            <Tooltip
+              title={intl.formatMessage({
+                id: 'pages.addressBook.edit',
+                defaultMessage: 'Edit address book',
+              })}
+            >
+              <span style={{ display: 'inline-flex' }}>
+                <Button
+                  aria-label={intl.formatMessage({
+                    id: 'pages.addressBook.edit',
+                    defaultMessage: 'Edit address book',
+                  })}
+                  type="text"
+                  icon={<EditOutlined />}
+                  disabled={isDefaultAddressBook || addressBookSaving}
+                  onClick={openEditAddressBook}
+                  style={{ width: 32 }}
+                />
+              </span>
+            </Tooltip>
+            <Tooltip
+              title={intl.formatMessage({
+                id: 'pages.common.delete',
+                defaultMessage: 'Delete',
+              })}
+            >
+              <span style={{ display: 'inline-flex' }}>
+                <Button
+                  aria-label={intl.formatMessage({
+                    id: 'pages.common.delete',
+                    defaultMessage: 'Delete',
+                  })}
+                  type="text"
+                  danger
+                  icon={<DeleteOutlined />}
+                  disabled={isDefaultAddressBook || addressBookSaving}
+                  onClick={confirmDeleteAddressBook}
+                  style={{ width: 32 }}
+                />
+              </span>
+            </Tooltip>
+          </div>
+        )}
+
         {/* Tags Area */}
         <div
           style={{
@@ -742,7 +1013,7 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
                   padding: '2px 8px',
                   paddingLeft: 0,
                 }}
-                closable
+                closable={canWrite}
                 closeIcon={
                   <Popconfirm
                     title={
@@ -799,9 +1070,10 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
                   }}
                 >
                   <ColorPicker
+                    disabled={!canWrite}
                     disabledAlpha
                     value={displayColor}
-                    open={hoveredColorDot === tag.name}
+                    open={canWrite && hoveredColorDot === tag.name}
                     onOpenChange={(open) => {
                       if (!open) {
                         setHoveredColorDot(null);
@@ -842,6 +1114,7 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
                   >
                     <span
                       onMouseEnter={() => {
+                        if (!canWrite) return;
                         if (colorPickerCloseTimerRef.current) {
                           clearTimeout(colorPickerCloseTimerRef.current);
                           colorPickerCloseTimerRef.current = null;
@@ -849,6 +1122,7 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
                         setHoveredColorDot(tag.name);
                       }}
                       onMouseLeave={() => {
+                        if (!canWrite) return;
                         colorPickerCloseTimerRef.current = setTimeout(() => {
                           setHoveredColorDot(null);
                         }, 100);
@@ -859,7 +1133,7 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
                         height: 8,
                         borderRadius: '50%',
                         backgroundColor: isSelected ? '#fff' : displayColor,
-                        cursor: 'pointer',
+                        cursor: canWrite ? 'pointer' : 'default',
                       }}
                     />
                   </ColorPicker>
@@ -869,12 +1143,14 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
               </Tag>
             );
           })}
-          <Button
-            size="small"
-            type="dashed"
-            icon={<PlusOutlined />}
-            onClick={() => setAddTagModalVisible(true)}
-          />
+          {canWrite && (
+            <Button
+              size="small"
+              type="dashed"
+              icon={<PlusOutlined />}
+              onClick={() => setAddTagModalVisible(true)}
+            />
+          )}
           {selectedTags.length > 1 && (
             <Radio.Group
               size="small"
@@ -903,8 +1179,10 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
         </div>
 
         <ProTable<API.PeerItem>
+          key={abGuid || 'loading'}
           headerTitle={
-            propTitle || (
+            propTitle ||
+            currentAddressBook?.name || (
               <FormattedMessage
                 id="pages.addressBook.personal"
                 defaultMessage="Personal Address Book"
@@ -932,11 +1210,15 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
               success: true,
             };
           }}
-          columns={columns}
+          columns={
+            canWrite
+              ? columns
+              : columns.filter((column) => column.valueType !== 'option')
+          }
           search={{
             labelWidth: 'auto',
             defaultCollapsed: false,
-            optionRender: (searchConfig, formProps, dom) => [dom[1], dom[0]],
+            optionRender: (_searchConfig, _formProps, dom) => [dom[1], dom[0]],
           }}
           pagination={{
             defaultPageSize: 20,
@@ -944,35 +1226,39 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
             showQuickJumper: true,
           }}
           scroll={{ x: 1100 }}
-          toolBarRender={() => [
-            <Button
-              key="add"
-              type="primary"
-              icon={<PlusOutlined />}
-              onClick={() => setAddPeerModalVisible(true)}
-            >
-              <FormattedMessage
-                id="pages.addressBook.addPeer"
-                defaultMessage="Add"
-              />
-            </Button>,
-            <Button
-              key="import"
-              icon={<SelectOutlined />}
-              onClick={() => setImportDevicesModalVisible(true)}
-            >
-              <FormattedMessage
-                id="pages.addressBook.import"
-                defaultMessage="Import"
-              />
-            </Button>,
-            <Button key="recycle" icon={<DeleteOutlined />}>
-              <FormattedMessage
-                id="pages.addressBook.recycleBin"
-                defaultMessage="Recycle Bin"
-              />
-            </Button>,
-          ]}
+          toolBarRender={() =>
+            canWrite
+              ? [
+                  <Button
+                    key="import"
+                    type="primary"
+                    icon={<SelectOutlined />}
+                    onClick={() => setImportDevicesModalVisible(true)}
+                  >
+                    <FormattedMessage
+                      id="pages.addressBook.import"
+                      defaultMessage="Import from devices"
+                    />
+                  </Button>,
+                  <Button
+                    key="add"
+                    icon={<PlusOutlined />}
+                    onClick={() => setAddPeerModalVisible(true)}
+                  >
+                    <FormattedMessage
+                      id="pages.addressBook.addPeer"
+                      defaultMessage="Add by RustDesk ID"
+                    />
+                  </Button>,
+                  <Button key="recycle" icon={<DeleteOutlined />}>
+                    <FormattedMessage
+                      id="pages.addressBook.recycleBin"
+                      defaultMessage="Recycle Bin"
+                    />
+                  </Button>,
+                ]
+              : []
+          }
           options={{
             density: true,
             setting: {
@@ -983,12 +1269,74 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
           }}
         />
 
+        <Modal
+          title={
+            addressBookModalMode === 'create' ? (
+              <FormattedMessage
+                id="pages.addressBook.create"
+                defaultMessage="Create Address Book"
+              />
+            ) : (
+              <FormattedMessage
+                id="pages.addressBook.edit"
+                defaultMessage="Edit Address Book"
+              />
+            )
+          }
+          open={addressBookModalMode !== null}
+          confirmLoading={addressBookSaving}
+          onCancel={() => {
+            setAddressBookModalMode(null);
+            addressBookForm.resetFields();
+          }}
+          onOk={() => addressBookForm.submit()}
+        >
+          <Form
+            form={addressBookForm}
+            layout="vertical"
+            onFinish={handleAddressBookSubmit}
+          >
+            <Form.Item
+              name="name"
+              label={
+                <FormattedMessage
+                  id="pages.addressBook.name"
+                  defaultMessage="Name"
+                />
+              }
+              rules={[
+                {
+                  required: true,
+                  whitespace: true,
+                  message: intl.formatMessage({
+                    id: 'pages.common.pleaseEnterName',
+                    defaultMessage: 'Please enter name',
+                  }),
+                },
+              ]}
+            >
+              <Input maxLength={255} />
+            </Form.Item>
+            <Form.Item
+              name="note"
+              label={
+                <FormattedMessage
+                  id="pages.addressBook.note"
+                  defaultMessage="Note"
+                />
+              }
+            >
+              <Input.TextArea maxLength={2000} rows={3} />
+            </Form.Item>
+          </Form>
+        </Modal>
+
         {/* Add Peer Modal */}
         <Modal
           title={
             <FormattedMessage
               id="pages.addressBook.addPeer"
-              defaultMessage="Add Peer"
+              defaultMessage="Add by RustDesk ID"
             />
           }
           open={addPeerModalVisible}
@@ -1007,14 +1355,17 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
             <Form.Item
               name="id"
               label={
-                <FormattedMessage id="pages.common.id" defaultMessage="ID" />
+                <FormattedMessage
+                  id="pages.addressBook.rustDeskId"
+                  defaultMessage="RustDesk ID"
+                />
               }
               rules={[
                 {
                   required: true,
                   message: intl.formatMessage({
-                    id: 'pages.common.pleaseEnterPeerId',
-                    defaultMessage: 'Please enter peer ID',
+                    id: 'pages.addressBook.pleaseEnterRustDeskId',
+                    defaultMessage: 'Please enter RustDesk ID',
                   }),
                 },
               ]}
@@ -1096,7 +1447,10 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
             <Form.Item
               name="id"
               label={
-                <FormattedMessage id="pages.common.id" defaultMessage="ID" />
+                <FormattedMessage
+                  id="pages.addressBook.rustDeskId"
+                  defaultMessage="RustDesk ID"
+                />
               }
             >
               <Text>{editingPeer?.id}</Text>
@@ -1239,6 +1593,7 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
           <DeviceSelectTable
             selectedRowKeys={selectedDeviceKeys}
             onSelectionChange={setSelectedDeviceKeys}
+            defaultSearchCollapsed={false}
           />
         </Modal>
       </PageContainer>

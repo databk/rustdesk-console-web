@@ -97,7 +97,10 @@ export default {
   'pages.addressBook.create': 'Criar Catálogo de Endereços',
   'pages.addressBook.edit': 'Editar Catálogo de Endereços',
   'pages.addressBook.personal': 'Catálogo de Endereços Pessoal',
-  'pages.addressBook.addPeer': 'Adicionar',
+  'pages.addressBook.currentAddressBook': 'Catálogo de endereços',
+  'pages.addressBook.myAddressBook': 'Meu catálogo de endereços',
+  'pages.addressBook.loadFailed': 'Falha ao carregar catálogos de endereços',
+  'pages.addressBook.addPeer': 'Adicionar por RustDesk ID',
   'pages.addressBook.addTag': 'Adicionar Tag',
   'pages.addressBook.tagName': 'Nome da Tag',
   'pages.addressBook.tagAdded': 'Tag adicionada',
@@ -108,7 +111,7 @@ export default {
     'Tem certeza de que deseja remover esta tag?',
   'pages.addressBook.tagModeUnion': 'Qualquer',
   'pages.addressBook.tagModeIntersection': 'Todos',
-  'pages.addressBook.importDevices': 'Importar Dispositivos',
+  'pages.addressBook.importDevices': 'Importar de Dispositivos',
   'pages.addressBook.importSuccess':
     '{count} dispositivo(s) importado(s) com sucesso',
   'pages.addressBook.importPartialFailed':
@@ -133,7 +136,9 @@ export default {
   'pages.addressBook.peerDeleteFailed': 'Falha ao remover contato',
   'pages.addressBook.deletePeerConfirm':
     'Tem certeza de que deseja remover este contato?',
-  'pages.addressBook.import': 'Importar',
+  'pages.addressBook.import': 'Importar de Dispositivos',
+  'pages.addressBook.rustDeskId': 'RustDesk ID',
+  'pages.addressBook.pleaseEnterRustDeskId': 'Informe o RustDesk ID',
   'pages.addressBook.recycleBin': 'Lixeira',
   'pages.deviceGroups.list': 'Grupos de Dispositivos',
   'pages.deviceGroups.name': 'Nome',

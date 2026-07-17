@@ -235,12 +235,20 @@ declare namespace API {
     note?: string;
   };
 
+  type AddressBookProfile = {
+    guid: string;
+    name: string;
+    note?: string;
+    is_personal?: boolean;
+  };
+
   type SharedAddressBook = {
     guid: string;
     name: string;
     owner?: string;
     note?: string;
     rule?: 1 | 2 | 3;
+    is_owner?: boolean;
     info?: Record<string, any>;
     [key: string]: any;
   };

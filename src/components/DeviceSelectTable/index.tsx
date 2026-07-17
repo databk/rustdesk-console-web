@@ -8,12 +8,14 @@ interface DeviceSelectTableProps {
   selectedRowKeys?: React.Key[];
   onSelectionChange?: (selectedRowKeys: React.Key[]) => void;
   pageSize?: number;
+  defaultSearchCollapsed?: boolean;
 }
 
 const DeviceSelectTable: React.FC<DeviceSelectTableProps> = ({
   selectedRowKeys = [],
   onSelectionChange,
   pageSize = 10,
+  defaultSearchCollapsed = true,
 }) => {
   const actionRef = useRef<ActionType>(null);
 
@@ -26,7 +28,7 @@ const DeviceSelectTable: React.FC<DeviceSelectTableProps> = ({
       rowKey="id"
       search={{
         labelWidth: 'auto',
-        defaultCollapsed: true,
+        defaultCollapsed: defaultSearchCollapsed,
       }}
       pagination={{
         defaultPageSize: pageSize,

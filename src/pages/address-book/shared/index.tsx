@@ -21,7 +21,7 @@ import React, { useRef, useState } from 'react';
 import {
   addSharedAddressBook,
   deleteSharedAddressBooks,
-  getSharedAddressBooks,
+  getWebSharedAddressBooks,
   updateSharedAddressBook,
 } from '@/services/rustdesk-console/addressBook';
 import UserGroupAccessModal from './components/UserGroupAccessModal';
@@ -30,6 +30,7 @@ const SharedAddressBook: React.FC = () => {
   const intl = useIntl();
   const { message: msgApi } = App.useApp();
   const { initialState } = useModel('@@initialState');
+  const isAdmin = initialState?.currentUser?.is_admin === true;
   const actionRef = useRef<ActionType>(null);
   const [createModalVisible, setCreateModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
@@ -113,9 +114,10 @@ const SharedAddressBook: React.FC = () => {
       render: (_, record: API.SharedAddressBook) => (
         <a
           onClick={() => {
-            history.push(`/address-book/shared/${record.guid}`, {
-              name: record.name,
-            });
+            history.push(
+              `/address-book/shared/${record.guid}?rule=${record.rule || 1}`,
+              { name: record.name, rule: record.rule },
+            );
           }}
           style={{ cursor: 'pointer' }}
         >
@@ -130,68 +132,84 @@ const SharedAddressBook: React.FC = () => {
       dataIndex: 'note',
       ellipsis: true,
     },
-    {
-      title: (
-        <FormattedMessage id="pages.common.action" defaultMessage="Action" />
-      ),
-      valueType: 'option',
-      width: 280,
-      render: (_, record) => (
-        <Space size={0} split={<Divider type="vertical" />}>
-          {initialState?.currentUser?.is_admin && record.rule === 3 && (
-            <Button
-              key="groupAccess"
-              type="link"
-              size="small"
-              icon={<ShareAltOutlined />}
-              onClick={() => setAccessRecord(record)}
-            >
+    ...(isAdmin
+      ? [
+          {
+            title: (
               <FormattedMessage
-                id="pages.addressBook.groupAccess"
-                defaultMessage="Group access"
+                id="pages.common.action"
+                defaultMessage="Action"
               />
-            </Button>
-          )}
-          <Button
-            key="edit"
-            type="link"
-            size="small"
-            icon={<EditOutlined />}
-            onClick={() => {
-              editForm.setFieldsValue(record);
-              setEditModalVisible(true);
-            }}
-          >
-            <FormattedMessage id="pages.common.edit" defaultMessage="Edit" />
-          </Button>
-          <Popconfirm
-            key="delete"
-            title={
-              <FormattedMessage
-                id="pages.addressBook.deleteConfirm"
-                defaultMessage="Are you sure to delete this address book?"
-              />
-            }
-            onConfirm={() => handleDelete([record.guid])}
-            okText={intl.formatMessage({
-              id: 'pages.common.confirm',
-              defaultMessage: 'Yes',
-            })}
-            cancelText={intl.formatMessage({
-              id: 'pages.common.cancel',
-              defaultMessage: 'No',
-            })}
-          >
-            <Button type="link" size="small" danger icon={<DeleteOutlined />}>
-              <FormattedMessage
-                id="pages.common.delete"
-                defaultMessage="Delete"
-              />
-            </Button>
-          </Popconfirm>
-        </Space>
-      ),
-    },
+            ),
+            valueType: 'option' as const,
+            width: 280,
+            render: (_: unknown, record: API.SharedAddressBook) =>
+              record.is_owner ? (
+                <Space size={0} split={<Divider type="vertical" />}>
+                  <Button
+                    key="groupAccess"
+                    type="link"
+                    size="small"
+                    icon={<ShareAltOutlined />}
+                    onClick={() => setAccessRecord(record)}
+                  >
+                    <FormattedMessage
+                      id="pages.addressBook.groupAccess"
+                      defaultMessage="Group access"
+                    />
+                  </Button>
+                  <Button
+                    key="edit"
+                    type="link"
+                    size="small"
+                    icon={<EditOutlined />}
+                    onClick={() => {
+                      editForm.setFieldsValue(record);
+                      setEditModalVisible(true);
+                    }}
+                  >
+                    <FormattedMessage
+                      id="pages.common.edit"
+                      defaultMessage="Edit"
+                    />
+                  </Button>
+                  <Popconfirm
+                    key="delete"
+                    title={
+                      <FormattedMessage
+                        id="pages.addressBook.deleteConfirm"
+                        defaultMessage="Are you sure to delete this address book?"
+                      />
+                    }
+                    onConfirm={() => handleDelete([record.guid])}
+                    okText={intl.formatMessage({
+                      id: 'pages.common.confirm',
+                      defaultMessage: 'Yes',
+                    })}
+                    cancelText={intl.formatMessage({
+                      id: 'pages.common.cancel',
+                      defaultMessage: 'No',
+                    })}
+                  >
+                    <Button
+                      type="link"
+                      size="small"
+                      danger
+                      icon={<DeleteOutlined />}
+                    >
+                      <FormattedMessage
+                        id="pages.common.delete"
+                        defaultMessage="Delete"
+                      />
+                    </Button>
+                  </Popconfirm>
+                </Space>
+              ) : (
+                '-'
+              ),
+          },
+        ]
+      : []),
   ];
 
   return (
@@ -206,9 +224,10 @@ const SharedAddressBook: React.FC = () => {
         actionRef={actionRef}
         rowKey="guid"
         request={async (params) => {
-          const result = await getSharedAddressBooks({
+          const result = await getWebSharedAddressBooks({
             pageSize: params.pageSize || 20,
             current: params.current || 1,
+            name: params.name,
           });
           return {
             data: result.data || [],
@@ -217,55 +236,66 @@ const SharedAddressBook: React.FC = () => {
           };
         }}
         columns={columns}
-        rowSelection={{
-          selectedRowKeys,
-          onChange: setSelectedRowKeys,
-        }}
+        rowSelection={
+          isAdmin
+            ? {
+                selectedRowKeys,
+                onChange: setSelectedRowKeys,
+                getCheckboxProps: (record) => ({
+                  disabled: !record.is_owner,
+                }),
+              }
+            : undefined
+        }
         pagination={{
           defaultPageSize: 20,
           showSizeChanger: true,
           showQuickJumper: true,
         }}
-        toolBarRender={() => [
-          <Button
-            key="create"
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={() => setCreateModalVisible(true)}
-          >
-            <FormattedMessage
-              id="pages.addressBook.create"
-              defaultMessage="Create Address Book"
-            />
-          </Button>,
-          selectedRowKeys.length > 0 && (
-            <Popconfirm
-              key="batchDelete"
-              title={
-                <FormattedMessage
-                  id="pages.addressBook.batchDeleteConfirm"
-                  defaultMessage="Are you sure to delete selected address books?"
-                />
-              }
-              onConfirm={() => handleDelete(selectedRowKeys as string[])}
-              okText={intl.formatMessage({
-                id: 'pages.common.confirm',
-                defaultMessage: 'Yes',
-              })}
-              cancelText={intl.formatMessage({
-                id: 'pages.common.cancel',
-                defaultMessage: 'No',
-              })}
-            >
-              <Button danger icon={<DeleteOutlined />}>
-                <FormattedMessage
-                  id="pages.common.batchDelete"
-                  defaultMessage="Batch Delete"
-                />
-              </Button>
-            </Popconfirm>
-          ),
-        ]}
+        toolBarRender={() =>
+          isAdmin
+            ? [
+                <Button
+                  key="create"
+                  type="primary"
+                  icon={<PlusOutlined />}
+                  onClick={() => setCreateModalVisible(true)}
+                >
+                  <FormattedMessage
+                    id="pages.addressBook.create"
+                    defaultMessage="Create Address Book"
+                  />
+                </Button>,
+                selectedRowKeys.length > 0 && (
+                  <Popconfirm
+                    key="batchDelete"
+                    title={
+                      <FormattedMessage
+                        id="pages.addressBook.batchDeleteConfirm"
+                        defaultMessage="Are you sure to delete selected address books?"
+                      />
+                    }
+                    onConfirm={() => handleDelete(selectedRowKeys as string[])}
+                    okText={intl.formatMessage({
+                      id: 'pages.common.confirm',
+                      defaultMessage: 'Yes',
+                    })}
+                    cancelText={intl.formatMessage({
+                      id: 'pages.common.cancel',
+                      defaultMessage: 'No',
+                    })}
+                  >
+                    <Button danger icon={<DeleteOutlined />}>
+                      <FormattedMessage
+                        id="pages.common.batchDelete"
+                        defaultMessage="Batch Delete"
+                      />
+                    </Button>
+                  </Popconfirm>
+                ),
+              ]
+            : []
+        }
         options={{
           density: true,
           setting: {
