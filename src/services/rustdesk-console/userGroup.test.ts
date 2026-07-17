@@ -1,6 +1,6 @@
 import { beforeEach, expect, jest, test } from '@jest/globals';
 import { request } from '@umijs/max';
-import { deleteRules, getAllRules, getRules } from './addressBook';
+import { addPeer, deleteRules, getAllRules, getRules } from './addressBook';
 import {
   getAllUserGroups,
   getUserGroupUsers,
@@ -80,4 +80,15 @@ test('loads every page of user groups and address-book rules', async () => {
     method: 'GET',
     params: { ab: 'book-guid', current: 2, pageSize: 100 },
   });
+});
+
+test('rejects RustDesk action error payloads and accepts empty success responses', async () => {
+  requestMock
+    .mockResolvedValueOnce('')
+    .mockResolvedValueOnce({ error: '设备不存在' });
+
+  await expect(addPeer('book-guid', { id: '123456789' })).resolves.toBe('');
+  await expect(addPeer('book-guid', { id: 'missing' })).rejects.toThrow(
+    '设备不存在',
+  );
 });
