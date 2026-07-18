@@ -9,8 +9,7 @@ const SharedAddressBookDetail: React.FC = () => {
   const { initialState } = useModel('@@initialState');
   const state = location.state as { name?: string; rule?: 1 | 2 | 3 };
   const name = state?.name || '';
-  const queryRule = Number(new URLSearchParams(location.search).get('rule'));
-  const rule = queryRule >= 1 && queryRule <= 3 ? queryRule : state?.rule || 1;
+  const rule = state?.rule || 1;
   const canWrite = initialState?.currentUser?.is_admin === true || rule >= 2;
 
   return (

@@ -114,10 +114,10 @@ const SharedAddressBook: React.FC = () => {
       render: (_, record: API.SharedAddressBook) => (
         <a
           onClick={() => {
-            history.push(
-              `/address-book/shared/${record.guid}?rule=${record.rule || 1}`,
-              { name: record.name, rule: record.rule },
-            );
+            history.push(`/address-book/shared/${record.guid}`, {
+              name: record.name,
+              rule: record.rule,
+            });
           }}
           style={{ cursor: 'pointer' }}
         >

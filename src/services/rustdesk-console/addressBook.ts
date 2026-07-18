@@ -43,10 +43,21 @@ export async function getCustomAddressBooks(params?: {
   );
 }
 
+export async function getAllCustomAddressBooks() {
+  const first = await getCustomAddressBooks({ current: 1, pageSize: 100 });
+  const profiles = [...(first.data || [])];
+  for (let current = 2; profiles.length < first.total; current += 1) {
+    const page = await getCustomAddressBooks({ current, pageSize: 100 });
+    if (!page.data?.length) break;
+    profiles.push(...page.data);
+  }
+  return profiles;
+}
+
 export async function addCustomAddressBook(
   data: API.AddSharedAddressBookParams,
 ) {
-  return request<{ guid: string }>('/api/ab/custom/add', {
+  return actionRequest('/api/ab/custom/add', {
     method: 'POST',
     data,
   });
@@ -55,14 +66,14 @@ export async function addCustomAddressBook(
 export async function updateCustomAddressBook(
   data: API.UpdateSharedAddressBookParams,
 ) {
-  return request<{ message: string }>('/api/ab/custom/update/profile', {
+  return actionRequest('/api/ab/custom/update/profile', {
     method: 'PUT',
     data,
   });
 }
 
 export async function deleteCustomAddressBooks(guids: string[]) {
-  return request<{ message: string }>('/api/ab/custom', {
+  return actionRequest('/api/ab/custom', {
     method: 'DELETE',
     data: { guids },
   });

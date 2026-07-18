@@ -36,6 +36,7 @@ export {
   getAddressBookSettings,
   getPersonalAddressBook,
   getCustomAddressBooks,
+  getAllCustomAddressBooks,
   addCustomAddressBook,
   updateCustomAddressBook,
   deleteCustomAddressBooks,

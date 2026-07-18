@@ -35,7 +35,7 @@ import { Helmet } from 'react-helmet-async';
 import Settings from '../../../../config/defaultSettings';
 import {
   getPersonalAddressBook,
-  getCustomAddressBooks,
+  getAllCustomAddressBooks,
   addCustomAddressBook,
   updateCustomAddressBook,
   deleteCustomAddressBooks,
@@ -143,9 +143,9 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
     async (preferredGuid?: string) => {
       setAbLoading(true);
       try {
-        const [personal, custom] = await Promise.all([
+        const [personal, customProfiles] = await Promise.all([
           getPersonalAddressBook(),
-          getCustomAddressBooks({ current: 1, pageSize: 100 }),
+          getAllCustomAddressBooks(),
         ]);
         const profiles: API.AddressBookProfile[] = [
           {
@@ -156,7 +156,7 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
             }),
             is_personal: true,
           },
-          ...(custom.data || []),
+          ...customProfiles,
         ];
         setAddressBooks(profiles);
         setDefaultAbGuid(personal.guid);
@@ -265,7 +265,11 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
     try {
       if (addressBookModalMode === 'create') {
         const created = await addCustomAddressBook(values);
-        await loadAddressBooks(created.guid);
+        const createdGuid = (created as { guid?: string } | null)?.guid;
+        if (!createdGuid) {
+          throw new Error('Missing guid in addCustomAddressBook response');
+        }
+        await loadAddressBooks(createdGuid);
         msgApi.success(
           intl.formatMessage({
             id: 'pages.addressBook.createSuccess',
