@@ -221,6 +221,10 @@ const SharedAddressBook: React.FC = () => {
             defaultMessage="Shared Address Books"
           />
         }
+        columnsState={{
+          persistenceType: 'localStorage',
+          persistenceKey: 'shared_address_book_columns_state',
+        }}
         actionRef={actionRef}
         rowKey="guid"
         request={async (params) => {

@@ -644,6 +644,10 @@ const UserList: React.FC = () => {
         headerTitle={
           <FormattedMessage id="pages.users.list" defaultMessage="User List" />
         }
+        columnsState={{
+          persistenceType: 'localStorage',
+          persistenceKey: 'user_list_columns_state',
+        }}
         actionRef={actionRef}
         rowKey="guid"
         rowSelection={{

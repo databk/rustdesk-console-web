@@ -183,6 +183,10 @@ const DeviceGroupList: React.FC = () => {
             defaultMessage="Device Groups"
           />
         }
+        columnsState={{
+          persistenceType: 'localStorage',
+          persistenceKey: 'device_group_list_columns_state',
+        }}
         actionRef={actionRef}
         rowKey="guid"
         request={async (params) => {

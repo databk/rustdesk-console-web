@@ -44,6 +44,10 @@ const ConsoleAudit: React.FC = () => {
             defaultMessage="Console Audits"
           />
         }
+        columnsState={{
+          persistenceType: 'localStorage',
+          persistenceKey: 'console_audit_columns_state',
+        }}
         actionRef={actionRef}
         rowKey="id"
         request={async (params) => {

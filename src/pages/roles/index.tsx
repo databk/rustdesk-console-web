@@ -263,6 +263,10 @@ const RoleList: React.FC = () => {
         headerTitle={
           <FormattedMessage id="pages.roles.list" defaultMessage="Role List" />
         }
+        columnsState={{
+          persistenceType: 'localStorage',
+          persistenceKey: 'role_list_columns_state',
+        }}
         actionRef={actionRef}
         rowKey="guid"
         request={async (params) => {

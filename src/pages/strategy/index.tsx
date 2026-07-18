@@ -135,6 +135,10 @@ const StrategyList: React.FC = () => {
             defaultMessage="Strategy List"
           />
         }
+        columnsState={{
+          persistenceType: 'localStorage',
+          persistenceKey: 'strategy_list_columns_state',
+        }}
         actionRef={actionRef}
         rowKey="guid"
         request={async (params) => {

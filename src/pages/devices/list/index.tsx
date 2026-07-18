@@ -329,6 +329,10 @@ const DeviceList: React.FC<DeviceListProps> = ({
               defaultMessage="Device List"
             />
           }
+          columnsState={{
+            persistenceType: 'localStorage',
+            persistenceKey: 'device_list_columns_state',
+          }}
           actionRef={actionRef}
           rowKey="guid"
           rowSelection={{

@@ -1188,6 +1188,10 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
               />
             )
           }
+          columnsState={{
+            persistenceType: 'localStorage',
+            persistenceKey: 'personal_address_book_columns_state',
+          }}
           actionRef={actionRef}
           rowKey="id"
           loading={abLoading}

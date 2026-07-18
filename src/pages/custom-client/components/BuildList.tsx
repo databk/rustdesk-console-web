@@ -298,6 +298,10 @@ const BuildList: React.FC<BuildListProps> = ({
           )}
         </Space>
       }
+      columnsState={{
+        persistenceType: 'localStorage',
+        persistenceKey: 'build_list_columns_state',
+      }}
       actionRef={actionRef}
       rowKey="uuid"
       search={false}

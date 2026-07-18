@@ -177,6 +177,10 @@ const OidcProviderList: React.FC = () => {
             defaultMessage="OIDC Providers"
           />
         }
+        columnsState={{
+          persistenceType: 'localStorage',
+          persistenceKey: 'oidc_provider_list_columns_state',
+        }}
         actionRef={actionRef}
         rowKey="guid"
         request={async (params) => {

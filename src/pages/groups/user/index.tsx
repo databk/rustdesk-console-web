@@ -244,6 +244,10 @@ const UserGroupList: React.FC = () => {
             defaultMessage="User Group List"
           />
         }
+        columnsState={{
+          persistenceType: 'localStorage',
+          persistenceKey: 'user_group_list_columns_state',
+        }}
         actionRef={actionRef}
         rowKey="guid"
         request={async (params) => {
