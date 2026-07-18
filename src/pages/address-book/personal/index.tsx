@@ -1246,7 +1246,7 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
                   >
                     <FormattedMessage
                       id="pages.addressBook.addPeer"
-                      defaultMessage="Add by RustDesk ID"
+                      defaultMessage="Add by ID"
                     />
                   </Button>,
                   <Button key="recycle" icon={<DeleteOutlined />}>
@@ -1335,7 +1335,7 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
           title={
             <FormattedMessage
               id="pages.addressBook.addPeer"
-              defaultMessage="Add by RustDesk ID"
+              defaultMessage="Add by ID"
             />
           }
           open={addPeerModalVisible}
@@ -1586,7 +1586,6 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
           <DeviceSelectTable
             selectedRowKeys={selectedDeviceKeys}
             onSelectionChange={setSelectedDeviceKeys}
-            defaultSearchCollapsed={false}
           />
         </Modal>
       </PageContainer>

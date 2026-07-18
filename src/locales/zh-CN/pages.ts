@@ -85,7 +85,7 @@ export default {
   'pages.addressBook.currentAddressBook': '地址簿',
   'pages.addressBook.myAddressBook': '我的地址簿',
   'pages.addressBook.loadFailed': '加载地址簿失败',
-  'pages.addressBook.addPeer': '按 RustDesk ID 添加',
+  'pages.addressBook.addPeer': '按 ID 添加',
   'pages.addressBook.addTag': '添加标签',
   'pages.addressBook.tagName': '标签名称',
   'pages.addressBook.tagAdded': '标签已添加',

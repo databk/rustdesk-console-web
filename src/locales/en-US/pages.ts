@@ -96,7 +96,7 @@ export default {
   'pages.addressBook.currentAddressBook': 'Address book',
   'pages.addressBook.myAddressBook': 'My address book',
   'pages.addressBook.loadFailed': 'Failed to load address books',
-  'pages.addressBook.addPeer': 'Add by RustDesk ID',
+  'pages.addressBook.addPeer': 'Add by ID',
   'pages.addressBook.addTag': 'Add Tag',
   'pages.addressBook.tagName': 'Tag Name',
   'pages.addressBook.tagAdded': 'Tag added',

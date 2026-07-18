@@ -100,7 +100,7 @@ export default {
   'pages.addressBook.currentAddressBook': 'Catálogo de endereços',
   'pages.addressBook.myAddressBook': 'Meu catálogo de endereços',
   'pages.addressBook.loadFailed': 'Falha ao carregar catálogos de endereços',
-  'pages.addressBook.addPeer': 'Adicionar por RustDesk ID',
+  'pages.addressBook.addPeer': 'Adicionar por ID',
   'pages.addressBook.addTag': 'Adicionar Tag',
   'pages.addressBook.tagName': 'Nome da Tag',
   'pages.addressBook.tagAdded': 'Tag adicionada',
