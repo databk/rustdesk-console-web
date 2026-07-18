@@ -584,12 +584,7 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
 
   const columns: ProColumns<API.PeerItem>[] = [
     {
-      title: (
-        <FormattedMessage
-          id="pages.addressBook.rustDeskId"
-          defaultMessage="RustDesk ID"
-        />
-      ),
+      title: <FormattedMessage id="pages.common.id" defaultMessage="ID" />,
       dataIndex: 'id',
       width: '15%',
       ellipsis: true,
@@ -1359,17 +1354,14 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
             <Form.Item
               name="id"
               label={
-                <FormattedMessage
-                  id="pages.addressBook.rustDeskId"
-                  defaultMessage="RustDesk ID"
-                />
+                <FormattedMessage id="pages.common.id" defaultMessage="ID" />
               }
               rules={[
                 {
                   required: true,
                   message: intl.formatMessage({
-                    id: 'pages.addressBook.pleaseEnterRustDeskId',
-                    defaultMessage: 'Please enter RustDesk ID',
+                    id: 'pages.common.pleaseEnterId',
+                    defaultMessage: 'Please enter ID',
                   }),
                 },
               ]}
@@ -1451,10 +1443,7 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
             <Form.Item
               name="id"
               label={
-                <FormattedMessage
-                  id="pages.addressBook.rustDeskId"
-                  defaultMessage="RustDesk ID"
-                />
+                <FormattedMessage id="pages.common.id" defaultMessage="ID" />
               }
             >
               <Text>{editingPeer?.id}</Text>

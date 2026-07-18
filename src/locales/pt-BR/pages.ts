@@ -137,8 +137,6 @@ export default {
   'pages.addressBook.deletePeerConfirm':
     'Tem certeza de que deseja remover este contato?',
   'pages.addressBook.import': 'Importar de Dispositivos',
-  'pages.addressBook.rustDeskId': 'RustDesk ID',
-  'pages.addressBook.pleaseEnterRustDeskId': 'Informe o RustDesk ID',
   'pages.addressBook.recycleBin': 'Lixeira',
   'pages.deviceGroups.list': 'Grupos de Dispositivos',
   'pages.deviceGroups.name': 'Nome',
@@ -490,7 +488,7 @@ export default {
   'pages.dashboard.status': 'Status',
   'pages.dashboard.time': 'Hora',
   'pages.common.pleaseEnterName': 'Por favor, informe o nome',
-  'pages.common.pleaseEnterPeerId': 'Por favor, informe o ID do dispositivo',
+  'pages.common.pleaseEnterId': 'Por favor, informe o ID',
   'pages.common.pleaseEnterTagName': 'Por favor, informe o nome da tag',
   'pages.common.pleaseEnterUsername': 'Por favor, informe o nome de usuário',
   'pages.common.pleaseEnterEmail': 'Por favor, informe o e-mail',
