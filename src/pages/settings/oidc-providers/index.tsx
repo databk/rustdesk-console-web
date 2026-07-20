@@ -175,11 +175,8 @@ const OidcProviderList: React.FC = () => {
     newDataSource: API.OidcProvider[],
   ) => {
     try {
-      const items = newDataSource.map((item, index) => ({
-        guid: item.guid,
-        priority: index + 1,
-      }));
-      await sortOidcProviderList({ items });
+      const guids = newDataSource.map((item) => item.guid);
+      await sortOidcProviderList(guids);
       actionRef.current?.reload();
     } catch (_error) {
       msgApi.error(

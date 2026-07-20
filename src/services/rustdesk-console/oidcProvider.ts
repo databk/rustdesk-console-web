@@ -66,11 +66,9 @@ export async function testOidcProvider(guid: string) {
   });
 }
 
-export async function sortOidcProviderList(
-  data: API.SortOidcProviderListParams,
-) {
+export async function sortOidcProviderList(guids: string[]) {
   return request('/api/oidc-providers/sort', {
     method: 'PATCH',
-    data,
+    data: guids,
   });
 }

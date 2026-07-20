@@ -788,10 +788,6 @@ declare namespace API {
     enabled: boolean;
   };
 
-  type SortOidcProviderListParams = {
-    items: { guid: string; priority: number }[];
-  };
-
   type OidcTestEndpoints = {
     authorization_endpoint: string;
     token_endpoint: string;
