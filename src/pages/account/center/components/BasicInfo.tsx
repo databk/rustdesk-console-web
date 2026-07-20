@@ -68,6 +68,17 @@ const BasicInfo: React.FC = () => {
       <Spin spinning={saving}>
         <Form form={form} layout="vertical">
           <Form.Item
+            label={
+              <FormattedMessage
+                id="pages.account.basicInfo.name"
+                defaultMessage="Username"
+              />
+            }
+          >
+            <Input value={currentUser?.name} disabled />
+          </Form.Item>
+
+          <Form.Item
             name="display_name"
             label={
               <FormattedMessage
@@ -82,17 +93,6 @@ const BasicInfo: React.FC = () => {
                 defaultMessage: 'Enter display name',
               })}
             />
-          </Form.Item>
-
-          <Form.Item
-            label={
-              <FormattedMessage
-                id="pages.account.basicInfo.name"
-                defaultMessage="Username"
-              />
-            }
-          >
-            <Input value={currentUser?.name} disabled />
           </Form.Item>
 
           <Form.Item
