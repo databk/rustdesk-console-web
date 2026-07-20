@@ -371,6 +371,7 @@ const UserList: React.FC = () => {
     setEditingUser(record);
     editForm.setFieldsValue({
       name: record.name,
+      display_name: record.display_name,
       email: record.email,
       note: record.note,
       status: record.status,
@@ -424,25 +425,34 @@ const UserList: React.FC = () => {
         <FormattedMessage id="pages.users.name" defaultMessage="Username" />
       ),
       dataIndex: 'name',
-      width: 150,
+      width: 180,
       ellipsis: true,
       render: (_: unknown, record: API.UserItem) => (
-        <Space>
-          <span>{record.name}</span>
-          {record.is_admin && (
-            <Tooltip
-              title={intl.formatMessage({
-                id: 'pages.users.admin',
-                defaultMessage: 'Admin',
-              })}
-            >
-              <CrownOutlined style={{ color: '#faad14' }} />
-            </Tooltip>
-          )}
-          {record.name === currentUser?.name && (
-            <Tag color="blue">
-              <FormattedMessage id="pages.users.me" defaultMessage="Me" />
-            </Tag>
+        <Space direction="vertical" size={0}>
+          <Space>
+            <span style={{ fontWeight: 500 }}>
+              {record.display_name || record.name}
+            </span>
+            {record.is_admin && (
+              <Tooltip
+                title={intl.formatMessage({
+                  id: 'pages.users.admin',
+                  defaultMessage: 'Admin',
+                })}
+              >
+                <CrownOutlined style={{ color: '#faad14' }} />
+              </Tooltip>
+            )}
+            {record.name === currentUser?.name && (
+              <Tag color="blue">
+                <FormattedMessage id="pages.users.me" defaultMessage="Me" />
+              </Tag>
+            )}
+          </Space>
+          {record.display_name && (
+            <span style={{ color: '#8c8c8c', fontSize: 12 }}>
+              @{record.name}
+            </span>
           )}
         </Space>
       ),
@@ -841,6 +851,17 @@ const UserList: React.FC = () => {
             <Input />
           </Form.Item>
           <Form.Item
+            name="display_name"
+            label={
+              <FormattedMessage
+                id="pages.users.displayName"
+                defaultMessage="Display Name"
+              />
+            }
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
             name="password"
             label={
               <FormattedMessage
@@ -946,6 +967,17 @@ const UserList: React.FC = () => {
             <Input />
           </Form.Item>
           <Form.Item
+            name="display_name"
+            label={
+              <FormattedMessage
+                id="pages.users.displayName"
+                defaultMessage="Display Name"
+              />
+            }
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
             name="email"
             label={
               <FormattedMessage id="pages.users.email" defaultMessage="Email" />
@@ -1035,6 +1067,17 @@ const UserList: React.FC = () => {
                 }),
               },
             ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="display_name"
+            label={
+              <FormattedMessage
+                id="pages.users.displayName"
+                defaultMessage="Display Name"
+              />
+            }
           >
             <Input />
           </Form.Item>

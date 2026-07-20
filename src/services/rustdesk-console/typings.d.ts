@@ -1,6 +1,7 @@
 declare namespace API {
   type CurrentUser = {
     name?: string;
+    display_name?: string;
     email?: string;
     note?: string;
     avatar?: string;
@@ -22,7 +23,7 @@ declare namespace API {
   };
 
   type UpdateProfileParams = {
-    name?: string;
+    display_name?: string;
     email?: string;
     note?: string;
   };
@@ -107,6 +108,7 @@ declare namespace API {
   type UserItem = {
     guid: string;
     name: string;
+    display_name?: string;
     email: string;
     note: string;
     status: number; // -1=未验证, 0=禁用, 1=正常
@@ -124,6 +126,7 @@ declare namespace API {
   type CreateUserParams = {
     name: string;
     password: string;
+    display_name?: string;
     email?: string;
     note?: string;
     user_group_guid?: string;
@@ -132,12 +135,14 @@ declare namespace API {
   type InviteUserParams = {
     email: string;
     name: string;
+    display_name?: string;
     note?: string;
     user_group_guid?: string;
   };
 
   type UpdateUserParams = {
     name?: string;
+    display_name?: string;
     email?: string;
     note?: string;
     status?: number;

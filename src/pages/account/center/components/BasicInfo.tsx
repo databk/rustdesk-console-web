@@ -14,7 +14,7 @@ const BasicInfo: React.FC = () => {
   useEffect(() => {
     if (currentUser) {
       form.setFieldsValue({
-        name: currentUser.name,
+        display_name: currentUser.display_name,
         email: currentUser.email,
         note: currentUser.note,
       });
@@ -68,29 +68,31 @@ const BasicInfo: React.FC = () => {
       <Spin spinning={saving}>
         <Form form={form} layout="vertical">
           <Form.Item
-            name="name"
+            name="display_name"
+            label={
+              <FormattedMessage
+                id="pages.account.basicInfo.displayName"
+                defaultMessage="Display Name"
+              />
+            }
+          >
+            <Input
+              placeholder={intl.formatMessage({
+                id: 'pages.account.basicInfo.displayNamePlaceholder',
+                defaultMessage: 'Enter display name',
+              })}
+            />
+          </Form.Item>
+
+          <Form.Item
             label={
               <FormattedMessage
                 id="pages.account.basicInfo.name"
                 defaultMessage="Username"
               />
             }
-            rules={[
-              {
-                required: true,
-                message: intl.formatMessage({
-                  id: 'pages.common.pleaseEnterUsername',
-                  defaultMessage: 'Please enter username',
-                }),
-              },
-            ]}
           >
-            <Input
-              placeholder={intl.formatMessage({
-                id: 'pages.common.pleaseEnterUsername',
-                defaultMessage: 'Please enter username',
-              })}
-            />
+            <Input value={currentUser?.name} disabled />
           </Form.Item>
 
           <Form.Item

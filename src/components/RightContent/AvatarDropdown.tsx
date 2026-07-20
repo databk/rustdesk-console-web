@@ -22,7 +22,11 @@ export type GlobalHeaderRightProps = {
 export const AvatarName = () => {
   const { initialState } = useModel('@@initialState');
   const { currentUser } = initialState || {};
-  return <span className="anticon">{currentUser?.name}</span>;
+  return (
+    <span className="anticon">
+      {currentUser?.display_name || currentUser?.name}
+    </span>
+  );
 };
 
 const useStyles = createStyles(({ token }) => {
@@ -110,7 +114,7 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({
       key: 'center',
       icon: <UserOutlined />,
       disabled: true,
-      label: currentUser.email || currentUser.name,
+      label: currentUser.email || currentUser.display_name || currentUser.name,
     },
     {
       type: 'divider' as const,
