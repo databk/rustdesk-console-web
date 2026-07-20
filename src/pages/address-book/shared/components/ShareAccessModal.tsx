@@ -239,9 +239,7 @@ const ShareAccessModal: React.FC<ShareAccessModalProps> = ({
       new Map(
         users.map((user) => [
           user.guid,
-          user.display_name
-            ? `${user.display_name} (${user.name})`
-            : user.name,
+          user.display_name ? `${user.display_name} (${user.name})` : user.name,
         ]),
       ),
     [users],
@@ -315,9 +313,13 @@ const ShareAccessModal: React.FC<ShareAccessModalProps> = ({
           defaultMessage: 'All users',
         });
       case 'user':
-        return (record.user && userNames.get(record.user)) || record.user || '-';
+        return (
+          (record.user && userNames.get(record.user)) || record.user || '-'
+        );
       case 'group':
-        return (record.group && groupNames.get(record.group)) || record.group || '-';
+        return (
+          (record.group && groupNames.get(record.group)) || record.group || '-'
+        );
       default:
         return '-';
     }
@@ -469,8 +471,7 @@ const ShareAccessModal: React.FC<ShareAccessModalProps> = ({
               defaultMessage: 'Target',
             }),
             key: 'target',
-            render: (_: unknown, record: API.RuleItem) =>
-              renderTarget(record),
+            render: (_: unknown, record: API.RuleItem) => renderTarget(record),
           },
           {
             title: intl.formatMessage({

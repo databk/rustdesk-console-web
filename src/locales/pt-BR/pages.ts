@@ -325,19 +325,14 @@ export default {
     'Todos os usuários terão acesso a este catálogo de endereços',
   'pages.addressBook.allUsers': 'Todos os usuários',
   'pages.addressBook.addAccess': 'Adicionar acesso',
-  'pages.addressBook.accessLoadFailed':
-    'Falha ao carregar regras de acesso',
+  'pages.addressBook.accessLoadFailed': 'Falha ao carregar regras de acesso',
   'pages.addressBook.accessAdded': 'Regra de acesso adicionada',
-  'pages.addressBook.accessAddFailed':
-    'Falha ao adicionar regra de acesso',
+  'pages.addressBook.accessAddFailed': 'Falha ao adicionar regra de acesso',
   'pages.addressBook.accessUpdated': 'Regra de acesso atualizada',
-  'pages.addressBook.accessUpdateFailed':
-    'Falha ao atualizar regra de acesso',
+  'pages.addressBook.accessUpdateFailed': 'Falha ao atualizar regra de acesso',
   'pages.addressBook.accessDeleted': 'Regra de acesso excluída',
-  'pages.addressBook.accessDeleteFailed':
-    'Falha ao excluir regra de acesso',
-  'pages.addressBook.accessDeleteConfirm':
-    'Excluir esta regra de acesso?',
+  'pages.addressBook.accessDeleteFailed': 'Falha ao excluir regra de acesso',
+  'pages.addressBook.accessDeleteConfirm': 'Excluir esta regra de acesso?',
   'pages.roles.list': 'Lista de Funções',
   'pages.roles.name': 'Nome da Função',
   'pages.roles.note': 'Observação',
