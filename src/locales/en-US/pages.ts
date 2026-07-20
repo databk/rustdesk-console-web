@@ -577,6 +577,7 @@ export default {
     'Are you sure to disable this provider?',
   'pages.oidcProviders.testFailed': 'Failed to test OIDC connection',
   'pages.oidcProviders.fetchDetailFailed': 'Failed to fetch provider details',
+  'pages.oidcProviders.sortFailed': 'Failed to update provider order',
   'pages.account.tab.basic': 'Basic Information',
   'pages.account.tab.avatar': 'Avatar',
   'pages.account.tab.security': 'Security',

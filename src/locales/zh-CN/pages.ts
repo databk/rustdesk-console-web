@@ -552,6 +552,7 @@ export default {
   'pages.oidcProviders.disableConfirm': '确定要禁用此提供商吗？',
   'pages.oidcProviders.testFailed': '测试 OIDC 连接失败',
   'pages.oidcProviders.fetchDetailFailed': '获取提供商详情失败',
+  'pages.oidcProviders.sortFailed': '更新提供商排序失败',
   'pages.account.tab.basic': '基本信息',
   'pages.account.tab.avatar': '头像设置',
   'pages.account.tab.security': '安全设置',

@@ -1,6 +1,6 @@
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType } from '@ant-design/pro-components';
-import { PageContainer, ProTable } from '@ant-design/pro-components';
+import { DragSortTable, PageContainer } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
 import { App, Button } from 'antd';
 import React, { useRef, useState } from 'react';
@@ -9,6 +9,7 @@ import {
   deleteOidcProvider,
   getOidcProvider,
   getOidcProviderList,
+  sortOidcProviderList,
   testOidcProvider,
   toggleOidcProvider,
   updateOidcProvider,
@@ -168,9 +169,32 @@ const OidcProviderList: React.FC = () => {
     testingGuid,
   });
 
+  const handleDragSortEnd = async (
+    _beforeIndex: number,
+    _afterIndex: number,
+    newDataSource: API.OidcProvider[],
+  ) => {
+    try {
+      const items = newDataSource.map((item, index) => ({
+        guid: item.guid,
+        priority: index + 1,
+      }));
+      await sortOidcProviderList({ items });
+      actionRef.current?.reload();
+    } catch (_error) {
+      msgApi.error(
+        intl.formatMessage({
+          id: 'pages.oidcProviders.sortFailed',
+          defaultMessage: 'Failed to update provider order',
+        }),
+      );
+      actionRef.current?.reload();
+    }
+  };
+
   return (
     <PageContainer>
-      <ProTable<API.OidcProvider>
+      <DragSortTable<API.OidcProvider>
         headerTitle={
           <FormattedMessage
             id="pages.oidcProviders.list"
@@ -183,6 +207,8 @@ const OidcProviderList: React.FC = () => {
         }}
         actionRef={actionRef}
         rowKey="guid"
+        dragSortKey="sort"
+        onDragSortEnd={handleDragSortEnd}
         request={async (params) => {
           const result = await getOidcProviderList({
             current: params.current,

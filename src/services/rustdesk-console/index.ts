@@ -83,6 +83,7 @@ export {
   deleteOidcProvider,
   toggleOidcProvider,
   testOidcProvider,
+  sortOidcProviderList,
 } from './oidcProvider';
 export {
   getStrategyList,

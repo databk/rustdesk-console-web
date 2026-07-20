@@ -19,12 +19,6 @@ const OidcProviderColumns = (
 
   return [
     {
-      title: '',
-      dataIndex: 'index',
-      valueType: 'indexBorder',
-      width: 48,
-    },
-    {
       title: (
         <FormattedMessage
           id="pages.oidcProviders.name"
@@ -79,18 +73,6 @@ const OidcProviderColumns = (
           {record.clientId}
         </Tooltip>
       ),
-    },
-    {
-      title: (
-        <FormattedMessage
-          id="pages.oidcProviders.priority"
-          defaultMessage="Priority"
-        />
-      ),
-      dataIndex: 'priority',
-      width: 80,
-      search: false,
-      align: 'center',
     },
     {
       title: (
