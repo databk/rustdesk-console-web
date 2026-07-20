@@ -12,7 +12,13 @@ import {
   ThemeToggle,
 } from '@/components';
 import { currentUser as queryCurrentUser } from '@/services/rustdesk-console/auth';
+import { getGeneralSettings } from '@/services/rustdesk-console/settings';
 import { getToken, TOKEN_KEY } from '@/utils/auth';
+import {
+  DEFAULT_GENERAL_SETTINGS,
+  getRuntimePageTitle,
+  getUsernameWatermark,
+} from '@/utils/generalSettings';
 import defaultSettings from '../config/defaultSettings';
 import { errorConfig } from './requestErrorConfig';
 import '@ant-design/v5-patch-for-react-19';
@@ -47,6 +53,7 @@ export async function getInitialState(): Promise<{
   currentUser?: API.CurrentUser;
   loading?: boolean;
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
+  generalSettings?: API.GeneralSettings;
 }> {
   const fetchUserInfo = async () => {
     try {
@@ -65,19 +72,27 @@ export async function getInitialState(): Promise<{
     ...(defaultSettings as Partial<LayoutSettings>),
     ...storedTheme,
   };
+  const generalSettingsPromise = getGeneralSettings({
+    skipErrorHandler: true,
+  }).catch(() => DEFAULT_GENERAL_SETTINGS);
 
   const { location } = history;
   if (![loginPath].includes(location.pathname) && getToken()) {
-    const currentUser = await fetchUserInfo();
+    const [currentUser, generalSettings] = await Promise.all([
+      fetchUserInfo(),
+      generalSettingsPromise,
+    ]);
     return {
       fetchUserInfo,
       currentUser,
       settings: initialSettings,
+      generalSettings,
     };
   }
   return {
     fetchUserInfo,
     settings: initialSettings,
+    generalSettings: await generalSettingsPromise,
   };
 }
 
@@ -117,7 +132,15 @@ export const layout: RunTimeLayoutConfig = ({
   initialState,
   setInitialState,
 }) => {
+  const generalSettings =
+    initialState?.generalSettings || DEFAULT_GENERAL_SETTINGS;
+  const waterMarkProps = getUsernameWatermark(
+    generalSettings,
+    initialState?.currentUser?.name,
+  );
+
   return {
+    ...initialState?.settings,
     actionsRender: () => [
       <ThemeToggle key="ThemeToggle" />,
       <SelectLang key="SelectLang" />,
@@ -129,9 +152,13 @@ export const layout: RunTimeLayoutConfig = ({
         return <AvatarDropdown>{avatarChildren}</AvatarDropdown>;
       },
     },
-    waterMarkProps: {
-      content: initialState?.currentUser?.name,
-    },
+    ...(waterMarkProps ? { waterMarkProps } : {}),
+    title: generalSettings.siteName,
+    pageTitleRender: (_props, defaultPageTitle) =>
+      getRuntimePageTitle(
+        typeof defaultPageTitle === 'string' ? defaultPageTitle : undefined,
+        generalSettings.siteName,
+      ),
     footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;
@@ -171,7 +198,6 @@ export const layout: RunTimeLayoutConfig = ({
         </>
       );
     },
-    ...initialState?.settings,
   };
 };
 

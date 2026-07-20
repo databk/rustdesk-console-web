@@ -4,8 +4,17 @@ import React, { type CSSProperties } from 'react';
 
 const { Text } = Typography;
 
-const getProgressColor = (value: number) =>
-  value > 80 ? '#f5222d' : value > 60 ? '#faad14' : '#52c41a';
+const getProgressColor = (value: number | null) =>
+  value === null
+    ? '#d9d9d9'
+    : value > 80
+      ? '#f5222d'
+      : value > 60
+        ? '#faad14'
+        : '#52c41a';
+
+const formatPercentage = (value: number | null) =>
+  value === null ? '--' : `${value}%`;
 
 const formatUptime = (seconds: number) => {
   const days = Math.floor(seconds / 86400);
@@ -20,10 +29,10 @@ interface SystemStatusProps {
 }
 
 const SystemStatus: React.FC<SystemStatusProps> = ({ systemStatus, style }) => {
-  const cpu = systemStatus?.cpu || 0;
-  const memory = systemStatus?.memory || 0;
-  const disk = systemStatus?.disk || 0;
-  const uptime = systemStatus?.uptime || 0;
+  const cpu = systemStatus?.cpu ?? null;
+  const memory = systemStatus?.memory ?? null;
+  const disk = systemStatus?.disk ?? null;
+  const uptime = systemStatus?.uptime ?? null;
 
   return (
     <Card
@@ -50,11 +59,11 @@ const SystemStatus: React.FC<SystemStatusProps> = ({ systemStatus, style }) => {
               <FormattedMessage id="pages.dashboard.cpu" defaultMessage="CPU" />
             </Text>
             <Text style={{ fontSize: 12, color: getProgressColor(cpu) }}>
-              {cpu}%
+              {formatPercentage(cpu)}
             </Text>
           </div>
           <Progress
-            percent={cpu}
+            percent={cpu ?? 0}
             showInfo={false}
             strokeColor={getProgressColor(cpu)}
             size="small"
@@ -75,11 +84,11 @@ const SystemStatus: React.FC<SystemStatusProps> = ({ systemStatus, style }) => {
               />
             </Text>
             <Text style={{ fontSize: 12, color: getProgressColor(memory) }}>
-              {memory}%
+              {formatPercentage(memory)}
             </Text>
           </div>
           <Progress
-            percent={memory}
+            percent={memory ?? 0}
             showInfo={false}
             strokeColor={getProgressColor(memory)}
             size="small"
@@ -100,11 +109,11 @@ const SystemStatus: React.FC<SystemStatusProps> = ({ systemStatus, style }) => {
               />
             </Text>
             <Text style={{ fontSize: 12, color: getProgressColor(disk) }}>
-              {disk}%
+              {formatPercentage(disk)}
             </Text>
           </div>
           <Progress
-            percent={disk}
+            percent={disk ?? 0}
             showInfo={false}
             strokeColor={getProgressColor(disk)}
             size="small"
@@ -122,7 +131,7 @@ const SystemStatus: React.FC<SystemStatusProps> = ({ systemStatus, style }) => {
               id="pages.dashboard.uptime"
               defaultMessage="Uptime"
             />
-            : {formatUptime(uptime)}
+            : {uptime === null ? '--' : formatUptime(uptime)}
           </Text>
         </div>
       </Space>

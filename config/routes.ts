@@ -177,7 +177,13 @@ export default [
     routes: [
       {
         path: '/settings',
-        redirect: '/settings/smtp',
+        redirect: '/settings/general',
+      },
+      {
+        name: 'general',
+        icon: 'setting',
+        path: '/settings/general',
+        component: './settings',
       },
       {
         name: 'smtp',

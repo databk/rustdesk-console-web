@@ -690,11 +690,16 @@ declare namespace API {
       status: 'success' | 'failed' | 'warning';
     }>;
     systemStatus: {
-      cpu: number;
-      memory: number;
-      disk: number;
-      uptime: number;
+      cpu: number | null;
+      memory: number | null;
+      disk: number | null;
+      uptime: number | null;
     };
+  };
+
+  type GeneralSettings = {
+    siteName: string;
+    watermarkEnabled: boolean;
   };
 
   type SMTPConfig = {

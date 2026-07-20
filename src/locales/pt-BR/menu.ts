@@ -22,6 +22,7 @@ export default {
   'menu.groups.user': 'Grupos de Usuários',
   'menu.groups.device': 'Grupos de Dispositivos',
   'menu.settings': 'Configurações',
+  'menu.settings.general': 'Geral',
   'menu.settings.smtp': 'Configuração SMTP',
   'menu.settings.oidcProviders': 'Provedores OIDC',
   'menu.settings.ldap': 'Configuração LDAP',

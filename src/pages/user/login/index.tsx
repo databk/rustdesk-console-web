@@ -44,7 +44,7 @@ import {
   getLoginOptions,
   oidcAuth,
 } from '@/services/rustdesk-console/auth';
-import Settings from '../../../../config/defaultSettings';
+import { DEFAULT_GENERAL_SETTINGS } from '@/utils/generalSettings';
 
 // --- Auth step types ---
 type AuthStep = 'account' | 'email_check' | 'tfa_check';
@@ -405,11 +405,14 @@ const Login: React.FC = () => {
   );
   const [submitting, setSubmitting] = useState(false);
   const [oidcOptions, setOidcOptions] = useState<API.OidcLoginInfo[]>([]);
-  const { setInitialState } = useModel('@@initialState');
+  const { initialState, setInitialState } = useModel('@@initialState');
   const { styles } = useStyles();
   const { message } = App.useApp();
   const intl = useIntl();
   const [accountForm] = Form.useForm();
+  const siteName =
+    initialState?.generalSettings?.siteName ||
+    DEFAULT_GENERAL_SETTINGS.siteName;
 
   const isVerifyStep = authStep === 'email_check' || authStep === 'tfa_check';
 
@@ -686,7 +689,7 @@ const Login: React.FC = () => {
       <Helmet>
         <title>
           {intl.formatMessage({ id: 'menu.login', defaultMessage: 'Login' })}
-          {Settings.title && ` - ${Settings.title}`}
+          {` - ${siteName}`}
         </title>
       </Helmet>
       <Lang />
@@ -695,7 +698,7 @@ const Login: React.FC = () => {
           form={accountForm}
           contentStyle={{ minWidth: 280, maxWidth: '75vw' }}
           logo={<img alt="logo" src="/logo.svg" />}
-          title="RustDesk Console"
+          title={siteName}
           subTitle="RustDesk Remote Desktop Management Console"
           initialValues={{ rememberMe }}
           onValuesChange={(values) => {
