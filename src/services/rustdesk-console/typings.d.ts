@@ -766,7 +766,6 @@ declare namespace API {
     userinfoEndpoint?: string;
     jwksUri?: string;
     enabled?: boolean;
-    priority?: number;
   };
 
   type UpdateOidcProviderParams = {
@@ -781,7 +780,6 @@ declare namespace API {
     userinfoEndpoint?: string;
     jwksUri?: string;
     enabled?: boolean;
-    priority?: number;
   };
 
   type ToggleOidcProviderParams = {

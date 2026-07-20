@@ -20,10 +20,7 @@ const OidcProviderColumns = (
   return [
     {
       title: (
-        <FormattedMessage
-          id="pages.oidcProviders.sort"
-          defaultMessage="Sort"
-        />
+        <FormattedMessage id="pages.oidcProviders.sort" defaultMessage="Sort" />
       ),
       dataIndex: 'sort',
       width: 60,
