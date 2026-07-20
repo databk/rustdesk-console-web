@@ -24,7 +24,7 @@ import {
   getWebSharedAddressBooks,
   updateSharedAddressBook,
 } from '@/services/rustdesk-console/addressBook';
-import UserGroupAccessModal from './components/UserGroupAccessModal';
+import ShareAccessModal from './components/ShareAccessModal';
 
 const SharedAddressBook: React.FC = () => {
   const intl = useIntl();
@@ -147,15 +147,15 @@ const SharedAddressBook: React.FC = () => {
               record.is_owner ? (
                 <Space size={0} split={<Divider type="vertical" />}>
                   <Button
-                    key="groupAccess"
+                    key="shareAccess"
                     type="link"
                     size="small"
                     icon={<ShareAltOutlined />}
                     onClick={() => setAccessRecord(record)}
                   >
                     <FormattedMessage
-                      id="pages.addressBook.groupAccess"
-                      defaultMessage="Group access"
+                      id="pages.addressBook.shareAccess"
+                      defaultMessage="Share"
                     />
                   </Button>
                   <Button
@@ -419,7 +419,7 @@ const SharedAddressBook: React.FC = () => {
         </Form>
       </Modal>
 
-      <UserGroupAccessModal
+      <ShareAccessModal
         open={!!accessRecord}
         addressBook={accessRecord}
         onOpenChange={(open) => !open && setAccessRecord(null)}
