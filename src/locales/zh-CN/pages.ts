@@ -514,6 +514,7 @@ export default {
   'pages.users.admin': '管理员',
   'pages.users.me': '我',
   'pages.oidcProviders.list': 'OIDC 提供商列表',
+  'pages.oidcProviders.sort': '排序',
   'pages.oidcProviders.name': '提供商名称',
   'pages.oidcProviders.type': '类型',
   'pages.oidcProviders.issuer': '发行者 URL',

@@ -566,6 +566,7 @@ export default {
   'pages.users.admin': 'Administrador',
   'pages.users.me': 'Eu',
   'pages.oidcProviders.list': 'Provedores OIDC',
+  'pages.oidcProviders.sort': 'Ordenar',
   'pages.oidcProviders.name': 'Nome do Provedor',
   'pages.oidcProviders.type': 'Tipo',
   'pages.oidcProviders.issuer': 'URL do Emissor',

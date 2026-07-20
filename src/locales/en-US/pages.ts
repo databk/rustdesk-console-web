@@ -538,6 +538,7 @@ export default {
   'pages.users.admin': 'Admin',
   'pages.users.me': 'Me',
   'pages.oidcProviders.list': 'OIDC Providers',
+  'pages.oidcProviders.sort': 'Sort',
   'pages.oidcProviders.name': 'Provider Name',
   'pages.oidcProviders.type': 'Type',
   'pages.oidcProviders.issuer': 'Issuer URL',

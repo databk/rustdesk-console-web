@@ -21,6 +21,17 @@ const OidcProviderColumns = (
     {
       title: (
         <FormattedMessage
+          id="pages.oidcProviders.sort"
+          defaultMessage="Sort"
+        />
+      ),
+      dataIndex: 'sort',
+      width: 60,
+      search: false,
+    },
+    {
+      title: (
+        <FormattedMessage
           id="pages.oidcProviders.name"
           defaultMessage="Provider Name"
         />
