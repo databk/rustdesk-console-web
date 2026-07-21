@@ -81,7 +81,7 @@ const GeneralSettings: React.FC = () => {
           disabled={loading}
           initialValues={{
             siteName: DEFAULT_GENERAL_SETTINGS.siteName,
-            watermarkEnabled: true,
+            watermarkEnabled: DEFAULT_GENERAL_SETTINGS.watermarkEnabled,
           }}
           onFinish={handleSave}
           requiredMark={false}
