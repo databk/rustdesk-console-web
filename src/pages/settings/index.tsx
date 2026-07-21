@@ -7,7 +7,10 @@ import {
   getGeneralSettings,
   updateGeneralSettings,
 } from '@/services/rustdesk-console/settings';
-import { containsControlCharacters } from '@/utils/generalSettings';
+import {
+  containsControlCharacters,
+  DEFAULT_GENERAL_SETTINGS,
+} from '@/utils/generalSettings';
 
 const { Title } = Typography;
 
@@ -76,7 +79,10 @@ const GeneralSettings: React.FC = () => {
           form={form}
           layout="vertical"
           disabled={loading}
-          initialValues={{ watermarkEnabled: true }}
+          initialValues={{
+            siteName: DEFAULT_GENERAL_SETTINGS.siteName,
+            watermarkEnabled: true,
+          }}
           onFinish={handleSave}
           requiredMark={false}
         >
