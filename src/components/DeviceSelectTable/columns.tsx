@@ -174,7 +174,7 @@ export const getDeviceColumns = (options?: {
       ),
       dataIndex: 'device_group_name',
       ellipsis: true,
-      hideInSearch: true,
+      search: false,
       sorter: true,
       render: (_: unknown, record: API.DeviceItem) =>
         record.device_group_name || '-',

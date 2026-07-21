@@ -255,7 +255,7 @@ const FileAudit: React.FC = () => {
         <FormattedMessage id="pages.audits.remote" defaultMessage="Remote" />
       ),
       dataIndex: 'deviceId',
-      tip: intl.formatMessage({
+      tooltip: intl.formatMessage({
         id: 'pages.audits.remoteSearchTip',
         defaultMessage: 'Search by remote device ID (fuzzy match)',
       }),
@@ -272,11 +272,11 @@ const FileAudit: React.FC = () => {
         <FormattedMessage id="pages.audits.remote" defaultMessage="Remote" />
       ),
       dataIndex: 'deviceId',
-      tip: intl.formatMessage({
+      tooltip: intl.formatMessage({
         id: 'pages.audits.remoteTip',
         defaultMessage: 'Remotely controlled computer or terminal',
       }),
-      hideInSearch: true,
+      search: false,
       render: (_, record) => record.deviceId || '-',
     },
     {
@@ -343,7 +343,7 @@ const FileAudit: React.FC = () => {
       dataIndex: 'path',
       width: '30%',
       ellipsis: true,
-      tip: intl.formatMessage({
+      tooltip: intl.formatMessage({
         id: 'pages.audits.pathTip',
         defaultMessage: 'Path of Remote Device',
       }),

@@ -57,9 +57,9 @@
   "dependencies": {
     "@ant-design/icons": "^6.3.2",
     "@ant-design/plots": "^2.6.8",
-    "@ant-design/pro-components": "^2.8.10",
-    "antd": "^5.29.3",
-    "antd-style": "^3.7.1",
+    "@ant-design/pro-components": "^3.1.14-2",
+    "antd": "^6.5.1",
+    "antd-style": "^4.1.0",
     "bowser": "^2.14.1",
     "classnames": "^2.5.1",
     "dayjs": "^1.11.21",

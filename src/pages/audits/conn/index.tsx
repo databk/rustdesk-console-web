@@ -421,7 +421,7 @@ const ConnectionAudit: React.FC = () => {
         <FormattedMessage id="pages.audits.remote" defaultMessage="Remote" />
       ),
       dataIndex: 'deviceId',
-      tip: intl.formatMessage({
+      tooltip: intl.formatMessage({
         id: 'pages.audits.remoteSearchTip',
         defaultMessage: 'Search by remote device ID (fuzzy match)',
       }),
@@ -438,11 +438,11 @@ const ConnectionAudit: React.FC = () => {
         <FormattedMessage id="pages.audits.remote" defaultMessage="Remote" />
       ),
       dataIndex: 'deviceId',
-      tip: intl.formatMessage({
+      tooltip: intl.formatMessage({
         id: 'pages.audits.remoteTip',
         defaultMessage: 'Remotely controlled computer or terminal',
       }),
-      hideInSearch: true,
+      search: false,
       render: (_, record) => record.deviceId || '-',
     },
     {
