@@ -147,6 +147,7 @@ declare namespace API {
     note?: string;
     status?: number;
     is_admin?: boolean;
+    user_group_guid?: string;
   };
 
   type BatchUpdateUserStatusParams = {

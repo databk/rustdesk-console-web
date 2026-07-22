@@ -369,6 +369,7 @@ const UserList: React.FC = () => {
   // Open edit modal
   const openEditModal = (record: API.UserItem) => {
     setEditingUser(record);
+    void loadUserGroups();
     editForm.setFieldsValue({
       name: record.name,
       display_name: record.display_name,
@@ -376,6 +377,7 @@ const UserList: React.FC = () => {
       note: record.note,
       status: record.status,
       is_admin: record.is_admin,
+      user_group_guid: record.user_group_guid,
     });
     setEditModalVisible(true);
   };
@@ -541,6 +543,23 @@ const UserList: React.FC = () => {
     {
       title: (
         <FormattedMessage
+          id="pages.users.userGroup"
+          defaultMessage="User Group"
+        />
+      ),
+      dataIndex: 'user_group_name',
+      width: 140,
+      search: false,
+      render: (_: unknown, record: API.UserItem) => (
+        <Space>
+          <TeamOutlined />
+          <span>{record.user_group_name || '-'}</span>
+        </Space>
+      ),
+    },
+    {
+      title: (
+        <FormattedMessage
           id="pages.users.thirdAuthType"
           defaultMessage="Auth Type"
         />
@@ -626,23 +645,6 @@ const UserList: React.FC = () => {
               />
             </Button>
           </Popconfirm>
-        </Space>
-      ),
-    },
-    {
-      title: (
-        <FormattedMessage
-          id="pages.users.userGroup"
-          defaultMessage="User Group"
-        />
-      ),
-      dataIndex: 'user_group_name',
-      width: 140,
-      search: false,
-      render: (_: unknown, record: API.UserItem) => (
-        <Space>
-          <TeamOutlined />
-          <span>{record.user_group_name || '-'}</span>
         </Space>
       ),
     },
@@ -1152,6 +1154,30 @@ const UserList: React.FC = () => {
             valuePropName="checked"
           >
             <Switch />
+          </Form.Item>
+          <Form.Item
+            name="user_group_guid"
+            label={
+              <FormattedMessage
+                id="pages.users.userGroup"
+                defaultMessage="User Group"
+              />
+            }
+          >
+            <Select
+              allowClear
+              showSearch
+              optionFilterProp="label"
+              loading={userGroupsLoading}
+              placeholder={intl.formatMessage({
+                id: 'pages.users.selectUserGroup',
+                defaultMessage: 'Select user group',
+              })}
+              options={userGroups.map((group) => ({
+                label: group.name,
+                value: group.guid,
+              }))}
+            />
           </Form.Item>
         </Form>
       </Modal>
