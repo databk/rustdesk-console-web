@@ -1,7 +1,5 @@
 import { expect, test } from '@jest/globals';
-import {
-  getUsernameWatermark,
-} from './generalSettings';
+import { getUsernameWatermark } from './generalSettings';
 
 test('includes the username watermark only when enabled', () => {
   expect(

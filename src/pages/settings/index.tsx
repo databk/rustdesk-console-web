@@ -7,9 +7,7 @@ import {
   getGeneralSettings,
   updateGeneralSettings,
 } from '@/services/rustdesk-console/settings';
-import {
-  DEFAULT_GENERAL_SETTINGS,
-} from '@/utils/generalSettings';
+import { DEFAULT_GENERAL_SETTINGS } from '@/utils/generalSettings';
 
 const { Title } = Typography;
 
