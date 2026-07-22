@@ -22,7 +22,7 @@ export default {
   'menu.groups.user': '用户组',
   'menu.groups.device': '设备组',
   'menu.settings': '设置',
-  'menu.settings.general': '通用设置',
+  'menu.settings.general': '常规设置',
   'menu.settings.smtp': 'SMTP 配置',
   'menu.settings.oidcProviders': 'OIDC 提供商',
   'menu.settings.ldap': 'LDAP 配置',

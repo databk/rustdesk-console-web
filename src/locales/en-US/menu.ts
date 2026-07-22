@@ -22,7 +22,7 @@ export default {
   'menu.groups.user': 'User Groups',
   'menu.groups.device': 'Device Groups',
   'menu.settings': 'Settings',
-  'menu.settings.general': 'General',
+  'menu.settings.general': 'General Settings',
   'menu.settings.smtp': 'SMTP Configuration',
   'menu.settings.oidcProviders': 'OIDC Providers',
   'menu.settings.ldap': 'LDAP Configuration',
