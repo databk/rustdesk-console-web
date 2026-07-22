@@ -106,7 +106,7 @@ const StrategyForm: React.FC<StrategyFormProps> = ({
         />
       </Form.Item>
 
-      <Divider orientation="left" style={{ fontSize: 14 }}>
+      <Divider titlePlacement="left" style={{ fontSize: 14 }}>
         <FormattedMessage
           id="pages.strategies.configOptions"
           defaultMessage="Configuration Options"

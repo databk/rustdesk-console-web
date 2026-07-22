@@ -120,7 +120,7 @@ const CreateBuildModal: React.FC<CreateBuildModalProps> = ({
         style={{ maxHeight: '60vh', overflowY: 'auto', paddingRight: 8 }}
       >
         {/* Section: OS & Architecture */}
-        <Divider orientation="left" plain>
+        <Divider titlePlacement="left" plain>
           <FormattedMessage
             id="pages.nexus.os"
             defaultMessage="Operating System"
@@ -183,7 +183,7 @@ const CreateBuildModal: React.FC<CreateBuildModalProps> = ({
         </Form.Item>
 
         {/* Section: Custom Configuration */}
-        <Divider orientation="left" plain>
+        <Divider titlePlacement="left" plain>
           <FormattedMessage
             id="pages.nexus.customConfig"
             defaultMessage="Custom Configuration"
@@ -251,7 +251,7 @@ const CreateBuildModal: React.FC<CreateBuildModalProps> = ({
         <Row gutter={16}>{renderDisableField(DISABLE_FIELDS[4])}</Row>
 
         {/* Section: Server Configuration */}
-        <Divider orientation="left" plain>
+        <Divider titlePlacement="left" plain>
           <FormattedMessage
             id="pages.nexus.serverConfig"
             defaultMessage="Server Configuration"
