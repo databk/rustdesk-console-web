@@ -1144,18 +1144,6 @@ const UserList: React.FC = () => {
             />
           </Form.Item>
           <Form.Item
-            name="is_admin"
-            label={
-              <FormattedMessage
-                id="pages.users.isAdmin"
-                defaultMessage="Admin"
-              />
-            }
-            valuePropName="checked"
-          >
-            <Switch />
-          </Form.Item>
-          <Form.Item
             name="user_group_guid"
             label={
               <FormattedMessage
@@ -1178,6 +1166,18 @@ const UserList: React.FC = () => {
                 value: group.guid,
               }))}
             />
+          </Form.Item>
+          <Form.Item
+            name="is_admin"
+            label={
+              <FormattedMessage
+                id="pages.users.isAdmin"
+                defaultMessage="Admin"
+              />
+            }
+            valuePropName="checked"
+          >
+            <Switch />
           </Form.Item>
         </Form>
       </Modal>
