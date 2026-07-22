@@ -1,6 +1,6 @@
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { FormattedMessage, useIntl, useModel } from '@umijs/max';
+import { FormattedMessage, useIntl } from '@umijs/max';
 import {
   Alert,
   App,
@@ -32,6 +32,7 @@ import {
 } from '@ant-design/icons';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
+import Settings from '../../../../config/defaultSettings';
 import {
   getPersonalAddressBook,
   getAllCustomAddressBooks,
@@ -49,10 +50,6 @@ import {
   deleteTag,
 } from '@/services/rustdesk-console/addressBook';
 import DeviceSelectTable from '@/components/DeviceSelectTable';
-import {
-  DEFAULT_GENERAL_SETTINGS,
-  getRuntimePageTitle,
-} from '@/utils/generalSettings';
 
 const { Text } = Typography;
 
@@ -98,7 +95,6 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
   canWrite = true,
 }) => {
   const intl = useIntl();
-  const { initialState } = useModel('@@initialState');
   const { message: msgApi, modal } = App.useApp();
   const actionRef = useRef<ActionType>(null);
 
@@ -873,11 +869,8 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
       {propTitle && (
         <Helmet>
           <title>
-            {getRuntimePageTitle(
-              propTitle,
-              initialState?.generalSettings?.siteName ||
-                DEFAULT_GENERAL_SETTINGS.siteName,
-            )}
+            {propTitle}
+            {Settings.title && ` - ${Settings.title}`}
           </title>
         </Helmet>
       )}

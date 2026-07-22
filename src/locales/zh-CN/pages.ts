@@ -309,7 +309,6 @@ export default {
   'pages.settings.save': '保存设置',
   'pages.settings.general': '常规设置',
   'pages.settings.siteName': '站点名称',
-  'pages.settings.siteNameInvalid': '请输入 1 至 64 个不含控制字符的字符',
   'pages.settings.watermarkEnabled': '用户名水印',
   'pages.settings.adminEmail': '管理员邮箱',
   'pages.settings.language': '默认语言',

@@ -1,14 +1,13 @@
 import { SaveOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl, useModel } from '@umijs/max';
-import { App, Button, Form, Input, Space, Switch, Typography } from 'antd';
+import { App, Button, Form, Space, Switch, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
 import {
   getGeneralSettings,
   updateGeneralSettings,
 } from '@/services/rustdesk-console/settings';
 import {
-  containsControlCharacters,
   DEFAULT_GENERAL_SETTINGS,
 } from '@/utils/generalSettings';
 
@@ -39,10 +38,7 @@ const GeneralSettings: React.FC = () => {
   const handleSave = async (values: API.GeneralSettings) => {
     setSaving(true);
     try {
-      const saved = await updateGeneralSettings({
-        ...values,
-        siteName: values.siteName.trim(),
-      });
+      const saved = await updateGeneralSettings(values);
       form.setFieldsValue(saved);
       setInitialState((state) => ({
         ...state,
@@ -80,51 +76,11 @@ const GeneralSettings: React.FC = () => {
           layout="vertical"
           disabled={loading}
           initialValues={{
-            siteName: DEFAULT_GENERAL_SETTINGS.siteName,
             watermarkEnabled: DEFAULT_GENERAL_SETTINGS.watermarkEnabled,
           }}
           onFinish={handleSave}
           requiredMark={false}
         >
-          <Form.Item
-            name="siteName"
-            label={
-              <FormattedMessage
-                id="pages.settings.siteName"
-                defaultMessage="Site Name"
-              />
-            }
-            rules={[
-              {
-                validator: async (_, value: unknown) => {
-                  const siteName =
-                    typeof value === 'string' ? value.trim() : '';
-                  const length = Array.from(siteName).length;
-                  if (
-                    length < 1 ||
-                    length > 64 ||
-                    containsControlCharacters(siteName)
-                  ) {
-                    throw new Error(
-                      intl.formatMessage({
-                        id: 'pages.settings.siteNameInvalid',
-                        defaultMessage:
-                          'Enter 1 to 64 characters without control characters',
-                      }),
-                    );
-                  }
-                },
-              },
-            ]}
-          >
-            <Input
-              placeholder={intl.formatMessage({
-                id: 'pages.settings.enterSiteName',
-                defaultMessage: 'Enter site name',
-              })}
-            />
-          </Form.Item>
-
           <Form.Item
             name="watermarkEnabled"
             label={

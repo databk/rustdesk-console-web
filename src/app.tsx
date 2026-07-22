@@ -16,7 +16,6 @@ import { getGeneralSettings } from '@/services/rustdesk-console/settings';
 import { getToken, TOKEN_KEY } from '@/utils/auth';
 import {
   DEFAULT_GENERAL_SETTINGS,
-  getRuntimePageTitle,
   getUsernameWatermark,
 } from '@/utils/generalSettings';
 import defaultSettings from '../config/defaultSettings';
@@ -153,12 +152,6 @@ export const layout: RunTimeLayoutConfig = ({
       },
     },
     ...(waterMarkProps ? { waterMarkProps } : {}),
-    title: generalSettings.siteName,
-    pageTitleRender: (_props, defaultPageTitle) =>
-      getRuntimePageTitle(
-        typeof defaultPageTitle === 'string' ? defaultPageTitle : undefined,
-        generalSettings.siteName,
-      ),
     footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;

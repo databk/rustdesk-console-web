@@ -331,8 +331,6 @@ export default {
   'pages.settings.save': 'Save Settings',
   'pages.settings.general': 'General Settings',
   'pages.settings.siteName': 'Site Name',
-  'pages.settings.siteNameInvalid':
-    'Enter 1 to 64 characters without control characters',
   'pages.settings.watermarkEnabled': 'Username Watermark',
   'pages.settings.adminEmail': 'Admin Email',
   'pages.settings.language': 'Default Language',

@@ -352,8 +352,6 @@ export default {
   'pages.settings.save': 'Salvar Configurações',
   'pages.settings.general': 'Configurações Gerais',
   'pages.settings.siteName': 'Nome do Site',
-  'pages.settings.siteNameInvalid':
-    'Digite de 1 a 64 caracteres sem caracteres de controle',
   'pages.settings.watermarkEnabled': "Marca d'agua com nome de usuario",
   'pages.settings.adminEmail': 'E-mail do Administrador',
   'pages.settings.language': 'Idioma Padrão',
