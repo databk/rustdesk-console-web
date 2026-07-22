@@ -1,5 +1,4 @@
 export const DEFAULT_GENERAL_SETTINGS: API.GeneralSettings = {
-  siteName: 'RustDesk Console',
   watermarkEnabled: true,
 };
 

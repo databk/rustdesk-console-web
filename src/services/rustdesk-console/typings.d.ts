@@ -698,7 +698,6 @@ declare namespace API {
   };
 
   type GeneralSettings = {
-    siteName: string;
     watermarkEnabled: boolean;
   };
 

@@ -13,7 +13,7 @@ beforeEach(() => {
 
 test('uses the narrow general-settings API contract', async () => {
   const options = { skipErrorHandler: true };
-  const settings = { siteName: 'Operations', watermarkEnabled: false };
+  const settings = { watermarkEnabled: false };
 
   await getGeneralSettings(options);
   await updateGeneralSettings(settings);
