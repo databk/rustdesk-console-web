@@ -1,8 +1,13 @@
 [package]
 name = "rustdesk-console-web"
-version = "1.3.0"
+version = "0.0.0"  # Dynamically set from package.json at build time via build.rs
 edition = "2024"
-description = "Standalone web server for RustDesk Console"
+description = "Web frontend for RustDesk Console"
+authors = ["databk"]
+license = "AGPL-3.0"
+repository = "https://github.com/databk/rustdesk-console-web"
+homepage = "https://databk.github.io/rustdesk-console-web/"
+keywords = ["rustdesk", "rustdesk-console", "remote-desktop", "admin-panel", "web-app"]
 
 [dependencies]
 actix-web = "4"

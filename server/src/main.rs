@@ -120,6 +120,7 @@ async fn main() -> std::io::Result<()> {
     let bind_addr = env::var("BIND_ADDR")
         .unwrap_or_else(|_| "0.0.0.0".to_string());
 
+    log::info!("rustdesk-console-web v{}", env!("PKG_VERSION"));
     log::info!("Starting server on {}:{}", bind_addr, port);
     log::info!("Backend URL: {}", backend_url);
 
