@@ -108,3 +108,12 @@ export {
   getBuildFiles,
   downloadBuildFile,
 } from './nexus';
+export {
+  passkeyRegisterBegin,
+  passkeyRegisterVerify,
+  passkeyAuthBegin,
+  passkeyAuthVerify,
+  getPasskeyList,
+  deletePasskey,
+  togglePasskeyTfa,
+} from './passkey';

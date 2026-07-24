@@ -3,6 +3,8 @@ import {
   SafetyCertificateOutlined,
   UnlockOutlined,
   KeyOutlined,
+  PlusOutlined,
+  DeleteOutlined,
 } from '@ant-design/icons';
 import { useIntl, FormattedMessage, useModel } from '@umijs/max';
 import {
@@ -13,18 +15,32 @@ import {
   Input,
   message as messageApi,
   Modal,
+  Popconfirm,
   Space,
+  Switch,
+  Table,
   Tag,
   Typography,
 } from 'antd';
 import { QRCodeSVG } from 'qrcode.react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import dayjs from 'dayjs';
 import {
   setup2FA,
   verify2FA,
   disable2FA,
   changePassword,
+  getPasskeyList,
+  deletePasskey,
+  togglePasskeyTfa,
+  passkeyRegisterBegin,
+  passkeyRegisterVerify,
 } from '@/services/rustdesk-console';
+import {
+  isWebAuthnSupported,
+  prepareCreationOptions,
+  serializeRegistrationResponse,
+} from '@/utils/webauthn';
 
 const { Text, Paragraph } = Typography;
 
@@ -52,6 +68,146 @@ const SecuritySetting: React.FC = () => {
   const [passwordModalOpen, setPasswordModalOpen] = useState(false);
   const [passwordLoading, setPasswordLoading] = useState(false);
   const [passwordForm] = Form.useForm();
+
+  // Passkey states
+  const [passkeyList, setPasskeyList] = useState<API.PasskeyCredential[]>([]);
+  const [passkeyListLoading, setPasskeyListLoading] = useState(false);
+  const [registerLoading, setRegisterLoading] = useState(false);
+  const [registerModalOpen, setRegisterModalOpen] = useState(false);
+  const [registerConfirmLoading, setRegisterConfirmLoading] = useState(false);
+  const [registerName, setRegisterName] = useState('');
+  const [pendingRegistration, setPendingRegistration] =
+    useState<API.RegistrationResponseJSON | null>(null);
+  const [passkeyTfaLoading, setPasskeyTfaLoading] = useState(false);
+
+  const isPasskeyTfaEnabled =
+    currentUser?.info?.other?.passkey_tfa_enabled === true;
+  const passkeySupported = isWebAuthnSupported();
+
+  const fetchPasskeyList = async () => {
+    setPasskeyListLoading(true);
+    try {
+      const list = await getPasskeyList();
+      setPasskeyList(list);
+    } catch {
+      // ignore
+    } finally {
+      setPasskeyListLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPasskeyList();
+  }, []);
+
+  const handleRegisterPasskey = async () => {
+    setRegisterLoading(true);
+    try {
+      const options = await passkeyRegisterBegin();
+      const publicKey = prepareCreationOptions(options);
+      const credential = await navigator.credentials.create({ publicKey });
+      if (!credential || !(credential instanceof PublicKeyCredential)) {
+        throw new Error('No credential returned');
+      }
+      const response = serializeRegistrationResponse(credential);
+      setPendingRegistration(response);
+      setRegisterName('');
+      setRegisterModalOpen(true);
+    } catch (error: unknown) {
+      const err = error as { name?: string };
+      if (err?.name !== 'NotAllowedError') {
+        messageApi.error(
+          intl.formatMessage({
+            id: 'pages.account.security.passkey.registerFailed',
+            defaultMessage: 'Failed to register Passkey',
+          }),
+        );
+      }
+    } finally {
+      setRegisterLoading(false);
+    }
+  };
+
+  const handleConfirmRegister = async () => {
+    if (!pendingRegistration) return;
+    setRegisterConfirmLoading(true);
+    try {
+      await passkeyRegisterVerify({
+        response: pendingRegistration,
+        name: registerName || undefined,
+      });
+      messageApi.success(
+        intl.formatMessage({
+          id: 'pages.account.security.passkey.registerSuccess',
+          defaultMessage: 'Passkey registered successfully',
+        }),
+      );
+      setRegisterModalOpen(false);
+      setPendingRegistration(null);
+      await fetchPasskeyList();
+      await refresh();
+    } catch (error: any) {
+      messageApi.error(
+        error?.data?.message ||
+          intl.formatMessage({
+            id: 'pages.account.security.passkey.registerFailed',
+            defaultMessage: 'Failed to register Passkey',
+          }),
+      );
+    } finally {
+      setRegisterConfirmLoading(false);
+    }
+  };
+
+  const handleDeletePasskey = async (guid: string) => {
+    try {
+      await deletePasskey(guid);
+      messageApi.success(
+        intl.formatMessage({
+          id: 'pages.account.security.passkey.deleteSuccess',
+          defaultMessage: 'Passkey deleted successfully',
+        }),
+      );
+      await fetchPasskeyList();
+      await refresh();
+    } catch (error: any) {
+      messageApi.error(
+        error?.data?.message ||
+          intl.formatMessage({
+            id: 'pages.account.security.passkey.deleteFailed',
+            defaultMessage: 'Failed to delete Passkey',
+          }),
+      );
+    }
+  };
+
+  const handleTogglePasskeyTfa = async (enabled: boolean) => {
+    setPasskeyTfaLoading(true);
+    try {
+      await togglePasskeyTfa({ enabled });
+      messageApi.success(
+        intl.formatMessage({
+          id: enabled
+            ? 'pages.account.security.passkey.tfaEnabled'
+            : 'pages.account.security.passkey.tfaDisabled',
+          defaultMessage: enabled
+            ? 'Passkey TFA enabled'
+            : 'Passkey TFA disabled',
+        }),
+      );
+      await refresh();
+    } catch (error: any) {
+      messageApi.error(
+        error?.data?.message ||
+          intl.formatMessage({
+            id: 'pages.account.security.passkey.tfaToggleFailed',
+            defaultMessage: 'Failed to toggle Passkey TFA',
+          }),
+      );
+    } finally {
+      setPasskeyTfaLoading(false);
+    }
+  };
 
   const handleSetup2FA = async () => {
     try {
@@ -320,6 +476,147 @@ const SecuritySetting: React.FC = () => {
         </Descriptions>
       </Card>
 
+      <Card
+        title={
+          <FormattedMessage
+            id="pages.account.security.passkey.title"
+            defaultMessage="Passkey Management"
+          />
+        }
+        style={{ marginTop: 24 }}
+      >
+        <Space direction="vertical" style={{ width: '100%' }} size="middle">
+          {passkeySupported && (
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={handleRegisterPasskey}
+              loading={registerLoading}
+            >
+              <FormattedMessage
+                id="pages.account.security.passkey.register"
+                defaultMessage="Register Passkey"
+              />
+            </Button>
+          )}
+
+          <Table
+            dataSource={passkeyList}
+            rowKey="guid"
+            loading={passkeyListLoading}
+            size="small"
+            pagination={false}
+            locale={{
+              emptyText: intl.formatMessage({
+                id: 'pages.account.security.passkey.noCredentials',
+                defaultMessage: 'No Passkeys registered',
+              }),
+            }}
+            columns={[
+              {
+                title: intl.formatMessage({
+                  id: 'pages.account.security.passkey.name',
+                  defaultMessage: 'Name',
+                }),
+                dataIndex: 'name',
+                key: 'name',
+                render: (name: string) => name || '-',
+              },
+              {
+                title: intl.formatMessage({
+                  id: 'pages.account.security.passkey.deviceType',
+                  defaultMessage: 'Device Type',
+                }),
+                dataIndex: 'deviceType',
+                key: 'deviceType',
+                render: (type: string) => (
+                  <Tag>
+                    {type === 'multiDevice'
+                      ? intl.formatMessage({
+                          id: 'pages.account.security.passkey.multiDevice',
+                          defaultMessage: 'Multi-device',
+                        })
+                      : intl.formatMessage({
+                          id: 'pages.account.security.passkey.singleDevice',
+                          defaultMessage: 'Single-device',
+                        })}
+                  </Tag>
+                ),
+              },
+              {
+                title: intl.formatMessage({
+                  id: 'pages.account.security.passkey.createdAt',
+                  defaultMessage: 'Created At',
+                }),
+                dataIndex: 'createdAt',
+                key: 'createdAt',
+                render: (date: string) =>
+                  date ? dayjs(date).format('YYYY-MM-DD HH:mm') : '-',
+              },
+              {
+                title: intl.formatMessage({
+                  id: 'pages.common.action',
+                  defaultMessage: 'Action',
+                }),
+                key: 'action',
+                width: 100,
+                render: (_: unknown, record: API.PasskeyCredential) => (
+                  <Popconfirm
+                    title={intl.formatMessage({
+                      id: 'pages.account.security.passkey.deleteConfirm',
+                      defaultMessage: 'Are you sure to delete this Passkey?',
+                    })}
+                    onConfirm={() => handleDeletePasskey(record.guid)}
+                  >
+                    <Button danger size="small" icon={<DeleteOutlined />}>
+                      <FormattedMessage
+                        id="pages.common.delete"
+                        defaultMessage="Delete"
+                      />
+                    </Button>
+                  </Popconfirm>
+                ),
+              },
+            ]}
+          />
+
+          <Descriptions column={1}>
+            <Descriptions.Item
+              label={
+                <FormattedMessage
+                  id="pages.account.security.passkey.tfaStatus"
+                  defaultMessage="Passkey TFA"
+                />
+              }
+            >
+              <Space>
+                <Switch
+                  checked={isPasskeyTfaEnabled}
+                  loading={passkeyTfaLoading}
+                  onChange={handleTogglePasskeyTfa}
+                  disabled={passkeyList.length === 0}
+                />
+                {isPasskeyTfaEnabled ? (
+                  <Tag color="success">
+                    <FormattedMessage
+                      id="pages.account.security.enabled"
+                      defaultMessage="Enabled"
+                    />
+                  </Tag>
+                ) : (
+                  <Tag color="default">
+                    <FormattedMessage
+                      id="pages.account.security.disabled"
+                      defaultMessage="Disabled"
+                    />
+                  </Tag>
+                )}
+              </Space>
+            </Descriptions.Item>
+          </Descriptions>
+        </Space>
+      </Card>
+
       {/* Setup & Verify 2FA Modal */}
       <Modal
         title={
@@ -562,6 +859,47 @@ const SecuritySetting: React.FC = () => {
             ]}
           >
             <Input.Password />
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      {/* Passkey Register Name Modal */}
+      <Modal
+        title={
+          <FormattedMessage
+            id="pages.account.security.passkey.namePasskey"
+            defaultMessage="Name your Passkey"
+          />
+        }
+        open={registerModalOpen}
+        onCancel={() => {
+          setRegisterModalOpen(false);
+          setPendingRegistration(null);
+        }}
+        onOk={handleConfirmRegister}
+        confirmLoading={registerConfirmLoading}
+        okText={intl.formatMessage({
+          id: 'pages.common.save',
+          defaultMessage: 'Save',
+        })}
+      >
+        <Form layout="vertical">
+          <Form.Item
+            label={
+              <FormattedMessage
+                id="pages.account.security.passkey.name"
+                defaultMessage="Name"
+              />
+            }
+          >
+            <Input
+              value={registerName}
+              onChange={(e) => setRegisterName(e.target.value)}
+              placeholder={intl.formatMessage({
+                id: 'pages.account.security.passkey.namePlaceholder',
+                defaultMessage: 'e.g. MacBook Touch ID',
+              })}
+            />
           </Form.Item>
         </Form>
       </Modal>

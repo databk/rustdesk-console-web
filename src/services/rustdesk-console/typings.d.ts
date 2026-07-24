@@ -66,10 +66,108 @@ declare namespace API {
 
   type LoginResponse = {
     access_token?: string;
-    type?: 'access_token' | 'email_check' | 'tfa_check';
+    type?: 'access_token' | 'email_check' | 'tfa_check' | 'passkey_check';
     tfa_type?: 'email_check' | 'tfa_check';
     secret?: string;
+    passkey_options?: PublicKeyCredentialRequestOptionsJSON;
     user?: CurrentUser;
+  };
+
+  // --- WebAuthn JSON types (base64url-encoded, as returned by the server) ---
+
+  type PublicKeyCredentialCreationOptionsJSON = {
+    rp: { name: string; id?: string };
+    user: { id: string; name: string; displayName: string };
+    challenge: string;
+    pubKeyCredParams: Array<{ type: 'public-key'; alg: number }>;
+    authenticatorSelection?: {
+      authenticatorAttachment?: string;
+      residentKey?: string;
+      userVerification?: string;
+    };
+    excludeCredentials?: Array<{
+      id: string;
+      type: 'public-key';
+      transports?: string[];
+    }>;
+    timeout?: number;
+    attestation?: string;
+  };
+
+  type PublicKeyCredentialRequestOptionsJSON = {
+    challenge: string;
+    rpId?: string;
+    timeout?: number;
+    allowCredentials?: Array<{
+      id: string;
+      type: 'public-key';
+      transports?: string[];
+    }>;
+    userVerification?: string;
+  };
+
+  type RegistrationResponseJSON = {
+    id: string;
+    rawId: string;
+    response: {
+      attestationObject: string;
+      clientDataJSON: string;
+      transports?: string[];
+    };
+    authenticatorAttachment?: string;
+    clientExtensionResults: Record<string, any>;
+    type: 'public-key';
+  };
+
+  type AuthenticationResponseJSON = {
+    id: string;
+    rawId: string;
+    response: {
+      authenticatorData: string;
+      clientDataJSON: string;
+      signature: string;
+      userHandle?: string;
+    };
+    authenticatorAttachment?: string;
+    clientExtensionResults: Record<string, any>;
+    type: 'public-key';
+  };
+
+  // --- Passkey API types ---
+
+  type PasskeyAuthBeginResponse = {
+    secret: string;
+    options: PublicKeyCredentialRequestOptionsJSON;
+  };
+
+  type PasskeyRegistrationVerifyParams = {
+    response: RegistrationResponseJSON;
+    name?: string;
+  };
+
+  type PasskeyAuthVerifyParams = {
+    secret: string;
+    response: AuthenticationResponseJSON;
+    id?: string;
+    uuid?: string;
+    deviceInfo?: DeviceInfo;
+  };
+
+  type PasskeyCredential = {
+    guid: string;
+    userGuid: string;
+    credentialId: string;
+    counter: number;
+    transports: string;
+    deviceType: string;
+    backedUp: boolean;
+    name: string;
+    createdAt: string;
+    updatedAt: string;
+  };
+
+  type PasskeyTfaToggleParams = {
+    enabled: boolean;
   };
 
   type OidcLoginInfo = {

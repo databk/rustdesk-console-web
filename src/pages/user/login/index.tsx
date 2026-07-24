@@ -7,6 +7,7 @@ import {
   GithubOutlined,
   GoogleOutlined,
   GitlabOutlined,
+  KeyOutlined,
 } from '@ant-design/icons';
 import { LoginForm, ProFormText } from '@ant-design/pro-components';
 import {
@@ -44,16 +45,26 @@ import {
   getLoginOptions,
   oidcAuth,
 } from '@/services/rustdesk-console/auth';
+import {
+  passkeyAuthBegin,
+  passkeyAuthVerify,
+} from '@/services/rustdesk-console/passkey';
+import {
+  isWebAuthnSupported,
+  prepareRequestOptions,
+  serializeAuthenticationResponse,
+} from '@/utils/webauthn';
 import Settings from '../../../../config/defaultSettings';
 
 // --- Auth step types ---
-type AuthStep = 'account' | 'email_check' | 'tfa_check';
+type AuthStep = 'account' | 'email_check' | 'tfa_check' | 'passkey_check';
 
 // --- Session data for 2nd-step verification ---
 type VerifySession = {
   username: string;
   secret: string;
   emailHint?: string;
+  passkeyOptions?: API.PublicKeyCredentialRequestOptionsJSON;
 };
 
 // --- Device info ---
@@ -373,6 +384,73 @@ const VerifyStep: React.FC<{
   );
 };
 
+// --- Passkey Verify Step (for Passkey TFA) ---
+const PasskeyVerifyStep: React.FC<{
+  error: string;
+  submitting: boolean;
+  onVerify: () => void;
+  onBack: () => void;
+}> = ({ error, submitting, onVerify, onBack }) => {
+  const { styles } = useStyles();
+  const intl = useIntl();
+  const verifyRef = useRef(onVerify);
+  verifyRef.current = onVerify;
+
+  // Auto-trigger the browser passkey prompt on mount
+  useEffect(() => {
+    verifyRef.current();
+  }, []);
+
+  return (
+    <div className={styles.verifySection}>
+      {error && <LoginMessage content={error} />}
+
+      <div style={{ textAlign: 'center', marginBottom: 24 }}>
+        <KeyOutlined className={styles.verifyIcon} />
+        <Typography.Title level={5}>
+          {intl.formatMessage({
+            id: 'pages.login.passkeyCheck.title',
+            defaultMessage: 'Passkey Verification',
+          })}
+        </Typography.Title>
+        <Typography.Text className={styles.verifyHint}>
+          {intl.formatMessage({
+            id: 'pages.login.passkeyCheck.description',
+            defaultMessage: 'Use your Passkey to complete sign-in',
+          })}
+        </Typography.Text>
+      </div>
+
+      <Button
+        type="primary"
+        size="large"
+        block
+        loading={submitting}
+        icon={<KeyOutlined />}
+        onClick={onVerify}
+      >
+        {intl.formatMessage({
+          id: 'pages.login.passkey.verify',
+          defaultMessage: 'Verify with Passkey',
+        })}
+      </Button>
+
+      <Button
+        size="large"
+        block
+        style={{ marginTop: 12 }}
+        icon={<ArrowLeftOutlined />}
+        onClick={onBack}
+      >
+        {intl.formatMessage({
+          id: 'pages.login.back',
+          defaultMessage: 'Back',
+        })}
+      </Button>
+    </div>
+  );
+};
+
 // --- Parse OIDC login options from API response ---
 function parseOidcOptions(res: string[]): API.OidcLoginInfo[] {
   const ops: API.OidcLoginInfo[] = [];
@@ -405,13 +483,17 @@ const Login: React.FC = () => {
   );
   const [submitting, setSubmitting] = useState(false);
   const [oidcOptions, setOidcOptions] = useState<API.OidcLoginInfo[]>([]);
+  const [passkeySupported] = useState(() => isWebAuthnSupported());
   const { setInitialState } = useModel('@@initialState');
   const { styles } = useStyles();
   const { message } = App.useApp();
   const intl = useIntl();
   const [accountForm] = Form.useForm();
 
-  const isVerifyStep = authStep === 'email_check' || authStep === 'tfa_check';
+  const isVerifyStep =
+    authStep === 'email_check' ||
+    authStep === 'tfa_check' ||
+    authStep === 'passkey_check';
 
   // Fetch OIDC login options on mount
   useEffect(() => {
@@ -476,6 +558,93 @@ const Login: React.FC = () => {
     [intl],
   );
 
+  // Shared Passkey assertion flow: get credential from browser, then verify with server
+  const completePasskeyAuth = useCallback(
+    async (
+      secret: string,
+      options: API.PublicKeyCredentialRequestOptionsJSON,
+    ): Promise<API.LoginResponse> => {
+      const publicKey = prepareRequestOptions(options);
+      const credential = await navigator.credentials.get({ publicKey });
+      if (!credential || !(credential instanceof PublicKeyCredential)) {
+        throw new Error('No credential returned');
+      }
+      const response = serializeAuthenticationResponse(credential);
+      const deviceInfo = getDeviceInfo();
+      return passkeyAuthVerify({ secret, response, deviceInfo });
+    },
+    [],
+  );
+
+  // Passkey TFA verify (triggered from PasskeyVerifyStep)
+  const handlePasskeyVerify = useCallback(async () => {
+    if (!verifySession?.passkeyOptions || !verifySession?.secret) return;
+    setLoginError('');
+    setSubmitting(true);
+    try {
+      const msg = await completePasskeyAuth(
+        verifySession.secret,
+        verifySession.passkeyOptions,
+      );
+      if (msg.access_token) {
+        await handleLoginSuccess(msg.access_token, msg.user);
+      }
+    } catch (error: unknown) {
+      const err = error as { name?: string };
+      if (err?.name === 'NotAllowedError') {
+        setLoginError(
+          intl.formatMessage({
+            id: 'pages.login.passkey.cancelled',
+            defaultMessage: 'Passkey verification was cancelled',
+          }),
+        );
+      } else {
+        handleLoginError(
+          error,
+          'pages.login.passkey.failed',
+          'Passkey verification failed',
+        );
+      }
+    } finally {
+      setSubmitting(false);
+    }
+  }, [
+    verifySession,
+    completePasskeyAuth,
+    handleLoginSuccess,
+    handleLoginError,
+    intl,
+  ]);
+
+  // Passwordless Passkey login (from account step)
+  const handlePasskeyLogin = useCallback(async () => {
+    setLoginError('');
+    setSubmitting(true);
+    try {
+      const beginRes = await passkeyAuthBegin();
+      const msg = await completePasskeyAuth(
+        beginRes.secret,
+        beginRes.options,
+      );
+      if (msg.access_token) {
+        await handleLoginSuccess(msg.access_token, msg.user);
+      }
+    } catch (error: unknown) {
+      const err = error as { name?: string };
+      if (err?.name === 'NotAllowedError') {
+        // User cancelled - silently reset, no error message
+      } else {
+        handleLoginError(
+          error,
+          'pages.login.passkey.failed',
+          'Passkey login failed',
+        );
+      }
+    } finally {
+      setSubmitting(false);
+    }
+  }, [completePasskeyAuth, handleLoginSuccess, handleLoginError, intl]);
+
   const handleAccountSubmit = useCallback(
     async (values: API.LoginParams) => {
       setLoginError('');
@@ -520,6 +689,16 @@ const Login: React.FC = () => {
             secret: msg.secret || '',
           });
           setAuthStep('tfa_check');
+          return;
+        }
+
+        if (msg.type === 'passkey_check') {
+          setVerifySession({
+            username: values.username?.trim() || '',
+            secret: msg.secret || '',
+            passkeyOptions: msg.passkey_options,
+          });
+          setAuthStep('passkey_check');
           return;
         }
 
@@ -802,6 +981,22 @@ const Login: React.FC = () => {
                 </a>
               </div>
 
+              {passkeySupported && (
+                <Button
+                  block
+                  size="large"
+                  icon={<KeyOutlined />}
+                  loading={submitting}
+                  onClick={handlePasskeyLogin}
+                  style={{ marginTop: 16 }}
+                >
+                  {intl.formatMessage({
+                    id: 'pages.login.passkey.login',
+                    defaultMessage: 'Sign in with Passkey',
+                  })}
+                </Button>
+              )}
+
               <OidcLogin options={oidcOptions} loading={submitting} />
             </div>
           )}
@@ -830,6 +1025,16 @@ const Login: React.FC = () => {
               error={loginError}
               submitting={submitting}
               onSubmit={handleVerifySubmit}
+              onBack={handleBackToAccount}
+            />
+          )}
+
+          {/* Passkey Verification Step */}
+          {authStep === 'passkey_check' && (
+            <PasskeyVerifyStep
+              error={loginError}
+              submitting={submitting}
+              onVerify={handlePasskeyVerify}
               onBack={handleBackToAccount}
             />
           )}

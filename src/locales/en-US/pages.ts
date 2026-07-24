@@ -24,6 +24,13 @@ export default {
   'pages.login.oidc.divider': 'Or continue with',
   'pages.login.oidc.continueWith': 'Continue with {provider}',
   'pages.login.oidc.authFailed': 'OIDC login failed',
+  'pages.login.passkey.login': 'Sign in with Passkey',
+  'pages.login.passkey.verify': 'Verify with Passkey',
+  'pages.login.passkey.cancelled': 'Passkey verification was cancelled',
+  'pages.login.passkey.failed': 'Passkey verification failed',
+  'pages.login.passkeyCheck.title': 'Passkey Verification',
+  'pages.login.passkeyCheck.description':
+    'Use your Passkey to complete sign-in',
   'pages.devices.list': 'Device List',
   'pages.devices.os': 'OS',
   'pages.devices.status': 'Status',
@@ -668,6 +675,28 @@ export default {
   'pages.account.security.thirdPartyUser':
     'Third-party login users cannot change password',
   'pages.account.security.noPasswordUser': 'No password set for this account',
+  'pages.account.security.passkey.title': 'Passkey Management',
+  'pages.account.security.passkey.register': 'Register Passkey',
+  'pages.account.security.passkey.registerSuccess':
+    'Passkey registered successfully',
+  'pages.account.security.passkey.registerFailed': 'Failed to register Passkey',
+  'pages.account.security.passkey.deleteSuccess': 'Passkey deleted successfully',
+  'pages.account.security.passkey.deleteFailed': 'Failed to delete Passkey',
+  'pages.account.security.passkey.deleteConfirm':
+    'Are you sure to delete this Passkey?',
+  'pages.account.security.passkey.name': 'Name',
+  'pages.account.security.passkey.namePlaceholder': 'e.g. MacBook Touch ID',
+  'pages.account.security.passkey.namePasskey': 'Name your Passkey',
+  'pages.account.security.passkey.deviceType': 'Device Type',
+  'pages.account.security.passkey.multiDevice': 'Multi-device',
+  'pages.account.security.passkey.singleDevice': 'Single-device',
+  'pages.account.security.passkey.createdAt': 'Created At',
+  'pages.account.security.passkey.noCredentials': 'No Passkeys registered',
+  'pages.account.security.passkey.tfaStatus': 'Passkey TFA',
+  'pages.account.security.passkey.tfaEnabled': 'Passkey TFA enabled',
+  'pages.account.security.passkey.tfaDisabled': 'Passkey TFA disabled',
+  'pages.account.security.passkey.tfaToggleFailed':
+    'Failed to toggle Passkey TFA',
   'pages.ldap.title': 'LDAP Configuration',
   'pages.ldap.description':
     'Configure LDAP/Active Directory authentication. Users will be automatically authenticated via LDAP when enabled.',

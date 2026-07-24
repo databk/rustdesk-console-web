@@ -24,6 +24,13 @@ export default {
   'pages.login.oidc.divider': 'Ou continue com',
   'pages.login.oidc.continueWith': 'Continuar com {provider}',
   'pages.login.oidc.authFailed': 'Falha no login OIDC',
+  'pages.login.passkey.login': 'Entrar com Passkey',
+  'pages.login.passkey.verify': 'Verificar com Passkey',
+  'pages.login.passkey.cancelled': 'Verificação de Passkey cancelada',
+  'pages.login.passkey.failed': 'Falha na verificação de Passkey',
+  'pages.login.passkeyCheck.title': 'Verificação de Passkey',
+  'pages.login.passkeyCheck.description':
+    'Use seu Passkey para concluir o login',
   'pages.devices.list': 'Lista de Dispositivos',
   'pages.devices.os': 'SO',
   'pages.devices.status': 'Status',
@@ -701,6 +708,30 @@ export default {
     'Usuários autenticados por terceiros não podem alterar a senha',
   'pages.account.security.noPasswordUser':
     'Nenhuma senha configurada para esta conta',
+  'pages.account.security.passkey.title': 'Gerenciamento de Passkey',
+  'pages.account.security.passkey.register': 'Registrar Passkey',
+  'pages.account.security.passkey.registerSuccess':
+    'Passkey registrado com sucesso',
+  'pages.account.security.passkey.registerFailed':
+    'Falha ao registrar Passkey',
+  'pages.account.security.passkey.deleteSuccess':
+    'Passkey excluído com sucesso',
+  'pages.account.security.passkey.deleteFailed': 'Falha ao excluir Passkey',
+  'pages.account.security.passkey.deleteConfirm':
+    'Tem certeza de que deseja excluir este Passkey?',
+  'pages.account.security.passkey.name': 'Nome',
+  'pages.account.security.passkey.namePlaceholder': 'ex: MacBook Touch ID',
+  'pages.account.security.passkey.namePasskey': 'Nomeie seu Passkey',
+  'pages.account.security.passkey.deviceType': 'Tipo de Dispositivo',
+  'pages.account.security.passkey.multiDevice': 'Multi-dispositivo',
+  'pages.account.security.passkey.singleDevice': 'Dispositivo único',
+  'pages.account.security.passkey.createdAt': 'Criado em',
+  'pages.account.security.passkey.noCredentials': 'Nenhum Passkey registrado',
+  'pages.account.security.passkey.tfaStatus': 'TFA por Passkey',
+  'pages.account.security.passkey.tfaEnabled': 'TFA por Passkey ativado',
+  'pages.account.security.passkey.tfaDisabled': 'TFA por Passkey desativado',
+  'pages.account.security.passkey.tfaToggleFailed':
+    'Falha ao alternar TFA por Passkey',
   'pages.ldap.title': 'Configuração LDAP',
   'pages.ldap.description':
     'Configure a autenticação LDAP/Active Directory. Quando ativado, os usuários serão autenticados automaticamente via LDAP.',
