@@ -622,10 +622,7 @@ const Login: React.FC = () => {
     setSubmitting(true);
     try {
       const beginRes = await passkeyAuthBegin();
-      const msg = await completePasskeyAuth(
-        beginRes.secret,
-        beginRes.options,
-      );
+      const msg = await completePasskeyAuth(beginRes.secret, beginRes.options);
       if (msg.access_token) {
         await handleLoginSuccess(msg.access_token, msg.user);
       }

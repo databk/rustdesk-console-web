@@ -680,7 +680,8 @@ export default {
   'pages.account.security.passkey.registerSuccess':
     'Passkey registered successfully',
   'pages.account.security.passkey.registerFailed': 'Failed to register Passkey',
-  'pages.account.security.passkey.deleteSuccess': 'Passkey deleted successfully',
+  'pages.account.security.passkey.deleteSuccess':
+    'Passkey deleted successfully',
   'pages.account.security.passkey.deleteFailed': 'Failed to delete Passkey',
   'pages.account.security.passkey.deleteConfirm':
     'Are you sure to delete this Passkey?',

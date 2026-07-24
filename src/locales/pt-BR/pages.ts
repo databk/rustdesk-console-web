@@ -712,8 +712,7 @@ export default {
   'pages.account.security.passkey.register': 'Registrar Passkey',
   'pages.account.security.passkey.registerSuccess':
     'Passkey registrado com sucesso',
-  'pages.account.security.passkey.registerFailed':
-    'Falha ao registrar Passkey',
+  'pages.account.security.passkey.registerFailed': 'Falha ao registrar Passkey',
   'pages.account.security.passkey.deleteSuccess':
     'Passkey excluído com sucesso',
   'pages.account.security.passkey.deleteFailed': 'Falha ao excluir Passkey',

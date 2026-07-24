@@ -659,7 +659,8 @@ export default {
   'pages.account.security.passkey.tfaStatus': 'Passkey 双因素认证',
   'pages.account.security.passkey.tfaEnabled': '已启用 Passkey 双因素认证',
   'pages.account.security.passkey.tfaDisabled': '已禁用 Passkey 双因素认证',
-  'pages.account.security.passkey.tfaToggleFailed': '切换 Passkey 双因素认证失败',
+  'pages.account.security.passkey.tfaToggleFailed':
+    '切换 Passkey 双因素认证失败',
   'pages.ldap.title': 'LDAP 配置',
   'pages.ldap.description':
     '配置 LDAP/Active Directory 认证。启用后，用户将通过 LDAP 服务器进行身份验证。',

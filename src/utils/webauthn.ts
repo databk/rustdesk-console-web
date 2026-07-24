@@ -9,8 +9,7 @@
 
 /** Convert an ArrayBuffer (or typed array) to a base64url string. */
 export function bufferToBase64url(buffer: ArrayBuffer | Uint8Array): string {
-  const bytes =
-    buffer instanceof Uint8Array ? buffer : new Uint8Array(buffer);
+  const bytes = buffer instanceof Uint8Array ? buffer : new Uint8Array(buffer);
   let binary = '';
   for (let i = 0; i < bytes.length; i++) {
     binary += String.fromCharCode(bytes[i]);
@@ -57,7 +56,8 @@ export function prepareCreationOptions(
     pubKeyCredParams: json.pubKeyCredParams,
   };
   if (json.authenticatorSelection) {
-    options.authenticatorSelection = json.authenticatorSelection as AuthenticatorSelectionCriteria;
+    options.authenticatorSelection =
+      json.authenticatorSelection as AuthenticatorSelectionCriteria;
   }
   if (json.excludeCredentials) {
     options.excludeCredentials = json.excludeCredentials.map((c) => ({
@@ -86,7 +86,8 @@ export function prepareRequestOptions(
   if (json.rpId) options.rpId = json.rpId;
   if (json.timeout !== undefined) options.timeout = json.timeout;
   if (json.userVerification) {
-    options.userVerification = json.userVerification as UserVerificationRequirement;
+    options.userVerification =
+      json.userVerification as UserVerificationRequirement;
   }
   if (json.allowCredentials) {
     options.allowCredentials = json.allowCredentials.map((c) => ({
