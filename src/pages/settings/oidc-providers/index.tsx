@@ -46,7 +46,7 @@ const OidcProviderList: React.FC = () => {
         setLoading(false);
       }
     },
-    [msgApi, intl],
+    [],
   );
 
   useEffect(() => {
