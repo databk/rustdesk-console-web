@@ -170,6 +170,17 @@ declare namespace API {
     enabled: boolean;
   };
 
+  type SessionItem = {
+    jti: string;
+    deviceId?: string | null;
+    deviceUuid?: string | null;
+    deviceOs?: string;
+    deviceType?: 'browser' | 'client';
+    deviceName?: string;
+    createdAt?: string;
+    expiresAt?: string;
+  };
+
   type OidcLoginInfo = {
     name: string;
     icon?: string;

@@ -731,6 +731,24 @@ export default {
   'pages.account.security.passkey.tfaDisabled': 'TFA por Passkey desativado',
   'pages.account.security.passkey.tfaToggleFailed':
     'Falha ao alternar TFA por Passkey',
+  'pages.account.security.sessions.title': 'Sessões de Login',
+  'pages.account.security.sessions.device': 'Dispositivo',
+  'pages.account.security.sessions.type': 'Tipo',
+  'pages.account.security.sessions.browser': 'Navegador',
+  'pages.account.security.sessions.client': 'Cliente',
+  'pages.account.security.sessions.os': 'SO',
+  'pages.account.security.sessions.createdAt': 'Criado em',
+  'pages.account.security.sessions.expiresAt': 'Expira em',
+  'pages.account.security.sessions.current': 'Atual',
+  'pages.account.security.sessions.revoke': 'Revogar',
+  'pages.account.security.sessions.revokeConfirm':
+    'Tem certeza de que deseja revogar esta sessão?',
+  'pages.account.security.sessions.revokeSuccess':
+    'Sessão revogada com sucesso',
+  'pages.account.security.sessions.revokeFailed': 'Falha ao revogar sessão',
+  'pages.account.security.sessions.cannotRevokeCurrent':
+    'Não é possível revogar a sessão atual',
+  'pages.account.security.sessions.noSessions': 'Nenhuma sessão ativa',
   'pages.ldap.title': 'Configuração LDAP',
   'pages.ldap.description':
     'Configure a autenticação LDAP/Active Directory. Quando ativado, os usuários serão autenticados automaticamente via LDAP.',

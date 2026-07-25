@@ -117,3 +117,4 @@ export {
   deletePasskey,
   togglePasskeyTfa,
 } from './passkey';
+export { getSessions, revokeSession } from './session';

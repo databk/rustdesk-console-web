@@ -5,6 +5,8 @@ import {
   KeyOutlined,
   PlusOutlined,
   DeleteOutlined,
+  GlobalOutlined,
+  DesktopOutlined,
 } from '@ant-design/icons';
 import { useIntl, FormattedMessage, useModel } from '@umijs/max';
 import {
@@ -20,6 +22,7 @@ import {
   Switch,
   Table,
   Tag,
+  Tooltip,
   Typography,
 } from 'antd';
 import { QRCodeSVG } from 'qrcode.react';
@@ -35,7 +38,10 @@ import {
   togglePasskeyTfa,
   passkeyRegisterBegin,
   passkeyRegisterVerify,
+  getSessions,
+  revokeSession,
 } from '@/services/rustdesk-console';
+import { getTokenJti } from '@/utils/auth';
 import {
   isWebAuthnSupported,
   prepareCreationOptions,
@@ -80,6 +86,14 @@ const SecuritySetting: React.FC = () => {
     useState<API.RegistrationResponseJSON | null>(null);
   const [passkeyTfaLoading, setPasskeyTfaLoading] = useState(false);
 
+  // Session states
+  const [sessionList, setSessionList] = useState<API.SessionItem[]>([]);
+  const [sessionListLoading, setSessionListLoading] = useState(false);
+  const [revokeLoadingJti, setRevokeLoadingJti] = useState<string | null>(
+    null,
+  );
+  const currentJti = getTokenJti();
+
   const isPasskeyTfaEnabled =
     currentUser?.info?.other?.passkey_tfa_enabled === true;
   const passkeySupported = isWebAuthnSupported();
@@ -99,6 +113,46 @@ const SecuritySetting: React.FC = () => {
   useEffect(() => {
     fetchPasskeyList();
   }, []);
+
+  const fetchSessionList = async () => {
+    setSessionListLoading(true);
+    try {
+      const list = await getSessions();
+      setSessionList(list);
+    } catch {
+      // ignore
+    } finally {
+      setSessionListLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchSessionList();
+  }, []);
+
+  const handleRevokeSession = async (jti: string) => {
+    setRevokeLoadingJti(jti);
+    try {
+      await revokeSession(jti);
+      messageApi.success(
+        intl.formatMessage({
+          id: 'pages.account.security.sessions.revokeSuccess',
+          defaultMessage: 'Session revoked successfully',
+        }),
+      );
+      await fetchSessionList();
+    } catch (error: any) {
+      messageApi.error(
+        error?.data?.message ||
+          intl.formatMessage({
+            id: 'pages.account.security.sessions.revokeFailed',
+            defaultMessage: 'Failed to revoke session',
+          }),
+      );
+    } finally {
+      setRevokeLoadingJti(null);
+    }
+  };
 
   const handleRegisterPasskey = async () => {
     setRegisterLoading(true);
@@ -615,6 +669,161 @@ const SecuritySetting: React.FC = () => {
             </Descriptions.Item>
           </Descriptions>
         </Space>
+      </Card>
+
+      <Card
+        title={
+          <FormattedMessage
+            id="pages.account.security.sessions.title"
+            defaultMessage="Login Sessions"
+          />
+        }
+        style={{ marginTop: 24 }}
+      >
+        <Table
+          dataSource={sessionList}
+          rowKey="jti"
+          loading={sessionListLoading}
+          size="small"
+          pagination={false}
+          locale={{
+            emptyText: intl.formatMessage({
+              id: 'pages.account.security.sessions.noSessions',
+              defaultMessage: 'No active sessions',
+            }),
+          }}
+          columns={[
+            {
+              title: intl.formatMessage({
+                id: 'pages.account.security.sessions.device',
+                defaultMessage: 'Device',
+              }),
+              key: 'device',
+              render: (_: unknown, record: API.SessionItem) => (
+                <Space>
+                  {record.deviceType === 'client' ? (
+                    <DesktopOutlined />
+                  ) : (
+                    <GlobalOutlined />
+                  )}
+                  <span>{record.deviceName || '-'}</span>
+                  {record.jti === currentJti && (
+                    <Tag color="blue">
+                      <FormattedMessage
+                        id="pages.account.security.sessions.current"
+                        defaultMessage="Current"
+                      />
+                    </Tag>
+                  )}
+                </Space>
+              ),
+            },
+            {
+              title: intl.formatMessage({
+                id: 'pages.account.security.sessions.type',
+                defaultMessage: 'Type',
+              }),
+              dataIndex: 'deviceType',
+              key: 'deviceType',
+              render: (type: string) => (
+                <Tag>
+                  {type === 'client'
+                    ? intl.formatMessage({
+                        id: 'pages.account.security.sessions.client',
+                        defaultMessage: 'Client',
+                      })
+                    : intl.formatMessage({
+                        id: 'pages.account.security.sessions.browser',
+                        defaultMessage: 'Browser',
+                      })}
+                </Tag>
+              ),
+            },
+            {
+              title: intl.formatMessage({
+                id: 'pages.account.security.sessions.os',
+                defaultMessage: 'OS',
+              }),
+              dataIndex: 'deviceOs',
+              key: 'deviceOs',
+              render: (os: string) => os || '-',
+            },
+            {
+              title: intl.formatMessage({
+                id: 'pages.account.security.sessions.createdAt',
+                defaultMessage: 'Created At',
+              }),
+              dataIndex: 'createdAt',
+              key: 'createdAt',
+              render: (date: string) =>
+                date ? dayjs(date).format('YYYY-MM-DD HH:mm') : '-',
+            },
+            {
+              title: intl.formatMessage({
+                id: 'pages.account.security.sessions.expiresAt',
+                defaultMessage: 'Expires At',
+              }),
+              dataIndex: 'expiresAt',
+              key: 'expiresAt',
+              render: (date: string) =>
+                date ? dayjs(date).format('YYYY-MM-DD HH:mm') : '-',
+            },
+            {
+              title: intl.formatMessage({
+                id: 'pages.common.action',
+                defaultMessage: 'Action',
+              }),
+              key: 'action',
+              width: 100,
+              render: (_: unknown, record: API.SessionItem) => {
+                const isCurrent = record.jti === currentJti;
+                if (isCurrent) {
+                  return (
+                    <Tooltip
+                      title={intl.formatMessage({
+                        id: 'pages.account.security.sessions.cannotRevokeCurrent',
+                        defaultMessage: 'Cannot revoke current session',
+                      })}
+                    >
+                      <Button
+                        danger
+                        size="small"
+                        icon={<DeleteOutlined />}
+                        disabled
+                      >
+                        <FormattedMessage
+                          id="pages.account.security.sessions.revoke"
+                          defaultMessage="Revoke"
+                        />
+                      </Button>
+                    </Tooltip>
+                  );
+                }
+                return (
+                  <Popconfirm
+                    title={intl.formatMessage({
+                      id: 'pages.account.security.sessions.revokeConfirm',
+                      defaultMessage: 'Are you sure to revoke this session?',
+                    })}
+                    onConfirm={() => handleRevokeSession(record.jti)}
+                  >
+                    <Button
+                      danger
+                      size="small"
+                      icon={<DeleteOutlined />}
+                      loading={revokeLoadingJti === record.jti}
+                    >
+                      <FormattedMessage
+                        id="pages.account.security.sessions.revoke"
+                        defaultMessage="Revoke"
+                      />
+                    </Button>
+                  </Popconfirm>
+                );
+              },
+            },
+          ]}
+        />
       </Card>
 
       {/* Setup & Verify 2FA Modal */}
