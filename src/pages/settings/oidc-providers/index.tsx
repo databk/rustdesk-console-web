@@ -131,16 +131,7 @@ const OidcProviderList: React.FC = () => {
       );
       fetchData();
     } catch (_error) {
-      msgApi.error(
-        intl.formatMessage({
-          id: enabled
-            ? 'pages.oidcProviders.enableFailed'
-            : 'pages.oidcProviders.disableFailed',
-          defaultMessage: enabled
-            ? 'Failed to enable OIDC provider'
-            : 'Failed to disable OIDC provider',
-        }),
-      );
+      // Error is handled by global error handler
     }
   };
 
@@ -151,12 +142,7 @@ const OidcProviderList: React.FC = () => {
       setTestResult(result);
       setTestResultVisible(true);
     } catch (_error) {
-      msgApi.error(
-        intl.formatMessage({
-          id: 'pages.oidcProviders.testFailed',
-          defaultMessage: 'Failed to test OIDC connection',
-        }),
-      );
+      // Error is handled by global error handler
     } finally {
       setTestingGuid(null);
     }
@@ -177,12 +163,6 @@ const OidcProviderList: React.FC = () => {
   ) => {
     setDataSource(newDataSource);
     sortOidcProviderList(newDataSource.map((item) => item.guid)).catch(() => {
-      msgApi.error(
-        intl.formatMessage({
-          id: 'pages.oidcProviders.sortFailed',
-          defaultMessage: 'Failed to update provider order',
-        }),
-      );
       fetchData();
     });
   };
