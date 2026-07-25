@@ -114,12 +114,7 @@ const ShareAccessModal: React.FC<ShareAccessModalProps> = ({
       setUsers(userList.data || []);
       setRules(result);
     } catch {
-      msgApi.error(
-        intl.formatMessage({
-          id: 'pages.addressBook.accessLoadFailed',
-          defaultMessage: 'Failed to load access rules',
-        }),
-      );
+      // error handled by global request error handler
     } finally {
       setLoading(false);
     }
@@ -171,12 +166,7 @@ const ShareAccessModal: React.FC<ShareAccessModalProps> = ({
       );
       await load();
     } catch {
-      msgApi.error(
-        intl.formatMessage({
-          id: 'pages.addressBook.accessAddFailed',
-          defaultMessage: 'Failed to add access rule',
-        }),
-      );
+      // error handled by global request error handler
     } finally {
       setSaving(false);
     }
@@ -196,12 +186,7 @@ const ShareAccessModal: React.FC<ShareAccessModalProps> = ({
         }),
       );
     } catch {
-      msgApi.error(
-        intl.formatMessage({
-          id: 'pages.addressBook.accessUpdateFailed',
-          defaultMessage: 'Failed to update access rule',
-        }),
-      );
+      // error handled by global request error handler
     } finally {
       setSaving(false);
     }
@@ -219,12 +204,7 @@ const ShareAccessModal: React.FC<ShareAccessModalProps> = ({
         }),
       );
     } catch {
-      msgApi.error(
-        intl.formatMessage({
-          id: 'pages.addressBook.accessDeleteFailed',
-          defaultMessage: 'Failed to delete access rule',
-        }),
-      );
+      // error handled by global request error handler
     } finally {
       setSaving(false);
     }

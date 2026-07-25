@@ -53,12 +53,7 @@ const SharedAddressBook: React.FC = () => {
       createForm.resetFields();
       actionRef.current?.reload();
     } catch {
-      msgApi.error(
-        intl.formatMessage({
-          id: 'pages.addressBook.createFailed',
-          defaultMessage: 'Failed to create address book',
-        }),
-      );
+      // error handled by global request error handler
     }
   };
 
@@ -75,12 +70,7 @@ const SharedAddressBook: React.FC = () => {
       editForm.resetFields();
       actionRef.current?.reload();
     } catch {
-      msgApi.error(
-        intl.formatMessage({
-          id: 'pages.addressBook.updateFailed',
-          defaultMessage: 'Failed to update address book',
-        }),
-      );
+      // error handled by global request error handler
     }
   };
 
@@ -96,12 +86,7 @@ const SharedAddressBook: React.FC = () => {
       setSelectedRowKeys([]);
       actionRef.current?.reload();
     } catch {
-      msgApi.error(
-        intl.formatMessage({
-          id: 'pages.addressBook.deleteFailed',
-          defaultMessage: 'Failed to delete address book(s)',
-        }),
-      );
+      // error handled by global request error handler
     }
   };
 

@@ -41,12 +41,7 @@ const OidcProviderList: React.FC = () => {
         const result = await getOidcProviderList({ name });
         setDataSource(result.data || []);
       } catch (_error) {
-        msgApi.error(
-          intl.formatMessage({
-            id: 'pages.oidcProviders.fetchDetailFailed',
-            defaultMessage: 'Failed to fetch provider details',
-          }),
-        );
+        // Error is handled by global error handler
       } finally {
         setLoading(false);
       }
@@ -71,12 +66,7 @@ const OidcProviderList: React.FC = () => {
       fetchData();
       return true;
     } catch (_error) {
-      msgApi.error(
-        intl.formatMessage({
-          id: 'pages.oidcProviders.createFailed',
-          defaultMessage: 'Failed to create OIDC provider',
-        }),
-      );
+      // Error is handled by global error handler
       return false;
     }
   };
@@ -87,12 +77,7 @@ const OidcProviderList: React.FC = () => {
       setCurrentRecord(detail);
       setEditModalVisible(true);
     } catch (_error) {
-      msgApi.error(
-        intl.formatMessage({
-          id: 'pages.oidcProviders.fetchDetailFailed',
-          defaultMessage: 'Failed to fetch provider details',
-        }),
-      );
+      // Error is handled by global error handler
     }
   };
 
@@ -111,12 +96,7 @@ const OidcProviderList: React.FC = () => {
       fetchData();
       return true;
     } catch (_error) {
-      msgApi.error(
-        intl.formatMessage({
-          id: 'pages.oidcProviders.updateFailed',
-          defaultMessage: 'Failed to update OIDC provider',
-        }),
-      );
+      // Error is handled by global error handler
       return false;
     }
   };
@@ -132,12 +112,7 @@ const OidcProviderList: React.FC = () => {
       );
       fetchData();
     } catch (_error) {
-      msgApi.error(
-        intl.formatMessage({
-          id: 'pages.oidcProviders.deleteFailed',
-          defaultMessage: 'Failed to delete OIDC provider',
-        }),
-      );
+      // Error is handled by global error handler
     }
   };
 

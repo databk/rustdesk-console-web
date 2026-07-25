@@ -22,14 +22,7 @@ const GeneralSettings: React.FC = () => {
   useEffect(() => {
     void getGeneralSettings()
       .then((settings) => form.setFieldsValue(settings))
-      .catch(() => {
-        message.error(
-          intl.formatMessage({
-            id: 'pages.settings.fetchFailed',
-            defaultMessage: 'Failed to load settings',
-          }),
-        );
-      })
+      .catch(() => {})
       .finally(() => setLoading(false));
   }, [form, intl, message]);
 
@@ -49,12 +42,7 @@ const GeneralSettings: React.FC = () => {
         }),
       );
     } catch {
-      message.error(
-        intl.formatMessage({
-          id: 'pages.settings.saveFailed',
-          defaultMessage: 'Failed to save settings',
-        }),
-      );
+      // Error is handled by global error handler
     } finally {
       setSaving(false);
     }

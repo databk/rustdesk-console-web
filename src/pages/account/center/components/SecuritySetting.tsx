@@ -139,14 +139,7 @@ const SecuritySetting: React.FC = () => {
         }),
       );
       await fetchSessionList();
-    } catch (error: any) {
-      messageApi.error(
-        error?.data?.message ||
-          intl.formatMessage({
-            id: 'pages.account.security.sessions.revokeFailed',
-            defaultMessage: 'Failed to revoke session',
-          }),
-      );
+    } catch {
     } finally {
       setRevokeLoadingJti(null);
     }
@@ -166,14 +159,10 @@ const SecuritySetting: React.FC = () => {
       setRegisterName('');
       setRegisterModalOpen(true);
     } catch (error: unknown) {
+      // NotAllowedError means user cancelled, ignore; other errors handled by global error handler
       const err = error as { name?: string };
-      if (err?.name !== 'NotAllowedError') {
-        messageApi.error(
-          intl.formatMessage({
-            id: 'pages.account.security.passkey.registerFailed',
-            defaultMessage: 'Failed to register Passkey',
-          }),
-        );
+      if (err?.name === 'NotAllowedError') {
+        // User cancelled the passkey registration, no action needed
       }
     } finally {
       setRegisterLoading(false);
@@ -198,14 +187,7 @@ const SecuritySetting: React.FC = () => {
       setPendingRegistration(null);
       await fetchPasskeyList();
       await refresh();
-    } catch (error: any) {
-      messageApi.error(
-        error?.data?.message ||
-          intl.formatMessage({
-            id: 'pages.account.security.passkey.registerFailed',
-            defaultMessage: 'Failed to register Passkey',
-          }),
-      );
+    } catch {
     } finally {
       setRegisterConfirmLoading(false);
     }
@@ -222,14 +204,7 @@ const SecuritySetting: React.FC = () => {
       );
       await fetchPasskeyList();
       await refresh();
-    } catch (error: any) {
-      messageApi.error(
-        error?.data?.message ||
-          intl.formatMessage({
-            id: 'pages.account.security.passkey.deleteFailed',
-            defaultMessage: 'Failed to delete Passkey',
-          }),
-      );
+    } catch {
     }
   };
 
@@ -248,14 +223,7 @@ const SecuritySetting: React.FC = () => {
         }),
       );
       await refresh();
-    } catch (error: any) {
-      messageApi.error(
-        error?.data?.message ||
-          intl.formatMessage({
-            id: 'pages.account.security.passkey.tfaToggleFailed',
-            defaultMessage: 'Failed to toggle Passkey TFA',
-          }),
-      );
+    } catch {
     } finally {
       setPasskeyTfaLoading(false);
     }
@@ -267,14 +235,7 @@ const SecuritySetting: React.FC = () => {
       const data = await setup2FA();
       setSetupData(data);
       setSetupModalOpen(true);
-    } catch (error: any) {
-      messageApi.error(
-        error?.data?.message ||
-          intl.formatMessage({
-            id: 'pages.account.security.setupFailed',
-            defaultMessage: 'Failed to setup 2FA',
-          }),
-      );
+    } catch {
     } finally {
       setSetupLoading(false);
     }
@@ -297,13 +258,6 @@ const SecuritySetting: React.FC = () => {
       await refresh();
     } catch (error: any) {
       if (error?.errorFields) return;
-      messageApi.error(
-        error?.data?.message ||
-          intl.formatMessage({
-            id: 'pages.account.security.enableFailed',
-            defaultMessage: 'Failed to enable 2FA',
-          }),
-      );
     } finally {
       setVerifyLoading(false);
     }
@@ -325,13 +279,6 @@ const SecuritySetting: React.FC = () => {
       await refresh();
     } catch (error: any) {
       if (error?.errorFields) return;
-      messageApi.error(
-        error?.data?.message ||
-          intl.formatMessage({
-            id: 'pages.account.security.disableFailed',
-            defaultMessage: 'Failed to disable 2FA',
-          }),
-      );
     } finally {
       setDisableLoading(false);
     }
@@ -355,13 +302,6 @@ const SecuritySetting: React.FC = () => {
       passwordForm.resetFields();
     } catch (error: any) {
       if (error?.errorFields) return;
-      messageApi.error(
-        error?.data?.message ||
-          intl.formatMessage({
-            id: 'pages.account.security.changePasswordFailed',
-            defaultMessage: 'Failed to change password',
-          }),
-      );
     } finally {
       setPasswordLoading(false);
     }

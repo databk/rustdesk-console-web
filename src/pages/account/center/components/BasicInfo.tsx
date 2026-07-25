@@ -35,12 +35,6 @@ const BasicInfo: React.FC = () => {
       await refresh();
     } catch (error: any) {
       if (error?.errorFields) return;
-      messageApi.error(
-        intl.formatMessage({
-          id: 'pages.account.basicInfo.updateFailed',
-          defaultMessage: 'Failed to update profile',
-        }),
-      );
     } finally {
       setSaving(false);
     }

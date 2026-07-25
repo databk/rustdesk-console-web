@@ -109,12 +109,7 @@ const SMTPSettings: React.FC = () => {
         // 表单验证错误，不需要显示消息
         return;
       }
-      messageApi.error(
-        intl.formatMessage({
-          id: 'pages.smtp.saveFailed',
-          defaultMessage: 'Failed to save SMTP configuration',
-        }),
-      );
+      // Error is handled by global error handler
     } finally {
       setSaving(false);
     }
@@ -173,12 +168,7 @@ const SMTPSettings: React.FC = () => {
         // 表单验证错误
         return;
       }
-      messageApi.error(
-        intl.formatMessage({
-          id: 'pages.smtp.testFailed',
-          defaultMessage: 'SMTP connection test failed',
-        }),
-      );
+      // Error is handled by global error handler
     } finally {
       setTesting(false);
     }

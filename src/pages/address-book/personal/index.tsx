@@ -168,12 +168,6 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
         });
       } catch (error) {
         console.error('Failed to fetch address books:', error);
-        msgApi.error(
-          intl.formatMessage({
-            id: 'pages.addressBook.loadFailed',
-            defaultMessage: 'Failed to load address books',
-          }),
-        );
       } finally {
         setAbLoading(false);
       }
@@ -289,18 +283,7 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
       setAddressBookModalMode(null);
       addressBookForm.resetFields();
     } catch {
-      msgApi.error(
-        intl.formatMessage({
-          id:
-            addressBookModalMode === 'create'
-              ? 'pages.addressBook.createFailed'
-              : 'pages.addressBook.updateFailed',
-          defaultMessage:
-            addressBookModalMode === 'create'
-              ? 'Failed to create address book'
-              : 'Failed to update address book',
-        }),
-      );
+      // error handled by global request error handler
     } finally {
       setAddressBookSaving(false);
     }
@@ -319,12 +302,7 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
         }),
       );
     } catch {
-      msgApi.error(
-        intl.formatMessage({
-          id: 'pages.addressBook.deleteFailed',
-          defaultMessage: 'Failed to delete address book',
-        }),
-      );
+      // error handled by global request error handler
     } finally {
       setAddressBookSaving(false);
     }
@@ -427,12 +405,7 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
       );
       actionRef.current?.reload();
     } catch {
-      msgApi.error(
-        intl.formatMessage({
-          id: 'pages.addressBook.peerDeleteFailed',
-          defaultMessage: 'Failed to delete peer',
-        }),
-      );
+      // error handled by global request error handler
     }
   };
 
@@ -462,12 +435,7 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
       addTagForm.resetFields();
       fetchTags();
     } catch {
-      msgApi.error(
-        intl.formatMessage({
-          id: 'pages.addressBook.tagAddFailed',
-          defaultMessage: 'Failed to add tag',
-        }),
-      );
+      // error handled by global request error handler
     }
   };
 
@@ -484,12 +452,7 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
       renameTagForm.resetFields();
       fetchTags();
     } catch {
-      msgApi.error(
-        intl.formatMessage({
-          id: 'pages.addressBook.tagRenameFailed',
-          defaultMessage: 'Failed to rename tag',
-        }),
-      );
+      // error handled by global request error handler
     }
   };
 
@@ -511,12 +474,6 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
         delete next[tagName];
         return next;
       });
-      msgApi.error(
-        intl.formatMessage({
-          id: 'pages.addressBook.tagColorUpdateFailed',
-          defaultMessage: 'Failed to update tag color',
-        }),
-      );
     }
   };
 
@@ -532,12 +489,7 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
       );
       fetchTags();
     } catch {
-      msgApi.error(
-        intl.formatMessage({
-          id: 'pages.addressBook.tagDeleteFailed',
-          defaultMessage: 'Failed to delete tag',
-        }),
-      );
+      // error handled by global request error handler
     }
   };
 

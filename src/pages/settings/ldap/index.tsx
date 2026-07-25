@@ -113,13 +113,7 @@ const LDAPSettings: React.FC = () => {
       if (error?.errorFields) {
         return;
       }
-      const { message: messageApi } = await import('antd');
-      messageApi.error(
-        intl.formatMessage({
-          id: 'pages.ldap.saveFailed',
-          defaultMessage: 'Failed to save LDAP configuration',
-        }),
-      );
+      // Error is handled by global error handler
     } finally {
       setSaving(false);
     }
@@ -172,13 +166,7 @@ const LDAPSettings: React.FC = () => {
       if (error?.errorFields) {
         return;
       }
-      const { message: messageApi } = await import('antd');
-      messageApi.error(
-        intl.formatMessage({
-          id: 'pages.ldap.testFailed',
-          defaultMessage: 'LDAP connection test failed',
-        }),
-      );
+      // Error is handled by global error handler
     } finally {
       setTesting(false);
     }
