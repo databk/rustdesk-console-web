@@ -89,9 +89,7 @@ const SecuritySetting: React.FC = () => {
   // Session states
   const [sessionList, setSessionList] = useState<API.SessionItem[]>([]);
   const [sessionListLoading, setSessionListLoading] = useState(false);
-  const [revokeLoadingJti, setRevokeLoadingJti] = useState<string | null>(
-    null,
-  );
+  const [revokeLoadingJti, setRevokeLoadingJti] = useState<string | null>(null);
   const currentJti = getTokenJti();
 
   const isPasskeyTfaEnabled =
