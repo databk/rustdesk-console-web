@@ -25,12 +25,12 @@ const Footer: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    // Only auto-check when user is logged in
-    if (!autoChecked.current && initialState?.currentUser) {
+    // Only auto-check when user is logged in as admin
+    if (!autoChecked.current && initialState?.currentUser?.is_admin) {
       autoChecked.current = true;
       doAutoCheck();
     }
-  }, [doAutoCheck, initialState?.currentUser]);
+  }, [doAutoCheck, initialState?.currentUser?.is_admin]);
 
   return (
     <>
