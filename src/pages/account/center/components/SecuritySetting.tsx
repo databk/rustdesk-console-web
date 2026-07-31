@@ -12,12 +12,16 @@ import { useIntl, FormattedMessage, useModel } from '@umijs/max';
 import {
   Button,
   Card,
+  Col,
   Descriptions,
+  Divider,
+  Flex,
   Form,
   Input,
   message as messageApi,
   Modal,
   Popconfirm,
+  Row,
   Space,
   Switch,
   Table,
@@ -391,445 +395,430 @@ const SecuritySetting: React.FC = () => {
 
   return (
     <>
-      <Card
-        title={
-          <FormattedMessage
-            id="pages.account.security.title"
-            defaultMessage="Security Settings"
-          />
-        }
-      >
-        <Descriptions column={1}>
-          <Descriptions.Item
-            label={
-              <FormattedMessage
-                id="pages.account.security.2faStatus"
-                defaultMessage="2FA Status"
-              />
-            }
-          >
-            <Space>
-              {is2FAEnabled ? (
-                <Tag icon={<SafetyCertificateOutlined />} color="success">
-                  <FormattedMessage
-                    id="pages.account.security.enabled"
-                    defaultMessage="Enabled"
-                  />
-                </Tag>
-              ) : (
-                <Tag icon={<UnlockOutlined />} color="default">
-                  <FormattedMessage
-                    id="pages.account.security.disabled"
-                    defaultMessage="Disabled"
-                  />
-                </Tag>
-              )}
-            </Space>
-          </Descriptions.Item>
-          <Descriptions.Item
-            label={
-              <FormattedMessage
-                id="pages.account.security.2faAction"
-                defaultMessage="Action"
-              />
-            }
-          >
-            {is2FAEnabled ? (
-              <Button
-                danger
-                icon={<UnlockOutlined />}
-                onClick={() => setDisableModalOpen(true)}
-              >
-                <FormattedMessage
-                  id="pages.account.security.disable2FA"
-                  defaultMessage="Disable 2FA"
-                />
-              </Button>
-            ) : (
-              <Button
-                type="primary"
-                icon={<LockOutlined />}
-                onClick={handleSetup2FA}
-                loading={setupLoading}
-              >
-                <FormattedMessage
-                  id="pages.account.security.enable2FA"
-                  defaultMessage="Enable 2FA"
-                />
-              </Button>
-            )}
-          </Descriptions.Item>
-        </Descriptions>
-      </Card>
-
-      <Card
-        title={
-          <FormattedMessage
-            id="pages.account.security.password"
-            defaultMessage="Login Password"
-          />
-        }
-        style={{ marginTop: 24 }}
-      >
-        <Descriptions column={1}>
-          <Descriptions.Item
-            label={
-              <FormattedMessage
-                id="pages.account.security.password"
-                defaultMessage="Login Password"
-              />
-            }
-          >
-            <Space>
-              {isThirdPartyUser ? (
-                <Tag color="warning">
-                  <FormattedMessage
-                    id="pages.account.security.thirdPartyUser"
-                    defaultMessage="Third-party login users cannot change password"
-                  />
-                </Tag>
-              ) : hasPassword ? (
-                <Tag icon={<KeyOutlined />} color="success">
-                  <FormattedMessage
-                    id="pages.account.security.passwordSet"
-                    defaultMessage="Set"
-                  />
-                </Tag>
-              ) : (
-                <Tag icon={<UnlockOutlined />} color="default">
-                  <FormattedMessage
-                    id="pages.account.security.passwordNotSet"
-                    defaultMessage="Not Set"
-                  />
-                </Tag>
-              )}
-            </Space>
-          </Descriptions.Item>
-          <Descriptions.Item
-            label={
-              <FormattedMessage
-                id="pages.account.security.2faAction"
-                defaultMessage="Action"
-              />
-            }
-          >
-            <Button
-              type="primary"
-              icon={<KeyOutlined />}
-              onClick={handleChangePasswordClick}
-              disabled={isThirdPartyUser || !hasPassword}
-            >
-              <FormattedMessage
-                id="pages.account.security.changePassword"
-                defaultMessage="Change Password"
-              />
-            </Button>
-          </Descriptions.Item>
-        </Descriptions>
-      </Card>
-
-      <Card
-        title={
-          <FormattedMessage
-            id="pages.account.security.passkey.title"
-            defaultMessage="Passkey Management"
-          />
-        }
-        style={{ marginTop: 24 }}
-      >
-        <Space direction="vertical" style={{ width: '100%' }} size="middle">
-          {passkeySupported && (
-            <Button
-              type="primary"
-              icon={<PlusOutlined />}
-              onClick={handleRegisterPasskey}
-              loading={registerLoading}
-            >
-              <FormattedMessage
-                id="pages.account.security.passkey.register"
-                defaultMessage="Register Passkey"
-              />
-            </Button>
-          )}
-
-          <Table
-            dataSource={passkeyList}
-            rowKey="guid"
-            loading={passkeyListLoading}
-            size="small"
-            pagination={false}
-            locale={{
-              emptyText: intl.formatMessage({
-                id: 'pages.account.security.passkey.noCredentials',
-                defaultMessage: 'No Passkeys registered',
-              }),
-            }}
-            columns={[
-              {
-                title: intl.formatMessage({
-                  id: 'pages.account.security.passkey.name',
-                  defaultMessage: 'Name',
-                }),
-                dataIndex: 'name',
-                key: 'name',
-                render: (name: string) => name || '-',
-              },
-              {
-                title: intl.formatMessage({
-                  id: 'pages.account.security.passkey.deviceType',
-                  defaultMessage: 'Device Type',
-                }),
-                dataIndex: 'deviceType',
-                key: 'deviceType',
-                render: (type: string) => (
-                  <Tag>
-                    {type === 'multiDevice'
-                      ? intl.formatMessage({
-                          id: 'pages.account.security.passkey.multiDevice',
-                          defaultMessage: 'Multi-device',
-                        })
-                      : intl.formatMessage({
-                          id: 'pages.account.security.passkey.singleDevice',
-                          defaultMessage: 'Single-device',
-                        })}
-                  </Tag>
-                ),
-              },
-              {
-                title: intl.formatMessage({
-                  id: 'pages.account.security.passkey.createdAt',
-                  defaultMessage: 'Created At',
-                }),
-                dataIndex: 'createdAt',
-                key: 'createdAt',
-                render: (date: string) =>
-                  date ? dayjs(date).format('YYYY-MM-DD HH:mm') : '-',
-              },
-              {
-                title: intl.formatMessage({
-                  id: 'pages.common.action',
-                  defaultMessage: 'Action',
-                }),
-                key: 'action',
-                width: 100,
-                render: (_: unknown, record: API.PasskeyCredential) => (
-                  <Popconfirm
-                    title={intl.formatMessage({
-                      id: 'pages.account.security.passkey.deleteConfirm',
-                      defaultMessage: 'Are you sure to delete this Passkey?',
-                    })}
-                    onConfirm={() => handleDeletePasskey(record.guid)}
-                  >
-                    <Button danger size="small" icon={<DeleteOutlined />}>
-                      <FormattedMessage
-                        id="pages.common.delete"
-                        defaultMessage="Delete"
-                      />
-                    </Button>
-                  </Popconfirm>
-                ),
-              },
-            ]}
-          />
-
-          <Descriptions column={1}>
-            <Descriptions.Item
-              label={
-                <FormattedMessage
-                  id="pages.account.security.passkey.tfaStatus"
-                  defaultMessage="Passkey TFA"
-                />
-              }
-            >
+      <Row gutter={[16, 16]}>
+        {/* Row 1: 2FA (compact) + Passkey (table) */}
+        <Col xs={24} md={10}>
+          <Card
+            title={
               <Space>
-                <Switch
-                  checked={isPasskeyTfaEnabled}
-                  loading={passkeyTfaLoading}
-                  onChange={handleTogglePasskeyTfa}
-                  disabled={passkeyList.length === 0}
+                <SafetyCertificateOutlined />
+                <FormattedMessage
+                  id="pages.account.security.title"
+                  defaultMessage="Security Settings"
                 />
-                {isPasskeyTfaEnabled ? (
-                  <Tag color="success">
+              </Space>
+            }
+            styles={{ body: { padding: '16px 24px' } }}
+          >
+            <Flex vertical gap="middle">
+              <Flex align="center" justify="space-between">
+                <FormattedMessage
+                  id="pages.account.security.2faStatus"
+                  defaultMessage="2FA Status"
+                />
+                {is2FAEnabled ? (
+                  <Tag icon={<SafetyCertificateOutlined />} color="success">
                     <FormattedMessage
                       id="pages.account.security.enabled"
                       defaultMessage="Enabled"
                     />
                   </Tag>
                 ) : (
-                  <Tag color="default">
+                  <Tag icon={<UnlockOutlined />} color="default">
                     <FormattedMessage
                       id="pages.account.security.disabled"
                       defaultMessage="Disabled"
                     />
                   </Tag>
                 )}
-              </Space>
-            </Descriptions.Item>
-          </Descriptions>
-        </Space>
-      </Card>
+              </Flex>
+              {is2FAEnabled ? (
+                <Button
+                  danger
+                  icon={<UnlockOutlined />}
+                  onClick={() => setDisableModalOpen(true)}
+                  block
+                >
+                  <FormattedMessage
+                    id="pages.account.security.disable2FA"
+                    defaultMessage="Disable 2FA"
+                  />
+                </Button>
+              ) : (
+                <Button
+                  type="primary"
+                  icon={<LockOutlined />}
+                  onClick={handleSetup2FA}
+                  loading={setupLoading}
+                  block
+                >
+                  <FormattedMessage
+                    id="pages.account.security.enable2FA"
+                    defaultMessage="Enable 2FA"
+                  />
+                </Button>
+              )}
+            </Flex>
+          </Card>
+        </Col>
 
-      <Card
-        title={
-          <FormattedMessage
-            id="pages.account.security.sessions.title"
-            defaultMessage="Login Sessions"
-          />
-        }
-        style={{ marginTop: 24 }}
-      >
-        <Table
-          dataSource={sessionList}
-          rowKey="jti"
-          loading={sessionListLoading}
-          size="small"
-          pagination={false}
-          locale={{
-            emptyText: intl.formatMessage({
-              id: 'pages.account.security.sessions.noSessions',
-              defaultMessage: 'No active sessions',
-            }),
-          }}
-          columns={[
-            {
-              title: intl.formatMessage({
-                id: 'pages.account.security.sessions.device',
-                defaultMessage: 'Device',
-              }),
-              key: 'device',
-              render: (_: unknown, record: API.SessionItem) => (
+        <Col xs={24} md={14}>
+          <Card
+            title={
+              <Space>
+                <KeyOutlined />
+                <FormattedMessage
+                  id="pages.account.security.passkey.title"
+                  defaultMessage="Passkey Management"
+                />
+              </Space>
+            }
+          >
+            <Space direction="vertical" style={{ width: '100%' }} size="middle">
+              {passkeySupported && (
+                <Button
+                  type="primary"
+                  icon={<PlusOutlined />}
+                  onClick={handleRegisterPasskey}
+                  loading={registerLoading}
+                >
+                  <FormattedMessage
+                    id="pages.account.security.passkey.register"
+                    defaultMessage="Register Passkey"
+                  />
+                </Button>
+              )}
+
+              <Table
+                dataSource={passkeyList}
+                rowKey="guid"
+                loading={passkeyListLoading}
+                size="middle"
+                pagination={false}
+                locale={{
+                  emptyText: intl.formatMessage({
+                    id: 'pages.account.security.passkey.noCredentials',
+                    defaultMessage: 'No Passkeys registered',
+                  }),
+                }}
+                columns={[
+                  {
+                    title: intl.formatMessage({
+                      id: 'pages.account.security.passkey.name',
+                      defaultMessage: 'Name',
+                    }),
+                    dataIndex: 'name',
+                    key: 'name',
+                    render: (name: string) => name || '-',
+                  },
+                  {
+                    title: intl.formatMessage({
+                      id: 'pages.account.security.passkey.deviceType',
+                      defaultMessage: 'Device Type',
+                    }),
+                    dataIndex: 'deviceType',
+                    key: 'deviceType',
+                    render: (type: string) => (
+                      <Tag>
+                        {type === 'multiDevice'
+                          ? intl.formatMessage({
+                              id: 'pages.account.security.passkey.multiDevice',
+                              defaultMessage: 'Multi-device',
+                            })
+                          : intl.formatMessage({
+                              id: 'pages.account.security.passkey.singleDevice',
+                              defaultMessage: 'Single-device',
+                            })}
+                      </Tag>
+                    ),
+                  },
+                  {
+                    title: intl.formatMessage({
+                      id: 'pages.account.security.passkey.createdAt',
+                      defaultMessage: 'Created At',
+                    }),
+                    dataIndex: 'createdAt',
+                    key: 'createdAt',
+                    render: (date: string) =>
+                      date ? dayjs(date).format('YYYY-MM-DD HH:mm') : '-',
+                  },
+                  {
+                    title: intl.formatMessage({
+                      id: 'pages.common.action',
+                      defaultMessage: 'Action',
+                    }),
+                    key: 'action',
+                    width: 100,
+                    render: (_: unknown, record: API.PasskeyCredential) => (
+                      <Popconfirm
+                        title={intl.formatMessage({
+                          id: 'pages.account.security.passkey.deleteConfirm',
+                          defaultMessage: 'Are you sure to delete this Passkey?',
+                        })}
+                        onConfirm={() => handleDeletePasskey(record.guid)}
+                      >
+                        <Button danger size="small" icon={<DeleteOutlined />}>
+                          <FormattedMessage
+                            id="pages.common.delete"
+                            defaultMessage="Delete"
+                          />
+                        </Button>
+                      </Popconfirm>
+                    ),
+                  },
+                ]}
+              />
+
+              <Divider style={{ margin: '8px 0' }} />
+
+              <Flex align="center" justify="space-between">
                 <Space>
-                  {record.deviceType === 'client' ? (
-                    <DesktopOutlined />
-                  ) : (
-                    <GlobalOutlined />
-                  )}
-                  <span>{record.deviceName || '-'}</span>
-                  {record.jti === currentJti && (
-                    <Tag color="blue">
+                  <FormattedMessage
+                    id="pages.account.security.passkey.tfaStatus"
+                    defaultMessage="Passkey TFA"
+                  />
+                  {isPasskeyTfaEnabled ? (
+                    <Tag color="success">
                       <FormattedMessage
-                        id="pages.account.security.sessions.current"
-                        defaultMessage="Current"
+                        id="pages.account.security.enabled"
+                        defaultMessage="Enabled"
+                      />
+                    </Tag>
+                  ) : (
+                    <Tag color="default">
+                      <FormattedMessage
+                        id="pages.account.security.disabled"
+                        defaultMessage="Disabled"
                       />
                     </Tag>
                   )}
                 </Space>
-              ),
-            },
-            {
-              title: intl.formatMessage({
-                id: 'pages.account.security.sessions.type',
-                defaultMessage: 'Type',
-              }),
-              dataIndex: 'deviceType',
-              key: 'deviceType',
-              render: (type: string) => (
-                <Tag>
-                  {type === 'client'
-                    ? intl.formatMessage({
-                        id: 'pages.account.security.sessions.client',
-                        defaultMessage: 'Client',
-                      })
-                    : intl.formatMessage({
-                        id: 'pages.account.security.sessions.browser',
-                        defaultMessage: 'Browser',
-                      })}
-                </Tag>
-              ),
-            },
-            {
-              title: intl.formatMessage({
-                id: 'pages.account.security.sessions.os',
-                defaultMessage: 'OS',
-              }),
-              dataIndex: 'deviceOs',
-              key: 'deviceOs',
-              render: (os: string) => os || '-',
-            },
-            {
-              title: intl.formatMessage({
-                id: 'pages.account.security.sessions.createdAt',
-                defaultMessage: 'Created At',
-              }),
-              dataIndex: 'createdAt',
-              key: 'createdAt',
-              render: (date: string) =>
-                date ? dayjs(date).format('YYYY-MM-DD HH:mm') : '-',
-            },
-            {
-              title: intl.formatMessage({
-                id: 'pages.account.security.sessions.expiresAt',
-                defaultMessage: 'Expires At',
-              }),
-              dataIndex: 'expiresAt',
-              key: 'expiresAt',
-              render: (date: string) =>
-                date ? dayjs(date).format('YYYY-MM-DD HH:mm') : '-',
-            },
-            {
-              title: intl.formatMessage({
-                id: 'pages.common.action',
-                defaultMessage: 'Action',
-              }),
-              key: 'action',
-              width: 100,
-              render: (_: unknown, record: API.SessionItem) => {
-                const isCurrent = record.jti === currentJti;
-                if (isCurrent) {
-                  return (
-                    <Tooltip
-                      title={intl.formatMessage({
-                        id: 'pages.account.security.sessions.cannotRevokeCurrent',
-                        defaultMessage: 'Cannot revoke current session',
-                      })}
-                    >
-                      <Button
-                        danger
-                        size="small"
-                        icon={<DeleteOutlined />}
-                        disabled
+                <Switch
+                  checked={isPasskeyTfaEnabled}
+                  loading={passkeyTfaLoading}
+                  onChange={handleTogglePasskeyTfa}
+                  disabled={passkeyList.length === 0}
+                />
+              </Flex>
+            </Space>
+          </Card>
+        </Col>
+
+        {/* Row 2: Password (compact) + Sessions (table) */}
+        <Col xs={24} md={10}>
+          <Card
+            title={
+              <Space>
+                <LockOutlined />
+                <FormattedMessage
+                  id="pages.account.security.password"
+                  defaultMessage="Login Password"
+                />
+              </Space>
+            }
+            styles={{ body: { padding: '16px 24px' } }}
+          >
+            <Flex vertical gap="middle">
+              <Flex align="center" justify="space-between">
+                <FormattedMessage
+                  id="pages.account.security.password"
+                  defaultMessage="Login Password"
+                />
+                {isThirdPartyUser ? (
+                  <Tag color="warning">
+                    <FormattedMessage
+                      id="pages.account.security.thirdPartyUser"
+                      defaultMessage="Third-party login users cannot change password"
+                    />
+                  </Tag>
+                ) : hasPassword ? (
+                  <Tag icon={<KeyOutlined />} color="success">
+                    <FormattedMessage
+                      id="pages.account.security.passwordSet"
+                      defaultMessage="Set"
+                    />
+                  </Tag>
+                ) : (
+                  <Tag icon={<UnlockOutlined />} color="default">
+                    <FormattedMessage
+                      id="pages.account.security.passwordNotSet"
+                      defaultMessage="Not Set"
+                    />
+                  </Tag>
+                )}
+              </Flex>
+              <Button
+                type="primary"
+                icon={<KeyOutlined />}
+                onClick={handleChangePasswordClick}
+                disabled={isThirdPartyUser || !hasPassword}
+                block
+              >
+                <FormattedMessage
+                  id="pages.account.security.changePassword"
+                  defaultMessage="Change Password"
+                />
+              </Button>
+            </Flex>
+          </Card>
+        </Col>
+
+        <Col xs={24} md={14}>
+          <Card
+            title={
+              <Space>
+                <DesktopOutlined />
+                <FormattedMessage
+                  id="pages.account.security.sessions.title"
+                  defaultMessage="Login Sessions"
+                />
+              </Space>
+            }
+          >
+            <Table
+              dataSource={sessionList}
+              rowKey="jti"
+              loading={sessionListLoading}
+              size="middle"
+              pagination={false}
+              locale={{
+                emptyText: intl.formatMessage({
+                  id: 'pages.account.security.sessions.noSessions',
+                  defaultMessage: 'No active sessions',
+                }),
+              }}
+              columns={[
+                {
+                  title: intl.formatMessage({
+                    id: 'pages.account.security.sessions.device',
+                    defaultMessage: 'Device',
+                  }),
+                  key: 'device',
+                  render: (_: unknown, record: API.SessionItem) => (
+                    <Space>
+                      {record.deviceType === 'client' ? (
+                        <DesktopOutlined />
+                      ) : (
+                        <GlobalOutlined />
+                      )}
+                      <span>{record.deviceName || '-'}</span>
+                      {record.jti === currentJti && (
+                        <Tag color="blue">
+                          <FormattedMessage
+                            id="pages.account.security.sessions.current"
+                            defaultMessage="Current"
+                          />
+                        </Tag>
+                      )}
+                    </Space>
+                  ),
+                },
+                {
+                  title: intl.formatMessage({
+                    id: 'pages.account.security.sessions.type',
+                    defaultMessage: 'Type',
+                  }),
+                  dataIndex: 'deviceType',
+                  key: 'deviceType',
+                  render: (type: string) => (
+                    <Tag>
+                      {type === 'client'
+                        ? intl.formatMessage({
+                            id: 'pages.account.security.sessions.client',
+                            defaultMessage: 'Client',
+                          })
+                        : intl.formatMessage({
+                            id: 'pages.account.security.sessions.browser',
+                            defaultMessage: 'Browser',
+                          })}
+                    </Tag>
+                  ),
+                },
+                {
+                  title: intl.formatMessage({
+                    id: 'pages.account.security.sessions.os',
+                    defaultMessage: 'OS',
+                  }),
+                  dataIndex: 'deviceOs',
+                  key: 'deviceOs',
+                  render: (os: string) => os || '-',
+                },
+                {
+                  title: intl.formatMessage({
+                    id: 'pages.account.security.sessions.createdAt',
+                    defaultMessage: 'Created At',
+                  }),
+                  dataIndex: 'createdAt',
+                  key: 'createdAt',
+                  render: (date: string) =>
+                    date ? dayjs(date).format('YYYY-MM-DD HH:mm') : '-',
+                },
+                {
+                  title: intl.formatMessage({
+                    id: 'pages.account.security.sessions.expiresAt',
+                    defaultMessage: 'Expires At',
+                  }),
+                  dataIndex: 'expiresAt',
+                  key: 'expiresAt',
+                  render: (date: string) =>
+                    date ? dayjs(date).format('YYYY-MM-DD HH:mm') : '-',
+                },
+                {
+                  title: intl.formatMessage({
+                    id: 'pages.common.action',
+                    defaultMessage: 'Action',
+                  }),
+                  key: 'action',
+                  width: 100,
+                  render: (_: unknown, record: API.SessionItem) => {
+                    const isCurrent = record.jti === currentJti;
+                    return (
+                      <Tooltip
+                        title={
+                          isCurrent
+                            ? intl.formatMessage({
+                                id: 'pages.account.security.sessions.cannotRevokeCurrent',
+                                defaultMessage: 'Cannot revoke current session',
+                              })
+                            : undefined
+                        }
                       >
-                        <FormattedMessage
-                          id="pages.account.security.sessions.revoke"
-                          defaultMessage="Revoke"
-                        />
-                      </Button>
-                    </Tooltip>
-                  );
-                }
-                return (
-                  <Popconfirm
-                    title={intl.formatMessage({
-                      id: 'pages.account.security.sessions.revokeConfirm',
-                      defaultMessage: 'Are you sure to revoke this session?',
-                    })}
-                    onConfirm={() => handleRevokeSession(record.jti)}
-                  >
-                    <Button
-                      danger
-                      size="small"
-                      icon={<DeleteOutlined />}
-                      loading={revokeLoadingJti === record.jti}
-                    >
-                      <FormattedMessage
-                        id="pages.account.security.sessions.revoke"
-                        defaultMessage="Revoke"
-                      />
-                    </Button>
-                  </Popconfirm>
-                );
-              },
-            },
-          ]}
-        />
-      </Card>
+                        <Popconfirm
+                          title={intl.formatMessage({
+                            id: 'pages.account.security.sessions.revokeConfirm',
+                            defaultMessage: 'Are you sure to revoke this session?',
+                          })}
+                          onConfirm={() => handleRevokeSession(record.jti)}
+                        >
+                          <Button
+                            danger
+                            size="small"
+                            icon={<DeleteOutlined />}
+                            disabled={isCurrent}
+                            loading={revokeLoadingJti === record.jti}
+                          >
+                            <FormattedMessage
+                              id="pages.account.security.sessions.revoke"
+                              defaultMessage="Revoke"
+                            />
+                          </Button>
+                        </Popconfirm>
+                      </Tooltip>
+                    );
+                  },
+                },
+              ]}
+            />
+          </Card>
+        </Col>
+      </Row>
 
       {/* Setup & Verify 2FA Modal */}
       <Modal
         title={
           <FormattedMessage
             id="pages.account.security.setup2FA"
-            defaultMessage="Setup 2FA"
+            defaultMessage="Setup Two-Factor Authentication"
           />
         }
         open={setupModalOpen}
@@ -846,7 +835,7 @@ const SecuritySetting: React.FC = () => {
             <div style={{ textAlign: 'center' }}>
               <QRCodeSVG value={setupData.otpauth_url} size={200} />
             </div>
-            <Paragraph>
+            <Paragraph type="secondary">
               <FormattedMessage
                 id="pages.account.security.scanQRCode"
                 defaultMessage="Scan the QR code with your authenticator app, then enter the verification code below."

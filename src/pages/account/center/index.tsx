@@ -1,9 +1,8 @@
 import { PageContainer } from '@ant-design/pro-components';
 import { FormattedMessage } from '@umijs/max';
-import { Card, Tabs } from 'antd';
+import { Tabs } from 'antd';
 import React from 'react';
 import BasicInfo from './components/BasicInfo';
-import AvatarSetting from './components/AvatarSetting';
 import SecuritySetting from './components/SecuritySetting';
 
 const AccountCenter: React.FC = () => {
@@ -19,16 +18,6 @@ const AccountCenter: React.FC = () => {
       children: <BasicInfo />,
     },
     {
-      key: 'avatar',
-      label: (
-        <FormattedMessage
-          id="pages.account.tab.avatar"
-          defaultMessage="Avatar"
-        />
-      ),
-      children: <AvatarSetting />,
-    },
-    {
       key: 'security',
       label: (
         <FormattedMessage
@@ -42,9 +31,7 @@ const AccountCenter: React.FC = () => {
 
   return (
     <PageContainer>
-      <Card>
-        <Tabs items={items} />
-      </Card>
+      <Tabs items={items} centered size="large" />
     </PageContainer>
   );
 };
