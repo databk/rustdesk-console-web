@@ -150,7 +150,14 @@ const BasicInfo: React.FC = () => {
         <Col xs={24} md={8}>
           <Card
             style={{ textAlign: 'center' }}
-            styles={{ body: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 } }}
+            styles={{
+              body: {
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: 16,
+              },
+            }}
           >
             <Avatar
               size={120}

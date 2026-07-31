@@ -553,7 +553,8 @@ const SecuritySetting: React.FC = () => {
                       <Popconfirm
                         title={intl.formatMessage({
                           id: 'pages.account.security.passkey.deleteConfirm',
-                          defaultMessage: 'Are you sure to delete this Passkey?',
+                          defaultMessage:
+                            'Are you sure to delete this Passkey?',
                         })}
                         onConfirm={() => handleDeletePasskey(record.guid)}
                       >
@@ -786,7 +787,8 @@ const SecuritySetting: React.FC = () => {
                         <Popconfirm
                           title={intl.formatMessage({
                             id: 'pages.account.security.sessions.revokeConfirm',
-                            defaultMessage: 'Are you sure to revoke this session?',
+                            defaultMessage:
+                              'Are you sure to revoke this session?',
                           })}
                           onConfirm={() => handleRevokeSession(record.jti)}
                         >
