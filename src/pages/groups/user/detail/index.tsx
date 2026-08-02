@@ -1,6 +1,6 @@
 import { useLocation, useNavigate, useParams } from '@umijs/max';
 import React from 'react';
-import UserList from '@/pages/users/list';
+import UserList from '@/pages/users';
 
 const UserGroupDetail: React.FC = () => {
   const { guid } = useParams<{ guid: string }>();

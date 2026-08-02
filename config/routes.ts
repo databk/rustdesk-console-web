@@ -46,7 +46,7 @@ export default [
     path: '/devices',
     name: 'devices',
     icon: 'desktop',
-    component: './devices/list',
+    component: './devices',
   },
   {
     path: '/address-book',
@@ -101,11 +101,11 @@ export default [
         name: 'device',
         icon: 'device',
         path: '/groups/device',
-        component: './device-groups/list',
+        component: './groups/device/list',
       },
       {
         path: '/groups/device/:guid',
-        component: './device-groups/detail',
+        component: './groups/device/detail',
         hideInMenu: true,
       },
     ],
@@ -115,7 +115,7 @@ export default [
     name: 'users',
     icon: 'user',
     access: 'canAdmin',
-    component: './users/list',
+    component: './users',
   },
   {
     path: '/roles',
@@ -188,7 +188,7 @@ export default [
         name: 'general',
         icon: 'setting',
         path: '/settings/general',
-        component: './settings',
+        component: './settings/general',
       },
       {
         name: 'smtp',

@@ -16,7 +16,7 @@ import { FormattedMessage, useIntl } from '@umijs/max';
 import { App, Button, Popconfirm, Space } from 'antd';
 import React, { useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import Settings from '../../../../config/defaultSettings';
+import Settings from '../../../config/defaultSettings';
 import { getDeviceColumns } from '@/components/DeviceSelectTable/columns';
 import { getActionColumn } from './columns';
 import EditDeviceModal from './components/EditDeviceModal';

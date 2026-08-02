@@ -1,6 +1,6 @@
 import { useLocation, useNavigate, useParams } from '@umijs/max';
 import React from 'react';
-import DeviceList from '@/pages/devices/list';
+import DeviceList from '@/pages/devices';
 
 const DeviceGroupDetail: React.FC = () => {
   const { guid } = useParams<{ guid: string }>();

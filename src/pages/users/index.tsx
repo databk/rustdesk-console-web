@@ -4,7 +4,7 @@ import { FormattedMessage, useIntl } from '@umijs/max';
 import { App, Form } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import Settings from '../../../../config/defaultSettings';
+import Settings from '../../../config/defaultSettings';
 import {
   batchForceLogout,
   batchUpdateUserStatus,
