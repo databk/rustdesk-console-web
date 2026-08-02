@@ -297,7 +297,8 @@ export default {
   'pages.userGroups.moveToGroup': 'Mover para grupo',
   'pages.userGroups.import': 'Importar',
   'pages.userGroups.importUsers': 'Importar Usuários',
-  'pages.userGroups.importSuccess': '{count} usuário(s) importado(s) com sucesso',
+  'pages.userGroups.importSuccess':
+    '{count} usuário(s) importado(s) com sucesso',
   'pages.userGroups.importFailed': 'Falha ao importar usuários',
   'pages.userGroups.addSelected': 'Adicionar usuários selecionados',
   'pages.userGroups.membersUpdated': '{count} usuário(s) atualizado(s)',

@@ -112,7 +112,6 @@ const UserGroupList: React.FC = () => {
 
   const columns: ProColumns<API.UserGroupItem>[] = [
     {
-
       title: (
         <FormattedMessage
           id="pages.userGroups.name"

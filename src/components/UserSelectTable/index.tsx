@@ -7,9 +7,7 @@ import { getUserColumns } from './columns';
 interface UserSelectTableProps {
   selectedRowKeys?: React.Key[];
   onSelectionChange?: (selectedRowKeys: React.Key[]) => void;
-  getCheckboxProps?: (
-    record: API.UserItem,
-  ) => { disabled?: boolean };
+  getCheckboxProps?: (record: API.UserItem) => { disabled?: boolean };
   pageSize?: number;
   defaultSearchCollapsed?: boolean;
 }
