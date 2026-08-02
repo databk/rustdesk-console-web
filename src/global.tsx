@@ -4,7 +4,9 @@ import defaultSettings from '../config/defaultSettings';
 
 const { pwa } = defaultSettings;
 const isHttps = document.location.protocol === 'https:';
-const isLocalhost = document.location.hostname === 'localhost' || document.location.hostname === '127.0.0.1';
+const isLocalhost =
+  document.location.hostname === 'localhost' ||
+  document.location.hostname === '127.0.0.1';
 
 const clearCache = () => {
   // remove all caches
@@ -87,7 +89,10 @@ if (pwa) {
             const newWorker = registration.installing;
             if (!newWorker) return;
             newWorker.addEventListener('statechange', () => {
-              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              if (
+                newWorker.state === 'installed' &&
+                navigator.serviceWorker.controller
+              ) {
                 window.dispatchEvent(
                   new CustomEvent('sw.updated', {
                     detail: { waiting: registration.waiting },
