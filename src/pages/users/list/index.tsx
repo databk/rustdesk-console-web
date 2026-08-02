@@ -7,6 +7,7 @@ import {
   PlusCircleOutlined,
   PlusOutlined,
   SafetyOutlined,
+  SelectOutlined,
   SwapOutlined,
   TeamOutlined,
 } from '@ant-design/icons';
@@ -17,7 +18,7 @@ import {
   App,
   Button,
   Divider,
-  Dropdown,
+
   Form,
   Input,
   Modal,
@@ -46,6 +47,7 @@ import {
   getAllUserGroups,
   moveUsersToGroup,
 } from '@/services/rustdesk-console/userGroup';
+import ImportUsersModal from './components/ImportUsersModal';
 
 export interface UserListProps {
   userGroupGuid?: string;
@@ -86,6 +88,9 @@ const UserList: React.FC<UserListProps> = ({ userGroupGuid, title, onBack }) => 
   // Group member management states (only used when userGroupGuid is provided)
   const [destinationGuid, setDestinationGuid] = useState<string>();
   const [moving, setMoving] = useState(false);
+  const [importModalVisible, setImportModalVisible] = useState(false);
+  const [moveUser, setMoveUser] = useState<API.UserItem | null>(null);
+  const [moveDestinationGuid, setMoveDestinationGuid] = useState<string>();
 
   useEffect(() => {
     if (!userGroupGuid) return;
@@ -639,22 +644,20 @@ const UserList: React.FC<UserListProps> = ({ userGroupGuid, title, onBack }) => 
       fixed: 'right',
       render: (_: unknown, record: API.UserItem) =>
         userGroupGuid ? (
-          <Dropdown
-            menu={{
-              items: userGroups
-                .filter((g) => g.guid !== userGroupGuid)
-                .map((g) => ({ key: g.guid, label: g.name })),
-              onClick: ({ key }) => handleMove(key, [record.guid]),
+          <Button
+            type="link"
+            size="small"
+            icon={<SwapOutlined />}
+            onClick={() => {
+              setMoveUser(record);
+              setMoveDestinationGuid(undefined);
             }}
-            trigger={['click']}
           >
-            <Button type="link" size="small" icon={<SwapOutlined />}>
-              <FormattedMessage
-                id="pages.userGroups.move"
-                defaultMessage="Move"
-              />
-            </Button>
-          </Dropdown>
+            <FormattedMessage
+              id="pages.userGroups.move"
+              defaultMessage="Move"
+            />
+          </Button>
         ) : (
           <Space size={0} split={<Divider type="vertical" />}>
             <Button
@@ -766,6 +769,8 @@ const UserList: React.FC<UserListProps> = ({ userGroupGuid, title, onBack }) => 
                   id: 'pages.userGroups.destination',
                   defaultMessage: 'Destination group',
                 })}
+                showSearch
+                optionFilterProp="label"
                 loading={userGroupsLoading}
                 value={destinationGuid}
                 onChange={setDestinationGuid}
@@ -929,7 +934,18 @@ const UserList: React.FC<UserListProps> = ({ userGroupGuid, title, onBack }) => 
         scroll={{ x: 1540 }}
         toolBarRender={() =>
           userGroupGuid
-            ? []
+            ? [
+                <Button
+                  key="import"
+                  icon={<SelectOutlined />}
+                  onClick={() => setImportModalVisible(true)}
+                >
+                  <FormattedMessage
+                    id="pages.userGroups.import"
+                    defaultMessage="Import"
+                  />
+                </Button>,
+              ]
             : [
                 <Button
                   key="create"
@@ -1373,6 +1389,54 @@ const UserList: React.FC<UserListProps> = ({ userGroupGuid, title, onBack }) => 
             <Switch />
           </Form.Item>
         </Form>
+      </Modal>
+
+      {userGroupGuid && (
+        <ImportUsersModal
+          open={importModalVisible}
+          userGroupGuid={userGroupGuid}
+          onCancel={() => setImportModalVisible(false)}
+          onSuccess={() => actionRef.current?.reload()}
+        />
+      )}
+
+      <Modal
+        title={
+          <FormattedMessage
+            id="pages.userGroups.moveToGroup"
+            defaultMessage="Move to group"
+          />
+        }
+        open={!!moveUser}
+        onCancel={() => {
+          setMoveUser(null);
+          setMoveDestinationGuid(undefined);
+        }}
+        onOk={() => {
+          if (moveUser && moveDestinationGuid) {
+            void handleMove(moveDestinationGuid, [moveUser.guid]);
+            setMoveUser(null);
+            setMoveDestinationGuid(undefined);
+          }
+        }}
+        okButtonProps={{ disabled: !moveDestinationGuid }}
+        destroyOnHidden
+      >
+        <Select
+          showSearch
+          optionFilterProp="label"
+          style={{ width: '100%' }}
+          loading={userGroupsLoading}
+          value={moveDestinationGuid}
+          onChange={setMoveDestinationGuid}
+          placeholder={intl.formatMessage({
+            id: 'pages.userGroups.selectDestination',
+            defaultMessage: 'Select destination group',
+          })}
+          options={userGroups
+            .filter((g) => g.guid !== userGroupGuid)
+            .map((g) => ({ label: g.name, value: g.guid }))}
+        />
       </Modal>
       </PageContainer>
     </>
