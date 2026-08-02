@@ -123,7 +123,6 @@ const UserGroupList: React.FC = () => {
       width: 200,
       render: (_, record) => (
         <Space>
-          <TeamOutlined style={{ color: '#13c2c2' }} />
           <a
             onClick={() => {
               history.push(`/groups/user/${record.guid}`, {
