@@ -62,6 +62,7 @@ const UserSelectTable: React.FC<UserSelectTableProps> = ({
         onChange: onSelectionChange,
         getCheckboxProps,
       }}
+      scroll={{ x: 'max-content' }}
       options={false}
     />
   );
