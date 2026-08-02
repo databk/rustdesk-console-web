@@ -1,29 +1,7 @@
-import {
-  DeleteOutlined,
-  EditOutlined,
-  LogoutOutlined,
-  MinusCircleOutlined,
-  PlusCircleOutlined,
-  PlusOutlined,
-  SafetyOutlined,
-  SelectOutlined,
-  SwapOutlined,
-} from '@ant-design/icons';
-import type { ActionType, ProColumns } from '@ant-design/pro-components';
-import { PageContainer, ProTable } from '@ant-design/pro-components';
+import type { ActionType } from '@ant-design/pro-components';
+import { PageContainer } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
-import {
-  App,
-  Button,
-  Divider,
-  Form,
-  Input,
-  Modal,
-  Popconfirm,
-  Select,
-  Space,
-  Switch,
-} from 'antd';
+import { App, Form } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Settings from '../../../../config/defaultSettings';
@@ -33,7 +11,6 @@ import {
   createUser,
   deleteUser,
   forceLogoutUser,
-  getAdminUserList,
   inviteUser,
   updateUser,
   updateUserSecurity,
@@ -42,14 +19,15 @@ import {
   getAllUserGroups,
   moveUsersToGroup,
 } from '@/services/rustdesk-console/userGroup';
-import { getUserColumns } from '@/components/UserSelectTable/columns';
+import type { UserListProps } from './types';
+import CreateUserModal from './components/CreateUserModal';
+import InviteUserModal from './components/InviteUserModal';
+import EditUserModal from './components/EditUserModal';
+import SecurityModal from './components/SecurityModal';
+import MoveUserModal from './components/MoveUserModal';
 import ImportUsersModal from './components/ImportUsersModal';
-
-export interface UserListProps {
-  userGroupGuid?: string;
-  title?: string;
-  onBack?: () => void;
-}
+import UserTable from './components/UserTable';
+import { useUserColumns } from './components/UserColumns';
 
 const UserList: React.FC<UserListProps> = ({
   userGroupGuid,
@@ -61,19 +39,16 @@ const UserList: React.FC<UserListProps> = ({
 
   const actionRef = useRef<ActionType>(null);
 
-  // Modal states
   const [createModalVisible, setCreateModalVisible] = useState(false);
   const [inviteModalVisible, setInviteModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [securityModalVisible, setSecurityModalVisible] = useState(false);
 
-  // Form instances
-  const [createForm] = Form.useForm();
-  const [inviteForm] = Form.useForm();
-  const [editForm] = Form.useForm();
-  const [securityForm] = Form.useForm();
+  const [createForm] = Form.useForm<API.CreateUserParams>();
+  const [inviteForm] = Form.useForm<API.InviteUserParams>();
+  const [editForm] = Form.useForm<API.UpdateUserParams>();
+  const [securityForm] = Form.useForm<API.UpdateUserSecurityParams>();
 
-  // Selection states (for batch operations)
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [selectedRows, setSelectedRows] = useState<API.UserItem[]>([]);
   const [batchStatusUpdating, setBatchStatusUpdating] = useState(false);
@@ -81,19 +56,38 @@ const UserList: React.FC<UserListProps> = ({
   const [userGroups, setUserGroups] = useState<API.UserGroupItem[]>([]);
   const [userGroupsLoading, setUserGroupsLoading] = useState(false);
 
-  // Current user being edited
   const [editingUser, setEditingUser] = useState<API.UserItem | null>(null);
 
-  // Group member management states (only used when userGroupGuid is provided)
   const [destinationGuid, setDestinationGuid] = useState<string>();
   const [moving, setMoving] = useState(false);
   const [importModalVisible, setImportModalVisible] = useState(false);
   const [moveUser, setMoveUser] = useState<API.UserItem | null>(null);
   const [moveDestinationGuid, setMoveDestinationGuid] = useState<string>();
 
+  const loadUserGroups = async () => {
+    if (userGroups.length > 0) return userGroups;
+    setUserGroupsLoading(true);
+    try {
+      const groups = await getAllUserGroups();
+      setUserGroups(groups);
+      return groups;
+    } catch {
+      msgApi.error(
+        intl.formatMessage({
+          id: 'pages.userGroups.loadFailed',
+          defaultMessage: 'Failed to load user groups',
+        }),
+      );
+      return [];
+    } finally {
+      setUserGroupsLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (!userGroupGuid) return;
     void loadUserGroups();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userGroupGuid]);
 
   const handleMove = async (targetGuid: string, userGuids: string[]) => {
@@ -126,26 +120,6 @@ const UserList: React.FC<UserListProps> = ({
     }
   };
 
-  const loadUserGroups = async () => {
-    if (userGroups.length > 0) return userGroups;
-    setUserGroupsLoading(true);
-    try {
-      const groups = await getAllUserGroups();
-      setUserGroups(groups);
-      return groups;
-    } catch {
-      msgApi.error(
-        intl.formatMessage({
-          id: 'pages.userGroups.loadFailed',
-          defaultMessage: 'Failed to load user groups',
-        }),
-      );
-      return [];
-    } finally {
-      setUserGroupsLoading(false);
-    }
-  };
-
   const openCreateModal = () => {
     setCreateModalVisible(true);
     void loadUserGroups().then((groups) => {
@@ -162,7 +136,6 @@ const UserList: React.FC<UserListProps> = ({
     });
   };
 
-  // Create user
   const handleCreate = async (values: API.CreateUserParams) => {
     try {
       await createUser(values);
@@ -185,7 +158,6 @@ const UserList: React.FC<UserListProps> = ({
     }
   };
 
-  // Invite user
   const handleInvite = async (values: API.InviteUserParams) => {
     try {
       await inviteUser(values);
@@ -208,7 +180,6 @@ const UserList: React.FC<UserListProps> = ({
     }
   };
 
-  // Edit user
   const handleEdit = async (values: API.UpdateUserParams) => {
     if (!editingUser) return;
     try {
@@ -233,7 +204,6 @@ const UserList: React.FC<UserListProps> = ({
     }
   };
 
-  // Delete user
   const handleDelete = async (guid: string) => {
     try {
       await deleteUser(guid);
@@ -254,8 +224,9 @@ const UserList: React.FC<UserListProps> = ({
     }
   };
 
-  // Update single user security
-  const handleUpdateSecurity = async (values: API.UpdateUserSecurityParams) => {
+  const handleUpdateSecurity = async (
+    values: API.UpdateUserSecurityParams,
+  ) => {
     if (!editingUser) return;
     try {
       await updateUserSecurity(editingUser.guid, values);
@@ -279,7 +250,6 @@ const UserList: React.FC<UserListProps> = ({
     }
   };
 
-  // Force logout single user
   const handleForceLogout = async (guid: string) => {
     try {
       await forceLogoutUser(guid);
@@ -300,7 +270,6 @@ const UserList: React.FC<UserListProps> = ({
     }
   };
 
-  // Batch enable
   const handleBatchEnable = async () => {
     if (selectedRows.length === 0) return;
     setBatchStatusUpdating(true);
@@ -347,7 +316,6 @@ const UserList: React.FC<UserListProps> = ({
     }
   };
 
-  // Batch disable
   const handleBatchDisable = async () => {
     if (selectedRows.length === 0) return;
     setBatchStatusUpdating(true);
@@ -394,7 +362,6 @@ const UserList: React.FC<UserListProps> = ({
     }
   };
 
-  // Batch force logout
   const handleBatchForceLogout = async () => {
     if (selectedRows.length === 0) return;
     setBatchForceLoggingOut(true);
@@ -422,7 +389,6 @@ const UserList: React.FC<UserListProps> = ({
     }
   };
 
-  // Open edit modal
   const openEditModal = (record: API.UserItem) => {
     setEditingUser(record);
     void loadUserGroups();
@@ -438,100 +404,23 @@ const UserList: React.FC<UserListProps> = ({
     setEditModalVisible(true);
   };
 
-  // Open security modal
   const openSecurityModal = (record: API.UserItem) => {
     setEditingUser(record);
     securityForm.resetFields();
     setSecurityModalVisible(true);
   };
 
-  const baseColumns = getUserColumns();
-
-  const actionColumn: ProColumns<API.UserItem> = {
-    title: (
-      <FormattedMessage id="pages.common.action" defaultMessage="Action" />
-    ),
-    valueType: 'option',
-    width: 220,
-    fixed: 'right',
-    render: (_: unknown, record: API.UserItem) =>
-      userGroupGuid ? (
-        <Button
-          type="link"
-          size="small"
-          icon={<SwapOutlined />}
-          onClick={() => {
-            setMoveUser(record);
-            setMoveDestinationGuid(undefined);
-          }}
-        >
-          <FormattedMessage id="pages.userGroups.move" defaultMessage="Move" />
-        </Button>
-      ) : (
-        <Space size={0} split={<Divider type="vertical" />}>
-          <Button
-            key="edit"
-            type="link"
-            size="small"
-            icon={<EditOutlined />}
-            onClick={() => openEditModal(record)}
-          >
-            <FormattedMessage id="pages.common.edit" defaultMessage="Edit" />
-          </Button>
-          <Button
-            key="security"
-            type="link"
-            size="small"
-            icon={<SafetyOutlined />}
-            onClick={() => openSecurityModal(record)}
-          >
-            <FormattedMessage
-              id="pages.users.security"
-              defaultMessage="Security"
-            />
-          </Button>
-          <Button
-            key="logout"
-            type="link"
-            size="small"
-            icon={<LogoutOutlined />}
-            onClick={() => handleForceLogout(record.guid)}
-          >
-            <FormattedMessage
-              id="pages.users.forceLogout"
-              defaultMessage="Logout"
-            />
-          </Button>
-          <Popconfirm
-            key="delete"
-            title={
-              <FormattedMessage
-                id="pages.users.deleteConfirm"
-                defaultMessage="Are you sure to delete this user?"
-              />
-            }
-            onConfirm={() => handleDelete(record.guid)}
-            okText={intl.formatMessage({
-              id: 'pages.common.confirm',
-              defaultMessage: 'Yes',
-            })}
-            cancelText={intl.formatMessage({
-              id: 'pages.common.cancel',
-              defaultMessage: 'No',
-            })}
-          >
-            <Button type="link" size="small" danger icon={<DeleteOutlined />}>
-              <FormattedMessage
-                id="pages.common.delete"
-                defaultMessage="Delete"
-              />
-            </Button>
-          </Popconfirm>
-        </Space>
-      ),
-  };
-
-  const columns = [...baseColumns, actionColumn];
+  const columns = useUserColumns({
+    userGroupGuid,
+    onEdit: openEditModal,
+    onSecurity: openSecurityModal,
+    onForceLogout: handleForceLogout,
+    onDelete: handleDelete,
+    onMove: (record) => {
+      setMoveUser(record);
+      setMoveDestinationGuid(undefined);
+    },
+  });
 
   return (
     <>
@@ -554,669 +443,79 @@ const UserList: React.FC<UserListProps> = ({
         }
         onBack={onBack}
       >
-        <ProTable<API.UserItem>
-          headerTitle={
-            <FormattedMessage
-              id="pages.users.list"
-              defaultMessage="User List"
-            />
-          }
-          columnsState={{
-            persistenceType: 'localStorage',
-            persistenceKey: 'user_list_columns_state',
-          }}
+        <UserTable
+          userGroupGuid={userGroupGuid}
+          columns={columns}
           actionRef={actionRef}
-          rowKey="guid"
-          rowSelection={{
-            selectedRowKeys,
-            onChange: (keys, rows) => {
-              setSelectedRowKeys(keys);
-              setSelectedRows(rows);
-            },
+          selectedRowKeys={selectedRowKeys}
+          selectedRows={selectedRows}
+          onSelectionChange={(keys, rows) => {
+            setSelectedRowKeys(keys);
+            setSelectedRows(rows);
           }}
-          tableAlertOptionRender={() =>
-            userGroupGuid ? (
-              <Space size={16}>
-                <Select
-                  aria-label={intl.formatMessage({
-                    id: 'pages.userGroups.destination',
-                    defaultMessage: 'Destination group',
-                  })}
-                  showSearch
-                  optionFilterProp="label"
-                  loading={userGroupsLoading}
-                  value={destinationGuid}
-                  onChange={setDestinationGuid}
-                  placeholder={intl.formatMessage({
-                    id: 'pages.userGroups.selectDestination',
-                    defaultMessage: 'Select destination group',
-                  })}
-                  options={userGroups
-                    .filter((g) => g.guid !== userGroupGuid)
-                    .map((g) => ({ label: g.name, value: g.guid }))}
-                  style={{ width: 200 }}
-                />
-                <Button
-                  type="link"
-                  icon={<SwapOutlined />}
-                  disabled={!destinationGuid || selectedRows.length === 0}
-                  loading={moving}
-                  onClick={() =>
-                    destinationGuid &&
-                    handleMove(
-                      destinationGuid,
-                      selectedRows.map((r) => r.guid),
-                    )
-                  }
-                  style={{ padding: 0 }}
-                >
-                  <FormattedMessage
-                    id="pages.userGroups.batchMove"
-                    defaultMessage="Batch Move"
-                  />
-                </Button>
-              </Space>
-            ) : (
-              <Space size={16}>
-                <Popconfirm
-                  title={
-                    <FormattedMessage
-                      id="pages.users.batchEnableConfirm"
-                      defaultMessage="Are you sure to enable selected users?"
-                    />
-                  }
-                  onConfirm={handleBatchEnable}
-                  okText={intl.formatMessage({
-                    id: 'pages.common.confirm',
-                    defaultMessage: 'Yes',
-                  })}
-                  cancelText={intl.formatMessage({
-                    id: 'pages.common.cancel',
-                    defaultMessage: 'No',
-                  })}
-                >
-                  <Button
-                    type="link"
-                    icon={<PlusCircleOutlined />}
-                    loading={batchStatusUpdating}
-                    style={{ padding: 0 }}
-                  >
-                    <FormattedMessage
-                      id="pages.users.batchEnable"
-                      defaultMessage="Batch Enable"
-                    />
-                  </Button>
-                </Popconfirm>
-                <Popconfirm
-                  title={
-                    <FormattedMessage
-                      id="pages.users.batchDisableConfirm"
-                      defaultMessage="Are you sure to disable selected users?"
-                    />
-                  }
-                  onConfirm={handleBatchDisable}
-                  okText={intl.formatMessage({
-                    id: 'pages.common.confirm',
-                    defaultMessage: 'Yes',
-                  })}
-                  cancelText={intl.formatMessage({
-                    id: 'pages.common.cancel',
-                    defaultMessage: 'No',
-                  })}
-                >
-                  <Button
-                    type="link"
-                    icon={<MinusCircleOutlined />}
-                    loading={batchStatusUpdating}
-                    style={{ padding: 0 }}
-                  >
-                    <FormattedMessage
-                      id="pages.users.batchDisable"
-                      defaultMessage="Batch Disable"
-                    />
-                  </Button>
-                </Popconfirm>
-                <Popconfirm
-                  title={
-                    <FormattedMessage
-                      id="pages.users.batchForceLogoutConfirm"
-                      defaultMessage="Are you sure to force logout selected users?"
-                    />
-                  }
-                  onConfirm={handleBatchForceLogout}
-                  okText={intl.formatMessage({
-                    id: 'pages.common.confirm',
-                    defaultMessage: 'Yes',
-                  })}
-                  cancelText={intl.formatMessage({
-                    id: 'pages.common.cancel',
-                    defaultMessage: 'No',
-                  })}
-                >
-                  <Button
-                    type="link"
-                    icon={<LogoutOutlined />}
-                    loading={batchForceLoggingOut}
-                    style={{ padding: 0 }}
-                  >
-                    <FormattedMessage
-                      id="pages.users.batchForceLogout"
-                      defaultMessage="Batch Force Logout"
-                    />
-                  </Button>
-                </Popconfirm>
-              </Space>
+          userGroups={userGroups}
+          userGroupsLoading={userGroupsLoading}
+          destinationGuid={destinationGuid}
+          moving={moving}
+          batchStatusUpdating={batchStatusUpdating}
+          batchForceLoggingOut={batchForceLoggingOut}
+          onDestinationChange={setDestinationGuid}
+          onBatchMove={() =>
+            destinationGuid &&
+            handleMove(
+              destinationGuid,
+              selectedRows.map((r) => r.guid),
             )
           }
-          request={async (params) => {
-            const result = await getAdminUserList({
-              current: params.current || 1,
-              pageSize: params.pageSize || 20,
-              status: params.status,
-              name: params.name,
-              email: params.email,
-              is_admin:
-                params.is_admin === 'true'
-                  ? 1
-                  : params.is_admin === 'false'
-                    ? 0
-                    : undefined,
-              user_group_guid: userGroupGuid,
-            });
-            return {
-              data: result.data || [],
-              total: result.total || 0,
-              success: true,
-            };
-          }}
-          columns={
-            userGroupGuid
-              ? columns.filter((col) => col.dataIndex !== 'user_group_name')
-              : columns
-          }
-          search={{
-            labelWidth: 'auto',
-            defaultCollapsed: true,
-            optionRender: (_searchConfig, _formProps, dom) => [
-              ...dom.reverse(),
-            ],
-          }}
-          pagination={{
-            defaultPageSize: 20,
-            showSizeChanger: true,
-            showQuickJumper: true,
-          }}
-          scroll={{ x: 1540 }}
-          toolBarRender={() =>
-            userGroupGuid
-              ? [
-                  <Button
-                    key="import"
-                    icon={<SelectOutlined />}
-                    onClick={() => setImportModalVisible(true)}
-                  >
-                    <FormattedMessage
-                      id="pages.userGroups.import"
-                      defaultMessage="Import"
-                    />
-                  </Button>,
-                ]
-              : [
-                  <Button
-                    key="create"
-                    type="primary"
-                    icon={<PlusOutlined />}
-                    onClick={openCreateModal}
-                  >
-                    <FormattedMessage
-                      id="pages.users.create"
-                      defaultMessage="Create"
-                    />
-                  </Button>,
-                  <Button
-                    key="invite"
-                    icon={<PlusOutlined />}
-                    onClick={openInviteModal}
-                  >
-                    <FormattedMessage
-                      id="pages.users.invite"
-                      defaultMessage="Invite"
-                    />
-                  </Button>,
-                ]
-          }
-          options={{
-            density: true,
-            setting: {
-              listsHeight: 400,
-            },
-            fullScreen: false,
-            reload: true,
-          }}
+          onBatchEnable={handleBatchEnable}
+          onBatchDisable={handleBatchDisable}
+          onBatchForceLogout={handleBatchForceLogout}
+          onOpenImport={() => setImportModalVisible(true)}
+          onOpenCreate={openCreateModal}
+          onOpenInvite={openInviteModal}
         />
 
-        {/* Create User Modal */}
-        <Modal
-          title={
-            <FormattedMessage
-              id="pages.users.create"
-              defaultMessage="Create User"
-            />
-          }
-          open={createModalVisible}
+        <CreateUserModal
+          visible={createModalVisible}
+          userGroups={userGroups}
+          userGroupsLoading={userGroupsLoading}
+          form={createForm}
+          onSubmit={handleCreate}
           onCancel={() => setCreateModalVisible(false)}
-          onOk={() => createForm.submit()}
-        >
-          <Form form={createForm} onFinish={handleCreate} layout="vertical">
-            <Form.Item
-              name="name"
-              label={
-                <FormattedMessage
-                  id="pages.users.name"
-                  defaultMessage="Username"
-                />
-              }
-              rules={[
-                {
-                  required: true,
-                  message: intl.formatMessage({
-                    id: 'pages.common.pleaseEnterUsername',
-                    defaultMessage: 'Please enter username',
-                  }),
-                },
-              ]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              name="display_name"
-              label={
-                <FormattedMessage
-                  id="pages.users.displayName"
-                  defaultMessage="Display Name"
-                />
-              }
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              name="password"
-              label={
-                <FormattedMessage
-                  id="pages.users.password"
-                  defaultMessage="Password"
-                />
-              }
-              rules={[
-                {
-                  required: true,
-                  message: intl.formatMessage({
-                    id: 'pages.common.pleaseEnterPassword',
-                    defaultMessage: 'Please enter password',
-                  }),
-                },
-              ]}
-            >
-              <Input.Password />
-            </Form.Item>
-            <Form.Item
-              name="email"
-              label={
-                <FormattedMessage
-                  id="pages.users.email"
-                  defaultMessage="Email"
-                />
-              }
-              rules={[
-                {
-                  type: 'email',
-                  message: intl.formatMessage({
-                    id: 'pages.common.pleaseEnterValidEmail',
-                    defaultMessage: 'Please enter valid email',
-                  }),
-                },
-              ]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              name="note"
-              label={
-                <FormattedMessage id="pages.users.note" defaultMessage="Note" />
-              }
-            >
-              <Input.TextArea />
-            </Form.Item>
-            <Form.Item
-              name="user_group_guid"
-              label={
-                <FormattedMessage
-                  id="pages.users.userGroup"
-                  defaultMessage="User Group"
-                />
-              }
-            >
-              <Select
-                allowClear
-                showSearch
-                optionFilterProp="label"
-                loading={userGroupsLoading}
-                placeholder={intl.formatMessage({
-                  id: 'pages.users.selectUserGroup',
-                  defaultMessage: 'Select user group',
-                })}
-                options={userGroups.map((group) => ({
-                  label: group.name,
-                  value: group.guid,
-                }))}
-              />
-            </Form.Item>
-          </Form>
-        </Modal>
+        />
 
-        {/* Invite User Modal */}
-        <Modal
-          title={
-            <FormattedMessage
-              id="pages.users.invite"
-              defaultMessage="Invite User"
-            />
-          }
-          open={inviteModalVisible}
+        <InviteUserModal
+          visible={inviteModalVisible}
+          userGroups={userGroups}
+          userGroupsLoading={userGroupsLoading}
+          form={inviteForm}
+          onSubmit={handleInvite}
           onCancel={() => setInviteModalVisible(false)}
-          onOk={() => inviteForm.submit()}
-        >
-          <Form form={inviteForm} onFinish={handleInvite} layout="vertical">
-            <Form.Item
-              name="name"
-              label={
-                <FormattedMessage
-                  id="pages.users.name"
-                  defaultMessage="Username"
-                />
-              }
-              rules={[
-                {
-                  required: true,
-                  message: intl.formatMessage({
-                    id: 'pages.common.pleaseEnterUsername',
-                    defaultMessage: 'Please enter username',
-                  }),
-                },
-              ]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              name="display_name"
-              label={
-                <FormattedMessage
-                  id="pages.users.displayName"
-                  defaultMessage="Display Name"
-                />
-              }
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              name="email"
-              label={
-                <FormattedMessage
-                  id="pages.users.email"
-                  defaultMessage="Email"
-                />
-              }
-              rules={[
-                {
-                  required: true,
-                  message: intl.formatMessage({
-                    id: 'pages.common.pleaseEnterEmail',
-                    defaultMessage: 'Please enter email',
-                  }),
-                },
-                {
-                  type: 'email',
-                  message: intl.formatMessage({
-                    id: 'pages.common.pleaseEnterValidEmail',
-                    defaultMessage: 'Please enter valid email',
-                  }),
-                },
-              ]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              name="note"
-              label={
-                <FormattedMessage id="pages.users.note" defaultMessage="Note" />
-              }
-            >
-              <Input.TextArea />
-            </Form.Item>
-            <Form.Item
-              name="user_group_guid"
-              label={
-                <FormattedMessage
-                  id="pages.users.userGroup"
-                  defaultMessage="User Group"
-                />
-              }
-            >
-              <Select
-                allowClear
-                showSearch
-                optionFilterProp="label"
-                loading={userGroupsLoading}
-                placeholder={intl.formatMessage({
-                  id: 'pages.users.selectUserGroup',
-                  defaultMessage: 'Select user group',
-                })}
-                options={userGroups.map((group) => ({
-                  label: group.name,
-                  value: group.guid,
-                }))}
-              />
-            </Form.Item>
-          </Form>
-        </Modal>
+        />
 
-        {/* Edit User Modal */}
-        <Modal
-          title={
-            <FormattedMessage
-              id="pages.users.edit"
-              defaultMessage="Edit User"
-            />
-          }
-          open={editModalVisible}
+        <EditUserModal
+          visible={editModalVisible}
+          userGroups={userGroups}
+          userGroupsLoading={userGroupsLoading}
+          form={editForm}
+          onSubmit={handleEdit}
           onCancel={() => {
             setEditModalVisible(false);
             setEditingUser(null);
             editForm.resetFields();
           }}
-          onOk={() => editForm.submit()}
-        >
-          <Form form={editForm} onFinish={handleEdit} layout="vertical">
-            <Form.Item
-              name="name"
-              label={
-                <FormattedMessage
-                  id="pages.users.name"
-                  defaultMessage="Username"
-                />
-              }
-              rules={[
-                {
-                  required: true,
-                  message: intl.formatMessage({
-                    id: 'pages.common.pleaseEnterUsername',
-                    defaultMessage: 'Please enter username',
-                  }),
-                },
-              ]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              name="display_name"
-              label={
-                <FormattedMessage
-                  id="pages.users.displayName"
-                  defaultMessage="Display Name"
-                />
-              }
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              name="email"
-              label={
-                <FormattedMessage
-                  id="pages.users.email"
-                  defaultMessage="Email"
-                />
-              }
-              rules={[
-                {
-                  type: 'email',
-                  message: intl.formatMessage({
-                    id: 'pages.common.pleaseEnterValidEmail',
-                    defaultMessage: 'Please enter valid email',
-                  }),
-                },
-              ]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              name="note"
-              label={
-                <FormattedMessage id="pages.users.note" defaultMessage="Note" />
-              }
-            >
-              <Input.TextArea />
-            </Form.Item>
-            <Form.Item
-              name="status"
-              label={
-                <FormattedMessage
-                  id="pages.users.status"
-                  defaultMessage="Status"
-                />
-              }
-            >
-              <Select
-                options={[
-                  {
-                    label: intl.formatMessage({
-                      id: 'pages.users.active',
-                      defaultMessage: 'Active',
-                    }),
-                    value: 1,
-                  },
-                  {
-                    label: intl.formatMessage({
-                      id: 'pages.users.disabled',
-                      defaultMessage: 'Disabled',
-                    }),
-                    value: 0,
-                  },
-                  {
-                    label: intl.formatMessage({
-                      id: 'pages.users.unverified',
-                      defaultMessage: 'Unverified',
-                    }),
-                    value: -1,
-                  },
-                ]}
-              />
-            </Form.Item>
-            <Form.Item
-              name="user_group_guid"
-              label={
-                <FormattedMessage
-                  id="pages.users.userGroup"
-                  defaultMessage="User Group"
-                />
-              }
-            >
-              <Select
-                allowClear
-                showSearch
-                optionFilterProp="label"
-                loading={userGroupsLoading}
-                placeholder={intl.formatMessage({
-                  id: 'pages.users.selectUserGroup',
-                  defaultMessage: 'Select user group',
-                })}
-                options={userGroups.map((group) => ({
-                  label: group.name,
-                  value: group.guid,
-                }))}
-              />
-            </Form.Item>
-            <Form.Item
-              name="is_admin"
-              label={
-                <FormattedMessage
-                  id="pages.users.isAdmin"
-                  defaultMessage="Admin"
-                />
-              }
-              valuePropName="checked"
-            >
-              <Switch />
-            </Form.Item>
-          </Form>
-        </Modal>
+        />
 
-        {/* Security Settings Modal */}
-        <Modal
-          title={
-            <FormattedMessage
-              id="pages.users.securitySettings"
-              defaultMessage="Security Settings"
-            />
-          }
-          open={securityModalVisible}
+        <SecurityModal
+          visible={securityModalVisible}
+          form={securityForm}
+          onSubmit={handleUpdateSecurity}
           onCancel={() => {
             setSecurityModalVisible(false);
             setEditingUser(null);
             securityForm.resetFields();
           }}
-          onOk={() => securityForm.submit()}
-        >
-          <Form
-            form={securityForm}
-            onFinish={handleUpdateSecurity}
-            layout="vertical"
-          >
-            <Form.Item
-              name="tfa_enforce"
-              label={
-                <FormattedMessage
-                  id="pages.users.tfaEnforce"
-                  defaultMessage="Enforce Two-Factor Authentication"
-                />
-              }
-              valuePropName="checked"
-            >
-              <Switch />
-            </Form.Item>
-            <Form.Item
-              name="email_verification"
-              label={
-                <FormattedMessage
-                  id="pages.users.emailVerification"
-                  defaultMessage="Require Email Verification"
-                />
-              }
-              valuePropName="checked"
-            >
-              <Switch />
-            </Form.Item>
-          </Form>
-        </Modal>
+        />
 
         {userGroupGuid && (
           <ImportUsersModal
@@ -1227,18 +526,13 @@ const UserList: React.FC<UserListProps> = ({
           />
         )}
 
-        <Modal
-          title={
-            <FormattedMessage
-              id="pages.userGroups.moveToGroup"
-              defaultMessage="Move to group"
-            />
-          }
-          open={!!moveUser}
-          onCancel={() => {
-            setMoveUser(null);
-            setMoveDestinationGuid(undefined);
-          }}
+        <MoveUserModal
+          visible={!!moveUser}
+          userGroups={userGroups}
+          userGroupsLoading={userGroupsLoading}
+          currentGroupGuid={userGroupGuid}
+          destinationGuid={moveDestinationGuid}
+          onDestinationChange={setMoveDestinationGuid}
           onOk={() => {
             if (moveUser && moveDestinationGuid) {
               void handleMove(moveDestinationGuid, [moveUser.guid]);
@@ -1246,25 +540,11 @@ const UserList: React.FC<UserListProps> = ({
               setMoveDestinationGuid(undefined);
             }
           }}
-          okButtonProps={{ disabled: !moveDestinationGuid }}
-          destroyOnHidden
-        >
-          <Select
-            showSearch
-            optionFilterProp="label"
-            style={{ width: '100%' }}
-            loading={userGroupsLoading}
-            value={moveDestinationGuid}
-            onChange={setMoveDestinationGuid}
-            placeholder={intl.formatMessage({
-              id: 'pages.userGroups.selectDestination',
-              defaultMessage: 'Select destination group',
-            })}
-            options={userGroups
-              .filter((g) => g.guid !== userGroupGuid)
-              .map((g) => ({ label: g.name, value: g.guid }))}
-          />
-        </Modal>
+          onCancel={() => {
+            setMoveUser(null);
+            setMoveDestinationGuid(undefined);
+          }}
+        />
       </PageContainer>
     </>
   );
