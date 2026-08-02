@@ -27,6 +27,8 @@ import {
   Tooltip,
 } from 'antd';
 import React, { useRef, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
+import Settings from '../../../../config/defaultSettings';
 import {
   batchForceLogout,
   batchUpdateUserStatus,
@@ -40,7 +42,13 @@ import {
 } from '@/services/rustdesk-console/user';
 import { getAllUserGroups } from '@/services/rustdesk-console/userGroup';
 
-const UserList: React.FC = () => {
+export interface UserListProps {
+  userGroupGuid?: string;
+  title?: string;
+  onBack?: () => void;
+}
+
+const UserList: React.FC<UserListProps> = ({ userGroupGuid, title, onBack }) => {
   const intl = useIntl();
   const { message: msgApi } = App.useApp();
   const { initialState } = useModel('@@initialState');
@@ -651,8 +659,27 @@ const UserList: React.FC = () => {
   ];
 
   return (
-    <PageContainer>
-      <ProTable<API.UserItem>
+    <>
+      {title && (
+        <Helmet>
+          <title>
+            {title}
+            {Settings.title && ` - ${Settings.title}`}
+          </title>
+        </Helmet>
+      )}
+      <PageContainer
+        title={
+          title || (
+            <FormattedMessage
+              id="pages.users.list"
+              defaultMessage="User List"
+            />
+          )
+        }
+        onBack={onBack}
+      >
+        <ProTable<API.UserItem>
         headerTitle={
           <FormattedMessage id="pages.users.list" defaultMessage="User List" />
         }
@@ -773,6 +800,7 @@ const UserList: React.FC = () => {
                 : params.is_admin === 'false'
                   ? 0
                   : undefined,
+            user_group_guid: userGroupGuid,
           });
           return {
             data: result.data || [],
@@ -780,7 +808,11 @@ const UserList: React.FC = () => {
             success: true,
           };
         }}
-        columns={columns}
+        columns={
+          userGroupGuid
+            ? columns.filter((col) => col.dataIndex !== 'user_group_name')
+            : columns
+        }
         search={{
           labelWidth: 'auto',
           defaultCollapsed: true,
@@ -1229,7 +1261,8 @@ const UserList: React.FC = () => {
           </Form.Item>
         </Form>
       </Modal>
-    </PageContainer>
+      </PageContainer>
+    </>
   );
 };
 

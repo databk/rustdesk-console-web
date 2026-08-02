@@ -93,6 +93,11 @@ export default [
         component: './groups/user',
       },
       {
+        path: '/groups/user/:guid',
+        component: './groups/user/detail',
+        hideInMenu: true,
+      },
+      {
         name: 'device',
         icon: 'device',
         path: '/groups/device',

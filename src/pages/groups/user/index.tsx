@@ -6,7 +6,7 @@ import {
 } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { ModalForm, PageContainer, ProTable } from '@ant-design/pro-components';
-import { FormattedMessage, useIntl } from '@umijs/max';
+import { FormattedMessage, history, useIntl } from '@umijs/max';
 import {
   App,
   Button,
@@ -129,7 +129,16 @@ const UserGroupList: React.FC = () => {
       render: (_, record) => (
         <Space>
           <TeamOutlined style={{ color: '#13c2c2' }} />
-          <span>{record.name}</span>
+          <a
+            onClick={() => {
+              history.push(`/groups/user/${record.guid}`, {
+                name: record.name,
+              });
+            }}
+            style={{ cursor: 'pointer' }}
+          >
+            {record.name}
+          </a>
           {record.is_default && (
             <Tag color="blue">
               <FormattedMessage
