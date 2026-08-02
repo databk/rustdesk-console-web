@@ -1,11 +1,7 @@
 import { FormattedMessage, useIntl } from '@umijs/max';
 import { Button, Card, Flex, Form, Input, Modal, Space, Tag } from 'antd';
 import type { FormInstance } from 'antd';
-import {
-  KeyOutlined,
-  LockOutlined,
-  UnlockOutlined,
-} from '@ant-design/icons';
+import { KeyOutlined, LockOutlined, UnlockOutlined } from '@ant-design/icons';
 import React from 'react';
 
 interface PasswordSectionProps {

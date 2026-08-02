@@ -13,11 +13,7 @@ import {
   Table,
   Tag,
 } from 'antd';
-import {
-  KeyOutlined,
-  PlusOutlined,
-  DeleteOutlined,
-} from '@ant-design/icons';
+import { KeyOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import React from 'react';
 
@@ -239,6 +235,5 @@ const PasskeySection: React.FC<PasskeySectionProps> = ({
     </>
   );
 };
-
 
 export default PasskeySection;

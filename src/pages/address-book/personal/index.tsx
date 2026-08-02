@@ -542,14 +542,12 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
     onDeleteTag: handleDeleteTag,
   });
 
-  const headerTitle =
-    propTitle ||
-    currentAddressBook?.name || (
-      <FormattedMessage
-        id="pages.addressBook.personal"
-        defaultMessage="Personal Address Book"
-      />
-    );
+  const headerTitle = propTitle || currentAddressBook?.name || (
+    <FormattedMessage
+      id="pages.addressBook.personal"
+      defaultMessage="Personal Address Book"
+    />
+  );
 
   return (
     <>

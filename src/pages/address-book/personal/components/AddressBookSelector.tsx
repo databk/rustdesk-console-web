@@ -1,10 +1,6 @@
 import { FormattedMessage, useIntl } from '@umijs/max';
 import { Button, Select, Tooltip, Typography } from 'antd';
-import {
-  DeleteOutlined,
-  EditOutlined,
-  PlusOutlined,
-} from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import React from 'react';
 
 const { Text } = Typography;

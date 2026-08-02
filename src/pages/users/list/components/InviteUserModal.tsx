@@ -25,7 +25,10 @@ const InviteUserModal: React.FC<InviteUserModalProps> = ({
   return (
     <Modal
       title={
-        <FormattedMessage id="pages.users.invite" defaultMessage="Invite User" />
+        <FormattedMessage
+          id="pages.users.invite"
+          defaultMessage="Invite User"
+        />
       }
       open={visible}
       onCancel={onCancel}
@@ -35,10 +38,7 @@ const InviteUserModal: React.FC<InviteUserModalProps> = ({
         <Form.Item
           name="name"
           label={
-            <FormattedMessage
-              id="pages.users.name"
-              defaultMessage="Username"
-            />
+            <FormattedMessage id="pages.users.name" defaultMessage="Username" />
           }
           rules={[
             {
@@ -66,10 +66,7 @@ const InviteUserModal: React.FC<InviteUserModalProps> = ({
         <Form.Item
           name="email"
           label={
-            <FormattedMessage
-              id="pages.users.email"
-              defaultMessage="Email"
-            />
+            <FormattedMessage id="pages.users.email" defaultMessage="Email" />
           }
           rules={[
             {
@@ -92,7 +89,9 @@ const InviteUserModal: React.FC<InviteUserModalProps> = ({
         </Form.Item>
         <Form.Item
           name="note"
-          label={<FormattedMessage id="pages.users.note" defaultMessage="Note" />}
+          label={
+            <FormattedMessage id="pages.users.note" defaultMessage="Note" />
+          }
         >
           <Input.TextArea />
         </Form.Item>

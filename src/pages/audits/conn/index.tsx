@@ -6,7 +6,15 @@ import {
   ProTable,
 } from '@ant-design/pro-components';
 import { FormattedMessage, useAccess, useIntl } from '@umijs/max';
-import { App, Breadcrumb, Button, Drawer, Modal, Tooltip, Typography } from 'antd';
+import {
+  App,
+  Breadcrumb,
+  Button,
+  Drawer,
+  Modal,
+  Tooltip,
+  Typography,
+} from 'antd';
 import dayjs from 'dayjs';
 import React, { useRef, useState } from 'react';
 import {
@@ -210,7 +218,11 @@ const ConnectionAudit: React.FC = () => {
               defaultMessage: 'Export up to 1000 records at a time',
             })}
           >
-            <Button type="default" icon={<DownloadOutlined />} onClick={exportCsv}>
+            <Button
+              type="default"
+              icon={<DownloadOutlined />}
+              onClick={exportCsv}
+            >
               <FormattedMessage
                 id="pages.audits.exportCSV"
                 defaultMessage="Export CSV"

@@ -11,7 +11,9 @@ interface TagFilterBarProps {
   pendingColorUpdates: Record<string, number>;
   hoveredColorDot: string | null;
   canWrite: boolean;
-  colorPickerCloseTimerRef: React.MutableRefObject<ReturnType<typeof setTimeout> | null>;
+  colorPickerCloseTimerRef: React.MutableRefObject<ReturnType<
+    typeof setTimeout
+  > | null>;
   onSelectTags: (updater: (prev: string[]) => string[]) => void;
   onSetTagMode: (mode: 'union' | 'intersection') => void;
   onSetHoveredColorDot: (name: string | null) => void;
@@ -52,10 +54,7 @@ const TagFilterBar: React.FC<TagFilterBarProps> = ({
       }}
     >
       <span style={{ fontWeight: 500, marginRight: 4 }}>
-        <FormattedMessage
-          id="pages.addressBook.tags"
-          defaultMessage="Tags"
-        />
+        <FormattedMessage id="pages.addressBook.tags" defaultMessage="Tags" />
       </span>
       <Tag
         style={{ cursor: 'pointer', padding: '2px 8px' }}

@@ -224,9 +224,7 @@ const UserList: React.FC<UserListProps> = ({
     }
   };
 
-  const handleUpdateSecurity = async (
-    values: API.UpdateUserSecurityParams,
-  ) => {
+  const handleUpdateSecurity = async (values: API.UpdateUserSecurityParams) => {
     if (!editingUser) return;
     try {
       await updateUserSecurity(editingUser.guid, values);

@@ -6,16 +6,19 @@ import {
   KeyOutlined,
 } from '@ant-design/icons';
 import { LoginForm, ProFormText } from '@ant-design/pro-components';
-import { FormattedMessage, Helmet, useIntl, useModel, history } from '@umijs/max';
+import {
+  FormattedMessage,
+  Helmet,
+  useIntl,
+  useModel,
+  history,
+} from '@umijs/max';
 import { App, Button, Checkbox, Form } from 'antd';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { flushSync } from 'react-dom';
 import { setToken } from '@/utils/auth';
 import { Footer } from '@/components';
-import {
-  login,
-  getLoginOptions,
-} from '@/services/rustdesk-console/auth';
+import { login, getLoginOptions } from '@/services/rustdesk-console/auth';
 import {
   passkeyAuthBegin,
   passkeyAuthVerify,

@@ -38,10 +38,7 @@ const CreateUserModal: React.FC<CreateUserModalProps> = ({
         <Form.Item
           name="name"
           label={
-            <FormattedMessage
-              id="pages.users.name"
-              defaultMessage="Username"
-            />
+            <FormattedMessage id="pages.users.name" defaultMessage="Username" />
           }
           rules={[
             {
@@ -89,10 +86,7 @@ const CreateUserModal: React.FC<CreateUserModalProps> = ({
         <Form.Item
           name="email"
           label={
-            <FormattedMessage
-              id="pages.users.email"
-              defaultMessage="Email"
-            />
+            <FormattedMessage id="pages.users.email" defaultMessage="Email" />
           }
           rules={[
             {
@@ -108,7 +102,9 @@ const CreateUserModal: React.FC<CreateUserModalProps> = ({
         </Form.Item>
         <Form.Item
           name="note"
-          label={<FormattedMessage id="pages.users.note" defaultMessage="Note" />}
+          label={
+            <FormattedMessage id="pages.users.note" defaultMessage="Note" />
+          }
         >
           <Input.TextArea />
         </Form.Item>

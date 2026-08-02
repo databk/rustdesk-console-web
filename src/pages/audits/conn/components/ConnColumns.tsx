@@ -225,7 +225,12 @@ export const useConnColumns = (
         const isActive = record.action === 'established' && !record.closedAt;
         if (!isActive) return '';
         return (
-          <Button size="small" type="default" danger onClick={() => onDisconnect(record)}>
+          <Button
+            size="small"
+            type="default"
+            danger
+            onClick={() => onDisconnect(record)}
+          >
             <FormattedMessage
               id="pages.audits.disconnect"
               defaultMessage="Disconnect"

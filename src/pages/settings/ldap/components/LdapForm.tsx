@@ -38,10 +38,7 @@ const LdapForm: React.FC<LdapFormProps> = ({
     >
       <Form.Item
         label={
-          <FormattedMessage
-            id="pages.ldap.urls"
-            defaultMessage="Server URLs"
-          />
+          <FormattedMessage id="pages.ldap.urls" defaultMessage="Server URLs" />
         }
         required
       >
@@ -82,15 +79,12 @@ const LdapForm: React.FC<LdapFormProps> = ({
                         style={{ width: 500 }}
                         placeholder={intl.formatMessage({
                           id: 'pages.ldap.urlPlaceholder',
-                          defaultMessage:
-                            'e.g. ldaps://ad.example.com:636',
+                          defaultMessage: 'e.g. ldaps://ad.example.com:636',
                         })}
                       />
                     </Form.Item>
                     {fields.length > 1 && (
-                      <MinusCircleOutlined
-                        onClick={() => remove(field.name)}
-                      />
+                      <MinusCircleOutlined onClick={() => remove(field.name)} />
                     )}
                   </Space>
                 </Form.Item>
@@ -114,10 +108,7 @@ const LdapForm: React.FC<LdapFormProps> = ({
       <Form.Item
         name="bindDN"
         label={
-          <FormattedMessage
-            id="pages.ldap.bindDN"
-            defaultMessage="Bind DN"
-          />
+          <FormattedMessage id="pages.ldap.bindDN" defaultMessage="Bind DN" />
         }
         rules={[
           {
@@ -254,9 +245,7 @@ const LdapForm: React.FC<LdapFormProps> = ({
                     />
                   </Form.Item>
                   {fields.length > 1 && (
-                    <MinusCircleOutlined
-                      onClick={() => remove(field.name)}
-                    />
+                    <MinusCircleOutlined onClick={() => remove(field.name)} />
                   )}
                 </Space>
               ))}
@@ -354,9 +343,7 @@ const LdapForm: React.FC<LdapFormProps> = ({
                       })}
                     />
                   </Form.Item>
-                  <MinusCircleOutlined
-                    onClick={() => remove(field.name)}
-                  />
+                  <MinusCircleOutlined onClick={() => remove(field.name)} />
                 </Space>
               ))}
               <Button

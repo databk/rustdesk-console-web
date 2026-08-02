@@ -24,7 +24,9 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
 
   return (
     <Modal
-      title={<FormattedMessage id="pages.users.edit" defaultMessage="Edit User" />}
+      title={
+        <FormattedMessage id="pages.users.edit" defaultMessage="Edit User" />
+      }
       open={visible}
       onCancel={onCancel}
       onOk={() => form.submit()}
@@ -33,10 +35,7 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
         <Form.Item
           name="name"
           label={
-            <FormattedMessage
-              id="pages.users.name"
-              defaultMessage="Username"
-            />
+            <FormattedMessage id="pages.users.name" defaultMessage="Username" />
           }
           rules={[
             {
@@ -64,10 +63,7 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
         <Form.Item
           name="email"
           label={
-            <FormattedMessage
-              id="pages.users.email"
-              defaultMessage="Email"
-            />
+            <FormattedMessage id="pages.users.email" defaultMessage="Email" />
           }
           rules={[
             {
@@ -83,17 +79,16 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
         </Form.Item>
         <Form.Item
           name="note"
-          label={<FormattedMessage id="pages.users.note" defaultMessage="Note" />}
+          label={
+            <FormattedMessage id="pages.users.note" defaultMessage="Note" />
+          }
         >
           <Input.TextArea />
         </Form.Item>
         <Form.Item
           name="status"
           label={
-            <FormattedMessage
-              id="pages.users.status"
-              defaultMessage="Status"
-            />
+            <FormattedMessage id="pages.users.status" defaultMessage="Status" />
           }
         >
           <Select
@@ -149,10 +144,7 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
         <Form.Item
           name="is_admin"
           label={
-            <FormattedMessage
-              id="pages.users.isAdmin"
-              defaultMessage="Admin"
-            />
+            <FormattedMessage id="pages.users.isAdmin" defaultMessage="Admin" />
           }
           valuePropName="checked"
         >

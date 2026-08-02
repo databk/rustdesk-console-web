@@ -6,12 +6,10 @@ import React from 'react';
 interface AddTagModalProps {
   visible: boolean;
   form: FormInstance;
-  onSubmit: (
-    values: {
-      name: string;
-      color?: { toRgb: () => { r: number; g: number; b: number; a: number } };
-    },
-  ) => Promise<void>;
+  onSubmit: (values: {
+    name: string;
+    color?: { toRgb: () => { r: number; g: number; b: number; a: number } };
+  }) => Promise<void>;
   onCancel: () => void;
 }
 

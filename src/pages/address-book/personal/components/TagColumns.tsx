@@ -1,5 +1,14 @@
 import { useIntl } from '@umijs/max';
-import { Button, ColorPicker, Divider, Form, Input, Popconfirm, Space, Tag } from 'antd';
+import {
+  Button,
+  ColorPicker,
+  Divider,
+  Form,
+  Input,
+  Popconfirm,
+  Space,
+  Tag,
+} from 'antd';
 import type { FormInstance } from 'antd';
 import { FormattedMessage } from '@umijs/max';
 import React from 'react';
@@ -101,8 +110,7 @@ export const useTagColumns = (options: TagColumnsOptions) => {
                     </Form.Item>
                   </Form>
                 ),
-                onOk: () =>
-                  renameTagForm.validateFields().then(onRenameTag),
+                onOk: () => renameTagForm.validateFields().then(onRenameTag),
               });
             }}
           >

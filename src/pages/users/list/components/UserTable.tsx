@@ -55,10 +55,7 @@ const UserTable: React.FC<UserTableProps> = ({
   return (
     <ProTable<API.UserItem>
       headerTitle={
-        <FormattedMessage
-          id="pages.users.list"
-          defaultMessage="User List"
-        />
+        <FormattedMessage id="pages.users.list" defaultMessage="User List" />
       }
       columnsState={{
         persistenceType: 'localStorage',
