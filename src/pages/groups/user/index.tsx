@@ -112,12 +112,7 @@ const UserGroupList: React.FC = () => {
 
   const columns: ProColumns<API.UserGroupItem>[] = [
     {
-      title: '',
-      dataIndex: 'index',
-      valueType: 'indexBorder',
-      width: 50,
-    },
-    {
+
       title: (
         <FormattedMessage
           id="pages.userGroups.name"

@@ -277,6 +277,8 @@ export default {
   'pages.userGroups.destination': 'Destination group',
   'pages.userGroups.selectDestination': 'Select destination group',
   'pages.userGroups.moveSelected': 'Move selected',
+  'pages.userGroups.move': 'Move',
+  'pages.userGroups.batchMove': 'Batch Move',
   'pages.userGroups.addSelected': 'Add selected users',
   'pages.userGroups.membersUpdated': 'Updated {count} user(s)',
   'pages.userGroups.membersUpdateFailed': 'Failed to update group members',

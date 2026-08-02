@@ -255,6 +255,8 @@ export default {
   'pages.userGroups.destination': '目标用户组',
   'pages.userGroups.selectDestination': '选择目标用户组',
   'pages.userGroups.moveSelected': '移动已选用户',
+  'pages.userGroups.move': '移动',
+  'pages.userGroups.batchMove': '批量移动',
   'pages.userGroups.addSelected': '添加已选用户',
   'pages.userGroups.membersUpdated': '已更新 {count} 个用户',
   'pages.userGroups.membersUpdateFailed': '更新用户组成员失败',
