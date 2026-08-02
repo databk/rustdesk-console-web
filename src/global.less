@@ -97,3 +97,40 @@ ol {
   color: #fff !important;
   background-color: rgb(49, 70, 89) !important;
 }
+
+.basic-info-avatar-wrapper {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  border-radius: 50%;
+  cursor: pointer;
+
+  .basic-info-avatar-overlay {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.55);
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+    inset: 0;
+
+    .anticon {
+      font-size: 22px;
+    }
+
+    span {
+      font-size: 12px;
+      line-height: 1;
+    }
+  }
+
+  &:hover .basic-info-avatar-overlay {
+    opacity: 1;
+  }
+}
