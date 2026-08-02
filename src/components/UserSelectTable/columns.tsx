@@ -120,38 +120,7 @@ export const getUserColumns = (): ProColumns<API.UserItem>[] => {
       render: (_: unknown, record: API.UserItem) =>
         renderStatusTag(record.status),
     },
-    {
-      title: (
-        <FormattedMessage id="pages.users.isAdmin" defaultMessage="Admin" />
-      ),
-      dataIndex: 'is_admin',
-      width: 80,
-      valueType: 'select',
-      valueEnum: {
-        true: {
-          text: intl.formatMessage({
-            id: 'pages.users.admin',
-            defaultMessage: 'Admin',
-          }),
-          status: 'Processing',
-        },
-        false: {
-          text: intl.formatMessage({
-            id: 'pages.users.normalUser',
-            defaultMessage: 'Normal',
-          }),
-          status: 'Default',
-        },
-      },
-      render: (_: unknown, record: API.UserItem) =>
-        record.is_admin ? (
-          <Tag color="blue">
-            <FormattedMessage id="pages.users.admin" defaultMessage="Admin" />
-          </Tag>
-        ) : (
-          <span>-</span>
-        ),
-    },
+
     {
       title: (
         <FormattedMessage id="pages.users.strategy" defaultMessage="Strategy" />
