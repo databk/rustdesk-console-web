@@ -120,7 +120,6 @@ export const getUserColumns = (): ProColumns<API.UserItem>[] => {
       render: (_: unknown, record: API.UserItem) =>
         renderStatusTag(record.status),
     },
-
     {
       title: (
         <FormattedMessage id="pages.users.strategy" defaultMessage="Strategy" />
