@@ -1,5 +1,4 @@
 import {
-  CrownOutlined,
   DeleteOutlined,
   EditOutlined,
   LogoutOutlined,
@@ -9,16 +8,14 @@ import {
   SafetyOutlined,
   SelectOutlined,
   SwapOutlined,
-  TeamOutlined,
 } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { FormattedMessage, useIntl, useModel } from '@umijs/max';
+import { FormattedMessage, useIntl } from '@umijs/max';
 import {
   App,
   Button,
   Divider,
-
   Form,
   Input,
   Modal,
@@ -26,8 +23,6 @@ import {
   Select,
   Space,
   Switch,
-  Tag,
-  Tooltip,
 } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
@@ -47,6 +42,7 @@ import {
   getAllUserGroups,
   moveUsersToGroup,
 } from '@/services/rustdesk-console/userGroup';
+import { getUserColumns } from '@/components/UserSelectTable/columns';
 import ImportUsersModal from './components/ImportUsersModal';
 
 export interface UserListProps {
@@ -58,8 +54,7 @@ export interface UserListProps {
 const UserList: React.FC<UserListProps> = ({ userGroupGuid, title, onBack }) => {
   const intl = useIntl();
   const { message: msgApi } = App.useApp();
-  const { initialState } = useModel('@@initialState');
-  const currentUser = initialState?.currentUser;
+
   const actionRef = useRef<ActionType>(null);
 
   // Modal states
@@ -446,282 +441,96 @@ const UserList: React.FC<UserListProps> = ({ userGroupGuid, title, onBack }) => 
     setSecurityModalVisible(true);
   };
 
-  // Status tag renderer
-  const renderStatusTag = (status: number) => {
-    if (status === 1) {
-      return (
-        <Tag icon={<PlusCircleOutlined />} color="green">
-          <FormattedMessage id="pages.users.active" defaultMessage="Active" />
-        </Tag>
-      );
-    }
-    if (status === 0) {
-      return (
-        <Tag icon={<MinusCircleOutlined />} color="red">
-          <FormattedMessage
-            id="pages.users.disabled"
-            defaultMessage="Disabled"
-          />
-        </Tag>
-      );
-    }
-    if (status === -1) {
-      return (
-        <Tag color="orange">
-          <FormattedMessage
-            id="pages.users.unverified"
-            defaultMessage="Unverified"
-          />
-        </Tag>
-      );
-    }
-    return <Tag>{status}</Tag>;
-  };
+  const baseColumns = getUserColumns();
 
-  const columns: ProColumns<API.UserItem>[] = [
-    {
-      title: (
-        <FormattedMessage id="pages.users.name" defaultMessage="Username" />
-      ),
-      dataIndex: 'name',
-      width: 180,
-      ellipsis: true,
-      render: (_: unknown, record: API.UserItem) => (
-        <Space direction="vertical" size={0}>
-          <Space>
-            <span style={{ fontWeight: 500 }}>
-              {record.display_name || record.name}
-            </span>
-            {record.is_admin && (
-              <Tooltip
-                title={intl.formatMessage({
-                  id: 'pages.users.admin',
-                  defaultMessage: 'Admin',
-                })}
-              >
-                <CrownOutlined style={{ color: '#faad14' }} />
-              </Tooltip>
-            )}
-            {record.name === currentUser?.name && (
-              <Tag color="blue">
-                <FormattedMessage id="pages.users.me" defaultMessage="Me" />
-              </Tag>
-            )}
-          </Space>
-          {record.display_name && (
-            <span style={{ color: '#8c8c8c', fontSize: 12 }}>
-              @{record.name}
-            </span>
-          )}
-        </Space>
-      ),
-    },
-    {
-      title: <FormattedMessage id="pages.users.email" defaultMessage="Email" />,
-      dataIndex: 'email',
-      width: 200,
-      ellipsis: true,
-      render: (_: unknown, record: API.UserItem) => record.email || '-',
-    },
-    {
-      title: (
-        <FormattedMessage id="pages.users.status" defaultMessage="Status" />
-      ),
-      dataIndex: 'status',
-      width: 100,
-      valueType: 'select',
-      valueEnum: {
-        1: {
-          text: intl.formatMessage({
-            id: 'pages.users.active',
-            defaultMessage: 'Active',
-          }),
-          status: 'Success',
-        },
-        0: {
-          text: intl.formatMessage({
-            id: 'pages.users.disabled',
-            defaultMessage: 'Disabled',
-          }),
-          status: 'Error',
-        },
-        [-1]: {
-          text: intl.formatMessage({
-            id: 'pages.users.unverified',
-            defaultMessage: 'Unverified',
-          }),
-          status: 'Warning',
-        },
-      },
-      render: (_: unknown, record: API.UserItem) =>
-        renderStatusTag(record.status),
-    },
-    {
-      title: (
-        <FormattedMessage id="pages.users.isAdmin" defaultMessage="Admin" />
-      ),
-      dataIndex: 'is_admin',
-      width: 80,
-      valueType: 'select',
-      valueEnum: {
-        true: {
-          text: intl.formatMessage({
-            id: 'pages.users.admin',
-            defaultMessage: 'Admin',
-          }),
-          status: 'Processing',
-        },
-        false: {
-          text: intl.formatMessage({
-            id: 'pages.users.normalUser',
-            defaultMessage: 'Normal',
-          }),
-          status: 'Default',
-        },
-      },
-      render: (_: unknown, record: API.UserItem) =>
-        record.is_admin ? (
-          <Tag color="blue">
-            <FormattedMessage id="pages.users.admin" defaultMessage="Admin" />
-          </Tag>
-        ) : (
-          <span>-</span>
-        ),
-    },
-    {
-      title: (
-        <FormattedMessage id="pages.users.strategy" defaultMessage="Strategy" />
-      ),
-      dataIndex: 'strategy_name',
-      width: 120,
-      search: false,
-      render: (_: unknown, record: API.UserItem) => record.strategy_name || '-',
-    },
-    {
-      title: (
-        <FormattedMessage
-          id="pages.users.userGroup"
-          defaultMessage="User Group"
-        />
-      ),
-      dataIndex: 'user_group_name',
-      width: 140,
-      search: false,
-      render: (_: unknown, record: API.UserItem) => (
-        <Space>
-          <TeamOutlined />
-          <span>{record.user_group_name || '-'}</span>
-        </Space>
-      ),
-    },
-    {
-      title: (
-        <FormattedMessage
-          id="pages.users.thirdAuthType"
-          defaultMessage="Auth Type"
-        />
-      ),
-      dataIndex: 'third_auth_type',
-      width: 100,
-      search: false,
-      render: (_: unknown, record: API.UserItem) =>
-        record.third_auth_type || '-',
-    },
-    {
-      title: <FormattedMessage id="pages.users.note" defaultMessage="Note" />,
-      dataIndex: 'note',
-      width: 150,
-      ellipsis: true,
-      search: false,
-      render: (_: unknown, record: API.UserItem) => record.note || '-',
-    },
-    {
-      title: (
-        <FormattedMessage id="pages.common.action" defaultMessage="Action" />
-      ),
-      valueType: 'option',
-      width: 220,
-      fixed: 'right',
-      render: (_: unknown, record: API.UserItem) =>
-        userGroupGuid ? (
+  const actionColumn: ProColumns<API.UserItem> = {
+    title: (
+      <FormattedMessage id="pages.common.action" defaultMessage="Action" />
+    ),
+    valueType: 'option',
+    width: 220,
+    fixed: 'right',
+    render: (_: unknown, record: API.UserItem) =>
+      userGroupGuid ? (
+        <Button
+          type="link"
+          size="small"
+          icon={<SwapOutlined />}
+          onClick={() => {
+            setMoveUser(record);
+            setMoveDestinationGuid(undefined);
+          }}
+        >
+          <FormattedMessage
+            id="pages.userGroups.move"
+            defaultMessage="Move"
+          />
+        </Button>
+      ) : (
+        <Space size={0} split={<Divider type="vertical" />}>
           <Button
+            key="edit"
             type="link"
             size="small"
-            icon={<SwapOutlined />}
-            onClick={() => {
-              setMoveUser(record);
-              setMoveDestinationGuid(undefined);
-            }}
+            icon={<EditOutlined />}
+            onClick={() => openEditModal(record)}
+          >
+            <FormattedMessage id="pages.common.edit" defaultMessage="Edit" />
+          </Button>
+          <Button
+            key="security"
+            type="link"
+            size="small"
+            icon={<SafetyOutlined />}
+            onClick={() => openSecurityModal(record)}
           >
             <FormattedMessage
-              id="pages.userGroups.move"
-              defaultMessage="Move"
+              id="pages.users.security"
+              defaultMessage="Security"
             />
           </Button>
-        ) : (
-          <Space size={0} split={<Divider type="vertical" />}>
-            <Button
-              key="edit"
-              type="link"
-              size="small"
-              icon={<EditOutlined />}
-              onClick={() => openEditModal(record)}
-            >
-              <FormattedMessage id="pages.common.edit" defaultMessage="Edit" />
-            </Button>
-            <Button
-              key="security"
-              type="link"
-              size="small"
-              icon={<SafetyOutlined />}
-              onClick={() => openSecurityModal(record)}
-            >
+          <Button
+            key="logout"
+            type="link"
+            size="small"
+            icon={<LogoutOutlined />}
+            onClick={() => handleForceLogout(record.guid)}
+          >
+            <FormattedMessage
+              id="pages.users.forceLogout"
+              defaultMessage="Logout"
+            />
+          </Button>
+          <Popconfirm
+            key="delete"
+            title={
               <FormattedMessage
-                id="pages.users.security"
-                defaultMessage="Security"
+                id="pages.users.deleteConfirm"
+                defaultMessage="Are you sure to delete this user?"
+              />
+            }
+            onConfirm={() => handleDelete(record.guid)}
+            okText={intl.formatMessage({
+              id: 'pages.common.confirm',
+              defaultMessage: 'Yes',
+            })}
+            cancelText={intl.formatMessage({
+              id: 'pages.common.cancel',
+              defaultMessage: 'No',
+            })}
+          >
+            <Button type="link" size="small" danger icon={<DeleteOutlined />}>
+              <FormattedMessage
+                id="pages.common.delete"
+                defaultMessage="Delete"
               />
             </Button>
-            <Button
-              key="logout"
-              type="link"
-              size="small"
-              icon={<LogoutOutlined />}
-              onClick={() => handleForceLogout(record.guid)}
-            >
-              <FormattedMessage
-                id="pages.users.forceLogout"
-                defaultMessage="Logout"
-              />
-            </Button>
-            <Popconfirm
-              key="delete"
-              title={
-                <FormattedMessage
-                  id="pages.users.deleteConfirm"
-                  defaultMessage="Are you sure to delete this user?"
-                />
-              }
-              onConfirm={() => handleDelete(record.guid)}
-              okText={intl.formatMessage({
-                id: 'pages.common.confirm',
-                defaultMessage: 'Yes',
-              })}
-              cancelText={intl.formatMessage({
-                id: 'pages.common.cancel',
-                defaultMessage: 'No',
-              })}
-            >
-              <Button type="link" size="small" danger icon={<DeleteOutlined />}>
-                <FormattedMessage
-                  id="pages.common.delete"
-                  defaultMessage="Delete"
-                />
-              </Button>
-            </Popconfirm>
-          </Space>
-        ),
-    },
-  ];
+          </Popconfirm>
+        </Space>
+      ),
+  };
+
+  const columns = [...baseColumns, actionColumn];
 
   return (
     <>
