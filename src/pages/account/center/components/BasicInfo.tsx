@@ -1,7 +1,7 @@
 import {
   DeleteOutlined,
+  EditOutlined,
   SaveOutlined,
-  UploadOutlined,
   UserOutlined,
 } from '@ant-design/icons';
 import { useIntl, FormattedMessage, useModel } from '@umijs/max';
@@ -15,7 +15,6 @@ import {
   message as messageApi,
   Popconfirm,
   Row,
-  Space,
   Spin,
   Typography,
   Upload,
@@ -28,6 +27,8 @@ import {
 } from '@/services/rustdesk-console';
 
 const { Text } = Typography;
+
+const AVATAR_SIZE = 120;
 
 const BasicInfo: React.FC = () => {
   const intl = useIntl();
@@ -145,82 +146,10 @@ const BasicInfo: React.FC = () => {
 
   return (
     <Spin spinning={saving}>
-      <Row gutter={24}>
-        {/* Left: Avatar Card */}
-        <Col xs={24} md={8}>
-          <Card
-            style={{ textAlign: 'center' }}
-            styles={{
-              body: {
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: 16,
-              },
-            }}
-          >
-            <Avatar
-              size={120}
-              src={avatarUrl}
-              icon={!avatarUrl && <UserOutlined />}
-              style={{ backgroundColor: avatarUrl ? undefined : '#1677ff' }}
-            />
-            <Space>
-              <Upload
-                showUploadList={false}
-                beforeUpload={handleUpload}
-                accept=".jpg,.jpeg,.png,.webp"
-              >
-                <Button icon={<UploadOutlined />} loading={uploading}>
-                  <FormattedMessage
-                    id="pages.account.avatar.upload"
-                    defaultMessage="Upload Avatar"
-                  />
-                </Button>
-              </Upload>
-              {avatarUrl && (
-                <Popconfirm
-                  title={
-                    <FormattedMessage
-                      id="pages.account.avatar.deleteConfirm"
-                      defaultMessage="Are you sure to delete your avatar?"
-                    />
-                  }
-                  onConfirm={handleDeleteAvatar}
-                  okText={
-                    <FormattedMessage
-                      id="pages.common.confirm"
-                      defaultMessage="Yes"
-                    />
-                  }
-                  cancelText={
-                    <FormattedMessage
-                      id="pages.common.cancel"
-                      defaultMessage="No"
-                    />
-                  }
-                >
-                  <Button icon={<DeleteOutlined />} danger loading={deleting}>
-                    <FormattedMessage
-                      id="pages.account.avatar.delete"
-                      defaultMessage="Delete Avatar"
-                    />
-                  </Button>
-                </Popconfirm>
-              )}
-            </Space>
-            <Text type="secondary" style={{ fontSize: 12 }}>
-              <FormattedMessage
-                id="pages.account.avatar.hint"
-                defaultMessage="Supports JPG, PNG, WebP, max 2MB, will be resized to 256x256"
-              />
-            </Text>
-          </Card>
-        </Col>
-
-        {/* Right: Form Card */}
-        <Col xs={24} md={16}>
-          <Card>
+      <Card>
+        <Row gutter={32} align="top">
+          {/* Left: editable form */}
+          <Col xs={24} md={16}>
             <Form form={form} layout="vertical">
               <Form.Item
                 label={
@@ -230,7 +159,11 @@ const BasicInfo: React.FC = () => {
                   />
                 }
               >
-                <Input value={currentUser?.name} disabled />
+                <Input
+                  value={currentUser?.name}
+                  disabled
+                  style={{ maxWidth: 320 }}
+                />
               </Form.Item>
 
               <Form.Item
@@ -243,6 +176,7 @@ const BasicInfo: React.FC = () => {
                 }
               >
                 <Input
+                  style={{ maxWidth: 320 }}
                   placeholder={intl.formatMessage({
                     id: 'pages.account.basicInfo.displayNamePlaceholder',
                     defaultMessage: 'Enter display name',
@@ -276,6 +210,7 @@ const BasicInfo: React.FC = () => {
                 ]}
               >
                 <Input
+                  style={{ maxWidth: 320 }}
                   placeholder={intl.formatMessage({
                     id: 'pages.common.pleaseEnterEmail',
                     defaultMessage: 'Please enter email',
@@ -294,6 +229,7 @@ const BasicInfo: React.FC = () => {
               >
                 <Input.TextArea
                   rows={4}
+                  style={{ maxWidth: 480 }}
                   placeholder={intl.formatMessage({
                     id: 'pages.common.enterDescription',
                     defaultMessage: 'Enter description',
@@ -315,11 +251,88 @@ const BasicInfo: React.FC = () => {
                 </Button>
               </Form.Item>
             </Form>
-          </Card>
-        </Col>
-      </Row>
+          </Col>
+
+          {/* Right: avatar with hover-to-change effect */}
+          <Col xs={24} md={8} style={{ textAlign: 'center' }}>
+            <Upload
+              showUploadList={false}
+              beforeUpload={handleUpload}
+              accept=".jpg,.jpeg,.png,.webp"
+              disabled={uploading}
+            >
+              <div
+                className="basic-info-avatar-wrapper"
+                style={{
+                  width: AVATAR_SIZE + 8,
+                  height: AVATAR_SIZE + 8,
+                }}
+              >
+                <Avatar
+                  size={AVATAR_SIZE}
+                  src={avatarUrl}
+                  icon={!avatarUrl && <UserOutlined />}
+                  style={{
+                    backgroundColor: avatarUrl ? undefined : '#1677ff',
+                  }}
+                />
+                <div className="basic-info-avatar-overlay">
+                  <EditOutlined />
+                </div>
+              </div>
+            </Upload>
+            {avatarUrl && (
+              <Popconfirm
+                title={
+                  <FormattedMessage
+                    id="pages.account.avatar.deleteConfirm"
+                    defaultMessage="Are you sure to delete your avatar?"
+                  />
+                }
+                onConfirm={handleDeleteAvatar}
+                okText={
+                  <FormattedMessage
+                    id="pages.common.confirm"
+                    defaultMessage="Yes"
+                  />
+                }
+                cancelText={
+                  <FormattedMessage
+                    id="pages.common.cancel"
+                    defaultMessage="No"
+                  />
+                }
+              >
+                <Button
+                  type="link"
+                  size="small"
+                  icon={<DeleteOutlined />}
+                  danger
+                  loading={deleting}
+                  style={{ marginTop: 12, padding: 0 }}
+                >
+                  <FormattedMessage
+                    id="pages.account.avatar.delete"
+                    defaultMessage="Delete Avatar"
+                  />
+                </Button>
+              </Popconfirm>
+            )}
+            <Text
+              type="secondary"
+              style={{ display: 'block', fontSize: 12, marginTop: 8 }}
+            >
+              <FormattedMessage
+                id="pages.account.avatar.hint"
+                defaultMessage="Supports JPG, PNG, WebP, max 2MB, will be resized to 256x256"
+              />
+            </Text>
+          </Col>
+        </Row>
+      </Card>
     </Spin>
   );
 };
 
 export default BasicInfo;
+
