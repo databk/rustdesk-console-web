@@ -2,7 +2,8 @@ name: Nightly Build
 
 on:
   schedule:
-    - cron: '0 16 * * *' # Run daily at 00:00 CST (16:00 UTC)
+    # Run daily at 00:00 CST (16:00 UTC)
+    - cron: '0 16 * * *'
   workflow_dispatch:
 
 concurrency:
@@ -159,10 +160,6 @@ jobs:
         id: changelog
         uses: TriPSs/conventional-changelog-action@v6
         with:
-          git-user-name: 'DataBK Auto Release'
-          git-user-email: 'databk.auto.release@github.com'
-          tag-prefix: ''
-          version-file: './package.json,./package-lock.json'
           skip-commit: 'true'
           skip-tag: 'true'
 
