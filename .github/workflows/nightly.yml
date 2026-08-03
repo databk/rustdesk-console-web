@@ -149,7 +149,6 @@ jobs:
           DATE=$(date -u +%Y%m%d)
           NIGHTLY_VERSION="${BASE_VERSION}-nightly.${DATE}"
           echo "version=${NIGHTLY_VERSION}" >> "$GITHUB_OUTPUT"
-          echo "date=${DATE}" >> "$GITHUB_OUTPUT"
 
       - name: Delete existing nightly release and tag
         env:
