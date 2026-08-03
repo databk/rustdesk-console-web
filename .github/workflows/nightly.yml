@@ -2,7 +2,7 @@ name: Nightly Build
 
 on:
   schedule:
-    - cron: '0 0 * * *' # UTC 00:00 daily
+    - cron: '0 16 * * *' # Run daily at 00:00 CST (16:00 UTC)
   workflow_dispatch:
 
 concurrency:
@@ -28,26 +28,21 @@ jobs:
       - name: Check if new commits since last nightly
         id: check
         run: |
-          # Get the date of the last nightly tag
-          LAST_NIGHTLY=$(git tag -l "v*-nightly.*" --sort=-version:refname | head -n 1)
-
-          if [ -z "$LAST_NIGHTLY" ]; then
+          # Check if the nightly tag exists
+          if ! git rev-parse "nightly" >/dev/null 2>&1; then
             echo "No previous nightly tag found, proceeding with build"
             echo "has_changes=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
-          LAST_NIGHTLY_DATE=$(echo "$LAST_NIGHTLY" | grep -oP '\d{8}')
-          TODAY=$(date -u +%Y%m%d)
-
-          # Count commits since the last nightly tag
-          NEW_COMMITS=$(git rev-list "${LAST_NIGHTLY}..HEAD" --count 2>/dev/null || echo "0")
+          # Count commits since the nightly tag
+          NEW_COMMITS=$(git rev-list "nightly..HEAD" --count 2>/dev/null || echo "0")
 
           if [ "$NEW_COMMITS" -gt 0 ]; then
-            echo "Found ${NEW_COMMITS} new commits since last nightly (${LAST_NIGHTLY}), proceeding with build"
+            echo "Found ${NEW_COMMITS} new commits since last nightly, proceeding with build"
             echo "has_changes=true" >> "$GITHUB_OUTPUT"
           else
-            echo "No new commits since last nightly (${LAST_NIGHTLY}), skipping build"
+            echo "No new commits since last nightly, skipping build"
             echo "has_changes=false" >> "$GITHUB_OUTPUT"
           fi
 
@@ -146,49 +141,30 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Determine nightly version
+      - name: Determine nightly date
         id: version
         run: |
-          BASE_VERSION=$(jq -r '.version' package.json)
           DATE=$(date -u +%Y%m%d)
-          NIGHTLY_VERSION="${BASE_VERSION}-nightly.${DATE}"
-          echo "version=${NIGHTLY_VERSION}" >> "$GITHUB_OUTPUT"
-          echo "tag=v${NIGHTLY_VERSION}" >> "$GITHUB_OUTPUT"
           echo "date=${DATE}" >> "$GITHUB_OUTPUT"
 
-      - name: Delete existing nightly release for today (if any)
+      - name: Delete existing nightly release and tag
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          TAG="v${{ steps.version.outputs.version }}"
-          gh release delete "$TAG" --yes --cleanup-tag 2>/dev/null || true
+          gh release delete "nightly" --yes --cleanup-tag 2>/dev/null || true
+          git push origin ":nightly" 2>/dev/null || true
+          git tag -d "nightly" 2>/dev/null || true
 
       - name: Generate changelog
         id: changelog
-        run: |
-          # Find the last stable tag (not nightly)
-          LAST_STABLE=$(git tag -l "v[0-9]*" --sort=-version:refname | grep -v "nightly" | head -n 1)
-
-          if [ -n "$LAST_STABLE" ]; then
-            COMMITS=$(git log "${LAST_STABLE}..HEAD" --pretty=format:"- %s (%h)" --no-merges)
-          else
-            COMMITS=$(git log --pretty=format:"- %s (%h)" --no-merges -50)
-          fi
-
-          # Write changelog to file for multi-line output
-          {
-            echo "## Nightly Build ${{ steps.version.outputs.version }}"
-            echo ""
-            echo "This is an automated nightly build. **Not recommended for production use.**"
-            echo ""
-            if [ -n "$LAST_STABLE" ]; then
-              echo "### Changes since ${LAST_STABLE}"
-            else
-              echo "### Recent Changes"
-            fi
-            echo ""
-            echo "$COMMITS"
-          } > CHANGELOG_NIGHTLY.md
+        uses: TriPSs/conventional-changelog-action@v6
+        with:
+          git-user-name: 'DataBK Auto Release'
+          git-user-email: 'databk.auto.release@github.com'
+          tag-prefix: ''
+          version-file: './package.json,./package-lock.json'
+          skip-commit: 'true'
+          skip-tag: 'true'
 
       - name: Download build artifact
         uses: actions/download-artifact@v8
@@ -206,19 +182,19 @@ jobs:
       - name: Create release archive
         run: |
           cd dist
-          tar -czf ../rustdesk-console-web-${{ steps.version.outputs.version }}.tar.gz .
+          tar -czf ../rustdesk-console-web-nightly.tar.gz .
           cd ..
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
         with:
-          tag_name: ${{ steps.version.outputs.tag }}
-          name: Nightly ${{ steps.version.outputs.version }}
-          body_path: CHANGELOG_NIGHTLY.md
+          tag_name: nightly
+          name: Nightly Build ${{ steps.version.outputs.date }}
+          body: ${{ steps.changelog.outputs.clean_changelog }}
           draft: false
           prerelease: true
           files: |
-            rustdesk-console-web-${{ steps.version.outputs.version }}.tar.gz
+            rustdesk-console-web-nightly.tar.gz
             binaries/*
 
   docker:
@@ -229,13 +205,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Determine version
+      - name: Determine nightly date
         id: version
         run: |
-          BASE_VERSION=$(jq -r '.version' package.json)
           DATE=$(date -u +%Y%m%d)
-          NIGHTLY_VERSION="${BASE_VERSION}-nightly.${DATE}"
-          echo "version=${NIGHTLY_VERSION}" >> "$GITHUB_OUTPUT"
+          echo "date=${DATE}" >> "$GITHUB_OUTPUT"
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v4
@@ -269,57 +243,8 @@ jobs:
           labels: |
             org.opencontainers.image.title=rustdesk-console-web
             org.opencontainers.image.description=Nightly build of RustDesk Console Web
-            org.opencontainers.image.version=${{ steps.version.outputs.version }}
+            org.opencontainers.image.version=nightly-${{ steps.version.outputs.date }}
             org.opencontainers.image.revision=${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  cleanup:
-    name: Cleanup Old Nightly Releases
-    needs: [release, docker]
-    if: always() && needs.release.result == 'success'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
-
-      - name: Delete old nightly releases and tags
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          RETENTION_DAYS=7
-          TODAY=$(date -u +%Y%m%d)
-          CUTOFF=$((TODAY - RETENTION_DAYS))
-
-          echo "Cleaning up nightly releases older than ${RETENTION_DAYS} days..."
-          echo "Cutoff date: ${CUTOFF}"
-
-          # List all nightly tags sorted by version (newest first)
-          git tag -l "v*-nightly.*" --sort=-version:refname | while read -r TAG; do
-            TAG_DATE=$(echo "$TAG" | grep -oP '\d{8}')
-
-            if [ -z "$TAG_DATE" ]; then
-              continue
-            fi
-
-            # Skip if tag date is within retention period
-            if [ "$TAG_DATE" -ge "$CUTOFF" ]; then
-              echo "Keeping: ${TAG} (date: ${TAG_DATE})"
-              continue
-            fi
-
-            echo "Removing: ${TAG} (date: ${TAG_DATE})"
-
-            # Delete the GitHub release
-            gh release delete "$TAG" --yes --cleanup-tag 2>/dev/null || true
-
-            # Delete the remote tag (in case cleanup-tag didn't work)
-            git push origin ":${TAG}" 2>/dev/null || true
-
-            # Delete the local tag
-            git tag -d "$TAG" 2>/dev/null || true
-          done
-
-          echo "Cleanup complete"
