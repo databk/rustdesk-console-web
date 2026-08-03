@@ -142,10 +142,13 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Determine nightly date
+      - name: Determine nightly version
         id: version
         run: |
+          BASE_VERSION=$(jq -r '.version' package.json)
           DATE=$(date -u +%Y%m%d)
+          NIGHTLY_VERSION="${BASE_VERSION}-nightly.${DATE}"
+          echo "version=${NIGHTLY_VERSION}" >> "$GITHUB_OUTPUT"
           echo "date=${DATE}" >> "$GITHUB_OUTPUT"
 
       - name: Delete existing nightly release and tag
@@ -186,7 +189,7 @@ jobs:
         uses: softprops/action-gh-release@v3
         with:
           tag_name: nightly
-          name: Nightly Build ${{ steps.version.outputs.date }}
+          name: Nightly ${{ steps.version.outputs.version }}
           body: ${{ steps.changelog.outputs.clean_changelog }}
           draft: false
           prerelease: true
@@ -202,11 +205,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Determine nightly date
+      - name: Determine nightly version
         id: version
         run: |
+          BASE_VERSION=$(jq -r '.version' package.json)
           DATE=$(date -u +%Y%m%d)
-          echo "date=${DATE}" >> "$GITHUB_OUTPUT"
+          NIGHTLY_VERSION="${BASE_VERSION}-nightly.${DATE}"
+          echo "version=${NIGHTLY_VERSION}" >> "$GITHUB_OUTPUT"
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v4
@@ -240,7 +245,7 @@ jobs:
           labels: |
             org.opencontainers.image.title=rustdesk-console-web
             org.opencontainers.image.description=Nightly build of RustDesk Console Web
-            org.opencontainers.image.version=nightly-${{ steps.version.outputs.date }}
+            org.opencontainers.image.version=${{ steps.version.outputs.version }}
             org.opencontainers.image.revision=${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
