@@ -107,14 +107,14 @@ async fn main() -> std::io::Result<()> {
         .init();
 
     let port: u16 = env::var("PORT")
-        .unwrap_or_else(|_| "80".to_string())
+        .unwrap_or_else(|_| "21114".to_string())
         .parse()
-        .unwrap_or(80);
+        .unwrap_or(21114);
 
     let backend_url = env::var("BACKEND_URL")
         .unwrap_or_else(|_| {
             log::warn!("BACKEND_URL not set, API proxy will not work");
-            "http://localhost:21114".to_string()
+            "http://localhost:3000".to_string()
         });
 
     let bind_addr = env::var("BIND_ADDR")
