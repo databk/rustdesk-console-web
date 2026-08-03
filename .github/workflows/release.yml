@@ -89,24 +89,11 @@ jobs:
         env:
           CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
 
-      - name: Package (Unix)
-        if: runner.os != 'Windows'
-        run: |
-          cd server/target/${{ matrix.target }}/release
-          tar -czf ../../../rustdesk-console-web-${{ matrix.target }}.tar.gz rustdesk-console-web
-
-      - name: Package (Windows)
-        if: runner.os == 'Windows'
-        working-directory: server/target/${{ matrix.target }}/release
-        run: Compress-Archive -Path rustdesk-console-web.exe -DestinationPath ../../../rustdesk-console-web-${{ matrix.target }}.zip
-
       - name: Upload binary artifact
         uses: actions/upload-artifact@v7
         with:
           name: binary-${{ matrix.target }}
-          path: |
-            server/rustdesk-console-web-${{ matrix.target }}.tar.gz
-            server/rustdesk-console-web-${{ matrix.target }}.zip
+          path: server/target/${{ matrix.target }}/release/rustdesk-console-web${{ matrix.ext }}
 
   release:
     name: Create GitHub Release
