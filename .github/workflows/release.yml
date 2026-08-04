@@ -89,11 +89,16 @@ jobs:
         env:
           CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
 
+      - name: Rename binary with target suffix
+        shell: bash
+        run: |
+          cp "server/target/${{ matrix.target }}/release/rustdesk-console-web${{ matrix.ext }}" "server/target/${{ matrix.target }}/release/rustdesk-console-web-${{ matrix.target }}${{ matrix.ext }}"
+
       - name: Upload binary artifact
         uses: actions/upload-artifact@v7
         with:
           name: binary-${{ matrix.target }}
-          path: server/target/${{ matrix.target }}/release/rustdesk-console-web${{ matrix.ext }}
+          path: server/target/${{ matrix.target }}/release/rustdesk-console-web-${{ matrix.target }}${{ matrix.ext }}
 
   release:
     name: Create GitHub Release
