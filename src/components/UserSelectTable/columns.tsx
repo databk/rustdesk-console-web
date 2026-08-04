@@ -96,7 +96,7 @@ export const getUserColumns = (): ProColumns<API.UserItem>[] => {
         <FormattedMessage id="pages.users.status" defaultMessage="Status" />
       ),
       dataIndex: 'status',
-      width: 100,
+      width: 80,
       valueType: 'select',
       valueEnum: {
         1: {
