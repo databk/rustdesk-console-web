@@ -71,11 +71,7 @@ export const getUserColumns = (): ProColumns<API.UserItem>[] => {
                 <FormattedMessage id="pages.users.me" defaultMessage="Me" />
               </Tag>
             )}
-            {record.third_auth_type && (
-              <Tag>
-                {record.third_auth_type}
-              </Tag>
-            )}
+            {record.third_auth_type && <Tag>{record.third_auth_type}</Tag>}
           </Space>
           {record.display_name && (
             <span style={{ color: '#8c8c8c', fontSize: 12 }}>
