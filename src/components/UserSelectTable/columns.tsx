@@ -71,6 +71,11 @@ export const getUserColumns = (): ProColumns<API.UserItem>[] => {
                 <FormattedMessage id="pages.users.me" defaultMessage="Me" />
               </Tag>
             )}
+            {record.third_auth_type && (
+              <Tag>
+                {record.third_auth_type}
+              </Tag>
+            )}
           </Space>
           {record.display_name && (
             <span style={{ color: '#8c8c8c', fontSize: 12 }}>
@@ -142,18 +147,6 @@ export const getUserColumns = (): ProColumns<API.UserItem>[] => {
           <span>{record.user_group_name || '-'}</span>
         </Space>
       ),
-    },
-    {
-      title: (
-        <FormattedMessage
-          id="pages.users.thirdAuthType"
-          defaultMessage="Auth Type"
-        />
-      ),
-      dataIndex: 'third_auth_type',
-      search: false,
-      render: (_: unknown, record: API.UserItem) =>
-        record.third_auth_type || '-',
     },
     {
       title: <FormattedMessage id="pages.users.note" defaultMessage="Note" />,
