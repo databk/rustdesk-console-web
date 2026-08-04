@@ -308,6 +308,41 @@ const CustomClientPage: React.FC = () => {
     }
   };
 
+  const handleRetry = async (record: API.BuildRecord) => {
+    try {
+      const custom = record.custom ? JSON.parse(record.custom) : {};
+      const result = await submitBuild({
+        os: record.os as 'windows',
+        arch: record.arch as 'x64' | 'arm64' | 'x86',
+        custom,
+      });
+      msgApi.success(result.message || 'Build request submitted');
+      buildListActionRef.current?.reload();
+    } catch (error: any) {
+      if (isRepoRequiredError(error)) {
+        setPageState('repoRequired');
+      } else if (
+        error?.data?.message?.includes('进行中') ||
+        error?.data?.message?.includes('ongoing') ||
+        error?.response?.status === 409
+      ) {
+        msgApi.error(
+          intl.formatMessage({
+            id: 'pages.nexus.buildAlreadyRunning',
+            defaultMessage: 'You already have a build in progress',
+          }),
+        );
+      } else {
+        msgApi.error(
+          intl.formatMessage({
+            id: 'pages.nexus.retryBuildFailed',
+            defaultMessage: 'Failed to retry build',
+          }),
+        );
+      }
+    }
+  };
+
   const handleCancelCreate = () => {
     setCreateModalOpen(false);
     setPendingBuildConfig(null);
@@ -358,6 +393,7 @@ const CustomClientPage: React.FC = () => {
           onUnbind={handleUnbind}
           onCreate={() => setCreateModalOpen(true)}
           onRepoRequired={() => setPageState('repoRequired')}
+          onRetry={handleRetry}
         />
       )}
       <CreateBuildModal

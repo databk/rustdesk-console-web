@@ -801,6 +801,8 @@ export default {
     '请先对 databk/rustdesk-console 仓库进行 Star、Fork 或 Watch 操作。操作后最长需等待 5 分钟缓存刷新。',
   'pages.nexus.buildAlreadyRunning': '已有一个正在进行的构建任务',
   'pages.nexus.generateFailed': '提交构建请求失败',
+  'pages.nexus.retryBuild': '重试',
+  'pages.nexus.retryBuildFailed': '重试构建失败',
   'pages.nexus.downloadFailed': '下载自定义客户端失败',
   'pages.nexus.download': '下载',
   'pages.nexus.buildAgain': '再次构建',

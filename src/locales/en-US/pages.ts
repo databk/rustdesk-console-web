@@ -844,6 +844,8 @@ export default {
     'Please Star, Fork or Watch the databk/rustdesk-console repository on GitHub first. It may take up to 5 minutes for the cache to refresh.',
   'pages.nexus.buildAlreadyRunning': 'You already have a build in progress',
   'pages.nexus.generateFailed': 'Failed to submit build request',
+  'pages.nexus.retryBuild': 'Retry',
+  'pages.nexus.retryBuildFailed': 'Failed to retry build',
   'pages.nexus.downloadFailed': 'Failed to download custom client',
   'pages.nexus.download': 'Download',
   'pages.nexus.buildAgain': 'Build Again',
