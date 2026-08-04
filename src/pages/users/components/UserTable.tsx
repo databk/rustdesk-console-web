@@ -140,7 +140,7 @@ const UserTable: React.FC<UserTableProps> = ({
         showSizeChanger: true,
         showQuickJumper: true,
       }}
-      scroll={{ x: 1540 }}
+      scroll={{ x: 'max-content' }}
       toolBarRender={() =>
         userGroupGuid
           ? [

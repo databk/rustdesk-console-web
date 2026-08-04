@@ -83,7 +83,6 @@ export const getUserColumns = (): ProColumns<API.UserItem>[] => {
     {
       title: <FormattedMessage id="pages.users.email" defaultMessage="Email" />,
       dataIndex: 'email',
-      width: 200,
       ellipsis: true,
       render: (_: unknown, record: API.UserItem) => record.email || '-',
     },
@@ -125,7 +124,6 @@ export const getUserColumns = (): ProColumns<API.UserItem>[] => {
         <FormattedMessage id="pages.users.strategy" defaultMessage="Strategy" />
       ),
       dataIndex: 'strategy_name',
-      width: 120,
       search: false,
       render: (_: unknown, record: API.UserItem) => record.strategy_name || '-',
     },
@@ -137,7 +135,6 @@ export const getUserColumns = (): ProColumns<API.UserItem>[] => {
         />
       ),
       dataIndex: 'user_group_name',
-      width: 140,
       search: false,
       render: (_: unknown, record: API.UserItem) => (
         <Space>
@@ -154,7 +151,6 @@ export const getUserColumns = (): ProColumns<API.UserItem>[] => {
         />
       ),
       dataIndex: 'third_auth_type',
-      width: 100,
       search: false,
       render: (_: unknown, record: API.UserItem) =>
         record.third_auth_type || '-',
@@ -162,7 +158,6 @@ export const getUserColumns = (): ProColumns<API.UserItem>[] => {
     {
       title: <FormattedMessage id="pages.users.note" defaultMessage="Note" />,
       dataIndex: 'note',
-      width: 150,
       ellipsis: true,
       search: false,
       render: (_: unknown, record: API.UserItem) => record.note || '-',
