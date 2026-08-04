@@ -162,6 +162,7 @@ jobs:
         id: changelog
         uses: TriPSs/conventional-changelog-action@v6
         with:
+          tag-prefix: ''
           skip-commit: 'true'
           skip-tag: 'true'
 
