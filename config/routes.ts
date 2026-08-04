@@ -123,6 +123,7 @@ export default [
     icon: 'audit',
     access: 'canAdmin',
     component: './roles',
+    hideInMenu: true,
   },
   {
     path: '/audits',
@@ -157,6 +158,7 @@ export default [
         icon: 'code',
         path: '/audits/console',
         component: './audits/console',
+        hideInMenu: true,
       },
     ],
   },
