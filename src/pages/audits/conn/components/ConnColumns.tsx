@@ -64,7 +64,7 @@ export const useConnColumns = (
     {
       title: <FormattedMessage id="pages.audits.type" defaultMessage="Type" />,
       dataIndex: 'type',
-      width: 60,
+      width: 48,
       valueType: 'select',
       valueEnum: connTypeValueEnum,
       render: (_, record) => {
@@ -116,7 +116,7 @@ export const useConnColumns = (
       ),
       dataIndex: 'local',
       search: false,
-      width: 200,
+      width: 160,
       render: (_, record) => renderLocalField(record),
     },
     {
@@ -145,7 +145,7 @@ export const useConnColumns = (
         />
       ),
       dataIndex: 'requestedAt',
-      width: 180,
+      width: 160,
       search: false,
       render: (_, record) => formatDateTime(record.requestedAt),
     },
@@ -157,7 +157,7 @@ export const useConnColumns = (
         />
       ),
       dataIndex: 'establishedAt',
-      width: 180,
+      width: 160,
       search: false,
       render: (_, record) => formatDateTime(record.establishedAt),
     },
@@ -169,7 +169,7 @@ export const useConnColumns = (
         />
       ),
       dataIndex: 'closedAt',
-      width: 180,
+      width: 160,
       search: false,
       render: (_, record) => formatDateTime(record.closedAt),
     },
@@ -182,7 +182,7 @@ export const useConnColumns = (
       ),
       dataIndex: 'duration',
       search: false,
-      width: 120,
+      width: 100,
       render: (_, record) => renderDuration(record),
     },
     {
@@ -190,13 +190,13 @@ export const useConnColumns = (
       dataIndex: 'note',
       valueType: 'textarea',
       search: false,
-      width: 200,
+      width: 150,
       ellipsis: true,
       render: (_, record) => (
         <Fragment>
           <Text
             ellipsis={{ tooltip: record.note || '' }}
-            style={{ maxWidth: 150 }}
+            style={{ maxWidth: 120 }}
           >
             {record.note || ''}
           </Text>
@@ -217,7 +217,7 @@ export const useConnColumns = (
       ),
       search: false,
       hideInTable: !canEdit,
-      width: 120,
+      width: 100,
       render: (_, record) => {
         if (!canEdit) {
           return <Text type="secondary">-</Text>;

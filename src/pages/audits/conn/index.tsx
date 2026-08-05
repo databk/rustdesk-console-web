@@ -235,7 +235,7 @@ const ConnectionAudit: React.FC = () => {
           showSizeChanger: true,
           showQuickJumper: true,
         }}
-        scroll={{ x: 1500 }}
+        scroll={{ x: '100%' }}
         options={{
           density: true,
           setting: { listsHeight: 400 },
