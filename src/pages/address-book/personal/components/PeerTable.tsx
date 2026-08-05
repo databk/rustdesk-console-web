@@ -2,11 +2,7 @@ import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
 import { FormattedMessage } from '@umijs/max';
 import { Button } from 'antd';
-import {
-
-  PlusOutlined,
-  SelectOutlined,
-} from '@ant-design/icons';
+import { PlusOutlined, SelectOutlined } from '@ant-design/icons';
 import React from 'react';
 import { getPeers } from '@/services/rustdesk-console/addressBook';
 
@@ -100,7 +96,6 @@ const PeerTable: React.FC<PeerTableProps> = ({
                   defaultMessage="Add by ID"
                 />
               </Button>,
-
             ]
           : []
       }
