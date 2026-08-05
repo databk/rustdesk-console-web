@@ -259,7 +259,7 @@ export const getDeviceColumns = (options?: {
         <FormattedMessage id="pages.devices.status" defaultMessage="Status" />
       ),
       dataIndex: 'status_display',
-      width: 75,
+      width: 71,
       search: false,
       sorter: true,
       render: (_: unknown, record: API.DeviceItem) => {
