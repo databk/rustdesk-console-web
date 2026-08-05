@@ -142,6 +142,7 @@ const UserGroupList: React.FC = () => {
       dataIndex: 'note',
       width: 250,
       ellipsis: true,
+      search: false,
       render: (_, record) => record.note || '-',
     },
     {
