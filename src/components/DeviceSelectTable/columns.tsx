@@ -301,9 +301,9 @@ export const getDeviceColumns = (options?: {
       render: (_: unknown, record: API.DeviceItem) => {
         if (!record.info) return '-';
         const parts = [
-          record.info.version,
           record.info.cpu,
           record.info.memory,
+          record.info.version,
         ].filter(Boolean);
         return parts.join(' | ') || '-';
       },
