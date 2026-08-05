@@ -123,6 +123,7 @@ const DeviceGroupList: React.FC = () => {
       ),
       dataIndex: 'note',
       ellipsis: true,
+      search: false,
     },
     {
       title: (
@@ -193,6 +194,7 @@ const DeviceGroupList: React.FC = () => {
           const result = await getDeviceGroupList({
             current: params.current || 1,
             pageSize: params.pageSize || 20,
+            name: params.name,
           });
           return {
             data: result.data || [],
@@ -201,7 +203,11 @@ const DeviceGroupList: React.FC = () => {
           };
         }}
         columns={columns}
-        search={false}
+        search={{
+          labelWidth: 'auto',
+          defaultCollapsed: true,
+          optionRender: (_searchConfig, _formProps, dom) => [...dom.reverse()],
+        }}
         pagination={{
           defaultPageSize: 20,
           showSizeChanger: true,

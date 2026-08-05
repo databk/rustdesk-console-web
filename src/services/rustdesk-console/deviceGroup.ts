@@ -1,7 +1,7 @@
 import { request } from '@umijs/max';
 
 export async function getDeviceGroupList(
-  params: { current: number; pageSize: number },
+  params: { current: number; pageSize: number; name?: string },
   options?: { [key: string]: any },
 ) {
   return request<API.PaginatedResult<API.DeviceGroupItem>>('/api/device-groups', {
