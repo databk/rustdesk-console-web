@@ -297,6 +297,7 @@ declare namespace API {
     third_auth_type?: string;
     strategy_name?: string;
     user_group_guid?: string;
+    user_group_name?: string;
   };
 
   type DeviceItem = {

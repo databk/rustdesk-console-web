@@ -304,6 +304,8 @@ export default {
   'pages.userGroups.membersUpdated': '{count} usuário(s) atualizado(s)',
   'pages.userGroups.membersUpdateFailed': 'Falha ao atualizar membros do grupo',
   'pages.users.userGroup': 'Grupo de Usuários',
+  'pages.users.userGroupSearchTip': 'Filtrar pelo nome do grupo de usuários',
+  'pages.users.strategySearchTip': 'Filtrar pelo nome da estratégia',
   'pages.users.selectUserGroup': 'Selecione o grupo de usuários',
   'pages.addressBook.groupAccess': 'Acesso por grupo',
   'pages.addressBook.groupAccessTitle': 'Acesso por grupo de {name}',

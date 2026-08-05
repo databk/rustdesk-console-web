@@ -125,7 +125,6 @@ export const getUserColumns = (): ProColumns<API.UserItem>[] => {
         <FormattedMessage id="pages.users.strategy" defaultMessage="Strategy" />
       ),
       dataIndex: 'strategy_name',
-      search: false,
       render: (_: unknown, record: API.UserItem) => record.strategy_name || '-',
     },
     {
@@ -136,13 +135,34 @@ export const getUserColumns = (): ProColumns<API.UserItem>[] => {
         />
       ),
       dataIndex: 'user_group_name',
-      search: false,
       render: (_: unknown, record: API.UserItem) => (
         <Space>
           <TeamOutlined />
           <span>{record.user_group_name || '-'}</span>
         </Space>
       ),
+    },
+    {
+      title: (
+        <FormattedMessage id="pages.users.isAdmin" defaultMessage="Admin" />
+      ),
+      dataIndex: 'is_admin',
+      valueType: 'select',
+      hideInTable: true,
+      valueEnum: {
+        true: {
+          text: intl.formatMessage({
+            id: 'pages.users.admin',
+            defaultMessage: 'Admin',
+          }),
+        },
+        false: {
+          text: intl.formatMessage({
+            id: 'pages.users.normalUser',
+            defaultMessage: 'Normal',
+          }),
+        },
+      },
     },
     {
       title: <FormattedMessage id="pages.users.note" defaultMessage="Note" />,

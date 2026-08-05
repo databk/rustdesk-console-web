@@ -117,6 +117,8 @@ const UserTable: React.FC<UserTableProps> = ({
               : params.is_admin === 'false'
                 ? 0
                 : undefined,
+          strategy_name: params.strategy_name,
+          user_group_name: params.user_group_name,
           user_group_guid: userGroupGuid,
         });
         return {
