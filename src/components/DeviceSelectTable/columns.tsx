@@ -135,7 +135,7 @@ export const getDeviceColumns = (options?: {
               </Tooltip>
             )}
             {osIcon && <>&nbsp;&nbsp;</>}
-            <a>{record.id}</a>
+            <a href={`rustdesk://${record.id}`}>{record.id}</a>
           </span>
         );
       },
