@@ -1,7 +1,14 @@
 import { FormattedMessage, useIntl } from '@umijs/max';
 import { ColorPicker, Form, Input, Modal } from 'antd';
 import type { FormInstance } from 'antd';
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+
+const generateRandomColor = (): string => {
+  const hue = Math.floor(Math.random() * 360);
+  const saturation = 65 + Math.floor(Math.random() * 20);
+  const lightness = 45 + Math.floor(Math.random() * 15);
+  return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+};
 
 interface AddTagModalProps {
   visible: boolean;
@@ -20,6 +27,17 @@ const AddTagModal: React.FC<AddTagModalProps> = ({
   onCancel,
 }) => {
   const intl = useIntl();
+  const colorInitializedRef = useRef(false);
+
+  useEffect(() => {
+    if (visible && !colorInitializedRef.current) {
+      form.setFieldValue('color', generateRandomColor());
+      colorInitializedRef.current = true;
+    }
+    if (!visible) {
+      colorInitializedRef.current = false;
+    }
+  }, [visible, form]);
 
   return (
     <Modal
@@ -71,3 +89,4 @@ const AddTagModal: React.FC<AddTagModalProps> = ({
 };
 
 export default AddTagModal;
+
