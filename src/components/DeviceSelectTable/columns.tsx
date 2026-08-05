@@ -87,7 +87,7 @@ export const getDeviceColumns = (options?: {
     {
       title: <FormattedMessage id="pages.common.id" defaultMessage="ID" />,
       dataIndex: 'id',
-      width: '15%',
+      width: '12%',
       ellipsis: true,
       sorter: true,
       render: (_: unknown, record: API.DeviceItem) => {
@@ -259,6 +259,7 @@ export const getDeviceColumns = (options?: {
         <FormattedMessage id="pages.devices.status" defaultMessage="Status" />
       ),
       dataIndex: 'status_display',
+      width: 60,
       search: false,
       sorter: true,
       render: (_: unknown, record: API.DeviceItem) => {
