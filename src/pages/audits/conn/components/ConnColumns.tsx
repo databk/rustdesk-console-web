@@ -108,6 +108,7 @@ export const useConnColumns = (
         defaultMessage: 'Remotely controlled computer or terminal',
       }),
       hideInSearch: true,
+      width: 160,
       render: (_, record) => record.deviceId || '-',
     },
     {
