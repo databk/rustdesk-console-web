@@ -89,4 +89,3 @@ const AddTagModal: React.FC<AddTagModalProps> = ({
 };
 
 export default AddTagModal;
-
