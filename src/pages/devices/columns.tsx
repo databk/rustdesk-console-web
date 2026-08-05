@@ -36,7 +36,7 @@ export const getActionColumn = (
       <FormattedMessage id="pages.common.action" defaultMessage="Action" />
     ),
     valueType: 'option',
-    width: '15%',
+    width: '14%',
     fixed: 'right',
     render: (_: unknown, record: API.DeviceItem) => {
       const isDisabled = record.status === 0;
