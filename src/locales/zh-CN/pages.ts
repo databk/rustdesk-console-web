@@ -121,7 +121,7 @@ export default {
   'pages.addressBook.peerDeleteFailed': '删除设备失败',
   'pages.addressBook.deletePeerConfirm': '确定要删除此设备吗？',
   'pages.addressBook.import': '从设备导入',
-  'pages.addressBook.recycleBin': '回收站',
+
   'pages.deviceGroups.list': '设备组列表',
   'pages.deviceGroups.name': '名称',
   'pages.deviceGroups.note': '备注',

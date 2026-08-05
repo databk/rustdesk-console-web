@@ -135,7 +135,7 @@ export default {
   'pages.addressBook.peerDeleteFailed': 'Failed to delete peer',
   'pages.addressBook.deletePeerConfirm': 'Are you sure to delete this peer?',
   'pages.addressBook.import': 'Import from Devices',
-  'pages.addressBook.recycleBin': 'Recycle Bin',
+
   'pages.deviceGroups.list': 'Device Groups',
   'pages.deviceGroups.name': 'Name',
   'pages.deviceGroups.note': 'Note',

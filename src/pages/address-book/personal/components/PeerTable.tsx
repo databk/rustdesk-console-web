@@ -3,7 +3,7 @@ import { ProTable } from '@ant-design/pro-components';
 import { FormattedMessage } from '@umijs/max';
 import { Button } from 'antd';
 import {
-  DeleteOutlined,
+
   PlusOutlined,
   SelectOutlined,
 } from '@ant-design/icons';
@@ -100,12 +100,7 @@ const PeerTable: React.FC<PeerTableProps> = ({
                   defaultMessage="Add by ID"
                 />
               </Button>,
-              <Button key="recycle" icon={<DeleteOutlined />}>
-                <FormattedMessage
-                  id="pages.addressBook.recycleBin"
-                  defaultMessage="Recycle Bin"
-                />
-              </Button>,
+
             ]
           : []
       }

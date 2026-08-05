@@ -144,7 +144,7 @@ export default {
   'pages.addressBook.deletePeerConfirm':
     'Tem certeza de que deseja remover este contato?',
   'pages.addressBook.import': 'Importar de Dispositivos',
-  'pages.addressBook.recycleBin': 'Lixeira',
+
   'pages.deviceGroups.list': 'Grupos de Dispositivos',
   'pages.deviceGroups.name': 'Nome',
   'pages.deviceGroups.note': 'Observação',
