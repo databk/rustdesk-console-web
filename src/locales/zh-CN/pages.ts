@@ -266,8 +266,6 @@ export default {
   'pages.userGroups.membersUpdated': '已更新 {count} 个用户',
   'pages.userGroups.membersUpdateFailed': '更新用户组成员失败',
   'pages.users.userGroup': '用户组',
-  'pages.users.userGroupSearchTip': '按用户组名称筛选',
-  'pages.users.strategySearchTip': '按策略名称筛选',
   'pages.users.selectUserGroup': '请选择用户组',
   'pages.addressBook.groupAccess': '用户组权限',
   'pages.addressBook.groupAccessTitle': '{name} 的用户组权限',

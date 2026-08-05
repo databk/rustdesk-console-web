@@ -288,8 +288,6 @@ export default {
   'pages.userGroups.membersUpdated': 'Updated {count} user(s)',
   'pages.userGroups.membersUpdateFailed': 'Failed to update group members',
   'pages.users.userGroup': 'User Group',
-  'pages.users.userGroupSearchTip': 'Filter by user group name',
-  'pages.users.strategySearchTip': 'Filter by strategy name',
   'pages.users.selectUserGroup': 'Select user group',
   'pages.addressBook.groupAccess': 'Group access',
   'pages.addressBook.groupAccessTitle': '{name} group access',
