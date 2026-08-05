@@ -87,7 +87,7 @@ export const getDeviceColumns = (options?: {
     {
       title: <FormattedMessage id="pages.common.id" defaultMessage="ID" />,
       dataIndex: 'id',
-      width: '12%',
+      width: '11%',
       ellipsis: true,
       sorter: true,
       render: (_: unknown, record: API.DeviceItem) => {
