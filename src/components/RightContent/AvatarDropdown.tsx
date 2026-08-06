@@ -8,9 +8,8 @@ import type { MenuProps } from 'antd';
 import { Spin } from 'antd';
 import { createStyles } from 'antd-style';
 import React from 'react';
-
 import { FormattedMessage } from '@umijs/max';
-import { removeToken } from '@/utils/auth';
+import { getToken, removeToken } from '@/utils/auth';
 import { logout } from '@/services/rustdesk-console/auth';
 import HeaderDropdown from '../HeaderDropdown';
 
@@ -55,11 +54,7 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({
   const { initialState, setInitialState } = useModel('@@initialState');
 
   const loginOut = async () => {
-    try {
-      await logout();
-    } catch (_e) {
-      // ignore
-    }
+    const token = getToken();
     removeToken();
     setInitialState((s) => ({ ...s, currentUser: undefined }));
     const { search, pathname } = window.location;
@@ -71,6 +66,9 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({
         pathname: '/user/login',
         search: searchParams.toString(),
       });
+    }
+    if (token) {
+      logout(undefined, token).catch(() => {});
     }
   };
 

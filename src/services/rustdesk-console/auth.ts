@@ -9,10 +9,18 @@ export async function login(body: API.LoginParams) {
   });
 }
 
-export async function logout(body?: { id?: string; uuid?: string }) {
+export async function logout(
+  body?: { id?: string; uuid?: string },
+  token?: string,
+) {
+  const headers: Record<string, string> = {};
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
   return request('/api/logout', {
     method: 'POST',
     data: body,
+    headers,
     skipErrorHandler: true,
   });
 }
