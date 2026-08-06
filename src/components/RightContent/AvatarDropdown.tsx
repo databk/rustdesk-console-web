@@ -55,7 +55,11 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({
   const { initialState, setInitialState } = useModel('@@initialState');
 
   const loginOut = async () => {
-    logout().catch(() => {});
+    try {
+      await logout();
+    } catch (_e) {
+      // ignore
+    }
     removeToken();
     const { search, pathname } = window.location;
     if (pathname !== '/user/login') {
