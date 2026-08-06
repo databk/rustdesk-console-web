@@ -811,6 +811,15 @@ declare namespace API {
 
   type GeneralSettings = {
     watermarkEnabled: boolean;
+    defaultLanguage: string;
+    site: {
+      frontendUrl: string;
+      backendUrl: string;
+    };
+    webauthn: {
+      enabled: boolean;
+      rpName: string;
+    };
   };
 
   type SMTPConfig = {

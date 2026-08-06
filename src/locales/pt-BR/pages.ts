@@ -379,6 +379,33 @@ export default {
   'pages.settings.fetchFailed': 'Falha ao carregar configurações',
   'pages.settings.saveSuccess': 'Configurações salvas com sucesso',
   'pages.settings.saveFailed': 'Falha ao salvar configurações',
+  'pages.settings.generalSection.watermark': "Marca d'água do usuário",
+  'pages.settings.generalSection.watermarkExtra':
+    'Sobrepõe o nome de usuário atual em cada página para responsabilidade.',
+  'pages.settings.generalSection.language': 'Idioma Padrão',
+  'pages.settings.generalSection.languageExtra':
+    'Idioma padrão da interface para novos visitantes. Usuários autenticados mantêm sua própria preferência.',
+  'pages.settings.generalSection.languagePlaceholder': 'Selecione o idioma padrão',
+  'pages.settings.generalSection.site': 'Site',
+  'pages.settings.generalSection.frontendUrl': 'URL do Frontend',
+  'pages.settings.generalSection.frontendUrlPlaceholder':
+    'https://console.example.com',
+  'pages.settings.generalSection.backendUrl': 'URL do Backend',
+  'pages.settings.generalSection.backendUrlExtra':
+    'Deixe em branco para usar a mesma origem do frontend.',
+  'pages.settings.generalSection.backendUrlPlaceholder':
+    'https://api.example.com',
+  'pages.settings.generalSection.urlInvalid': 'Informe uma URL válida',
+  'pages.settings.generalSection.webauthn': 'WebAuthn / Passkeys',
+  'pages.settings.generalSection.webauthnEnabled': 'Ativar WebAuthn',
+  'pages.settings.generalSection.webauthnEnabledExtra':
+    'Permite que usuários se registrem e entrem com passkeys.',
+  'pages.settings.generalSection.webauthnUnsupported':
+    'Este navegador não suporta WebAuthn. O login por passkey ficará indisponível para usuários em clientes sem suporte.',
+  'pages.settings.generalSection.rpName': 'Nome da Parte Confiável',
+  'pages.settings.generalSection.rpNameExtra':
+    'Nome amigável exibido no prompt de passkey.',
+  'pages.settings.generalSection.rpNamePlaceholder': 'RustDesk Console',
   'pages.strategies.list': 'Lista de Estratégias',
   'pages.strategies.name': 'Nome da Estratégia',
   'pages.strategies.note': 'Observação',

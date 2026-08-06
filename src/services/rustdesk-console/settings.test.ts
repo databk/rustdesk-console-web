@@ -13,7 +13,12 @@ beforeEach(() => {
 
 test('uses the narrow general-settings API contract', async () => {
   const options = { skipErrorHandler: true };
-  const settings = { watermarkEnabled: false };
+  const settings: API.GeneralSettings = {
+    watermarkEnabled: false,
+    defaultLanguage: 'en-US',
+    site: { frontendUrl: 'https://console.example.com', backendUrl: '' },
+    webauthn: { enabled: true, rpName: 'RustDesk Console' },
+  };
 
   await getGeneralSettings(options);
   await updateGeneralSettings(settings);

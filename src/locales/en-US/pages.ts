@@ -357,6 +357,33 @@ export default {
   'pages.settings.fetchFailed': 'Failed to load settings',
   'pages.settings.saveSuccess': 'Settings saved successfully',
   'pages.settings.saveFailed': 'Failed to save settings',
+  'pages.settings.generalSection.watermark': 'Username Watermark',
+  'pages.settings.generalSection.watermarkExtra':
+    'Overlay the current username on each page for accountability.',
+  'pages.settings.generalSection.language': 'Default Language',
+  'pages.settings.generalSection.languageExtra':
+    'Default UI language for new visitors. Signed-in users keep their own preference.',
+  'pages.settings.generalSection.languagePlaceholder': 'Select default language',
+  'pages.settings.generalSection.site': 'Site',
+  'pages.settings.generalSection.frontendUrl': 'Frontend URL',
+  'pages.settings.generalSection.frontendUrlPlaceholder':
+    'https://console.example.com',
+  'pages.settings.generalSection.backendUrl': 'Backend URL',
+  'pages.settings.generalSection.backendUrlExtra':
+    'Leave blank to use the same origin as the frontend.',
+  'pages.settings.generalSection.backendUrlPlaceholder':
+    'https://api.example.com',
+  'pages.settings.generalSection.urlInvalid': 'Please enter a valid URL',
+  'pages.settings.generalSection.webauthn': 'WebAuthn / Passkeys',
+  'pages.settings.generalSection.webauthnEnabled': 'Enable WebAuthn',
+  'pages.settings.generalSection.webauthnEnabledExtra':
+    'Allow users to register and sign in with passkeys.',
+  'pages.settings.generalSection.webauthnUnsupported':
+    'This browser does not support WebAuthn. Passkey login will be unavailable for users on unsupported clients.',
+  'pages.settings.generalSection.rpName': 'Relying Party Name',
+  'pages.settings.generalSection.rpNameExtra':
+    'Human-friendly name shown in the passkey prompt.',
+  'pages.settings.generalSection.rpNamePlaceholder': 'RustDesk Console',
   'pages.strategies.list': 'Strategy List',
   'pages.strategies.name': 'Strategy Name',
   'pages.strategies.note': 'Note',
