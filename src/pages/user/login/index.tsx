@@ -51,7 +51,8 @@ const Login: React.FC = () => {
   const [oidcOptions, setOidcOptions] = useState<API.OidcLoginInfo[]>([]);
   const [passkeySupported] = useState(() => isWebAuthnSupported());
   const { initialState, setInitialState } = useModel('@@initialState');
-  const webauthnEnabled = initialState?.frontendSettings?.webauthnEnabled ?? false;
+  const webauthnEnabled =
+    initialState?.frontendSettings?.webauthnEnabled ?? false;
   const { styles } = useStyles();
   const { message } = App.useApp();
   const intl = useIntl();

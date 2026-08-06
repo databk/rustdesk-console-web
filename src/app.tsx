@@ -2,13 +2,7 @@ import { LinkOutlined } from '@ant-design/icons';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { SettingDrawer } from '@ant-design/pro-components';
 import type { RequestConfig, RunTimeLayoutConfig } from '@umijs/max';
-import {
-  history,
-  Link,
-  useModel,
-  setLocale,
-  getAllLocales,
-} from '@umijs/max';
+import { history, Link, useModel, setLocale, getAllLocales } from '@umijs/max';
 import React, { useEffect } from 'react';
 import {
   AvatarDropdown,

@@ -17,7 +17,10 @@ test('maps general settings to frontend settings', () => {
   const general: API.GeneralSettings = {
     watermarkEnabled: true,
     defaultLanguage: 'zh-CN',
-    site: { frontendUrl: 'https://a.example.com', backendUrl: 'https://b.example.com' },
+    site: {
+      frontendUrl: 'https://a.example.com',
+      backendUrl: 'https://b.example.com',
+    },
     webauthn: { enabled: true, rpName: 'RustDesk Console' },
   };
   expect(toFrontendSettings(general)).toEqual({
