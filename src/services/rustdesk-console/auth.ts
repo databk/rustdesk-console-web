@@ -21,7 +21,6 @@ export async function logout(
     method: 'POST',
     data: body,
     headers,
-    skipErrorHandler: true,
   });
 }
 
