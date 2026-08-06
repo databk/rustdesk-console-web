@@ -8,7 +8,7 @@ import type { MenuProps } from 'antd';
 import { Spin } from 'antd';
 import { createStyles } from 'antd-style';
 import React from 'react';
-import { flushSync } from 'react-dom';
+
 import { FormattedMessage } from '@umijs/max';
 import { removeToken } from '@/utils/auth';
 import { logout } from '@/services/rustdesk-console/auth';
@@ -50,34 +50,29 @@ const useStyles = createStyles(({ token }) => {
 export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({
   children,
 }) => {
+  const { styles } = useStyles();
+
+  const { initialState, setInitialState } = useModel('@@initialState');
+
   const loginOut = async () => {
-    try {
-      await logout();
-    } catch (_e) {
-      // ignore
-    }
+    logout().catch(() => {});
     removeToken();
     const { search, pathname } = window.location;
-    const searchParams = new URLSearchParams({
-      redirect: pathname + search,
-    });
-    if (window.location.pathname !== '/user/login') {
+    if (pathname !== '/user/login') {
+      const searchParams = new URLSearchParams({
+        redirect: pathname + search,
+      });
       history.replace({
         pathname: '/user/login',
         search: searchParams.toString(),
       });
     }
+    setInitialState((s) => ({ ...s, currentUser: undefined }));
   };
-  const { styles } = useStyles();
-
-  const { initialState, setInitialState } = useModel('@@initialState');
 
   const onMenuClick: MenuProps['onClick'] = (event) => {
     const { key } = event;
     if (key === 'logout') {
-      flushSync(() => {
-        setInitialState((s) => ({ ...s, currentUser: undefined }));
-      });
       loginOut();
       return;
     }

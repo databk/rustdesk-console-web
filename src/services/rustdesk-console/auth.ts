@@ -13,6 +13,7 @@ export async function logout(body?: { id?: string; uuid?: string }) {
   return request('/api/logout', {
     method: 'POST',
     data: body,
+    skipErrorHandler: true,
   });
 }
 
