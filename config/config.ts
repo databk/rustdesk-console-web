@@ -63,6 +63,7 @@ export default defineConfig({
   presets: ['umi-presets-pro'],
   mock: false,
   mako: {},
+  devtool: process.env.NODE_ENV === 'development' ? 'source-map' : false,
   esbuildMinifyIIFE: true,
   requestRecord: {},
   define: {
