@@ -346,8 +346,7 @@ export default {
   'pages.settings.generalSection.frontendUrlPlaceholder':
     'https://console.example.com',
   'pages.settings.generalSection.backendUrl': '后端地址',
-  'pages.settings.generalSection.backendUrlExtra':
-    '留空则使用与前端相同的源。',
+  'pages.settings.generalSection.backendUrlExtra': '留空则使用与前端相同的源。',
   'pages.settings.generalSection.backendUrlPlaceholder':
     'https://api.example.com',
   'pages.settings.generalSection.urlInvalid': '请输入合法的 URL',
@@ -358,8 +357,7 @@ export default {
   'pages.settings.generalSection.webauthnUnsupported':
     '当前浏览器不支持 WebAuthn。在不支持的客户端上，通行密钥登录将不可用。',
   'pages.settings.generalSection.rpName': '依赖方名称',
-  'pages.settings.generalSection.rpNameExtra':
-    '通行密钥提示中展示的友好名称。',
+  'pages.settings.generalSection.rpNameExtra': '通行密钥提示中展示的友好名称。',
   'pages.settings.generalSection.rpNamePlaceholder': 'RustDesk Console',
   'pages.strategies.list': '策略列表',
   'pages.strategies.name': '策略名称',

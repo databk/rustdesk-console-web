@@ -385,7 +385,8 @@ export default {
   'pages.settings.generalSection.language': 'Idioma Padrão',
   'pages.settings.generalSection.languageExtra':
     'Idioma padrão da interface para novos visitantes. Usuários autenticados mantêm sua própria preferência.',
-  'pages.settings.generalSection.languagePlaceholder': 'Selecione o idioma padrão',
+  'pages.settings.generalSection.languagePlaceholder':
+    'Selecione o idioma padrão',
   'pages.settings.generalSection.site': 'Site',
   'pages.settings.generalSection.frontendUrl': 'URL do Frontend',
   'pages.settings.generalSection.frontendUrlPlaceholder':

@@ -363,7 +363,8 @@ export default {
   'pages.settings.generalSection.language': 'Default Language',
   'pages.settings.generalSection.languageExtra':
     'Default UI language for new visitors. Signed-in users keep their own preference.',
-  'pages.settings.generalSection.languagePlaceholder': 'Select default language',
+  'pages.settings.generalSection.languagePlaceholder':
+    'Select default language',
   'pages.settings.generalSection.site': 'Site',
   'pages.settings.generalSection.frontendUrl': 'Frontend URL',
   'pages.settings.generalSection.frontendUrlPlaceholder':
