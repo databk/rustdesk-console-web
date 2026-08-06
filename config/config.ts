@@ -70,4 +70,3 @@ export default defineConfig({
     FRONTEND_VERSION: version,
   },
 });
-
