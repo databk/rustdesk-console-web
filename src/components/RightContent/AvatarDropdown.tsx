@@ -61,6 +61,7 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({
       // ignore
     }
     removeToken();
+    setInitialState((s) => ({ ...s, currentUser: undefined }));
     const { search, pathname } = window.location;
     if (pathname !== '/user/login') {
       const searchParams = new URLSearchParams({
@@ -71,7 +72,6 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({
         search: searchParams.toString(),
       });
     }
-    setInitialState((s) => ({ ...s, currentUser: undefined }));
   };
 
   const onMenuClick: MenuProps['onClick'] = (event) => {
