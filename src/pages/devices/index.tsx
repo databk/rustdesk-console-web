@@ -288,11 +288,7 @@ const DeviceList: React.FC<DeviceListProps> = ({
       )
     : baseColumns;
 
-  const actionWidth = deviceGroupGuid
-    ? 100
-    : hasDisabledDevice
-      ? 240
-      : 170;
+  const actionWidth = deviceGroupGuid ? 100 : hasDisabledDevice ? 240 : 170;
 
   const actionColumn = getActionColumn(
     {
