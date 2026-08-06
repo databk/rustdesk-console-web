@@ -822,6 +822,12 @@ declare namespace API {
     };
   };
 
+  type FrontendSettings = {
+    watermarkEnabled: boolean;
+    defaultLanguage: string;
+    webauthnEnabled: boolean;
+  };
+
   type SMTPConfig = {
     host: string;
     port: number;

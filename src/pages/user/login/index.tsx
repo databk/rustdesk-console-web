@@ -50,7 +50,8 @@ const Login: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const [oidcOptions, setOidcOptions] = useState<API.OidcLoginInfo[]>([]);
   const [passkeySupported] = useState(() => isWebAuthnSupported());
-  const { setInitialState } = useModel('@@initialState');
+  const { initialState, setInitialState } = useModel('@@initialState');
+  const webauthnEnabled = initialState?.frontendSettings?.webauthnEnabled ?? false;
   const { styles } = useStyles();
   const { message } = App.useApp();
   const intl = useIntl();
@@ -538,7 +539,7 @@ const Login: React.FC = () => {
                 </a>
               </div>
 
-              {passkeySupported && (
+              {passkeySupported && webauthnEnabled && (
                 <Button
                   block
                   size="large"

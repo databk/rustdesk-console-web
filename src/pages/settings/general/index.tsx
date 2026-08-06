@@ -26,7 +26,10 @@ import {
   updateGeneralSettings,
 } from '@/services/rustdesk-console/settings';
 import { isWebAuthnSupported } from '@/utils/webauthn';
-import { DEFAULT_GENERAL_SETTINGS } from '@/utils/generalSettings';
+import {
+  DEFAULT_GENERAL_SETTINGS,
+  toFrontendSettings,
+} from '@/utils/generalSettings';
 
 const { Title } = Typography;
 
@@ -67,7 +70,7 @@ const GeneralSettings: React.FC = () => {
       form.setFieldsValue(saved);
       setInitialState((state) => ({
         ...state,
-        generalSettings: saved,
+        frontendSettings: toFrontendSettings(saved),
       }));
       message.success(
         intl.formatMessage({

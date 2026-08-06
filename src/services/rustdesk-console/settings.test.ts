@@ -1,6 +1,10 @@
 import { beforeEach, expect, jest, test } from '@jest/globals';
 import { request } from '@umijs/max';
-import { getGeneralSettings, updateGeneralSettings } from './settings';
+import {
+  getFrontendSettings,
+  getGeneralSettings,
+  updateGeneralSettings,
+} from './settings';
 
 jest.mock('@umijs/max', () => ({ request: jest.fn() }));
 
@@ -11,7 +15,15 @@ beforeEach(() => {
   requestMock.mockResolvedValue({});
 });
 
-test('uses the narrow general-settings API contract', async () => {
+test('uses the public frontend-settings API contract', async () => {
+  await getFrontendSettings();
+
+  expect(requestMock).toHaveBeenCalledWith('/api/settings/frontend', {
+    method: 'GET',
+  });
+});
+
+test('uses the admin general-settings API contract', async () => {
   const options = { skipErrorHandler: true };
   const settings: API.GeneralSettings = {
     watermarkEnabled: false,

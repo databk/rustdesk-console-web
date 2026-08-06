@@ -2,7 +2,13 @@ import { LinkOutlined } from '@ant-design/icons';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { SettingDrawer } from '@ant-design/pro-components';
 import type { RequestConfig, RunTimeLayoutConfig } from '@umijs/max';
-import { history, Link, useModel } from '@umijs/max';
+import {
+  history,
+  Link,
+  useModel,
+  setLocale,
+  getAllLocales,
+} from '@umijs/max';
 import React, { useEffect } from 'react';
 import {
   AvatarDropdown,
@@ -12,10 +18,10 @@ import {
   ThemeToggle,
 } from '@/components';
 import { currentUser as queryCurrentUser } from '@/services/rustdesk-console/auth';
-import { getGeneralSettings } from '@/services/rustdesk-console/settings';
+import { getFrontendSettings } from '@/services/rustdesk-console/settings';
 import { getToken, TOKEN_KEY } from '@/utils/auth';
 import {
-  DEFAULT_GENERAL_SETTINGS,
+  DEFAULT_FRONTEND_SETTINGS,
   getUsernameWatermark,
 } from '@/utils/generalSettings';
 import defaultSettings from '../config/defaultSettings';
@@ -24,6 +30,20 @@ import '@ant-design/v5-patch-for-react-19';
 
 const isDev = process.env.NODE_ENV === 'development' || process.env.CI;
 const loginPath = '/user/login';
+const LOCALE_STORAGE_KEY = 'umi_locale';
+
+function applyDefaultLanguage(lang?: string) {
+  if (!lang) return;
+  try {
+    if (localStorage.getItem(LOCALE_STORAGE_KEY)) return;
+    const supported = getAllLocales();
+    if (supported.includes(lang)) {
+      setLocale(lang, false);
+    }
+  } catch {
+    // ignore locale application failures
+  }
+}
 
 const THEME_KEY = 'rustdesk_theme_settings';
 
@@ -52,7 +72,7 @@ export async function getInitialState(): Promise<{
   currentUser?: API.CurrentUser;
   loading?: boolean;
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
-  generalSettings?: API.GeneralSettings;
+  frontendSettings?: API.FrontendSettings;
 }> {
   const fetchUserInfo = async () => {
     try {
@@ -71,27 +91,30 @@ export async function getInitialState(): Promise<{
     ...(defaultSettings as Partial<LayoutSettings>),
     ...storedTheme,
   };
-  const generalSettingsPromise = getGeneralSettings({
+  const frontendSettingsPromise = getFrontendSettings({
     skipErrorHandler: true,
-  }).catch(() => DEFAULT_GENERAL_SETTINGS);
+  }).catch(() => DEFAULT_FRONTEND_SETTINGS);
 
   const { location } = history;
   if (![loginPath].includes(location.pathname) && getToken()) {
-    const [currentUser, generalSettings] = await Promise.all([
+    const [currentUser, frontendSettings] = await Promise.all([
       fetchUserInfo(),
-      generalSettingsPromise,
+      frontendSettingsPromise,
     ]);
+    applyDefaultLanguage(frontendSettings.defaultLanguage);
     return {
       fetchUserInfo,
       currentUser,
       settings: initialSettings,
-      generalSettings,
+      frontendSettings,
     };
   }
+  const frontendSettings = await frontendSettingsPromise;
+  applyDefaultLanguage(frontendSettings.defaultLanguage);
   return {
     fetchUserInfo,
     settings: initialSettings,
-    generalSettings: await generalSettingsPromise,
+    frontendSettings,
   };
 }
 
@@ -131,10 +154,10 @@ export const layout: RunTimeLayoutConfig = ({
   initialState,
   setInitialState,
 }) => {
-  const generalSettings =
-    initialState?.generalSettings || DEFAULT_GENERAL_SETTINGS;
+  const frontendSettings =
+    initialState?.frontendSettings || DEFAULT_FRONTEND_SETTINGS;
   const waterMarkProps = getUsernameWatermark(
-    generalSettings,
+    frontendSettings,
     initialState?.currentUser?.name,
   );
 
