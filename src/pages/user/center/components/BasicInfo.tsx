@@ -57,7 +57,7 @@ const BasicInfo: React.FC = () => {
       await updateProfile(values);
       messageApi.success(
         intl.formatMessage({
-          id: 'pages.account.basicInfo.updateSuccess',
+          id: 'pages.user.center.basicInfo.updateSuccess',
           defaultMessage: 'Profile updated successfully',
         }),
       );
@@ -66,7 +66,7 @@ const BasicInfo: React.FC = () => {
       if (error?.errorFields) return;
       messageApi.error(
         intl.formatMessage({
-          id: 'pages.account.basicInfo.updateFailed',
+          id: 'pages.user.center.basicInfo.updateFailed',
           defaultMessage: 'Failed to update profile',
         }),
       );
@@ -79,7 +79,7 @@ const BasicInfo: React.FC = () => {
     if (file.size > 2 * 1024 * 1024) {
       messageApi.error(
         intl.formatMessage({
-          id: 'pages.account.avatar.fileTooLarge',
+          id: 'pages.user.center.avatar.fileTooLarge',
           defaultMessage: 'File size cannot exceed 2MB',
         }),
       );
@@ -90,7 +90,7 @@ const BasicInfo: React.FC = () => {
     if (!validTypes.includes(file.type)) {
       messageApi.error(
         intl.formatMessage({
-          id: 'pages.account.avatar.invalidFormat',
+          id: 'pages.user.center.avatar.invalidFormat',
           defaultMessage: 'Only JPG, PNG, WebP formats are supported',
         }),
       );
@@ -102,7 +102,7 @@ const BasicInfo: React.FC = () => {
       await uploadAvatar(file);
       messageApi.success(
         intl.formatMessage({
-          id: 'pages.account.avatar.uploadSuccess',
+          id: 'pages.user.center.avatar.uploadSuccess',
           defaultMessage: 'Avatar uploaded successfully',
         }),
       );
@@ -110,7 +110,7 @@ const BasicInfo: React.FC = () => {
     } catch {
       messageApi.error(
         intl.formatMessage({
-          id: 'pages.account.avatar.uploadFailed',
+          id: 'pages.user.center.avatar.uploadFailed',
           defaultMessage: 'Failed to upload avatar',
         }),
       );
@@ -126,7 +126,7 @@ const BasicInfo: React.FC = () => {
       await deleteAvatar();
       messageApi.success(
         intl.formatMessage({
-          id: 'pages.account.avatar.deleteSuccess',
+          id: 'pages.user.center.avatar.deleteSuccess',
           defaultMessage: 'Avatar deleted successfully',
         }),
       );
@@ -134,7 +134,7 @@ const BasicInfo: React.FC = () => {
     } catch {
       messageApi.error(
         intl.formatMessage({
-          id: 'pages.account.avatar.deleteFailed',
+          id: 'pages.user.center.avatar.deleteFailed',
           defaultMessage: 'Failed to delete avatar',
         }),
       );
@@ -173,7 +173,7 @@ const BasicInfo: React.FC = () => {
               >
                 <Button icon={<UploadOutlined />} loading={uploading}>
                   <FormattedMessage
-                    id="pages.account.avatar.upload"
+                    id="pages.user.center.avatar.upload"
                     defaultMessage="Upload Avatar"
                   />
                 </Button>
@@ -182,7 +182,7 @@ const BasicInfo: React.FC = () => {
                 <Popconfirm
                   title={
                     <FormattedMessage
-                      id="pages.account.avatar.deleteConfirm"
+                      id="pages.user.center.avatar.deleteConfirm"
                       defaultMessage="Are you sure to delete your avatar?"
                     />
                   }
@@ -202,7 +202,7 @@ const BasicInfo: React.FC = () => {
                 >
                   <Button icon={<DeleteOutlined />} danger loading={deleting}>
                     <FormattedMessage
-                      id="pages.account.avatar.delete"
+                      id="pages.user.center.avatar.delete"
                       defaultMessage="Delete Avatar"
                     />
                   </Button>
@@ -211,7 +211,7 @@ const BasicInfo: React.FC = () => {
             </Space>
             <Text type="secondary" style={{ fontSize: 12 }}>
               <FormattedMessage
-                id="pages.account.avatar.hint"
+                id="pages.user.center.avatar.hint"
                 defaultMessage="Supports JPG, PNG, WebP, max 2MB, will be resized to 256x256"
               />
             </Text>
@@ -225,7 +225,7 @@ const BasicInfo: React.FC = () => {
               <Form.Item
                 label={
                   <FormattedMessage
-                    id="pages.account.basicInfo.name"
+                    id="pages.user.center.basicInfo.name"
                     defaultMessage="Username"
                   />
                 }
@@ -237,14 +237,14 @@ const BasicInfo: React.FC = () => {
                 name="display_name"
                 label={
                   <FormattedMessage
-                    id="pages.account.basicInfo.displayName"
+                    id="pages.user.center.basicInfo.displayName"
                     defaultMessage="Display Name"
                   />
                 }
               >
                 <Input
                   placeholder={intl.formatMessage({
-                    id: 'pages.account.basicInfo.displayNamePlaceholder',
+                    id: 'pages.user.center.basicInfo.displayNamePlaceholder',
                     defaultMessage: 'Enter display name',
                   })}
                 />
@@ -254,7 +254,7 @@ const BasicInfo: React.FC = () => {
                 name="email"
                 label={
                   <FormattedMessage
-                    id="pages.account.basicInfo.email"
+                    id="pages.user.center.basicInfo.email"
                     defaultMessage="Email"
                   />
                 }
@@ -287,7 +287,7 @@ const BasicInfo: React.FC = () => {
                 name="note"
                 label={
                   <FormattedMessage
-                    id="pages.account.basicInfo.note"
+                    id="pages.user.center.basicInfo.note"
                     defaultMessage="Note"
                   />
                 }

@@ -1,6 +1,6 @@
 export default {
-  'menu.account': 'Account',
-  'menu.account.center': 'Profile',
+  'menu.user.center': 'Account',
+  'menu.user.center.profile': 'Profile',
   'menu.dashboard': 'Dashboard',
   'menu.devices': 'Devices',
   'menu.devices.list': 'Device List',

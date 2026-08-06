@@ -66,7 +66,7 @@ const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
           <Space>
             <SafetyCertificateOutlined />
             <FormattedMessage
-              id="pages.account.security.title"
+              id="pages.user.center.security.title"
               defaultMessage="Security Settings"
             />
           </Space>
@@ -76,20 +76,20 @@ const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
         <Flex vertical gap="middle">
           <Flex align="center" justify="space-between">
             <FormattedMessage
-              id="pages.account.security.2faStatus"
+              id="pages.user.center.security.2faStatus"
               defaultMessage="2FA Status"
             />
             {is2FAEnabled ? (
               <Tag icon={<SafetyCertificateOutlined />} color="success">
                 <FormattedMessage
-                  id="pages.account.security.enabled"
+                  id="pages.user.center.security.enabled"
                   defaultMessage="Enabled"
                 />
               </Tag>
             ) : (
               <Tag icon={<UnlockOutlined />} color="default">
                 <FormattedMessage
-                  id="pages.account.security.disabled"
+                  id="pages.user.center.security.disabled"
                   defaultMessage="Disabled"
                 />
               </Tag>
@@ -103,7 +103,7 @@ const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
               block
             >
               <FormattedMessage
-                id="pages.account.security.disable2FA"
+                id="pages.user.center.security.disable2FA"
                 defaultMessage="Disable 2FA"
               />
             </Button>
@@ -116,7 +116,7 @@ const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
               block
             >
               <FormattedMessage
-                id="pages.account.security.enable2FA"
+                id="pages.user.center.security.enable2FA"
                 defaultMessage="Enable 2FA"
               />
             </Button>
@@ -127,7 +127,7 @@ const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
       <Modal
         title={
           <FormattedMessage
-            id="pages.account.security.setup2FA"
+            id="pages.user.center.security.setup2FA"
             defaultMessage="Setup Two-Factor Authentication"
           />
         }
@@ -143,7 +143,7 @@ const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
             </div>
             <Paragraph type="secondary">
               <FormattedMessage
-                id="pages.account.security.scanQRCode"
+                id="pages.user.center.security.scanQRCode"
                 defaultMessage="Scan the QR code with your authenticator app, then enter the verification code below."
               />
             </Paragraph>
@@ -151,7 +151,7 @@ const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
               <Descriptions.Item
                 label={
                   <FormattedMessage
-                    id="pages.account.security.secretKey"
+                    id="pages.user.center.security.secretKey"
                     defaultMessage="Secret Key"
                   />
                 }
@@ -166,7 +166,7 @@ const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
                 name="code"
                 label={
                   <FormattedMessage
-                    id="pages.account.security.verificationCode"
+                    id="pages.user.center.security.verificationCode"
                     defaultMessage="Verification Code"
                   />
                 }
@@ -174,7 +174,7 @@ const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
                   {
                     required: true,
                     message: intl.formatMessage({
-                      id: 'pages.account.security.enterCode',
+                      id: 'pages.user.center.security.enterCode',
                       defaultMessage: 'Please enter verification code',
                     }),
                   },
@@ -190,7 +190,7 @@ const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
                   block
                 >
                   <FormattedMessage
-                    id="pages.account.security.verifyAndEnable"
+                    id="pages.user.center.security.verifyAndEnable"
                     defaultMessage="Verify & Enable"
                   />
                 </Button>
@@ -203,7 +203,7 @@ const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
       <Modal
         title={
           <FormattedMessage
-            id="pages.account.security.disable2FA"
+            id="pages.user.center.security.disable2FA"
             defaultMessage="Disable 2FA"
           />
         }
@@ -216,7 +216,7 @@ const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
             name="code"
             label={
               <FormattedMessage
-                id="pages.account.security.currentCode"
+                id="pages.user.center.security.currentCode"
                 defaultMessage="Current Verification Code"
               />
             }
@@ -224,7 +224,7 @@ const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
               {
                 required: true,
                 message: intl.formatMessage({
-                  id: 'pages.account.security.enterCode',
+                  id: 'pages.user.center.security.enterCode',
                   defaultMessage: 'Please enter verification code',
                 }),
               },
@@ -241,7 +241,7 @@ const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
               block
             >
               <FormattedMessage
-                id="pages.account.security.confirmDisable"
+                id="pages.user.center.security.confirmDisable"
                 defaultMessage="Confirm Disable"
               />
             </Button>

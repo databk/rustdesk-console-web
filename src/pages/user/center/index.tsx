@@ -11,7 +11,7 @@ const AccountCenter: React.FC = () => {
       key: 'basic',
       label: (
         <FormattedMessage
-          id="pages.account.tab.basic"
+          id="pages.user.center.tab.basic"
           defaultMessage="Basic Information"
         />
       ),
@@ -21,7 +21,7 @@ const AccountCenter: React.FC = () => {
       key: 'security',
       label: (
         <FormattedMessage
-          id="pages.account.tab.security"
+          id="pages.user.center.tab.security"
           defaultMessage="Security"
         />
       ),

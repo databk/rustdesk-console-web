@@ -38,7 +38,7 @@ const PasswordSection: React.FC<PasswordSectionProps> = ({
           <Space>
             <LockOutlined />
             <FormattedMessage
-              id="pages.account.security.password"
+              id="pages.user.center.security.password"
               defaultMessage="Login Password"
             />
           </Space>
@@ -48,27 +48,27 @@ const PasswordSection: React.FC<PasswordSectionProps> = ({
         <Flex vertical gap="middle">
           <Flex align="center" justify="space-between">
             <FormattedMessage
-              id="pages.account.security.password"
+              id="pages.user.center.security.password"
               defaultMessage="Login Password"
             />
             {isThirdPartyUser ? (
               <Tag color="warning">
                 <FormattedMessage
-                  id="pages.account.security.thirdPartyUser"
+                  id="pages.user.center.security.thirdPartyUser"
                   defaultMessage="Third-party login users cannot change password"
                 />
               </Tag>
             ) : hasPassword ? (
               <Tag icon={<KeyOutlined />} color="success">
                 <FormattedMessage
-                  id="pages.account.security.passwordSet"
+                  id="pages.user.center.security.passwordSet"
                   defaultMessage="Set"
                 />
               </Tag>
             ) : (
               <Tag icon={<UnlockOutlined />} color="default">
                 <FormattedMessage
-                  id="pages.account.security.passwordNotSet"
+                  id="pages.user.center.security.passwordNotSet"
                   defaultMessage="Not Set"
                 />
               </Tag>
@@ -82,7 +82,7 @@ const PasswordSection: React.FC<PasswordSectionProps> = ({
             block
           >
             <FormattedMessage
-              id="pages.account.security.changePassword"
+              id="pages.user.center.security.changePassword"
               defaultMessage="Change Password"
             />
           </Button>
@@ -92,7 +92,7 @@ const PasswordSection: React.FC<PasswordSectionProps> = ({
       <Modal
         title={
           <FormattedMessage
-            id="pages.account.security.changePassword"
+            id="pages.user.center.security.changePassword"
             defaultMessage="Change Password"
           />
         }
@@ -101,7 +101,7 @@ const PasswordSection: React.FC<PasswordSectionProps> = ({
         onOk={() => passwordForm.submit()}
         confirmLoading={passwordLoading}
         okText={intl.formatMessage({
-          id: 'pages.account.security.changePassword',
+          id: 'pages.user.center.security.changePassword',
           defaultMessage: 'Change Password',
         })}
       >
@@ -110,7 +110,7 @@ const PasswordSection: React.FC<PasswordSectionProps> = ({
             name="current_password"
             label={
               <FormattedMessage
-                id="pages.account.security.currentPassword"
+                id="pages.user.center.security.currentPassword"
                 defaultMessage="Current Password"
               />
             }
@@ -118,7 +118,7 @@ const PasswordSection: React.FC<PasswordSectionProps> = ({
               {
                 required: true,
                 message: intl.formatMessage({
-                  id: 'pages.account.security.enterCurrentPassword',
+                  id: 'pages.user.center.security.enterCurrentPassword',
                   defaultMessage: 'Please enter current password',
                 }),
               },
@@ -130,7 +130,7 @@ const PasswordSection: React.FC<PasswordSectionProps> = ({
             name="new_password"
             label={
               <FormattedMessage
-                id="pages.account.security.newPassword"
+                id="pages.user.center.security.newPassword"
                 defaultMessage="New Password"
               />
             }
@@ -138,7 +138,7 @@ const PasswordSection: React.FC<PasswordSectionProps> = ({
               {
                 required: true,
                 message: intl.formatMessage({
-                  id: 'pages.account.security.enterNewPassword',
+                  id: 'pages.user.center.security.enterNewPassword',
                   defaultMessage:
                     'Please enter new password (min 6 characters)',
                 }),
@@ -146,7 +146,7 @@ const PasswordSection: React.FC<PasswordSectionProps> = ({
               {
                 min: 6,
                 message: intl.formatMessage({
-                  id: 'pages.account.security.passwordMinLength',
+                  id: 'pages.user.center.security.passwordMinLength',
                   defaultMessage: 'Password must be at least 6 characters',
                 }),
               },
@@ -158,7 +158,7 @@ const PasswordSection: React.FC<PasswordSectionProps> = ({
             name="confirm_password"
             label={
               <FormattedMessage
-                id="pages.account.security.confirmNewPassword"
+                id="pages.user.center.security.confirmNewPassword"
                 defaultMessage="Confirm New Password"
               />
             }
@@ -167,7 +167,7 @@ const PasswordSection: React.FC<PasswordSectionProps> = ({
               {
                 required: true,
                 message: intl.formatMessage({
-                  id: 'pages.account.security.confirmNewPasswordPlaceholder',
+                  id: 'pages.user.center.security.confirmNewPasswordPlaceholder',
                   defaultMessage: 'Please re-enter new password',
                 }),
               },
@@ -179,7 +179,7 @@ const PasswordSection: React.FC<PasswordSectionProps> = ({
                   return Promise.reject(
                     new Error(
                       intl.formatMessage({
-                        id: 'pages.account.security.passwordMismatch',
+                        id: 'pages.user.center.security.passwordMismatch',
                         defaultMessage: 'The two passwords do not match',
                       }),
                     ),

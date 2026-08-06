@@ -31,7 +31,7 @@ const SessionSection: React.FC<SessionSectionProps> = ({
         <Space>
           <DesktopOutlined />
           <FormattedMessage
-            id="pages.account.security.sessions.title"
+            id="pages.user.center.security.sessions.title"
             defaultMessage="Login Sessions"
           />
         </Space>
@@ -45,14 +45,14 @@ const SessionSection: React.FC<SessionSectionProps> = ({
         pagination={false}
         locale={{
           emptyText: intl.formatMessage({
-            id: 'pages.account.security.sessions.noSessions',
+            id: 'pages.user.center.security.sessions.noSessions',
             defaultMessage: 'No active sessions',
           }),
         }}
         columns={[
           {
             title: intl.formatMessage({
-              id: 'pages.account.security.sessions.device',
+              id: 'pages.user.center.security.sessions.device',
               defaultMessage: 'Device',
             }),
             key: 'device',
@@ -67,7 +67,7 @@ const SessionSection: React.FC<SessionSectionProps> = ({
                 {record.jti === currentJti && (
                   <Tag color="blue">
                     <FormattedMessage
-                      id="pages.account.security.sessions.current"
+                      id="pages.user.center.security.sessions.current"
                       defaultMessage="Current"
                     />
                   </Tag>
@@ -77,7 +77,7 @@ const SessionSection: React.FC<SessionSectionProps> = ({
           },
           {
             title: intl.formatMessage({
-              id: 'pages.account.security.sessions.type',
+              id: 'pages.user.center.security.sessions.type',
               defaultMessage: 'Type',
             }),
             dataIndex: 'deviceType',
@@ -86,11 +86,11 @@ const SessionSection: React.FC<SessionSectionProps> = ({
               <Tag>
                 {type === 'client'
                   ? intl.formatMessage({
-                      id: 'pages.account.security.sessions.client',
+                      id: 'pages.user.center.security.sessions.client',
                       defaultMessage: 'Client',
                     })
                   : intl.formatMessage({
-                      id: 'pages.account.security.sessions.browser',
+                      id: 'pages.user.center.security.sessions.browser',
                       defaultMessage: 'Browser',
                     })}
               </Tag>
@@ -98,7 +98,7 @@ const SessionSection: React.FC<SessionSectionProps> = ({
           },
           {
             title: intl.formatMessage({
-              id: 'pages.account.security.sessions.os',
+              id: 'pages.user.center.security.sessions.os',
               defaultMessage: 'OS',
             }),
             dataIndex: 'deviceOs',
@@ -107,7 +107,7 @@ const SessionSection: React.FC<SessionSectionProps> = ({
           },
           {
             title: intl.formatMessage({
-              id: 'pages.account.security.sessions.createdAt',
+              id: 'pages.user.center.security.sessions.createdAt',
               defaultMessage: 'Created At',
             }),
             dataIndex: 'createdAt',
@@ -117,7 +117,7 @@ const SessionSection: React.FC<SessionSectionProps> = ({
           },
           {
             title: intl.formatMessage({
-              id: 'pages.account.security.sessions.expiresAt',
+              id: 'pages.user.center.security.sessions.expiresAt',
               defaultMessage: 'Expires At',
             }),
             dataIndex: 'expiresAt',
@@ -139,7 +139,7 @@ const SessionSection: React.FC<SessionSectionProps> = ({
                   title={
                     isCurrent
                       ? intl.formatMessage({
-                          id: 'pages.account.security.sessions.cannotRevokeCurrent',
+                          id: 'pages.user.center.security.sessions.cannotRevokeCurrent',
                           defaultMessage: 'Cannot revoke current session',
                         })
                       : undefined
@@ -147,7 +147,7 @@ const SessionSection: React.FC<SessionSectionProps> = ({
                 >
                   <Popconfirm
                     title={intl.formatMessage({
-                      id: 'pages.account.security.sessions.revokeConfirm',
+                      id: 'pages.user.center.security.sessions.revokeConfirm',
                       defaultMessage: 'Are you sure to revoke this session?',
                     })}
                     onConfirm={() => onRevoke(record.jti)}
@@ -160,7 +160,7 @@ const SessionSection: React.FC<SessionSectionProps> = ({
                       loading={revokeLoadingJti === record.jti}
                     >
                       <FormattedMessage
-                        id="pages.account.security.sessions.revoke"
+                        id="pages.user.center.security.sessions.revoke"
                         defaultMessage="Revoke"
                       />
                     </Button>

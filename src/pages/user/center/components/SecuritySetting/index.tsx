@@ -108,7 +108,7 @@ const SecuritySetting: React.FC = () => {
       await revokeSession(jti);
       messageApi.success(
         intl.formatMessage({
-          id: 'pages.account.security.sessions.revokeSuccess',
+          id: 'pages.user.center.security.sessions.revokeSuccess',
           defaultMessage: 'Session revoked successfully',
         }),
       );
@@ -117,7 +117,7 @@ const SecuritySetting: React.FC = () => {
       messageApi.error(
         error?.data?.message ||
           intl.formatMessage({
-            id: 'pages.account.security.sessions.revokeFailed',
+            id: 'pages.user.center.security.sessions.revokeFailed',
             defaultMessage: 'Failed to revoke session',
           }),
       );
@@ -144,7 +144,7 @@ const SecuritySetting: React.FC = () => {
       if (err?.name !== 'NotAllowedError') {
         messageApi.error(
           intl.formatMessage({
-            id: 'pages.account.security.passkey.registerFailed',
+            id: 'pages.user.center.security.passkey.registerFailed',
             defaultMessage: 'Failed to register Passkey',
           }),
         );
@@ -164,7 +164,7 @@ const SecuritySetting: React.FC = () => {
       });
       messageApi.success(
         intl.formatMessage({
-          id: 'pages.account.security.passkey.registerSuccess',
+          id: 'pages.user.center.security.passkey.registerSuccess',
           defaultMessage: 'Passkey registered successfully',
         }),
       );
@@ -176,7 +176,7 @@ const SecuritySetting: React.FC = () => {
       messageApi.error(
         error?.data?.message ||
           intl.formatMessage({
-            id: 'pages.account.security.passkey.registerFailed',
+            id: 'pages.user.center.security.passkey.registerFailed',
             defaultMessage: 'Failed to register Passkey',
           }),
       );
@@ -190,7 +190,7 @@ const SecuritySetting: React.FC = () => {
       await deletePasskey(guid);
       messageApi.success(
         intl.formatMessage({
-          id: 'pages.account.security.passkey.deleteSuccess',
+          id: 'pages.user.center.security.passkey.deleteSuccess',
           defaultMessage: 'Passkey deleted successfully',
         }),
       );
@@ -200,7 +200,7 @@ const SecuritySetting: React.FC = () => {
       messageApi.error(
         error?.data?.message ||
           intl.formatMessage({
-            id: 'pages.account.security.passkey.deleteFailed',
+            id: 'pages.user.center.security.passkey.deleteFailed',
             defaultMessage: 'Failed to delete Passkey',
           }),
       );
@@ -214,8 +214,8 @@ const SecuritySetting: React.FC = () => {
       messageApi.success(
         intl.formatMessage({
           id: enabled
-            ? 'pages.account.security.passkey.tfaEnabled'
-            : 'pages.account.security.passkey.tfaDisabled',
+            ? 'pages.user.center.security.passkey.tfaEnabled'
+            : 'pages.user.center.security.passkey.tfaDisabled',
           defaultMessage: enabled
             ? 'Passkey TFA enabled'
             : 'Passkey TFA disabled',
@@ -226,7 +226,7 @@ const SecuritySetting: React.FC = () => {
       messageApi.error(
         error?.data?.message ||
           intl.formatMessage({
-            id: 'pages.account.security.passkey.tfaToggleFailed',
+            id: 'pages.user.center.security.passkey.tfaToggleFailed',
             defaultMessage: 'Failed to toggle Passkey TFA',
           }),
       );
@@ -245,7 +245,7 @@ const SecuritySetting: React.FC = () => {
       messageApi.error(
         error?.data?.message ||
           intl.formatMessage({
-            id: 'pages.account.security.setupFailed',
+            id: 'pages.user.center.security.setupFailed',
             defaultMessage: 'Failed to setup 2FA',
           }),
       );
@@ -261,7 +261,7 @@ const SecuritySetting: React.FC = () => {
       await verify2FA({ code: values.code });
       messageApi.success(
         intl.formatMessage({
-          id: 'pages.account.security.enableSuccess',
+          id: 'pages.user.center.security.enableSuccess',
           defaultMessage: '2FA enabled successfully',
         }),
       );
@@ -274,7 +274,7 @@ const SecuritySetting: React.FC = () => {
       messageApi.error(
         error?.data?.message ||
           intl.formatMessage({
-            id: 'pages.account.security.enableFailed',
+            id: 'pages.user.center.security.enableFailed',
             defaultMessage: 'Failed to enable 2FA',
           }),
       );
@@ -290,7 +290,7 @@ const SecuritySetting: React.FC = () => {
       await disable2FA({ code: values.code });
       messageApi.success(
         intl.formatMessage({
-          id: 'pages.account.security.disableSuccess',
+          id: 'pages.user.center.security.disableSuccess',
           defaultMessage: '2FA disabled successfully',
         }),
       );
@@ -302,7 +302,7 @@ const SecuritySetting: React.FC = () => {
       messageApi.error(
         error?.data?.message ||
           intl.formatMessage({
-            id: 'pages.account.security.disableFailed',
+            id: 'pages.user.center.security.disableFailed',
             defaultMessage: 'Failed to disable 2FA',
           }),
       );
@@ -321,7 +321,7 @@ const SecuritySetting: React.FC = () => {
       });
       messageApi.success(
         intl.formatMessage({
-          id: 'pages.account.security.changePasswordSuccess',
+          id: 'pages.user.center.security.changePasswordSuccess',
           defaultMessage: 'Password changed successfully',
         }),
       );
@@ -332,7 +332,7 @@ const SecuritySetting: React.FC = () => {
       messageApi.error(
         error?.data?.message ||
           intl.formatMessage({
-            id: 'pages.account.security.changePasswordFailed',
+            id: 'pages.user.center.security.changePasswordFailed',
             defaultMessage: 'Failed to change password',
           }),
       );
@@ -345,7 +345,7 @@ const SecuritySetting: React.FC = () => {
     if (isThirdPartyUser) {
       messageApi.warning(
         intl.formatMessage({
-          id: 'pages.account.security.thirdPartyUser',
+          id: 'pages.user.center.security.thirdPartyUser',
           defaultMessage: 'Third-party login users cannot change password',
         }),
       );
@@ -354,7 +354,7 @@ const SecuritySetting: React.FC = () => {
     if (!hasPassword) {
       messageApi.warning(
         intl.formatMessage({
-          id: 'pages.account.security.noPasswordUser',
+          id: 'pages.user.center.security.noPasswordUser',
           defaultMessage: 'No password set for this account',
         }),
       );

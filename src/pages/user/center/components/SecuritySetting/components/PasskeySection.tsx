@@ -61,7 +61,7 @@ const PasskeySection: React.FC<PasskeySectionProps> = ({
           <Space>
             <KeyOutlined />
             <FormattedMessage
-              id="pages.account.security.passkey.title"
+              id="pages.user.center.security.passkey.title"
               defaultMessage="Passkey Management"
             />
           </Space>
@@ -76,7 +76,7 @@ const PasskeySection: React.FC<PasskeySectionProps> = ({
               loading={registerLoading}
             >
               <FormattedMessage
-                id="pages.account.security.passkey.register"
+                id="pages.user.center.security.passkey.register"
                 defaultMessage="Register Passkey"
               />
             </Button>
@@ -90,14 +90,14 @@ const PasskeySection: React.FC<PasskeySectionProps> = ({
             pagination={false}
             locale={{
               emptyText: intl.formatMessage({
-                id: 'pages.account.security.passkey.noCredentials',
+                id: 'pages.user.center.security.passkey.noCredentials',
                 defaultMessage: 'No Passkeys registered',
               }),
             }}
             columns={[
               {
                 title: intl.formatMessage({
-                  id: 'pages.account.security.passkey.name',
+                  id: 'pages.user.center.security.passkey.name',
                   defaultMessage: 'Name',
                 }),
                 dataIndex: 'name',
@@ -106,7 +106,7 @@ const PasskeySection: React.FC<PasskeySectionProps> = ({
               },
               {
                 title: intl.formatMessage({
-                  id: 'pages.account.security.passkey.deviceType',
+                  id: 'pages.user.center.security.passkey.deviceType',
                   defaultMessage: 'Device Type',
                 }),
                 dataIndex: 'deviceType',
@@ -115,11 +115,11 @@ const PasskeySection: React.FC<PasskeySectionProps> = ({
                   <Tag>
                     {type === 'multiDevice'
                       ? intl.formatMessage({
-                          id: 'pages.account.security.passkey.multiDevice',
+                          id: 'pages.user.center.security.passkey.multiDevice',
                           defaultMessage: 'Multi-device',
                         })
                       : intl.formatMessage({
-                          id: 'pages.account.security.passkey.singleDevice',
+                          id: 'pages.user.center.security.passkey.singleDevice',
                           defaultMessage: 'Single-device',
                         })}
                   </Tag>
@@ -127,7 +127,7 @@ const PasskeySection: React.FC<PasskeySectionProps> = ({
               },
               {
                 title: intl.formatMessage({
-                  id: 'pages.account.security.passkey.createdAt',
+                  id: 'pages.user.center.security.passkey.createdAt',
                   defaultMessage: 'Created At',
                 }),
                 dataIndex: 'createdAt',
@@ -145,7 +145,7 @@ const PasskeySection: React.FC<PasskeySectionProps> = ({
                 render: (_: unknown, record: API.PasskeyCredential) => (
                   <Popconfirm
                     title={intl.formatMessage({
-                      id: 'pages.account.security.passkey.deleteConfirm',
+                      id: 'pages.user.center.security.passkey.deleteConfirm',
                       defaultMessage: 'Are you sure to delete this Passkey?',
                     })}
                     onConfirm={() => onDelete(record.guid)}
@@ -167,20 +167,20 @@ const PasskeySection: React.FC<PasskeySectionProps> = ({
           <Flex align="center" justify="space-between">
             <Space>
               <FormattedMessage
-                id="pages.account.security.passkey.tfaStatus"
+                id="pages.user.center.security.passkey.tfaStatus"
                 defaultMessage="Passkey TFA"
               />
               {isPasskeyTfaEnabled ? (
                 <Tag color="success">
                   <FormattedMessage
-                    id="pages.account.security.enabled"
+                    id="pages.user.center.security.enabled"
                     defaultMessage="Enabled"
                   />
                 </Tag>
               ) : (
                 <Tag color="default">
                   <FormattedMessage
-                    id="pages.account.security.disabled"
+                    id="pages.user.center.security.disabled"
                     defaultMessage="Disabled"
                   />
                 </Tag>
@@ -199,7 +199,7 @@ const PasskeySection: React.FC<PasskeySectionProps> = ({
       <Modal
         title={
           <FormattedMessage
-            id="pages.account.security.passkey.namePasskey"
+            id="pages.user.center.security.passkey.namePasskey"
             defaultMessage="Name your Passkey"
           />
         }
@@ -216,7 +216,7 @@ const PasskeySection: React.FC<PasskeySectionProps> = ({
           <Form.Item
             label={
               <FormattedMessage
-                id="pages.account.security.passkey.name"
+                id="pages.user.center.security.passkey.name"
                 defaultMessage="Name"
               />
             }
@@ -225,7 +225,7 @@ const PasskeySection: React.FC<PasskeySectionProps> = ({
               value={registerName}
               onChange={(e) => onRegisterNameChange(e.target.value)}
               placeholder={intl.formatMessage({
-                id: 'pages.account.security.passkey.namePlaceholder',
+                id: 'pages.user.center.security.passkey.namePlaceholder',
                 defaultMessage: 'e.g. MacBook Touch ID',
               })}
             />
