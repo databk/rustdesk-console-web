@@ -47,6 +47,7 @@ const DeviceList: React.FC<DeviceListProps> = ({
   const [selectedRows, setSelectedRows] = useState<API.DeviceItem[]>([]);
   const [batchRemoving, setBatchRemoving] = useState(false);
   const [batchStatusUpdating, setBatchStatusUpdating] = useState(false);
+  const [hasDisabledDevice, setHasDisabledDevice] = useState(false);
 
   const handleEnable = async (guid: string) => {
     try {
@@ -287,17 +288,26 @@ const DeviceList: React.FC<DeviceListProps> = ({
       )
     : baseColumns;
 
-  const actionColumn = getActionColumn({
-    onEdit: (record) => {
-      setEditingRecord(record);
-      setEditModalVisible(true);
+  const actionWidth = deviceGroupGuid
+    ? 100
+    : hasDisabledDevice
+      ? 240
+      : 170;
+
+  const actionColumn = getActionColumn(
+    {
+      onEdit: (record) => {
+        setEditingRecord(record);
+        setEditModalVisible(true);
+      },
+      onEnable: handleEnable,
+      onDisable: handleDisable,
+      onDelete: handleDelete,
+      onRemoveFromGroup: handleRemoveFromGroup,
+      deviceGroupGuid,
     },
-    onEnable: handleEnable,
-    onDisable: handleDisable,
-    onDelete: handleDelete,
-    onRemoveFromGroup: handleRemoveFromGroup,
-    deviceGroupGuid,
-  });
+    actionWidth,
+  );
 
   const columns = [...filteredColumns, actionColumn];
 
@@ -451,8 +461,10 @@ const DeviceList: React.FC<DeviceListProps> = ({
               device_group_guid: deviceGroupGuid,
               os: params.os,
             });
+            const data = result.data || [];
+            setHasDisabledDevice(data.some((d) => d.status === 0));
             return {
-              data: result.data || [],
+              data,
               total: result.total || 0,
               success: true,
             };

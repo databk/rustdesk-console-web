@@ -20,6 +20,7 @@ export interface ActionColumnCallbacks {
 
 export const getActionColumn = (
   callbacks: ActionColumnCallbacks,
+  width?: number | string,
 ): ProColumns<API.DeviceItem> => {
   const intl = useIntl();
   const {
@@ -36,7 +37,7 @@ export const getActionColumn = (
       <FormattedMessage id="pages.common.action" defaultMessage="Action" />
     ),
     valueType: 'option',
-    width: '14%',
+    width: width ?? '14%',
     fixed: 'right',
     render: (_: unknown, record: API.DeviceItem) => {
       const isDisabled = record.status === 0;
