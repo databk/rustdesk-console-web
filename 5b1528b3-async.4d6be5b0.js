@@ -1,2 +1,1 @@
 (("undefined"!=typeof globalThis?globalThis:self)["makoChunk_rustdesk-console-web"]=("undefined"!=typeof globalThis?globalThis:self)["makoChunk_rustdesk-console-web"]||[]).push([["5b1528b3"],{"5b1528b3":function(e,t,u){"use strict";u.d(t,"__esModule",{value:!0}),u.d(t,"default",{enumerable:!0,get:function(){return o;}});var l=u("9aa38fc9");u("1e5e9665");var n=u("a2b2e592");function o(){let e=(0,n.useOutletContext)();return(0,l.jsx)(n.Outlet,{context:e});}}}]);
-//# sourceMappingURL=5b1528b3-async.4d6be5b0.js.map
