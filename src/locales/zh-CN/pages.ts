@@ -665,7 +665,8 @@ export default {
   'pages.user.center.security.newPassword': '新密码',
   'pages.user.center.security.enterNewPassword': '请输入新密码（至少6位）',
   'pages.user.center.security.confirmNewPassword': '确认新密码',
-  'pages.user.center.security.confirmNewPasswordPlaceholder': '请再次输入新密码',
+  'pages.user.center.security.confirmNewPasswordPlaceholder':
+    '请再次输入新密码',
   'pages.user.center.security.passwordMinLength': '密码长度不能少于6位',
   'pages.user.center.security.passwordMismatch': '两次输入的密码不一致',
   'pages.user.center.security.changePasswordSuccess': '密码修改成功',
@@ -678,9 +679,11 @@ export default {
   'pages.user.center.security.passkey.registerFailed': '注册 Passkey 失败',
   'pages.user.center.security.passkey.deleteSuccess': 'Passkey 已删除',
   'pages.user.center.security.passkey.deleteFailed': '删除 Passkey 失败',
-  'pages.user.center.security.passkey.deleteConfirm': '确定要删除此 Passkey 吗？',
+  'pages.user.center.security.passkey.deleteConfirm':
+    '确定要删除此 Passkey 吗？',
   'pages.user.center.security.passkey.name': '名称',
-  'pages.user.center.security.passkey.namePlaceholder': '例如：MacBook Touch ID',
+  'pages.user.center.security.passkey.namePlaceholder':
+    '例如：MacBook Touch ID',
   'pages.user.center.security.passkey.namePasskey': '为您的 Passkey 命名',
   'pages.user.center.security.passkey.deviceType': '设备类型',
   'pages.user.center.security.passkey.multiDevice': '多设备',

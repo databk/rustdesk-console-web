@@ -680,7 +680,8 @@ export default {
   'pages.user.center.tab.security': 'Segurança',
   'pages.user.center.basicInfo.title': 'Informações Básicas',
   'pages.user.center.basicInfo.displayName': 'Nome de Exibição',
-  'pages.user.center.basicInfo.displayNamePlaceholder': 'Digite o nome de exibição',
+  'pages.user.center.basicInfo.displayNamePlaceholder':
+    'Digite o nome de exibição',
   'pages.user.center.basicInfo.name': 'Nome de Usuário',
   'pages.user.center.basicInfo.email': 'E-mail',
   'pages.user.center.basicInfo.note': 'Observação',
@@ -708,7 +709,8 @@ export default {
   'pages.user.center.security.disabled': 'Desativado',
   'pages.user.center.security.enable2FA': 'Ativar 2FA',
   'pages.user.center.security.disable2FA': 'Desativar 2FA',
-  'pages.user.center.security.setup2FA': 'Configurar Autenticação em Dois Fatores',
+  'pages.user.center.security.setup2FA':
+    'Configurar Autenticação em Dois Fatores',
   'pages.user.center.security.setupFailed': 'Falha ao configurar 2FA',
   'pages.user.center.security.scanQRCode':
     'Escaneie o código QR com seu aplicativo autenticador e depois informe o código de verificação abaixo.',
@@ -737,7 +739,8 @@ export default {
   'pages.user.center.security.passwordMinLength':
     'A senha deve ter pelo menos 6 caracteres',
   'pages.user.center.security.passwordMismatch': 'As duas senhas não coincidem',
-  'pages.user.center.security.changePasswordSuccess': 'Senha alterada com sucesso',
+  'pages.user.center.security.changePasswordSuccess':
+    'Senha alterada com sucesso',
   'pages.user.center.security.changePasswordFailed': 'Falha ao alterar senha',
   'pages.user.center.security.thirdPartyUser':
     'Usuários autenticados por terceiros não podem alterar a senha',
@@ -747,7 +750,8 @@ export default {
   'pages.user.center.security.passkey.register': 'Registrar Passkey',
   'pages.user.center.security.passkey.registerSuccess':
     'Passkey registrado com sucesso',
-  'pages.user.center.security.passkey.registerFailed': 'Falha ao registrar Passkey',
+  'pages.user.center.security.passkey.registerFailed':
+    'Falha ao registrar Passkey',
   'pages.user.center.security.passkey.deleteSuccess':
     'Passkey excluído com sucesso',
   'pages.user.center.security.passkey.deleteFailed': 'Falha ao excluir Passkey',
@@ -760,10 +764,12 @@ export default {
   'pages.user.center.security.passkey.multiDevice': 'Multi-dispositivo',
   'pages.user.center.security.passkey.singleDevice': 'Dispositivo único',
   'pages.user.center.security.passkey.createdAt': 'Criado em',
-  'pages.user.center.security.passkey.noCredentials': 'Nenhum Passkey registrado',
+  'pages.user.center.security.passkey.noCredentials':
+    'Nenhum Passkey registrado',
   'pages.user.center.security.passkey.tfaStatus': 'TFA por Passkey',
   'pages.user.center.security.passkey.tfaEnabled': 'TFA por Passkey ativado',
-  'pages.user.center.security.passkey.tfaDisabled': 'TFA por Passkey desativado',
+  'pages.user.center.security.passkey.tfaDisabled':
+    'TFA por Passkey desativado',
   'pages.user.center.security.passkey.tfaToggleFailed':
     'Falha ao alternar TFA por Passkey',
   'pages.user.center.security.sessions.title': 'Sessões de Login',

@@ -658,7 +658,8 @@ export default {
     'Supports JPG, PNG, WebP, max 2MB, will be resized to 256x256',
   'pages.user.center.avatar.upload': 'Upload Avatar',
   'pages.user.center.avatar.delete': 'Delete Avatar',
-  'pages.user.center.avatar.deleteConfirm': 'Are you sure to delete your avatar?',
+  'pages.user.center.avatar.deleteConfirm':
+    'Are you sure to delete your avatar?',
   'pages.user.center.avatar.uploadSuccess': 'Avatar uploaded successfully',
   'pages.user.center.avatar.uploadFailed': 'Failed to upload avatar',
   'pages.user.center.avatar.deleteSuccess': 'Avatar deleted successfully',
@@ -702,18 +703,22 @@ export default {
     'Please re-enter new password',
   'pages.user.center.security.passwordMinLength':
     'Password must be at least 6 characters',
-  'pages.user.center.security.passwordMismatch': 'The two passwords do not match',
+  'pages.user.center.security.passwordMismatch':
+    'The two passwords do not match',
   'pages.user.center.security.changePasswordSuccess':
     'Password changed successfully',
-  'pages.user.center.security.changePasswordFailed': 'Failed to change password',
+  'pages.user.center.security.changePasswordFailed':
+    'Failed to change password',
   'pages.user.center.security.thirdPartyUser':
     'Third-party login users cannot change password',
-  'pages.user.center.security.noPasswordUser': 'No password set for this account',
+  'pages.user.center.security.noPasswordUser':
+    'No password set for this account',
   'pages.user.center.security.passkey.title': 'Passkey Management',
   'pages.user.center.security.passkey.register': 'Register Passkey',
   'pages.user.center.security.passkey.registerSuccess':
     'Passkey registered successfully',
-  'pages.user.center.security.passkey.registerFailed': 'Failed to register Passkey',
+  'pages.user.center.security.passkey.registerFailed':
+    'Failed to register Passkey',
   'pages.user.center.security.passkey.deleteSuccess':
     'Passkey deleted successfully',
   'pages.user.center.security.passkey.deleteFailed': 'Failed to delete Passkey',
@@ -746,7 +751,8 @@ export default {
     'Are you sure to revoke this session?',
   'pages.user.center.security.sessions.revokeSuccess':
     'Session revoked successfully',
-  'pages.user.center.security.sessions.revokeFailed': 'Failed to revoke session',
+  'pages.user.center.security.sessions.revokeFailed':
+    'Failed to revoke session',
   'pages.user.center.security.sessions.cannotRevokeCurrent':
     'Cannot revoke current session',
   'pages.user.center.security.sessions.noSessions': 'No active sessions',
