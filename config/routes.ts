@@ -17,11 +17,7 @@ export default [
       },
       {
         path: '/user',
-        redirect: '/user/login',
-      },
-      {
-        component: '404',
-        path: '/user/*',
+        redirect: '/user/center',
       },
     ],
   },
