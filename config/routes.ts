@@ -1,15 +1,14 @@
 export default [
   {
-    path: '/user/center',
-    name: 'center',
-    icon: 'user',
-    hideInMenu: true,
-    component: './user/center',
-  },
-  {
     path: '/user',
-    layout: false,
     routes: [
+      {
+        path: '/user/center',
+        name: 'center',
+        icon: 'user',
+        hideInMenu: true,
+        component: './user/center',
+      },
       {
         path: '/user/login',
         layout: false,
