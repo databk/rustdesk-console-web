@@ -27,15 +27,26 @@ export async function getRoleDetail(guid: string, options?: { [key: string]: any
 }
 
 export async function createRole(data: API.CreateRoleParams) {
-  return request<API.RoleItem>('/api/roles', { method: 'POST', data });
+  return request<API.RoleItem>('/api/roles', {
+    method: 'POST',
+    data,
+    skipErrorHandler: true,
+  });
 }
 
 export async function updateRole(guid: string, data: API.UpdateRoleParams) {
-  return request<API.RoleItem>(`/api/roles/${guid}`, { method: 'PUT', data });
+  return request<API.RoleItem>(`/api/roles/${guid}`, {
+    method: 'PUT',
+    data,
+    skipErrorHandler: true,
+  });
 }
 
 export async function deleteRole(guid: string) {
-  return request(`/api/roles/${guid}`, { method: 'DELETE' });
+  return request(`/api/roles/${guid}`, {
+    method: 'DELETE',
+    skipErrorHandler: true,
+  });
 }
 
 export async function getPermissionList(options?: { [key: string]: any }) {

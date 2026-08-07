@@ -19,6 +19,7 @@ export async function passkeyRegisterVerify(
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     data: body,
+    skipErrorHandler: true,
   });
 }
 
@@ -36,6 +37,7 @@ export async function passkeyAuthVerify(body: API.PasskeyAuthVerifyParams) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     data: body,
+    skipErrorHandler: true,
   });
 }
 
@@ -50,6 +52,7 @@ export async function getPasskeyList() {
 export async function deletePasskey(guid: string) {
   return request<{ message: string }>(`/api/passkey/${guid}`, {
     method: 'DELETE',
+    skipErrorHandler: true,
   });
 }
 
@@ -60,5 +63,6 @@ export async function togglePasskeyTfa(body: API.PasskeyTfaToggleParams) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     data: body,
+    skipErrorHandler: true,
   });
 }

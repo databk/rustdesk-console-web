@@ -50,7 +50,7 @@ const GeneralSettings: React.FC = () => {
   const passkeySupported = isWebAuthnSupported();
 
   useEffect(() => {
-    void getGeneralSettings()
+    void getGeneralSettings({ skipErrorHandler: true })
       .then((settings) => form.setFieldsValue(settings))
       .catch(() => {
         message.error(

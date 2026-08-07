@@ -21,6 +21,7 @@ export async function logout(
     method: 'POST',
     data: body,
     headers,
+    skipErrorHandler: true,
   });
 }
 
@@ -28,9 +29,11 @@ export async function currentUser() {
   return request<API.CurrentUser>('/api/currentUser', { method: 'POST' });
 }
 
-export async function getLoginOptions() {
+export async function getLoginOptions(options?: { [key: string]: any }) {
   return request<string[]>('/api/login-options', {
     method: 'GET',
+    skipErrorHandler: true,
+    ...(options || {}),
   });
 }
 
@@ -39,6 +42,7 @@ export async function oidcAuth(body: API.OidcAuthParams) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     data: body,
+    skipErrorHandler: true,
   });
 }
 

@@ -18,6 +18,7 @@ export async function updateSMTPConfig(data: API.UpdateSMTPConfigParams) {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     data,
+    skipErrorHandler: true,
   });
 }
 
@@ -29,5 +30,6 @@ export async function testSMTPConfig(data?: API.TestSMTPConfigParams) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     data,
+    skipErrorHandler: true,
   });
 }

@@ -19,28 +19,44 @@ export async function getStrategyList(
   });
 }
 
-export async function getStrategy(guid: string) {
+export async function getStrategy(
+  guid: string,
+  options?: { [key: string]: any },
+) {
   return request<API.StrategyItem>(`/api/strategies/${guid}`, {
     method: 'GET',
+    ...(options || {}),
   });
 }
 
 export async function createStrategy(data: API.CreateStrategyParams) {
-  return request<API.StrategyItem>('/api/strategies', { method: 'POST', data });
+  return request<API.StrategyItem>('/api/strategies', {
+    method: 'POST',
+    data,
+    skipErrorHandler: true,
+  });
 }
 
 export async function updateStrategy(guid: string, data: API.UpdateStrategyParams) {
-  return request<API.StrategyItem>(`/api/strategies/${guid}`, { method: 'PATCH', data });
+  return request<API.StrategyItem>(`/api/strategies/${guid}`, {
+    method: 'PATCH',
+    data,
+    skipErrorHandler: true,
+  });
 }
 
 export async function deleteStrategy(guid: string) {
-  return request(`/api/strategies/${guid}`, { method: 'DELETE' });
+  return request(`/api/strategies/${guid}`, {
+    method: 'DELETE',
+    skipErrorHandler: true,
+  });
 }
 
 export async function assignStrategy(guid: string, data: API.StrategyAssignParams) {
   return request<API.StrategyBatchResult>(`/api/strategies/${guid}/assign`, {
     method: 'POST',
     data,
+    skipErrorHandler: true,
   });
 }
 
@@ -48,12 +64,14 @@ export async function unassignStrategy(guid: string, data: API.StrategyAssignPar
   return request<API.StrategyBatchResult>(`/api/strategies/${guid}/unassign`, {
     method: 'POST',
     data,
+    skipErrorHandler: true,
   });
 }
 
 export async function getStrategyAssignments(
   guid: string,
   params: API.StrategyAssignmentParams,
+  options?: { [key: string]: any },
 ) {
   return request<API.PaginatedResult<
     | API.StrategyAssignmentDeviceItem
@@ -66,5 +84,6 @@ export async function getStrategyAssignments(
       current: params.current,
       pageSize: params.pageSize,
     },
+    ...(options || {}),
   });
 }

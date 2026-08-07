@@ -27,7 +27,7 @@ export const useCsvExport = (options: UseCsvExportOptions) => {
         ...pageParams,
         current,
         pageSize,
-      });
+      }, { skipErrorHandler: true });
       if (total === 0 && items.total != null) {
         total = items.total;
       }

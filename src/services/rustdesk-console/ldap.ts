@@ -18,6 +18,7 @@ export async function updateLdapConfig(data: API.UpdateLdapConfigParams) {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     data,
+    skipErrorHandler: true,
   });
 }
 
@@ -29,5 +30,6 @@ export async function testLdapConfig(data?: API.TestLdapConfigParams) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     data,
+    skipErrorHandler: true,
   });
 }

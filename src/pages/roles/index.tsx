@@ -42,7 +42,7 @@ const RoleList: React.FC = () => {
 
   const fetchPermissions = async () => {
     try {
-      const data = await getPermissionList();
+      const data = await getPermissionList({ skipErrorHandler: true });
       setPermissions(data || []);
     } catch (error) {
       console.error('Failed to fetch permissions:', error);

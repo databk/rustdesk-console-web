@@ -38,6 +38,7 @@ test('uses the user-group membership contract', async () => {
     {
       method: 'POST',
       data: { user_guids: ['user-guid'] },
+      skipErrorHandler: true,
     },
   );
 });
@@ -53,6 +54,7 @@ test('uses paginated address-book rules and a raw delete array', async () => {
   expect(requestMock).toHaveBeenNthCalledWith(2, '/api/ab/rules', {
     method: 'DELETE',
     data: ['rule-guid'],
+    skipErrorHandler: true,
   });
 });
 

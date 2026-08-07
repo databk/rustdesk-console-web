@@ -77,6 +77,7 @@ export async function updateConnectionAudit(
   return request<API.ResponseResult>(`/api/audits/conn/${id}`, {
     method: 'PATCH',
     data,
+    skipErrorHandler: true,
     ...(options || {}),
   });
 }
@@ -89,6 +90,7 @@ export async function disconnectConnection(
   return request<API.ResponseResult>(`/api/devices/${uuid}/disconnect`, {
     method: 'POST',
     data: { connIds },
+    skipErrorHandler: true,
     ...(options || {}),
   });
 }

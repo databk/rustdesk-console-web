@@ -44,11 +44,15 @@ export async function batchUpdateDeviceStatus(params: {
   }>('/api/devices/status', {
     method: 'PATCH',
     data: params,
+    skipErrorHandler: true,
   });
 }
 
 export async function deleteDevice(guid: string) {
-  return request(`/api/devices/${guid}`, { method: 'DELETE' });
+  return request(`/api/devices/${guid}`, {
+    method: 'DELETE',
+    skipErrorHandler: true,
+  });
 }
 
 export async function updateDevice(
@@ -58,6 +62,7 @@ export async function updateDevice(
   return request(`/api/devices/${guid}`, {
     method: 'PATCH',
     data,
+    skipErrorHandler: true,
   });
 }
 
@@ -65,5 +70,6 @@ export async function assignDevice(guid: string, data: Record<string, any>) {
   return request(`/api/peers/${guid}/assign`, {
     method: 'POST',
     data,
+    skipErrorHandler: true,
   });
 }

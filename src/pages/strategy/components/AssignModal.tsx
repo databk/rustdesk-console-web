@@ -101,17 +101,17 @@ const AssignModal: React.FC<AssignModalProps> = ({
           target_type: 'device',
           current: 1,
           pageSize: ASSIGNMENT_PAGE_SIZE,
-        }),
+        }, { skipErrorHandler: true }),
         getStrategyAssignments(record.guid, {
           target_type: 'user',
           current: 1,
           pageSize: ASSIGNMENT_PAGE_SIZE,
-        }),
+        }, { skipErrorHandler: true }),
         getStrategyAssignments(record.guid, {
           target_type: 'device_group',
           current: 1,
           pageSize: ASSIGNMENT_PAGE_SIZE,
-        }),
+        }, { skipErrorHandler: true }),
       ]);
 
       const items: AssignedItem[] = [];
@@ -169,7 +169,7 @@ const AssignModal: React.FC<AssignModalProps> = ({
       try {
         switch (targetType) {
           case 'device': {
-            const result = await getDeviceList({ current: 1, pageSize: 200 });
+            const result = await getDeviceList({ current: 1, pageSize: 200 }, { skipErrorHandler: true });
             setDeviceList(result.data || []);
             break;
           }
@@ -177,7 +177,7 @@ const AssignModal: React.FC<AssignModalProps> = ({
             const result = await getAdminUserList({
               current: 1,
               pageSize: 200,
-            });
+            }, { skipErrorHandler: true });
             setUserList(result.data || []);
             break;
           }
@@ -185,7 +185,7 @@ const AssignModal: React.FC<AssignModalProps> = ({
             const result = await getDeviceGroupList({
               current: 1,
               pageSize: 200,
-            });
+            }, { skipErrorHandler: true });
             setDeviceGroupList(result.data || []);
             break;
           }

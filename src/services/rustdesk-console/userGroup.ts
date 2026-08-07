@@ -20,15 +20,26 @@ export async function getUserGroupList(
 }
 
 export async function createUserGroup(data: API.CreateUserGroupParams) {
-  return request<API.UserGroupItem>('/api/user-groups', { method: 'POST', data });
+  return request<API.UserGroupItem>('/api/user-groups', {
+    method: 'POST',
+    data,
+    skipErrorHandler: true,
+  });
 }
 
 export async function updateUserGroup(guid: string, data: API.UpdateUserGroupParams) {
-  return request<API.UserGroupItem>(`/api/user-groups/${guid}`, { method: 'PUT', data });
+  return request<API.UserGroupItem>(`/api/user-groups/${guid}`, {
+    method: 'PUT',
+    data,
+    skipErrorHandler: true,
+  });
 }
 
 export async function deleteUserGroup(guid: string) {
-  return request(`/api/user-groups/${guid}`, { method: 'DELETE' });
+  return request(`/api/user-groups/${guid}`, {
+    method: 'DELETE',
+    skipErrorHandler: true,
+  });
 }
 
 export async function getUserGroupUsers(
@@ -52,6 +63,7 @@ export async function moveUsersToGroup(guid: string, userGuids: string[]) {
   return request<API.UserGroupMoveResult>(`/api/user-groups/${guid}/users`, {
     method: 'POST',
     data: { user_guids: userGuids },
+    skipErrorHandler: true,
   });
 }
 

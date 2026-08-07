@@ -4,7 +4,10 @@ import { request } from '@umijs/max';
 type ActionResponse = string | Record<string, unknown> | null | undefined;
 
 async function actionRequest(url: string, options: RequestOptions) {
-  const response = await request<ActionResponse>(url, options);
+  const response = await request<ActionResponse>(url, {
+    ...options,
+    skipErrorHandler: true,
+  });
   if (
     response &&
     typeof response === 'object' &&
@@ -28,26 +31,32 @@ export async function getAddressBookSettings() {
   return request<API.AddressBookSettings>('/api/ab/settings', { method: 'POST' });
 }
 
-export async function getPersonalAddressBook() {
-  return request<{ guid: string }>('/api/ab/personal', { method: 'GET' });
+export async function getPersonalAddressBook(options?: { [key: string]: any }) {
+  return request<{ guid: string }>('/api/ab/personal', {
+    method: 'GET',
+    ...(options || {}),
+  });
 }
 
-export async function getCustomAddressBooks(params?: {
-  pageSize?: number;
-  current?: number;
-  name?: string;
-}) {
+export async function getCustomAddressBooks(
+  params?: {
+    pageSize?: number;
+    current?: number;
+    name?: string;
+  },
+  options?: { [key: string]: any },
+) {
   return request<API.PaginatedResult<API.AddressBookProfile>>(
     '/api/ab/custom/profiles',
-    { method: 'GET', params },
+    { method: 'GET', params, ...(options || {}) },
   );
 }
 
-export async function getAllCustomAddressBooks() {
-  const first = await getCustomAddressBooks({ current: 1, pageSize: 100 });
+export async function getAllCustomAddressBooks(options?: { [key: string]: any }) {
+  const first = await getCustomAddressBooks({ current: 1, pageSize: 100 }, options);
   const profiles = [...(first.data || [])];
   for (let current = 2; profiles.length < first.total; current += 1) {
-    const page = await getCustomAddressBooks({ current, pageSize: 100 });
+    const page = await getCustomAddressBooks({ current, pageSize: 100 }, options);
     if (!page.data?.length) break;
     profiles.push(...page.data);
   }
