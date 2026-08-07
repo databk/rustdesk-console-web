@@ -1,5 +1,11 @@
 export default [
   {
+    path: '/user/login',
+    layout: false,
+    name: 'login',
+    component: './user/login',
+  },
+  {
     path: '/user',
     routes: [
       {
@@ -8,12 +14,6 @@ export default [
         icon: 'user',
         hideInMenu: true,
         component: './user/center',
-      },
-      {
-        path: '/user/login',
-        layout: false,
-        name: 'login',
-        component: './user/login',
       },
       {
         path: '/user',
