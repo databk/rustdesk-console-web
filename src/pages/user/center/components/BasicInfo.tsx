@@ -37,8 +37,13 @@ const BasicInfo: React.FC = () => {
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [avatarVersion, setAvatarVersion] = useState(0);
 
-  const avatarUrl = currentUser?.avatar;
+  const rawAvatarUrl = currentUser?.avatar;
+  const avatarUrl =
+    rawAvatarUrl && avatarVersion > 0
+      ? `${rawAvatarUrl}${rawAvatarUrl.includes('?') ? '&' : '?'}v=${avatarVersion}`
+      : rawAvatarUrl;
 
   useEffect(() => {
     if (currentUser) {
@@ -106,6 +111,7 @@ const BasicInfo: React.FC = () => {
           defaultMessage: 'Avatar uploaded successfully',
         }),
       );
+      setAvatarVersion(Date.now());
       await refresh();
     } catch {
       messageApi.error(
@@ -130,6 +136,7 @@ const BasicInfo: React.FC = () => {
           defaultMessage: 'Avatar deleted successfully',
         }),
       );
+      setAvatarVersion(0);
       await refresh();
     } catch {
       messageApi.error(
