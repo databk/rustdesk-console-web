@@ -549,122 +549,122 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
 
   return (
     <PageContainer title={propTitle} onBack={onBack}>
-        {!propGuid && (
-          <AddressBookSelector
-            abGuid={abGuid}
-            abLoading={abLoading}
-            addressBooks={addressBooks}
-            addressBookSaving={addressBookSaving}
-            isDefaultAddressBook={isDefaultAddressBook}
-            onSelectAddressBook={selectAddressBook}
-            onOpenCreate={openCreateAddressBook}
-            onOpenEdit={openEditAddressBook}
-            onConfirmDelete={confirmDeleteAddressBook}
-          />
-        )}
-
-        <TagFilterBar
-          tags={tags}
-          selectedTags={selectedTags}
-          tagMode={tagMode}
-          pendingColorUpdates={pendingColorUpdates}
-          hoveredColorDot={hoveredColorDot}
-          canWrite={canWrite}
-          colorPickerCloseTimerRef={colorPickerCloseTimerRef}
-          onSelectTags={setSelectedTags}
-          onSetTagMode={(mode) => {
-            setTagMode(mode);
-            actionRef.current?.reload();
-          }}
-          onSetHoveredColorDot={setHoveredColorDot}
-          onUpdatePendingColor={(tagName, color) => {
-            setPendingColorUpdates((prev) => ({
-              ...prev,
-              [tagName]: color,
-            }));
-          }}
-          onUpdateTagColor={handleUpdateTagColor}
-          onDeleteTag={handleDeleteTag}
-          onOpenAddTag={() => setAddTagModalVisible(true)}
-          onClearTags={() => {
-            setSelectedTags([]);
-            actionRef.current?.reload();
-          }}
-        />
-
-        <PeerTable
+      {!propGuid && (
+        <AddressBookSelector
           abGuid={abGuid}
           abLoading={abLoading}
-          columns={columns}
-          selectedTags={selectedTags}
-          tagMode={tagMode}
-          canWrite={canWrite}
-          headerTitle={headerTitle}
-          actionRef={actionRef}
-          onOpenImport={() => setImportDevicesModalVisible(true)}
-          onOpenAddPeer={() => setAddPeerModalVisible(true)}
+          addressBooks={addressBooks}
+          addressBookSaving={addressBookSaving}
+          isDefaultAddressBook={isDefaultAddressBook}
+          onSelectAddressBook={selectAddressBook}
+          onOpenCreate={openCreateAddressBook}
+          onOpenEdit={openEditAddressBook}
+          onConfirmDelete={confirmDeleteAddressBook}
         />
+      )}
 
-        <AddressBookModal
-          mode={addressBookModalMode}
-          saving={addressBookSaving}
-          form={addressBookForm}
-          onSubmit={handleAddressBookSubmit}
-          onCancel={() => {
-            setAddressBookModalMode(null);
-            addressBookForm.resetFields();
-          }}
-        />
+      <TagFilterBar
+        tags={tags}
+        selectedTags={selectedTags}
+        tagMode={tagMode}
+        pendingColorUpdates={pendingColorUpdates}
+        hoveredColorDot={hoveredColorDot}
+        canWrite={canWrite}
+        colorPickerCloseTimerRef={colorPickerCloseTimerRef}
+        onSelectTags={setSelectedTags}
+        onSetTagMode={(mode) => {
+          setTagMode(mode);
+          actionRef.current?.reload();
+        }}
+        onSetHoveredColorDot={setHoveredColorDot}
+        onUpdatePendingColor={(tagName, color) => {
+          setPendingColorUpdates((prev) => ({
+            ...prev,
+            [tagName]: color,
+          }));
+        }}
+        onUpdateTagColor={handleUpdateTagColor}
+        onDeleteTag={handleDeleteTag}
+        onOpenAddTag={() => setAddTagModalVisible(true)}
+        onClearTags={() => {
+          setSelectedTags([]);
+          actionRef.current?.reload();
+        }}
+      />
 
-        <AddPeerModal
-          visible={addPeerModalVisible}
-          error={addPeerError}
-          tags={tags}
-          form={addPeerForm}
-          onSubmit={handleAddPeer}
-          onCancel={() => setAddPeerModalVisible(false)}
-        />
+      <PeerTable
+        abGuid={abGuid}
+        abLoading={abLoading}
+        columns={columns}
+        selectedTags={selectedTags}
+        tagMode={tagMode}
+        canWrite={canWrite}
+        headerTitle={headerTitle}
+        actionRef={actionRef}
+        onOpenImport={() => setImportDevicesModalVisible(true)}
+        onOpenAddPeer={() => setAddPeerModalVisible(true)}
+      />
 
-        <EditPeerModal
-          visible={editPeerModalVisible}
-          error={editPeerError}
-          editingPeer={editingPeer}
-          tags={tags}
-          form={editPeerForm}
-          onSubmit={handleUpdatePeer}
-          onCancel={() => {
-            setEditPeerModalVisible(false);
-            setEditingPeer(null);
-            editPeerForm.resetFields();
-          }}
-        />
+      <AddressBookModal
+        mode={addressBookModalMode}
+        saving={addressBookSaving}
+        form={addressBookForm}
+        onSubmit={handleAddressBookSubmit}
+        onCancel={() => {
+          setAddressBookModalMode(null);
+          addressBookForm.resetFields();
+        }}
+      />
 
-        <AddTagModal
-          visible={addTagModalVisible}
-          form={addTagForm}
-          onSubmit={handleAddTag}
-          onCancel={() => setAddTagModalVisible(false)}
-        />
+      <AddPeerModal
+        visible={addPeerModalVisible}
+        error={addPeerError}
+        tags={tags}
+        form={addPeerForm}
+        onSubmit={handleAddPeer}
+        onCancel={() => setAddPeerModalVisible(false)}
+      />
 
-        <TagManagementModal
-          visible={tagManagementVisible}
-          tags={tags}
-          columns={tagColumns}
-          onCancel={() => setTagManagementVisible(false)}
-        />
+      <EditPeerModal
+        visible={editPeerModalVisible}
+        error={editPeerError}
+        editingPeer={editingPeer}
+        tags={tags}
+        form={editPeerForm}
+        onSubmit={handleUpdatePeer}
+        onCancel={() => {
+          setEditPeerModalVisible(false);
+          setEditingPeer(null);
+          editPeerForm.resetFields();
+        }}
+      />
 
-        <ImportDevicesModal
-          visible={importDevicesModalVisible}
-          importing={importing}
-          selectedDeviceKeys={selectedDeviceKeys}
-          onSelectionChange={setSelectedDeviceKeys}
-          onOk={handleImportDevices}
-          onCancel={() => {
-            setImportDevicesModalVisible(false);
-            setSelectedDeviceKeys([]);
-          }}
-        />
-      </PageContainer>
+      <AddTagModal
+        visible={addTagModalVisible}
+        form={addTagForm}
+        onSubmit={handleAddTag}
+        onCancel={() => setAddTagModalVisible(false)}
+      />
+
+      <TagManagementModal
+        visible={tagManagementVisible}
+        tags={tags}
+        columns={tagColumns}
+        onCancel={() => setTagManagementVisible(false)}
+      />
+
+      <ImportDevicesModal
+        visible={importDevicesModalVisible}
+        importing={importing}
+        selectedDeviceKeys={selectedDeviceKeys}
+        onSelectionChange={setSelectedDeviceKeys}
+        onOk={handleImportDevices}
+        onCancel={() => {
+          setImportDevicesModalVisible(false);
+          setSelectedDeviceKeys([]);
+        }}
+      />
+    </PageContainer>
   );
 };
 
