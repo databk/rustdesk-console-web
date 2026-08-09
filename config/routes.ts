@@ -11,6 +11,7 @@ export default [
       {
         path: '/user/center',
         name: 'center',
+        locale: 'menu.user.center',
         icon: 'user',
         hideInMenu: true,
         component: './user/center',
