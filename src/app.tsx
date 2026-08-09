@@ -176,23 +176,6 @@ export const layout: RunTimeLayoutConfig = ({
         history.push(loginPath);
       }
     },
-    pageTitleRender: (props, defaultPageTitle) => {
-      const { pathname, formatMessage } = props;
-      const siteTitle = defaultSettings.title;
-      if (!pathname || !formatMessage || !siteTitle) {
-        return defaultPageTitle ?? '';
-      }
-      if (/^\/groups\/user\/[^/]+$/.test(pathname)) {
-        return `${formatMessage({ id: 'menu.groups.user', defaultMessage: 'User Groups' })} - ${siteTitle}`;
-      }
-      if (/^\/groups\/device\/[^/]+$/.test(pathname)) {
-        return `${formatMessage({ id: 'menu.groups.device', defaultMessage: 'Device Groups' })} - ${siteTitle}`;
-      }
-      if (/^\/address-book\/shared\/[^/]+$/.test(pathname)) {
-        return `${formatMessage({ id: 'menu.addressBook.shared', defaultMessage: 'Shared' })} - ${siteTitle}`;
-      }
-      return defaultPageTitle ?? '';
-    },
     bgLayoutImgList: [],
     links: isDev
       ? [

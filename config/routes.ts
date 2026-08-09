@@ -55,6 +55,7 @@ export default [
         component: './address-book/shared',
       },
       {
+        name: 'shared',
         path: '/address-book/shared/:guid',
         component: './address-book/shared/detail',
         hideInMenu: true,
@@ -78,6 +79,7 @@ export default [
         component: './groups/user',
       },
       {
+        name: 'user',
         path: '/groups/user/:guid',
         component: './groups/user/detail',
         hideInMenu: true,
@@ -89,6 +91,7 @@ export default [
         component: './groups/device/list',
       },
       {
+        name: 'device',
         path: '/groups/device/:guid',
         component: './groups/device/detail',
         hideInMenu: true,
