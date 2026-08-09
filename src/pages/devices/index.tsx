@@ -15,8 +15,6 @@ import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
 import { App, Button, Popconfirm, Space } from 'antd';
 import React, { useRef, useState } from 'react';
-import { Helmet } from 'react-helmet-async';
-import Settings from '../../../config/defaultSettings';
 import { getDeviceColumns } from '@/components/DeviceSelectTable/columns';
 import { getActionColumn } from './columns';
 import EditDeviceModal from './components/EditDeviceModal';
@@ -308,57 +306,80 @@ const DeviceList: React.FC<DeviceListProps> = ({
   const columns = [...filteredColumns, actionColumn];
 
   return (
-    <>
-      {title && (
-        <Helmet>
-          <title>
-            {title}
-            {Settings.title && ` - ${Settings.title}`}
-          </title>
-        </Helmet>
-      )}
-      <PageContainer
-        title={
-          title || (
-            <FormattedMessage
-              id="pages.devices.list"
-              defaultMessage="Device List"
-            />
-          )
+    <PageContainer
+      title={
+        title || (
+          <FormattedMessage
+            id="pages.devices.list"
+            defaultMessage="Device List"
+          />
+        )
+      }
+      onBack={onBack}
+    >
+      <ProTable<API.DeviceItem>
+        headerTitle={
+          <FormattedMessage
+            id="pages.devices.list"
+            defaultMessage="Device List"
+          />
         }
-        onBack={onBack}
-      >
-        <ProTable<API.DeviceItem>
-          headerTitle={
-            <FormattedMessage
-              id="pages.devices.list"
-              defaultMessage="Device List"
-            />
-          }
-          columnsState={{
-            persistenceType: 'localStorage',
-            persistenceKey: 'device_list_columns_state',
-          }}
-          actionRef={actionRef}
-          rowKey="guid"
-          rowSelection={{
-            selectedRowKeys,
-            onChange: (keys, rows) => {
-              setSelectedRowKeys(keys);
-              setSelectedRows(rows);
-            },
-          }}
-          tableAlertOptionRender={() => (
-            <Space size={16}>
-              {deviceGroupGuid ? (
+        columnsState={{
+          persistenceType: 'localStorage',
+          persistenceKey: 'device_list_columns_state',
+        }}
+        actionRef={actionRef}
+        rowKey="guid"
+        rowSelection={{
+          selectedRowKeys,
+          onChange: (keys, rows) => {
+            setSelectedRowKeys(keys);
+            setSelectedRows(rows);
+          },
+        }}
+        tableAlertOptionRender={() => (
+          <Space size={16}>
+            {deviceGroupGuid ? (
+              <Popconfirm
+                title={
+                  <FormattedMessage
+                    id="pages.devices.batchRemoveFromGroupConfirm"
+                    defaultMessage="Are you sure to remove selected devices from the group?"
+                  />
+                }
+                onConfirm={handleBatchRemoveFromGroup}
+                okText={intl.formatMessage({
+                  id: 'pages.common.confirm',
+                  defaultMessage: 'Yes',
+                })}
+                cancelText={intl.formatMessage({
+                  id: 'pages.common.cancel',
+                  defaultMessage: 'No',
+                })}
+              >
+                <Button
+                  type="link"
+                  danger
+                  icon={<DeleteOutlined />}
+                  loading={batchRemoving}
+                  style={{ padding: 0 }}
+                >
+                  <FormattedMessage
+                    id="pages.devices.batchRemove"
+                    defaultMessage="Batch Remove"
+                  />
+                </Button>
+              </Popconfirm>
+            ) : (
+              <>
                 <Popconfirm
                   title={
                     <FormattedMessage
-                      id="pages.devices.batchRemoveFromGroupConfirm"
-                      defaultMessage="Are you sure to remove selected devices from the group?"
+                      id="pages.devices.batchEnableConfirm"
+                      defaultMessage="Are you sure to enable selected devices?"
                     />
                   }
-                  onConfirm={handleBatchRemoveFromGroup}
+                  onConfirm={handleBatchEnable}
                   okText={intl.formatMessage({
                     id: 'pages.common.confirm',
                     defaultMessage: 'Yes',
@@ -370,161 +391,126 @@ const DeviceList: React.FC<DeviceListProps> = ({
                 >
                   <Button
                     type="link"
-                    danger
-                    icon={<DeleteOutlined />}
-                    loading={batchRemoving}
+                    icon={<PlusCircleOutlined />}
+                    loading={batchStatusUpdating}
                     style={{ padding: 0 }}
                   >
                     <FormattedMessage
-                      id="pages.devices.batchRemove"
-                      defaultMessage="Batch Remove"
+                      id="pages.devices.batchEnable"
+                      defaultMessage="Batch Enable"
                     />
                   </Button>
                 </Popconfirm>
-              ) : (
-                <>
-                  <Popconfirm
-                    title={
-                      <FormattedMessage
-                        id="pages.devices.batchEnableConfirm"
-                        defaultMessage="Are you sure to enable selected devices?"
-                      />
-                    }
-                    onConfirm={handleBatchEnable}
-                    okText={intl.formatMessage({
-                      id: 'pages.common.confirm',
-                      defaultMessage: 'Yes',
-                    })}
-                    cancelText={intl.formatMessage({
-                      id: 'pages.common.cancel',
-                      defaultMessage: 'No',
-                    })}
-                  >
-                    <Button
-                      type="link"
-                      icon={<PlusCircleOutlined />}
-                      loading={batchStatusUpdating}
-                      style={{ padding: 0 }}
-                    >
-                      <FormattedMessage
-                        id="pages.devices.batchEnable"
-                        defaultMessage="Batch Enable"
-                      />
-                    </Button>
-                  </Popconfirm>
-                  <Popconfirm
-                    title={
-                      <FormattedMessage
-                        id="pages.devices.batchDisableConfirm"
-                        defaultMessage="Are you sure to disable selected devices?"
-                      />
-                    }
-                    onConfirm={handleBatchDisable}
-                    okText={intl.formatMessage({
-                      id: 'pages.common.confirm',
-                      defaultMessage: 'Yes',
-                    })}
-                    cancelText={intl.formatMessage({
-                      id: 'pages.common.cancel',
-                      defaultMessage: 'No',
-                    })}
-                  >
-                    <Button
-                      type="link"
-                      icon={<MinusCircleOutlined />}
-                      loading={batchStatusUpdating}
-                      style={{ padding: 0 }}
-                    >
-                      <FormattedMessage
-                        id="pages.devices.batchDisable"
-                        defaultMessage="Batch Disable"
-                      />
-                    </Button>
-                  </Popconfirm>
-                </>
-              )}
-            </Space>
-          )}
-          request={async (params) => {
-            const result = await getDeviceList({
-              current: params.current || 1,
-              pageSize: params.pageSize || 20,
-              id: params.id,
-              status: params.status,
-              is_online: params.is_online,
-              user_name: params.user_name,
-              device_group_name: params.device_group_name_search,
-              device_group_guid: deviceGroupGuid,
-              os: params.os,
-            });
-            const data = result.data || [];
-            setHasDisabledDevice(data.some((d) => d.status === 0));
-            return {
-              data,
-              total: result.total || 0,
-              success: true,
-            };
-          }}
-          columns={columns}
-          search={{
-            labelWidth: 'auto',
-            defaultCollapsed: true,
-            optionRender: (_searchConfig, _formProps, dom) => [
-              ...dom.reverse(),
-            ],
-          }}
-          pagination={{
-            defaultPageSize: 20,
-            showSizeChanger: true,
-            showQuickJumper: true,
-          }}
-          scroll={{ x: '100%' }}
-          toolBarRender={() =>
-            deviceGroupGuid
-              ? [
+                <Popconfirm
+                  title={
+                    <FormattedMessage
+                      id="pages.devices.batchDisableConfirm"
+                      defaultMessage="Are you sure to disable selected devices?"
+                    />
+                  }
+                  onConfirm={handleBatchDisable}
+                  okText={intl.formatMessage({
+                    id: 'pages.common.confirm',
+                    defaultMessage: 'Yes',
+                  })}
+                  cancelText={intl.formatMessage({
+                    id: 'pages.common.cancel',
+                    defaultMessage: 'No',
+                  })}
+                >
                   <Button
-                    key="import"
-                    icon={<SelectOutlined />}
-                    onClick={() => setImportModalVisible(true)}
+                    type="link"
+                    icon={<MinusCircleOutlined />}
+                    loading={batchStatusUpdating}
+                    style={{ padding: 0 }}
                   >
                     <FormattedMessage
-                      id="pages.deviceGroups.import"
-                      defaultMessage="Import"
+                      id="pages.devices.batchDisable"
+                      defaultMessage="Batch Disable"
                     />
-                  </Button>,
-                ]
-              : []
-          }
-          options={{
-            density: true,
-            setting: {
-              listsHeight: 400,
-            },
-            fullScreen: false,
-            reload: true,
-          }}
-        />
-
-        {deviceGroupGuid && (
-          <ImportDevicesModal
-            open={importModalVisible}
-            deviceGroupGuid={deviceGroupGuid}
-            onCancel={() => setImportModalVisible(false)}
-            onSuccess={() => actionRef.current?.reload()}
-          />
+                  </Button>
+                </Popconfirm>
+              </>
+            )}
+          </Space>
         )}
+        request={async (params) => {
+          const result = await getDeviceList({
+            current: params.current || 1,
+            pageSize: params.pageSize || 20,
+            id: params.id,
+            status: params.status,
+            is_online: params.is_online,
+            user_name: params.user_name,
+            device_group_name: params.device_group_name_search,
+            device_group_guid: deviceGroupGuid,
+            os: params.os,
+          });
+          const data = result.data || [];
+          setHasDisabledDevice(data.some((d) => d.status === 0));
+          return {
+            data,
+            total: result.total || 0,
+            success: true,
+          };
+        }}
+        columns={columns}
+        search={{
+          labelWidth: 'auto',
+          defaultCollapsed: true,
+          optionRender: (_searchConfig, _formProps, dom) => [...dom.reverse()],
+        }}
+        pagination={{
+          defaultPageSize: 20,
+          showSizeChanger: true,
+          showQuickJumper: true,
+        }}
+        scroll={{ x: '100%' }}
+        toolBarRender={() =>
+          deviceGroupGuid
+            ? [
+                <Button
+                  key="import"
+                  icon={<SelectOutlined />}
+                  onClick={() => setImportModalVisible(true)}
+                >
+                  <FormattedMessage
+                    id="pages.deviceGroups.import"
+                    defaultMessage="Import"
+                  />
+                </Button>,
+              ]
+            : []
+        }
+        options={{
+          density: true,
+          setting: {
+            listsHeight: 400,
+          },
+          fullScreen: false,
+          reload: true,
+        }}
+      />
 
-        <EditDeviceModal
-          open={editModalVisible}
-          record={editingRecord}
-          onCancel={() => {
-            setEditModalVisible(false);
-            setEditingRecord(null);
-          }}
+      {deviceGroupGuid && (
+        <ImportDevicesModal
+          open={importModalVisible}
+          deviceGroupGuid={deviceGroupGuid}
+          onCancel={() => setImportModalVisible(false)}
           onSuccess={() => actionRef.current?.reload()}
         />
-      </PageContainer>
-    </>
+      )}
+
+      <EditDeviceModal
+        open={editModalVisible}
+        record={editingRecord}
+        onCancel={() => {
+          setEditModalVisible(false);
+          setEditingRecord(null);
+        }}
+        onSuccess={() => actionRef.current?.reload()}
+      />
+    </PageContainer>
   );
 };
 

@@ -3,8 +3,6 @@ import { PageContainer } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
 import { App, Form } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
-import { Helmet } from 'react-helmet-async';
-import Settings from '../../../config/defaultSettings';
 import {
   batchForceLogout,
   batchUpdateUserStatus,
@@ -421,130 +419,117 @@ const UserList: React.FC<UserListProps> = ({
   });
 
   return (
-    <>
-      {title && (
-        <Helmet>
-          <title>
-            {title}
-            {Settings.title && ` - ${Settings.title}`}
-          </title>
-        </Helmet>
-      )}
-      <PageContainer
-        title={
-          title || (
-            <FormattedMessage
-              id="pages.users.list"
-              defaultMessage="User List"
-            />
+    <PageContainer
+      title={
+        title || (
+          <FormattedMessage id="pages.users.list" defaultMessage="User List" />
+        )
+      }
+      onBack={onBack}
+    >
+      <UserTable
+        userGroupGuid={userGroupGuid}
+        columns={columns}
+        actionRef={actionRef}
+        selectedRowKeys={selectedRowKeys}
+        selectedRows={selectedRows}
+        onSelectionChange={(keys, rows) => {
+          setSelectedRowKeys(keys);
+          setSelectedRows(rows);
+        }}
+        userGroups={userGroups}
+        userGroupsLoading={userGroupsLoading}
+        destinationGuid={destinationGuid}
+        moving={moving}
+        batchStatusUpdating={batchStatusUpdating}
+        batchForceLoggingOut={batchForceLoggingOut}
+        onDestinationChange={setDestinationGuid}
+        onBatchMove={() =>
+          destinationGuid &&
+          handleMove(
+            destinationGuid,
+            selectedRows.map((r) => r.guid),
           )
         }
-        onBack={onBack}
-      >
-        <UserTable
+        onBatchEnable={handleBatchEnable}
+        onBatchDisable={handleBatchDisable}
+        onBatchForceLogout={handleBatchForceLogout}
+        onOpenImport={() => setImportModalVisible(true)}
+        onOpenCreate={openCreateModal}
+        onOpenInvite={openInviteModal}
+      />
+
+      <CreateUserModal
+        visible={createModalVisible}
+        userGroups={userGroups}
+        userGroupsLoading={userGroupsLoading}
+        form={createForm}
+        onSubmit={handleCreate}
+        onCancel={() => setCreateModalVisible(false)}
+      />
+
+      <InviteUserModal
+        visible={inviteModalVisible}
+        userGroups={userGroups}
+        userGroupsLoading={userGroupsLoading}
+        form={inviteForm}
+        onSubmit={handleInvite}
+        onCancel={() => setInviteModalVisible(false)}
+      />
+
+      <EditUserModal
+        visible={editModalVisible}
+        userGroups={userGroups}
+        userGroupsLoading={userGroupsLoading}
+        form={editForm}
+        onSubmit={handleEdit}
+        onCancel={() => {
+          setEditModalVisible(false);
+          setEditingUser(null);
+          editForm.resetFields();
+        }}
+      />
+
+      <SecurityModal
+        visible={securityModalVisible}
+        form={securityForm}
+        onSubmit={handleUpdateSecurity}
+        onCancel={() => {
+          setSecurityModalVisible(false);
+          setEditingUser(null);
+          securityForm.resetFields();
+        }}
+      />
+
+      {userGroupGuid && (
+        <ImportUsersModal
+          open={importModalVisible}
           userGroupGuid={userGroupGuid}
-          columns={columns}
-          actionRef={actionRef}
-          selectedRowKeys={selectedRowKeys}
-          selectedRows={selectedRows}
-          onSelectionChange={(keys, rows) => {
-            setSelectedRowKeys(keys);
-            setSelectedRows(rows);
-          }}
-          userGroups={userGroups}
-          userGroupsLoading={userGroupsLoading}
-          destinationGuid={destinationGuid}
-          moving={moving}
-          batchStatusUpdating={batchStatusUpdating}
-          batchForceLoggingOut={batchForceLoggingOut}
-          onDestinationChange={setDestinationGuid}
-          onBatchMove={() =>
-            destinationGuid &&
-            handleMove(
-              destinationGuid,
-              selectedRows.map((r) => r.guid),
-            )
-          }
-          onBatchEnable={handleBatchEnable}
-          onBatchDisable={handleBatchDisable}
-          onBatchForceLogout={handleBatchForceLogout}
-          onOpenImport={() => setImportModalVisible(true)}
-          onOpenCreate={openCreateModal}
-          onOpenInvite={openInviteModal}
+          onCancel={() => setImportModalVisible(false)}
+          onSuccess={() => actionRef.current?.reload()}
         />
+      )}
 
-        <CreateUserModal
-          visible={createModalVisible}
-          userGroups={userGroups}
-          userGroupsLoading={userGroupsLoading}
-          form={createForm}
-          onSubmit={handleCreate}
-          onCancel={() => setCreateModalVisible(false)}
-        />
-
-        <InviteUserModal
-          visible={inviteModalVisible}
-          userGroups={userGroups}
-          userGroupsLoading={userGroupsLoading}
-          form={inviteForm}
-          onSubmit={handleInvite}
-          onCancel={() => setInviteModalVisible(false)}
-        />
-
-        <EditUserModal
-          visible={editModalVisible}
-          userGroups={userGroups}
-          userGroupsLoading={userGroupsLoading}
-          form={editForm}
-          onSubmit={handleEdit}
-          onCancel={() => {
-            setEditModalVisible(false);
-            setEditingUser(null);
-            editForm.resetFields();
-          }}
-        />
-
-        <SecurityModal
-          visible={securityModalVisible}
-          form={securityForm}
-          onSubmit={handleUpdateSecurity}
-          onCancel={() => {
-            setSecurityModalVisible(false);
-            setEditingUser(null);
-            securityForm.resetFields();
-          }}
-        />
-
-        {userGroupGuid && (
-          <ImportUsersModal
-            open={importModalVisible}
-            userGroupGuid={userGroupGuid}
-            onCancel={() => setImportModalVisible(false)}
-            onSuccess={() => actionRef.current?.reload()}
-          />
-        )}
-
-        <MoveUserModal
-          visible={!!moveUser}
-          userGroups={userGroups}
-          userGroupsLoading={userGroupsLoading}
-          currentGroupGuid={userGroupGuid}
-          destinationGuid={moveDestinationGuid}
-          onDestinationChange={setMoveDestinationGuid}
-          onOk={() => {
-            if (moveUser && moveDestinationGuid) {
-              void handleMove(moveDestinationGuid, [moveUser.guid]);
-              setMoveUser(null);
-              setMoveDestinationGuid(undefined);
-            }
-          }}
-          onCancel={() => {
+      <MoveUserModal
+        visible={!!moveUser}
+        userGroups={userGroups}
+        userGroupsLoading={userGroupsLoading}
+        currentGroupGuid={userGroupGuid}
+        destinationGuid={moveDestinationGuid}
+        onDestinationChange={setMoveDestinationGuid}
+        onOk={() => {
+          if (moveUser && moveDestinationGuid) {
+            void handleMove(moveDestinationGuid, [moveUser.guid]);
             setMoveUser(null);
             setMoveDestinationGuid(undefined);
-          }}
-        />
-      </PageContainer>
-    </>
+          }
+        }}
+        onCancel={() => {
+          setMoveUser(null);
+          setMoveDestinationGuid(undefined);
+        }}
+      />
+    </PageContainer>
   );
 };
 
