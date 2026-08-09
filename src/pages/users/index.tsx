@@ -3,8 +3,6 @@ import { PageContainer } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
 import { App, Form } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
-import { Helmet } from 'react-helmet-async';
-import Settings from '../../../config/defaultSettings';
 import {
   batchForceLogout,
   batchUpdateUserStatus,
@@ -421,16 +419,7 @@ const UserList: React.FC<UserListProps> = ({
   });
 
   return (
-    <>
-      {title && (
-        <Helmet>
-          <title>
-            {title}
-            {Settings.title && ` - ${Settings.title}`}
-          </title>
-        </Helmet>
-      )}
-      <PageContainer
+    <PageContainer
         title={
           title || (
             <FormattedMessage
@@ -544,7 +533,6 @@ const UserList: React.FC<UserListProps> = ({
           }}
         />
       </PageContainer>
-    </>
   );
 };
 

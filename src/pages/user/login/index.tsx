@@ -425,7 +425,7 @@ const Login: React.FC = () => {
       <Helmet>
         <title>
           {intl.formatMessage({ id: 'menu.login', defaultMessage: 'Login' })}
-          {Settings.title && ` - ${Settings.title}`}
+          {` - ${Settings.title}`}
         </title>
       </Helmet>
       <Lang />

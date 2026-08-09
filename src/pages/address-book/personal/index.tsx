@@ -3,8 +3,6 @@ import { PageContainer } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
 import { App, Form } from 'antd';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Helmet } from 'react-helmet-async';
-import Settings from '../../../../config/defaultSettings';
 import {
   getPersonalAddressBook,
   getAllCustomAddressBooks,
@@ -550,16 +548,7 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
   );
 
   return (
-    <>
-      {propTitle && (
-        <Helmet>
-          <title>
-            {propTitle}
-            {Settings.title && ` - ${Settings.title}`}
-          </title>
-        </Helmet>
-      )}
-      <PageContainer title={propTitle} onBack={onBack}>
+    <PageContainer title={propTitle} onBack={onBack}>
         {!propGuid && (
           <AddressBookSelector
             abGuid={abGuid}
@@ -676,7 +665,6 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
           }}
         />
       </PageContainer>
-    </>
   );
 };
 
