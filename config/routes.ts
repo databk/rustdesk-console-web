@@ -7,6 +7,7 @@ export default [
   },
   {
     path: '/user',
+    name: 'user',
     routes: [
       {
         path: '/user/center',
