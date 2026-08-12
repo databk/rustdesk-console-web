@@ -2,7 +2,7 @@
   "name": "RustDesk Console",
   "short_name": "RustDesk",
   "description": "Web frontend for RustDesk Console",
-  "lang": "zh-CN",
+  "lang": "en-US",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
