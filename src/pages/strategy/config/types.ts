@@ -14,6 +14,4 @@ export type ConfigOption = {
 
 export type ConfigCategory = {
   key: string;
-  label: string;
-  labelEn: string;
 };
