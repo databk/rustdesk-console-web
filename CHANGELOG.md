@@ -1,3 +1,14 @@
+## [1.5.1](https://github.com/databk/rustdesk-console-web/compare/1.5.0...1.5.1) (2026-08-12)
+
+
+### Bug Fixes
+
+* **i18n:** add missing pt-BR translations and remove unused keys ([#270](https://github.com/databk/rustdesk-console-web/issues/270)) ([7c6249d](https://github.com/databk/rustdesk-console-web/commit/7c6249d1ea544fd92e5d8bcc818026e69215af3a))
+* localize /user/center title via explicit route locale ([#265](https://github.com/databk/rustdesk-console-web/issues/265)) ([43b06ab](https://github.com/databk/rustdesk-console-web/commit/43b06ab9d8180f3ccef3dcf3ad324f9855716a09))
+* prevent page title suffix from leaking into PageContainer ([#263](https://github.com/databk/rustdesk-console-web/issues/263)) ([d39b7f7](https://github.com/databk/rustdesk-console-web/commit/d39b7f78c2f9b020f5aa5388615411b09385daf6)), closes [#261](https://github.com/databk/rustdesk-console-web/issues/261)
+
+
+
 # [1.5.0](https://github.com/databk/rustdesk-console-web/compare/1.4.0...1.5.0) (2026-08-07)
 
 
@@ -86,15 +97,6 @@
 ### Reverts
 
 * Revert "chore(deps-dev): bump @biomejs/biome from 2.4.16 to 2.5.0 (#159)" (#161) ([208fe7f](https://github.com/databk/rustdesk-console-web/commit/208fe7fbf5789a244909dcd1c4df68c33dd35887)), closes [#159](https://github.com/databk/rustdesk-console-web/issues/159) [#161](https://github.com/databk/rustdesk-console-web/issues/161)
-
-
-
-## [1.2.1](https://github.com/databk/rustdesk-console-web/compare/1.2.0...1.2.1) (2026-06-15)
-
-
-### Bug Fixes
-
-* align react and react-dom versions to 19.2.7 ([#160](https://github.com/databk/rustdesk-console-web/issues/160)) ([a6decec](https://github.com/databk/rustdesk-console-web/commit/a6dececa384e290cf61abf0720490b6c188eca07)), closes [#527](https://github.com/databk/rustdesk-console-web/issues/527)
 
 
 
