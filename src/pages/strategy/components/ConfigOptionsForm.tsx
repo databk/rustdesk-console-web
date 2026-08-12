@@ -237,7 +237,7 @@ const ConfigOptionsForm: React.FC<ConfigOptionsFormProps> = ({
         <span>
           {intl.formatMessage({
             id: `pages.strategies.category.${cat.key}`,
-            defaultMessage: cat.labelEn,
+            defaultMessage: cat.label,
           })}
           <span style={{ color: '#999', fontSize: 12, marginLeft: 4 }}>
             ({options.length})
