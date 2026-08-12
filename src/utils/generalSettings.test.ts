@@ -16,7 +16,7 @@ test('includes the username watermark only when enabled', () => {
 test('maps general settings to frontend settings', () => {
   const general: API.GeneralSettings = {
     watermarkEnabled: true,
-    defaultLanguage: 'zh-CN',
+    defaultLanguage: 'en-US',
     site: {
       frontendUrl: 'https://a.example.com',
       backendUrl: 'https://b.example.com',
@@ -25,7 +25,7 @@ test('maps general settings to frontend settings', () => {
   };
   expect(toFrontendSettings(general)).toEqual({
     watermarkEnabled: true,
-    defaultLanguage: 'zh-CN',
+    defaultLanguage: 'en-US',
     webauthnEnabled: true,
   });
 });

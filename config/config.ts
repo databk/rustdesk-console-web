@@ -32,7 +32,7 @@ export default defineConfig({
     plugins: ['duration'],
   },
   locale: {
-    default: 'zh-CN',
+    default: 'en-US',
     antd: true,
     baseNavigator: true,
   },
