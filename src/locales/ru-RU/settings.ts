@@ -15,7 +15,8 @@ export default {
   'app.settings.basic.country': 'Страна/Регион',
   'app.settings.basic.country-message': 'Пожалуйста, укажите вашу страну!',
   'app.settings.basic.geographic': 'Область или город',
-  'app.settings.basic.geographic-message': 'Пожалуйста, укажите ваше местоположение!',
+  'app.settings.basic.geographic-message':
+    'Пожалуйста, укажите ваше местоположение!',
   'app.settings.basic.address': 'Адрес улицы',
   'app.settings.basic.address-message': 'Пожалуйста, введите ваш адрес!',
   'app.settings.basic.phone': 'Номер телефона',
@@ -29,11 +30,13 @@ export default {
   'app.settings.security.phone': 'Телефон для восстановления',
   'app.settings.security.phone-description': 'Привязанный телефон',
   'app.settings.security.question': 'Контрольный вопрос',
-  'app.settings.security.question-description': 'Контрольный вопрос не установлен, политика безопасности эффективно защищает аккаунт',
+  'app.settings.security.question-description':
+    'Контрольный вопрос не установлен, политика безопасности эффективно защищает аккаунт',
   'app.settings.security.email': 'Резервный email',
   'app.settings.security.email-description': 'Привязанный email',
   'app.settings.security.mfa': 'Устройство MFA',
-  'app.settings.security.mfa-description': 'Устройство MFA не привязано, после привязки потребуется двойное подтверждение',
+  'app.settings.security.mfa-description':
+    'Устройство MFA не привязано, после привязки потребуется двойное подтверждение',
   'app.settings.security.modify': 'Изменить',
   'app.settings.security.set': 'Установить',
   'app.settings.security.bind': 'Привязать',
@@ -45,11 +48,14 @@ export default {
   'app.settings.binding.dingding-description': 'Аккаунт DingTalk не привязан',
   'app.settings.binding.bind': 'Привязать',
   'app.settings.notification.password': 'Пароль аккаунта',
-  'app.settings.notification.password-description': 'Сообщения от других пользователей будут отправляться в виде внутренних уведомлений',
+  'app.settings.notification.password-description':
+    'Сообщения от других пользователей будут отправляться в виде внутренних уведомлений',
   'app.settings.notification.messages': 'Системные сообщения',
-  'app.settings.notification.messages-description': 'Системные сообщения будут отправляться в виде внутренних уведомлений',
+  'app.settings.notification.messages-description':
+    'Системные сообщения будут отправляться в виде внутренних уведомлений',
   'app.settings.notification.todo': 'Уведомления о задачах',
-  'app.settings.notification.todo-description': 'Список задач будет отправляться в виде внутренних уведомлений',
+  'app.settings.notification.todo-description':
+    'Список задач будет отправляться в виде внутренних уведомлений',
   'app.settings.open': 'Включить',
   'app.settings.close': 'Отключить',
 };

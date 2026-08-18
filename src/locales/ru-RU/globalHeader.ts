@@ -5,7 +5,8 @@ export default {
   'component.globalHeader.search.example3': 'Пример поиска 3',
   'component.globalHeader.help': 'Помощь',
   'component.globalHeader.notification': 'Уведомления',
-  'component.globalHeader.notification.empty': 'Вы просмотрели все уведомления.',
+  'component.globalHeader.notification.empty':
+    'Вы просмотрели все уведомления.',
   'component.globalHeader.message': 'Сообщения',
   'component.globalHeader.message.empty': 'Вы просмотрели все сообщения.',
   'component.globalHeader.event': 'События',

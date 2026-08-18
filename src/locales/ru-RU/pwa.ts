@@ -1,7 +1,8 @@
 export default {
   'app.pwa.offline': 'Вы сейчас офлайн',
   'app.pwa.serviceworker.updated': 'Доступно новое содержимое',
-  'app.pwa.serviceworker.updated.hint': 'Пожалуйста, нажмите кнопку "Обновить", чтобы перезагрузить текущую страницу',
+  'app.pwa.serviceworker.updated.hint':
+    'Пожалуйста, нажмите кнопку "Обновить", чтобы перезагрузить текущую страницу',
   'app.pwa.serviceworker.updated.ok': 'Обновить',
   'app.updateCheck.title': 'Проверка обновлений',
   'app.updateCheck.backend': 'Бэкенд',

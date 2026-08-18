@@ -25,6 +25,8 @@ export default {
   'app.setting.othersettings': 'Другие настройки',
   'app.setting.weakmode': 'Режим для дальтоников',
   'app.setting.copy': 'Копировать настройки',
-  'app.setting.copyinfo': 'настройки скопированы, замените defaultSettings в src/models/setting.js',
-  'app.setting.production.hint': 'Панель настроек доступна только в режиме разработки, измените настройки вручную',
+  'app.setting.copyinfo':
+    'настройки скопированы, замените defaultSettings в src/models/setting.js',
+  'app.setting.production.hint':
+    'Панель настроек доступна только в режиме разработки, измените настройки вручную',
 };

@@ -7,14 +7,16 @@ export default {
   'pages.login.password.required': 'Пожалуйста, введите пароль!',
   'pages.login.rememberMe': 'Запомнить меня',
   'pages.login.forgotPassword': 'Забыли пароль?',
-  'pages.login.forgotPasswordInfo': 'Обратитесь к администратору для сброса пароля',
+  'pages.login.forgotPasswordInfo':
+    'Обратитесь к администратору для сброса пароля',
   'pages.login.submit': 'Войти',
   'pages.login.back': 'Назад',
   'pages.login.emailCheck.title': 'Подтверждение email',
   'pages.login.emailCheck.description': '6-значный код отправлен на {email}',
   'pages.login.emailCheck.sent': 'Код подтверждения отправлен на вашу почту',
   'pages.login.tfaCheck.title': 'Двухфакторная аутентификация',
-  'pages.login.tfaCheck.description': 'Введите 6-значный код из приложения-аутентификатора',
+  'pages.login.tfaCheck.description':
+    'Введите 6-значный код из приложения-аутентификатора',
   'pages.login.verifyCode.submit': 'Подтвердить',
   'pages.login.verifyCode.invalid': 'Неверный код подтверждения',
   'pages.login.oidc.divider': 'Или продолжить через',
@@ -25,7 +27,8 @@ export default {
   'pages.login.passkey.cancelled': 'Подтверждение Passkey отменено',
   'pages.login.passkey.failed': 'Ошибка подтверждения Passkey',
   'pages.login.passkeyCheck.title': 'Подтверждение Passkey',
-  'pages.login.passkeyCheck.description': 'Используйте Passkey для завершения входа',
+  'pages.login.passkeyCheck.description':
+    'Используйте Passkey для завершения входа',
   'pages.devices.list': 'Список устройств',
   'pages.devices.os': 'ОС',
   'pages.devices.status': 'Статус',
@@ -46,7 +49,8 @@ export default {
   'pages.devices.disableFailed': 'Не удалось отключить устройство',
   'pages.devices.deleteSuccess': 'Устройство удалено',
   'pages.devices.deleteFailed': 'Не удалось удалить устройство',
-  'pages.devices.deleteConfirm': 'Вы уверены, что хотите удалить это устройство?',
+  'pages.devices.deleteConfirm':
+    'Вы уверены, что хотите удалить это устройство?',
   'pages.devices.deviceInfo': 'username@device_name',
   'pages.devices.strategyInfo': 'Информация о стратегии',
   'pages.devices.device': 'Устройство',
@@ -58,22 +62,32 @@ export default {
   'pages.devices.deviceGroupSearchTip': 'Фильтр по названию группы устройств',
   'pages.devices.remove': 'Удалить',
   'pages.devices.removeFromGroupSuccess': 'Устройство удалено из группы',
-  'pages.devices.removeFromGroupFailed': 'Не удалось удалить устройство из группы',
-  'pages.devices.removeFromGroupConfirm': 'Вы уверены, что хотите удалить это устройство из группы?',
+  'pages.devices.removeFromGroupFailed':
+    'Не удалось удалить устройство из группы',
+  'pages.devices.removeFromGroupConfirm':
+    'Вы уверены, что хотите удалить это устройство из группы?',
   'pages.devices.batchRemove': 'Массовое удаление',
-  'pages.devices.batchRemoveFromGroupSuccess': 'Успешно удалено {count} устройство(а) из группы',
-  'pages.devices.batchRemoveFromGroupFailed': 'Не удалось удалить устройства из группы',
-  'pages.devices.batchRemoveFromGroupConfirm': 'Вы уверены, что хотите удалить выбранные устройства из группы?',
+  'pages.devices.batchRemoveFromGroupSuccess':
+    'Успешно удалено {count} устройство(а) из группы',
+  'pages.devices.batchRemoveFromGroupFailed':
+    'Не удалось удалить устройства из группы',
+  'pages.devices.batchRemoveFromGroupConfirm':
+    'Вы уверены, что хотите удалить выбранные устройства из группы?',
   'pages.devices.batchEnable': 'Массовое включение',
   'pages.devices.batchDisable': 'Массовое отключение',
-  'pages.devices.batchEnableConfirm': 'Вы уверены, что хотите включить выбранные устройства?',
-  'pages.devices.batchDisableConfirm': 'Вы уверены, что хотите отключить выбранные устройства?',
+  'pages.devices.batchEnableConfirm':
+    'Вы уверены, что хотите включить выбранные устройства?',
+  'pages.devices.batchDisableConfirm':
+    'Вы уверены, что хотите отключить выбранные устройства?',
   'pages.devices.batchEnableSuccess': 'Успешно включено {count} устройство(а)',
   'pages.devices.batchEnableFailed': 'Не удалось включить устройства',
-  'pages.devices.batchEnablePartialFailed': 'Успешно включено {success} устройство(а), {failed} не удалось',
-  'pages.devices.batchDisableSuccess': 'Успешно отключено {count} устройство(а)',
+  'pages.devices.batchEnablePartialFailed':
+    'Успешно включено {success} устройство(а), {failed} не удалось',
+  'pages.devices.batchDisableSuccess':
+    'Успешно отключено {count} устройство(а)',
   'pages.devices.batchDisableFailed': 'Не удалось отключить устройства',
-  'pages.devices.batchDisablePartialFailed': 'Успешно отключено {success} устройство(а), {failed} не удалось',
+  'pages.devices.batchDisablePartialFailed':
+    'Успешно отключено {success} устройство(а), {failed} не удалось',
   'pages.devices.edit': 'Редактировать устройство',
   'pages.devices.updateSuccess': 'Устройство обновлено',
   'pages.devices.updateFailed': 'Не удалось обновить устройство',
@@ -96,20 +110,25 @@ export default {
   'pages.addressBook.tagAddFailed': 'Не удалось добавить тег',
   'pages.addressBook.tagDeleted': 'Тег удален',
   'pages.addressBook.tagDeleteFailed': 'Не удалось удалить тег',
-  'pages.addressBook.deleteTagConfirm': 'Вы уверены, что хотите удалить этот тег?',
+  'pages.addressBook.deleteTagConfirm':
+    'Вы уверены, что хотите удалить этот тег?',
   'pages.addressBook.tagModeUnion': 'Любой',
   'pages.addressBook.tagModeIntersection': 'Все',
   'pages.addressBook.importDevices': 'Импорт из устройств',
-  'pages.addressBook.importSuccess': 'Успешно импортировано {count} устройство(а)',
-  'pages.addressBook.importPartialFailed': 'Не удалось импортировать {count} устройство(а)',
+  'pages.addressBook.importSuccess':
+    'Успешно импортировано {count} устройство(а)',
+  'pages.addressBook.importPartialFailed':
+    'Не удалось импортировать {count} устройство(а)',
   'pages.addressBook.createSuccess': 'Адресная книга создана',
   'pages.addressBook.createFailed': 'Не удалось создать адресную книгу',
   'pages.addressBook.updateSuccess': 'Адресная книга обновлена',
   'pages.addressBook.updateFailed': 'Не удалось обновить адресную книгу',
   'pages.addressBook.deleteSuccess': 'Адресная книга(и) удалена(ы)',
   'pages.addressBook.deleteFailed': 'Не удалось удалить адресную книгу(и)',
-  'pages.addressBook.deleteConfirm': 'Вы уверены, что хотите удалить эту адресную книгу?',
-  'pages.addressBook.batchDeleteConfirm': 'Вы уверены, что хотите удалить выбранные адресные книги?',
+  'pages.addressBook.deleteConfirm':
+    'Вы уверены, что хотите удалить эту адресную книгу?',
+  'pages.addressBook.batchDeleteConfirm':
+    'Вы уверены, что хотите удалить выбранные адресные книги?',
   'pages.addressBook.device': 'Устройство',
   'pages.addressBook.alias': 'Псевдоним',
   'pages.addressBook.tags': 'Теги',
@@ -117,7 +136,8 @@ export default {
   'pages.addressBook.peerAddFailed': 'Не удалось добавить участника',
   'pages.addressBook.peerDeleted': 'Участник удален',
   'pages.addressBook.peerDeleteFailed': 'Не удалось удалить участника',
-  'pages.addressBook.deletePeerConfirm': 'Вы уверены, что хотите удалить этого участника?',
+  'pages.addressBook.deletePeerConfirm':
+    'Вы уверены, что хотите удалить этого участника?',
   'pages.addressBook.import': 'Импорт из устройств',
   'pages.deviceGroups.list': 'Группы устройств',
   'pages.deviceGroups.name': 'Название',
@@ -130,10 +150,12 @@ export default {
   'pages.deviceGroups.updateFailed': 'Не удалось обновить группу устройств',
   'pages.deviceGroups.deleteSuccess': 'Группа устройств удалена',
   'pages.deviceGroups.deleteFailed': 'Не удалось удалить группу устройств',
-  'pages.deviceGroups.deleteConfirm': 'Вы уверены, что хотите удалить эту группу устройств?',
+  'pages.deviceGroups.deleteConfirm':
+    'Вы уверены, что хотите удалить эту группу устройств?',
   'pages.deviceGroups.import': 'Импорт',
   'pages.deviceGroups.importDevices': 'Импорт устройств',
-  'pages.deviceGroups.importSuccess': 'Успешно импортировано {count} устройство(а)',
+  'pages.deviceGroups.importSuccess':
+    'Успешно импортировано {count} устройство(а)',
   'pages.deviceGroups.importFailed': 'Не удалось импортировать устройства',
   'pages.users.list': 'Список пользователей',
   'pages.users.name': 'Имя',
@@ -146,7 +168,8 @@ export default {
   'pages.users.createFailed': 'Не удалось создать пользователя',
   'pages.users.deleteSuccess': 'Пользователь удален',
   'pages.users.deleteFailed': 'Не удалось удалить пользователя',
-  'pages.users.deleteConfirm': 'Вы уверены, что хотите удалить этого пользователя?',
+  'pages.users.deleteConfirm':
+    'Вы уверены, что хотите удалить этого пользователя?',
   'pages.audits.conn': 'Журнал подключений',
   'pages.audits.file': 'Журнал передачи файлов',
   'pages.audits.alarm': 'Журнал оповещений',
@@ -172,7 +195,8 @@ export default {
   'pages.audits.disconnectSuccess': 'Успешно отключено!',
   'pages.audits.disconnectFailed': 'Не удалось отключить!',
   'pages.audits.disconnectConfirmTitle': 'Подтверждение операции',
-  'pages.audits.disconnectConfirmTip': 'Вы уверены, что хотите отключить это устройство?',
+  'pages.audits.disconnectConfirmTip':
+    'Вы уверены, что хотите отключить это устройство?',
   'pages.audits.updateSuccess': 'Обновление выполнено успешно',
   'pages.audits.updateFailed': 'Не удалось обновить, попробуйте снова!',
   'pages.audits.exportCSV': 'Экспорт в CSV',
@@ -180,13 +204,15 @@ export default {
   'pages.audits.exportSuccess': 'Экспорт выполнен успешно',
   'pages.audits.exportFailed': 'Не удалось выполнить экспорт',
   'pages.audits.exportConfirmTitle': 'Экспорт в CSV',
-  'pages.audits.exportConfirmContent': 'Экспортируется до 1000 записей. Продолжить?',
+  'pages.audits.exportConfirmContent':
+    'Экспортируется до 1000 записей. Продолжить?',
   'pages.audits.remote': 'Удаленный',
   'pages.audits.local': 'Локальный',
   'pages.audits.direction': 'Направление',
   'pages.audits.files': 'Файлы',
   'pages.audits.remoteTip': 'Удаленно управляемый компьютер или терминал',
-  'pages.audits.remoteSearchTip': 'Поиск по ID удаленного устройства (нечеткое совпадение)',
+  'pages.audits.remoteSearchTip':
+    'Поиск по ID удаленного устройства (нечеткое совпадение)',
   'pages.audits.remotePlaceholder': 'Введите ID удаленного устройства',
   'pages.audits.pathTip': 'Путь на удаленном устройстве',
   'pages.audits.exportCsvTip': 'Экспорт до 1000 записей за один раз',
@@ -194,11 +220,16 @@ export default {
   'pages.audits.startTime': 'Время начала',
   'pages.audits.endTime': 'Время окончания',
   'pages.audits.alarmType.ipWhitelist': 'IP не в белом списке',
-  'pages.audits.alarmType.exceedThirtyAttempts': 'С одного IP более 30 неудачных попыток',
-  'pages.audits.alarmType.sixAttemptsWithinOneMinute': 'Более 6 попыток за 1 минуту',
-  'pages.audits.alarmType.exceedIpv6PrefixAttempts': 'Превышен лимит попыток с IPv6-префикса',
-  'pages.audits.alarmType.terminalOsLoginBackoff': 'Блокировка входа в ОС терминала из-за задержки',
-  'pages.audits.alarmType.terminalOsLoginConcurrency': 'Превышен лимит одновременных входов в ОС терминала',
+  'pages.audits.alarmType.exceedThirtyAttempts':
+    'С одного IP более 30 неудачных попыток',
+  'pages.audits.alarmType.sixAttemptsWithinOneMinute':
+    'Более 6 попыток за 1 минуту',
+  'pages.audits.alarmType.exceedIpv6PrefixAttempts':
+    'Превышен лимит попыток с IPv6-префикса',
+  'pages.audits.alarmType.terminalOsLoginBackoff':
+    'Блокировка входа в ОС терминала из-за задержки',
+  'pages.audits.alarmType.terminalOsLoginConcurrency':
+    'Превышен лимит одновременных входов в ОС терминала',
   'pages.common.action': 'Действие',
   'pages.common.delete': 'Удалить',
   'pages.common.edit': 'Редактировать',
@@ -212,7 +243,8 @@ export default {
   'pages.userGroups.userCount': 'Количество пользователей',
   'pages.userGroups.create': 'Создать группу пользователей',
   'pages.userGroups.edit': 'Редактировать группу пользователей',
-  'pages.userGroups.deleteConfirm': 'Вы уверены, что хотите удалить эту группу пользователей?',
+  'pages.userGroups.deleteConfirm':
+    'Вы уверены, что хотите удалить эту группу пользователей?',
   'pages.userGroups.createSuccess': 'Группа пользователей создана',
   'pages.userGroups.createFailed': 'Не удалось создать группу пользователей',
   'pages.userGroups.updateSuccess': 'Группа пользователей обновлена',
@@ -228,10 +260,12 @@ export default {
   'pages.userGroups.moveToGroup': 'Переместить в группу',
   'pages.userGroups.import': 'Импорт',
   'pages.userGroups.importUsers': 'Импорт пользователей',
-  'pages.userGroups.importSuccess': 'Успешно импортировано {count} пользователь(ей)',
+  'pages.userGroups.importSuccess':
+    'Успешно импортировано {count} пользователь(ей)',
   'pages.userGroups.importFailed': 'Не удалось импортировать пользователей',
   'pages.userGroups.membersUpdated': 'Обновлено {count} пользователь(ей)',
-  'pages.userGroups.membersUpdateFailed': 'Не удалось обновить участников группы',
+  'pages.userGroups.membersUpdateFailed':
+    'Не удалось обновить участников группы',
   'pages.users.userGroup': 'Группа пользователей',
   'pages.users.selectUserGroup': 'Выберите группу пользователей',
   'pages.addressBook.userGroup': 'Группа пользователей',
@@ -247,8 +281,10 @@ export default {
   'pages.addressBook.shareTypeUser': 'Пользователь',
   'pages.addressBook.shareTypeGroup': 'Группа пользователей',
   'pages.addressBook.selectUser': 'Выберите пользователя',
-  'pages.addressBook.selectUserPlaceholder': 'Поиск по имени пользователя или email',
-  'pages.addressBook.everyoneHint': 'Все пользователи будут иметь доступ к этой адресной книге',
+  'pages.addressBook.selectUserPlaceholder':
+    'Поиск по имени пользователя или email',
+  'pages.addressBook.everyoneHint':
+    'Все пользователи будут иметь доступ к этой адресной книге',
   'pages.addressBook.allUsers': 'Все пользователи',
   'pages.addressBook.addAccess': 'Добавить правило доступа',
   'pages.addressBook.accessLoadFailed': 'Не удалось загрузить правила доступа',
@@ -279,31 +315,43 @@ export default {
   'pages.settings.fetchFailed': 'Не удалось загрузить настройки',
   'pages.settings.saveSuccess': 'Настройки успешно сохранены',
   'pages.settings.saveFailed': 'Не удалось сохранить настройки',
-  'pages.settings.generalSection.watermark': 'Водяной знак с именем пользователя',
-  'pages.settings.generalSection.watermarkExtra': 'Отображать имя текущего пользователя поверх каждой страницы для повышения ответственности.',
+  'pages.settings.generalSection.watermark':
+    'Водяной знак с именем пользователя',
+  'pages.settings.generalSection.watermarkExtra':
+    'Отображать имя текущего пользователя поверх каждой страницы для повышения ответственности.',
   'pages.settings.generalSection.language': 'Язык по умолчанию',
-  'pages.settings.generalSection.languageExtra': 'Язык интерфейса по умолчанию для новых посетителей. Авторизованные пользователи сохраняют свои предпочтения.',
-  'pages.settings.generalSection.languagePlaceholder': 'Выберите язык по умолчанию',
+  'pages.settings.generalSection.languageExtra':
+    'Язык интерфейса по умолчанию для новых посетителей. Авторизованные пользователи сохраняют свои предпочтения.',
+  'pages.settings.generalSection.languagePlaceholder':
+    'Выберите язык по умолчанию',
   'pages.settings.generalSection.site': 'Сайт',
   'pages.settings.generalSection.frontendUrl': 'URL фронтенда',
-  'pages.settings.generalSection.frontendUrlPlaceholder': 'https://console.example.com',
+  'pages.settings.generalSection.frontendUrlPlaceholder':
+    'https://console.example.com',
   'pages.settings.generalSection.backendUrl': 'URL бэкенда',
-  'pages.settings.generalSection.backendUrlExtra': 'Оставьте пустым для использования того же источника, что и фронтенд.',
-  'pages.settings.generalSection.backendUrlPlaceholder': 'https://api.example.com',
-  'pages.settings.generalSection.urlInvalid': 'Пожалуйста, введите корректный URL',
+  'pages.settings.generalSection.backendUrlExtra':
+    'Оставьте пустым для использования того же источника, что и фронтенд.',
+  'pages.settings.generalSection.backendUrlPlaceholder':
+    'https://api.example.com',
+  'pages.settings.generalSection.urlInvalid':
+    'Пожалуйста, введите корректный URL',
   'pages.settings.generalSection.webauthn': 'WebAuthn / Passkeys',
   'pages.settings.generalSection.webauthnEnabled': 'Включить WebAuthn',
-  'pages.settings.generalSection.webauthnEnabledExtra': 'Разрешить пользователям регистрироваться и входить с помощью ключей доступа (passkeys).',
-  'pages.settings.generalSection.webauthnUnsupported': 'Этот браузер не поддерживает WebAuthn. Вход с помощью passkey будет недоступен для пользователей на неподдерживаемых клиентах.',
+  'pages.settings.generalSection.webauthnEnabledExtra':
+    'Разрешить пользователям регистрироваться и входить с помощью ключей доступа (passkeys).',
+  'pages.settings.generalSection.webauthnUnsupported':
+    'Этот браузер не поддерживает WebAuthn. Вход с помощью passkey будет недоступен для пользователей на неподдерживаемых клиентах.',
   'pages.settings.generalSection.rpName': 'Название полагающейся стороны',
-  'pages.settings.generalSection.rpNameExtra': 'Понятное пользователю название, отображаемое в запросе на использование passkey.',
+  'pages.settings.generalSection.rpNameExtra':
+    'Понятное пользователю название, отображаемое в запросе на использование passkey.',
   'pages.settings.generalSection.rpNamePlaceholder': 'RustDesk Console',
   'pages.strategies.list': 'Список стратегий',
   'pages.strategies.name': 'Название стратегии',
   'pages.strategies.note': 'Примечание',
   'pages.strategies.create': 'Создать стратегию',
   'pages.strategies.edit': 'Редактировать стратегию',
-  'pages.strategies.deleteConfirm': 'Вы уверены, что хотите удалить эту стратегию?',
+  'pages.strategies.deleteConfirm':
+    'Вы уверены, что хотите удалить эту стратегию?',
   'pages.strategies.createSuccess': 'Стратегия создана',
   'pages.strategies.createFailed': 'Не удалось создать стратегию',
   'pages.strategies.updateSuccess': 'Стратегия обновлена',
@@ -328,7 +376,8 @@ export default {
   'pages.strategies.selectTarget': 'Выберите объект',
   'pages.strategies.assignSuccess': 'Стратегия успешно назначена',
   'pages.strategies.assignFailed': 'Не удалось назначить стратегию',
-  'pages.strategies.assignPartialFailed': 'Назначено {success} объект(ов), не удалось {failed}: {errors}',
+  'pages.strategies.assignPartialFailed':
+    'Назначено {success} объект(ов), не удалось {failed}: {errors}',
   'pages.strategies.unassignSuccess': 'Назначение стратегии успешно отменено',
   'pages.strategies.unassignFailed': 'Не удалось отменить назначение стратегии',
   'pages.strategies.unassignConfirm': 'Отменить назначение для этого объекта?',
@@ -359,7 +408,8 @@ export default {
   'pages.users.security': 'Безопасность',
   'pages.users.securitySettings': 'Настройки безопасности',
   'pages.users.securityUpdateSuccess': 'Настройки безопасности обновлены',
-  'pages.users.securityUpdateFailed': 'Не удалось обновить настройки безопасности',
+  'pages.users.securityUpdateFailed':
+    'Не удалось обновить настройки безопасности',
   'pages.users.tfaEnforce': 'Обязательная двухфакторная аутентификация',
   'pages.users.emailVerification': 'Требовать подтверждение email',
   'pages.users.forceLogout': 'Принудительный выход',
@@ -368,17 +418,25 @@ export default {
   'pages.users.batchEnable': 'Массовое включение',
   'pages.users.batchDisable': 'Массовое отключение',
   'pages.users.batchForceLogout': 'Массовый принудительный выход',
-  'pages.users.batchEnableConfirm': 'Вы уверены, что хотите включить выбранных пользователей?',
-  'pages.users.batchDisableConfirm': 'Вы уверены, что хотите отключить выбранных пользователей?',
-  'pages.users.batchForceLogoutConfirm': 'Вы уверены, что хотите выполнить принудительный выход для выбранных пользователей?',
+  'pages.users.batchEnableConfirm':
+    'Вы уверены, что хотите включить выбранных пользователей?',
+  'pages.users.batchDisableConfirm':
+    'Вы уверены, что хотите отключить выбранных пользователей?',
+  'pages.users.batchForceLogoutConfirm':
+    'Вы уверены, что хотите выполнить принудительный выход для выбранных пользователей?',
   'pages.users.batchEnableSuccess': 'Успешно включено {count} пользователь(ей)',
   'pages.users.batchEnableFailed': 'Не удалось включить пользователей',
-  'pages.users.batchEnablePartialFailed': 'Успешно включено {success} пользователь(ей), {failed} не удалось',
-  'pages.users.batchDisableSuccess': 'Успешно отключено {count} пользователь(ей)',
+  'pages.users.batchEnablePartialFailed':
+    'Успешно включено {success} пользователь(ей), {failed} не удалось',
+  'pages.users.batchDisableSuccess':
+    'Успешно отключено {count} пользователь(ей)',
   'pages.users.batchDisableFailed': 'Не удалось отключить пользователей',
-  'pages.users.batchDisablePartialFailed': 'Успешно отключено {success} пользователь(ей), {failed} не удалось',
-  'pages.users.batchForceLogoutSuccess': 'Массовый принудительный выход выполнен успешно',
-  'pages.users.batchForceLogoutFailed': 'Не удалось выполнить массовый принудительный выход',
+  'pages.users.batchDisablePartialFailed':
+    'Успешно отключено {success} пользователь(ей), {failed} не удалось',
+  'pages.users.batchForceLogoutSuccess':
+    'Массовый принудительный выход выполнен успешно',
+  'pages.users.batchForceLogoutFailed':
+    'Не удалось выполнить массовый принудительный выход',
   'pages.dashboard.totalUsers': 'Всего пользователей',
   'pages.dashboard.activeUsers': 'Активных пользователей',
   'pages.dashboard.totalDevices': 'Всего устройств',
@@ -442,21 +500,25 @@ export default {
   'pages.dashboard.resourceDistribution': 'Распределение ресурсов',
   'pages.dashboard.operationAnalysis': 'Анализ операций',
   'pages.smtp.title': 'Настройки SMTP',
-  'pages.smtp.description': 'Настройте SMTP-сервер для отправки системных уведомлений по электронной почте',
+  'pages.smtp.description':
+    'Настройте SMTP-сервер для отправки системных уведомлений по электронной почте',
   'pages.smtp.host': 'Адрес сервера',
   'pages.smtp.hostPlaceholder': 'Введите адрес SMTP-сервера',
   'pages.smtp.port': 'Порт',
   'pages.smtp.portPlaceholder': 'Введите номер порта',
   'pages.smtp.secure': 'Использовать SSL/TLS',
-  'pages.smtp.secureHelp': 'Включить защищенное соединение (обычно порт 465 использует SSL, порт 587 использует TLS)',
+  'pages.smtp.secureHelp':
+    'Включить защищенное соединение (обычно порт 465 использует SSL, порт 587 использует TLS)',
   'pages.smtp.user': 'Имя пользователя',
-  'pages.smtp.userPlaceholder': 'Введите имя пользователя для аутентификации SMTP',
+  'pages.smtp.userPlaceholder':
+    'Введите имя пользователя для аутентификации SMTP',
   'pages.smtp.password': 'Пароль',
   'pages.smtp.passwordPlaceholder': 'Введите пароль для аутентификации SMTP',
   'pages.smtp.from': 'Email отправителя',
   'pages.smtp.fromPlaceholder': 'Введите адрес электронной почты отправителя',
   'pages.smtp.enabled': 'Включить конфигурацию',
-  'pages.smtp.enabledHelp': 'При включении эта конфигурация будет использоваться для отправки системных писем',
+  'pages.smtp.enabledHelp':
+    'При включении эта конфигурация будет использоваться для отправки системных писем',
   'pages.smtp.testConnection': 'Проверить подключение',
   'pages.smtp.testSuccess': 'Проверка SMTP-подключения выполнена успешно',
   'pages.smtp.testFailed': 'Ошибка проверки SMTP-подключения',
@@ -514,47 +576,59 @@ export default {
   'pages.oidcProviders.updateFailed': 'Не удалось обновить провайдера OIDC',
   'pages.oidcProviders.deleteSuccess': 'Провайдер OIDC удален',
   'pages.oidcProviders.deleteFailed': 'Не удалось удалить провайдера OIDC',
-  'pages.oidcProviders.deleteConfirm': 'Вы уверены, что хотите удалить этого провайдера?',
+  'pages.oidcProviders.deleteConfirm':
+    'Вы уверены, что хотите удалить этого провайдера?',
   'pages.oidcProviders.enableSuccess': 'Провайдер OIDC включен',
   'pages.oidcProviders.enableFailed': 'Не удалось включить провайдера OIDC',
   'pages.oidcProviders.disableSuccess': 'Провайдер OIDC отключен',
   'pages.oidcProviders.disableFailed': 'Не удалось отключить провайдера OIDC',
-  'pages.oidcProviders.enableConfirm': 'Вы уверены, что хотите включить этого провайдера?',
-  'pages.oidcProviders.disableConfirm': 'Вы уверены, что хотите отключить этого провайдера?',
+  'pages.oidcProviders.enableConfirm':
+    'Вы уверены, что хотите включить этого провайдера?',
+  'pages.oidcProviders.disableConfirm':
+    'Вы уверены, что хотите отключить этого провайдера?',
   'pages.oidcProviders.testFailed': 'Не удалось проверить подключение OIDC',
-  'pages.oidcProviders.fetchDetailFailed': 'Не удалось загрузить детали провайдера',
+  'pages.oidcProviders.fetchDetailFailed':
+    'Не удалось загрузить детали провайдера',
   'pages.oidcProviders.sortFailed': 'Не удалось обновить порядок провайдеров',
   'pages.user.center.tab.basic': 'Основная информация',
   'pages.user.center.tab.security': 'Безопасность',
   'pages.user.center.basicInfo.displayName': 'Отображаемое имя',
-  'pages.user.center.basicInfo.displayNamePlaceholder': 'Введите отображаемое имя',
+  'pages.user.center.basicInfo.displayNamePlaceholder':
+    'Введите отображаемое имя',
   'pages.user.center.basicInfo.name': 'Имя пользователя',
   'pages.user.center.basicInfo.email': 'Email',
   'pages.user.center.basicInfo.note': 'Примечание',
   'pages.user.center.basicInfo.updateSuccess': 'Профиль успешно обновлен',
   'pages.user.center.basicInfo.updateFailed': 'Не удалось обновить профиль',
-  'pages.user.center.avatar.hint': 'Поддерживается JPG, PNG, WebP, макс. 2 МБ, будет изменен до 256x256',
+  'pages.user.center.avatar.hint':
+    'Поддерживается JPG, PNG, WebP, макс. 2 МБ, будет изменен до 256x256',
   'pages.user.center.avatar.upload': 'Загрузить аватар',
   'pages.user.center.avatar.delete': 'Удалить аватар',
-  'pages.user.center.avatar.deleteConfirm': 'Вы уверены, что хотите удалить свой аватар?',
+  'pages.user.center.avatar.deleteConfirm':
+    'Вы уверены, что хотите удалить свой аватар?',
   'pages.user.center.avatar.uploadSuccess': 'Аватар успешно загружен',
   'pages.user.center.avatar.uploadFailed': 'Не удалось загрузить аватар',
   'pages.user.center.avatar.deleteSuccess': 'Аватар успешно удален',
   'pages.user.center.avatar.deleteFailed': 'Не удалось удалить аватар',
-  'pages.user.center.avatar.fileTooLarge': 'Размер файла не может превышать 2 МБ',
-  'pages.user.center.avatar.invalidFormat': 'Поддерживаются только форматы JPG, PNG, WebP',
+  'pages.user.center.avatar.fileTooLarge':
+    'Размер файла не может превышать 2 МБ',
+  'pages.user.center.avatar.invalidFormat':
+    'Поддерживаются только форматы JPG, PNG, WebP',
   'pages.user.center.security.title': 'Настройки безопасности',
   'pages.user.center.security.2faStatus': 'Статус 2FA',
   'pages.user.center.security.enabled': 'Включена',
   'pages.user.center.security.disabled': 'Отключена',
   'pages.user.center.security.enable2FA': 'Включить 2FA',
   'pages.user.center.security.disable2FA': 'Отключить 2FA',
-  'pages.user.center.security.setup2FA': 'Настройка двухфакторной аутентификации',
+  'pages.user.center.security.setup2FA':
+    'Настройка двухфакторной аутентификации',
   'pages.user.center.security.setupFailed': 'Не удалось настроить 2FA',
-  'pages.user.center.security.scanQRCode': 'Отсканируйте QR-код в приложении-аутентификаторе, затем введите код подтверждения ниже.',
+  'pages.user.center.security.scanQRCode':
+    'Отсканируйте QR-код в приложении-аутентификаторе, затем введите код подтверждения ниже.',
   'pages.user.center.security.secretKey': 'Секретный ключ',
   'pages.user.center.security.verificationCode': 'Код подтверждения',
-  'pages.user.center.security.enterCode': 'Пожалуйста, введите код подтверждения',
+  'pages.user.center.security.enterCode':
+    'Пожалуйста, введите код подтверждения',
   'pages.user.center.security.verifyAndEnable': 'Подтвердить и включить',
   'pages.user.center.security.enableSuccess': '2FA успешно включена',
   'pages.user.center.security.enableFailed': 'Не удалось включить 2FA',
@@ -567,36 +641,51 @@ export default {
   'pages.user.center.security.passwordNotSet': 'Не установлен',
   'pages.user.center.security.changePassword': 'Изменить пароль',
   'pages.user.center.security.currentPassword': 'Текущий пароль',
-  'pages.user.center.security.enterCurrentPassword': 'Пожалуйста, введите текущий пароль',
+  'pages.user.center.security.enterCurrentPassword':
+    'Пожалуйста, введите текущий пароль',
   'pages.user.center.security.newPassword': 'Новый пароль',
-  'pages.user.center.security.enterNewPassword': 'Пожалуйста, введите новый пароль (минимум 6 символов)',
+  'pages.user.center.security.enterNewPassword':
+    'Пожалуйста, введите новый пароль (минимум 6 символов)',
   'pages.user.center.security.confirmNewPassword': 'Подтвердите новый пароль',
-  'pages.user.center.security.confirmNewPasswordPlaceholder': 'Пожалуйста, введите новый пароль еще раз',
-  'pages.user.center.security.passwordMinLength': 'Пароль должен содержать минимум 6 символов',
+  'pages.user.center.security.confirmNewPasswordPlaceholder':
+    'Пожалуйста, введите новый пароль еще раз',
+  'pages.user.center.security.passwordMinLength':
+    'Пароль должен содержать минимум 6 символов',
   'pages.user.center.security.passwordMismatch': 'Пароли не совпадают',
   'pages.user.center.security.changePasswordSuccess': 'Пароль успешно изменен',
-  'pages.user.center.security.changePasswordFailed': 'Не удалось изменить пароль',
-  'pages.user.center.security.thirdPartyUser': 'Пользователи, вошедшие через сторонние сервисы, не могут изменить пароль',
-  'pages.user.center.security.noPasswordUser': 'Для этой учетной записи не установлен пароль',
+  'pages.user.center.security.changePasswordFailed':
+    'Не удалось изменить пароль',
+  'pages.user.center.security.thirdPartyUser':
+    'Пользователи, вошедшие через сторонние сервисы, не могут изменить пароль',
+  'pages.user.center.security.noPasswordUser':
+    'Для этой учетной записи не установлен пароль',
   'pages.user.center.security.passkey.title': 'Управление Passkey',
   'pages.user.center.security.passkey.register': 'Зарегистрировать Passkey',
-  'pages.user.center.security.passkey.registerSuccess': 'Passkey успешно зарегистрирован',
-  'pages.user.center.security.passkey.registerFailed': 'Не удалось зарегистрировать Passkey',
+  'pages.user.center.security.passkey.registerSuccess':
+    'Passkey успешно зарегистрирован',
+  'pages.user.center.security.passkey.registerFailed':
+    'Не удалось зарегистрировать Passkey',
   'pages.user.center.security.passkey.deleteSuccess': 'Passkey успешно удален',
-  'pages.user.center.security.passkey.deleteFailed': 'Не удалось удалить Passkey',
-  'pages.user.center.security.passkey.deleteConfirm': 'Вы уверены, что хотите удалить этот Passkey?',
+  'pages.user.center.security.passkey.deleteFailed':
+    'Не удалось удалить Passkey',
+  'pages.user.center.security.passkey.deleteConfirm':
+    'Вы уверены, что хотите удалить этот Passkey?',
   'pages.user.center.security.passkey.name': 'Название',
-  'pages.user.center.security.passkey.namePlaceholder': 'например, MacBook Touch ID',
+  'pages.user.center.security.passkey.namePlaceholder':
+    'например, MacBook Touch ID',
   'pages.user.center.security.passkey.namePasskey': 'Назовите ваш Passkey',
   'pages.user.center.security.passkey.deviceType': 'Тип устройства',
   'pages.user.center.security.passkey.multiDevice': 'Мультиустройство',
   'pages.user.center.security.passkey.singleDevice': 'Одно устройство',
   'pages.user.center.security.passkey.createdAt': 'Дата создания',
-  'pages.user.center.security.passkey.noCredentials': 'Passkey не зарегистрированы',
+  'pages.user.center.security.passkey.noCredentials':
+    'Passkey не зарегистрированы',
   'pages.user.center.security.passkey.tfaStatus': 'TFA через Passkey',
   'pages.user.center.security.passkey.tfaEnabled': 'TFA через Passkey включена',
-  'pages.user.center.security.passkey.tfaDisabled': 'TFA через Passkey отключена',
-  'pages.user.center.security.passkey.tfaToggleFailed': 'Не удалось изменить состояние TFA через Passkey',
+  'pages.user.center.security.passkey.tfaDisabled':
+    'TFA через Passkey отключена',
+  'pages.user.center.security.passkey.tfaToggleFailed':
+    'Не удалось изменить состояние TFA через Passkey',
   'pages.user.center.security.sessions.title': 'Сессии входа',
   'pages.user.center.security.sessions.device': 'Устройство',
   'pages.user.center.security.sessions.type': 'Тип',
@@ -607,41 +696,58 @@ export default {
   'pages.user.center.security.sessions.expiresAt': 'Истекает',
   'pages.user.center.security.sessions.current': 'Текущая',
   'pages.user.center.security.sessions.revoke': 'Отозвать',
-  'pages.user.center.security.sessions.revokeConfirm': 'Вы уверены, что хотите отозвать эту сессию?',
-  'pages.user.center.security.sessions.revokeSuccess': 'Сессия успешно отозвана',
-  'pages.user.center.security.sessions.revokeFailed': 'Не удалось отозвать сессию',
-  'pages.user.center.security.sessions.cannotRevokeCurrent': 'Нельзя отозвать текущую сессию',
+  'pages.user.center.security.sessions.revokeConfirm':
+    'Вы уверены, что хотите отозвать эту сессию?',
+  'pages.user.center.security.sessions.revokeSuccess':
+    'Сессия успешно отозвана',
+  'pages.user.center.security.sessions.revokeFailed':
+    'Не удалось отозвать сессию',
+  'pages.user.center.security.sessions.cannotRevokeCurrent':
+    'Нельзя отозвать текущую сессию',
   'pages.user.center.security.sessions.noSessions': 'Нет активных сессий',
   'pages.ldap.title': 'Настройки LDAP',
-  'pages.ldap.description': 'Настройте аутентификацию через LDAP/Active Directory. При включении пользователи будут автоматически проходить аутентификацию через LDAP.',
+  'pages.ldap.description':
+    'Настройте аутентификацию через LDAP/Active Directory. При включении пользователи будут автоматически проходить аутентификацию через LDAP.',
   'pages.ldap.urls': 'URL серверов',
-  'pages.ldap.urlsRequired': 'Пожалуйста, введите хотя бы один URL LDAP-сервера',
+  'pages.ldap.urlsRequired':
+    'Пожалуйста, введите хотя бы один URL LDAP-сервера',
   'pages.ldap.urlPlaceholder': 'например, ldaps://ad.example.com:636',
   'pages.ldap.addUrl': 'Добавить URL сервера',
   'pages.ldap.bindDN': 'Bind DN',
-  'pages.ldap.bindDNRequired': 'Пожалуйста, введите Bind DN служебной учетной записи',
-  'pages.ldap.bindDNPlaceholder': 'например, CN=svc-ldap,OU=ServiceAccounts,DC=example,DC=com',
+  'pages.ldap.bindDNRequired':
+    'Пожалуйста, введите Bind DN служебной учетной записи',
+  'pages.ldap.bindDNPlaceholder':
+    'например, CN=svc-ldap,OU=ServiceAccounts,DC=example,DC=com',
   'pages.ldap.bindCredentials': 'Пароль для Bind',
-  'pages.ldap.bindCredentialsRequired': 'Пожалуйста, введите пароль служебной учетной записи',
-  'pages.ldap.bindCredentialsPlaceholder': 'Введите пароль служебной учетной записи',
+  'pages.ldap.bindCredentialsRequired':
+    'Пожалуйста, введите пароль служебной учетной записи',
+  'pages.ldap.bindCredentialsPlaceholder':
+    'Введите пароль служебной учетной записи',
   'pages.ldap.searchBase': 'Базовый DN для поиска',
   'pages.ldap.searchBaseRequired': 'Пожалуйста, введите базовый DN для поиска',
   'pages.ldap.searchBasePlaceholder': 'например, DC=example,DC=com',
   'pages.ldap.searchFilter': 'Фильтр поиска',
   'pages.ldap.searchFilterRequired': 'Пожалуйста, введите фильтр поиска',
-  'pages.ldap.searchFilterHelp': 'Используйте {{username}} как плейсхолдер имени пользователя. AD: (sAMAccountName={{username}}), OpenLDAP: (uid={{username}})',
-  'pages.ldap.searchFilterPlaceholder': 'например, (sAMAccountName={{username}})',
+  'pages.ldap.searchFilterHelp':
+    'Используйте {{username}} как плейсхолдер имени пользователя. AD: (sAMAccountName={{username}}), OpenLDAP: (uid={{username}})',
+  'pages.ldap.searchFilterPlaceholder':
+    'например, (sAMAccountName={{username}})',
   'pages.ldap.searchAttributes': 'Атрибуты поиска',
-  'pages.ldap.searchAttributePlaceholder': 'например, dn, sAMAccountName, mail, displayName',
+  'pages.ldap.searchAttributePlaceholder':
+    'например, dn, sAMAccountName, mail, displayName',
   'pages.ldap.addAttribute': 'Добавить атрибут',
   'pages.ldap.groupSearchBase': 'Базовый DN для поиска групп',
-  'pages.ldap.groupSearchBasePlaceholder': 'например, OU=Groups,DC=example,DC=com',
+  'pages.ldap.groupSearchBasePlaceholder':
+    'например, OU=Groups,DC=example,DC=com',
   'pages.ldap.groupSearchFilter': 'Фильтр поиска групп',
-  'pages.ldap.groupSearchFilterHelp': 'Используйте {{dn}} как плейсхолдер DN пользователя. например, (member={{dn}})',
+  'pages.ldap.groupSearchFilterHelp':
+    'Используйте {{dn}} как плейсхолдер DN пользователя. например, (member={{dn}})',
   'pages.ldap.groupSearchFilterPlaceholder': 'например, (member={{dn}})',
   'pages.ldap.adminGroups': 'Группы администраторов',
-  'pages.ldap.adminGroupsHelp': 'Пользователи из этих групп LDAP будут назначены администраторами (регистр не учитывается)',
-  'pages.ldap.adminGroupPlaceholder': 'например, CN=Admins,OU=Groups,DC=example,DC=com',
+  'pages.ldap.adminGroupsHelp':
+    'Пользователи из этих групп LDAP будут назначены администраторами (регистр не учитывается)',
+  'pages.ldap.adminGroupPlaceholder':
+    'например, CN=Admins,OU=Groups,DC=example,DC=com',
   'pages.ldap.addAdminGroup': 'Добавить группу администраторов',
   'pages.ldap.tlsOptions': 'Настройки TLS',
   'pages.ldap.tlsCa': 'Сертификат CA (PEM)',
@@ -653,7 +759,8 @@ export default {
   'pages.ldap.tlsServername': 'Имя сервера SNI',
   'pages.ldap.tlsServernamePlaceholder': 'Server Name Indication для TLS',
   'pages.ldap.enabled': 'Включить аутентификацию LDAP',
-  'pages.ldap.enabledHelp': 'При включении пользователи будут проходить аутентификацию через LDAP-сервер. Существующие пользователи, привязанные к LDAP, всегда используют LDAP-аутентификацию независимо от этой настройки.',
+  'pages.ldap.enabledHelp':
+    'При включении пользователи будут проходить аутентификацию через LDAP-сервер. Существующие пользователи, привязанные к LDAP, всегда используют LDAP-аутентификацию независимо от этой настройки.',
   'pages.ldap.testConnection': 'Проверить подключение',
   'pages.ldap.testSuccess': 'Проверка LDAP-подключения выполнена успешно',
   'pages.ldap.testFailed': 'Ошибка проверки LDAP-подключения',
@@ -662,7 +769,8 @@ export default {
   'pages.ldap.createdAt': 'Дата создания',
   'pages.ldap.updatedAt': 'Дата обновления',
   'pages.nexus.repoRequired': 'Требуется взаимодействие с репозиторием',
-  'pages.nexus.repoRequiredDesc': 'Вам необходимо поставить Star, Fork или Watch на репозиторий databk/rustdesk-console на GitHub перед генерацией пользовательских клиентов. Обновление кеша может занять до 5 минут.',
+  'pages.nexus.repoRequiredDesc':
+    'Вам необходимо поставить Star, Fork или Watch на репозиторий databk/rustdesk-console на GitHub перед генерацией пользовательских клиентов. Обновление кеша может занять до 5 минут.',
   'pages.nexus.goToRepo': 'Перейти в репозиторий GitHub',
   'pages.nexus.buildList': 'История сборок',
   'pages.nexus.createBuild': 'Создать новый клиент',
@@ -685,7 +793,8 @@ export default {
   'pages.nexus.apiServer': 'API-сервер',
   'pages.nexus.overrideSettings': 'Переопределить настройки',
   'pages.nexus.defaultSettings': 'Настройки по умолчанию',
-  'pages.nexus.deleteBuildConfirm': 'Вы уверены, что хотите удалить эту запись сборки?',
+  'pages.nexus.deleteBuildConfirm':
+    'Вы уверены, что хотите удалить эту запись сборки?',
   'pages.nexus.deleteSuccess': 'Запись сборки удалена',
   'pages.nexus.deleteFailed': 'Не удалось удалить запись сборки',
   'pages.nexus.uuid': 'UUID',
@@ -698,17 +807,21 @@ export default {
   'pages.nexus.bindFailed': 'Не удалось привязать учетную запись GitHub',
   'pages.nexus.createLoginFailed': 'Не удалось создать сессию входа',
   'pages.nexus.unbindConfirm': 'Отвязать учетную запись GitHub',
-  'pages.nexus.unbindConfirmContent': 'Вы уверены, что хотите отвязать учетную запись GitHub? Для генерации пользовательских клиентов потребуется повторная привязка.',
+  'pages.nexus.unbindConfirmContent':
+    'Вы уверены, что хотите отвязать учетную запись GitHub? Для генерации пользовательских клиентов потребуется повторная привязка.',
   'pages.nexus.unbindSuccess': 'Учетная запись GitHub отвязана',
   'pages.nexus.unbindFailed': 'Не удалось отвязать учетную запись GitHub',
   'pages.nexus.tokenExpired': 'Токен GitHub истек',
-  'pages.nexus.tokenExpiredDesc': 'Ваш токен GitHub для {username} истек. Пожалуйста, привяжите учетную запись заново.',
+  'pages.nexus.tokenExpiredDesc':
+    'Ваш токен GitHub для {username} истек. Пожалуйста, привяжите учетную запись заново.',
   'pages.nexus.rebind': 'Привязать учетную запись GitHub заново',
   'pages.nexus.bindTitle': 'Привязка учетной записи GitHub',
-  'pages.nexus.bindDesc': 'Для генерации пользовательских клиентов необходимо привязать учетную запись GitHub. Нажмите кнопку ниже для авторизации через GitHub.',
+  'pages.nexus.bindDesc':
+    'Для генерации пользовательских клиентов необходимо привязать учетную запись GitHub. Нажмите кнопку ниже для авторизации через GitHub.',
   'pages.nexus.bindGithub': 'Авторизоваться через GitHub',
   'pages.nexus.unbind': 'Отвязать',
-  'pages.nexus.repoInteractionRequired': 'Пожалуйста, поставьте Star, Fork или Watch на репозиторий databk/rustdesk-console на GitHub. Обновление кеша может занять до 5 минут.',
+  'pages.nexus.repoInteractionRequired':
+    'Пожалуйста, поставьте Star, Fork или Watch на репозиторий databk/rustdesk-console на GitHub. Обновление кеша может занять до 5 минут.',
   'pages.nexus.buildAlreadyRunning': 'У вас уже есть сборка в процессе',
   'pages.nexus.generateFailed': 'Не удалось отправить запрос на сборку',
   'pages.nexus.retryBuild': 'Повторить',
@@ -721,6 +834,8 @@ export default {
   'pages.nexus.statusCompleted': 'Сборка завершена',
   'pages.nexus.statusFailed': 'Ошибка сборки',
   'pages.nexus.statusCancelled': 'Сборка отменена',
-  'pages.nexus.bindWhyLogin': 'Аутентификация через GitHub помогает нам убедиться, что вы реальный пользователь, предотвращая автоматическое злоупотребление ресурсами сборки. Мы запрашиваем только ваши публичные данные — никакого доступа к вашим репозиториям, личным данным или другим разрешениям не требуется.',
-  'pages.nexus.repoWhyInteract': 'Я старшеклассник, разрабатывающий этот проект в свободное время. Ваши Star, Fork или Watch очень много значат для меня — это не только мотивирует меня, но и помогает с поступлением в колледж. Это единственное, что я прошу взамен. Большое спасибо за вашу поддержку!',
+  'pages.nexus.bindWhyLogin':
+    'Аутентификация через GitHub помогает нам убедиться, что вы реальный пользователь, предотвращая автоматическое злоупотребление ресурсами сборки. Мы запрашиваем только ваши публичные данные — никакого доступа к вашим репозиториям, личным данным или другим разрешениям не требуется.',
+  'pages.nexus.repoWhyInteract':
+    'Я старшеклассник, разрабатывающий этот проект в свободное время. Ваши Star, Fork или Watch очень много значат для меня — это не только мотивирует меня, но и помогает с поступлением в колледж. Это единственное, что я прошу взамен. Большое спасибо за вашу поддержку!',
 };
