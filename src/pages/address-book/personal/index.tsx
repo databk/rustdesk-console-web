@@ -88,8 +88,8 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
       setAbLoading(true);
       try {
         const [personal, customProfiles] = await Promise.all([
-          getPersonalAddressBook(),
-          getAllCustomAddressBooks(),
+          getPersonalAddressBook({ skipErrorHandler: true }),
+          getAllCustomAddressBooks({ skipErrorHandler: true }),
         ]);
         const profiles: API.AddressBookProfile[] = [
           {

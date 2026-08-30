@@ -18,5 +18,6 @@ export async function updateGeneralSettings(data: API.GeneralSettings) {
   return request<API.GeneralSettings>('/api/settings/general', {
     method: 'PUT',
     data,
+    skipErrorHandler: true,
   });
 }

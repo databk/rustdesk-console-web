@@ -20,15 +20,26 @@ export async function getCustomClientList(
 }
 
 export async function createCustomClient(data: API.CreateCustomClientParams) {
-  return request<API.CustomClientItem>('/api/custom-clients', { method: 'POST', data });
+  return request<API.CustomClientItem>('/api/custom-clients', {
+    method: 'POST',
+    data,
+    skipErrorHandler: true,
+  });
 }
 
 export async function updateCustomClient(guid: string, data: API.UpdateCustomClientParams) {
-  return request<API.CustomClientItem>(`/api/custom-clients/${guid}`, { method: 'PUT', data });
+  return request<API.CustomClientItem>(`/api/custom-clients/${guid}`, {
+    method: 'PUT',
+    data,
+    skipErrorHandler: true,
+  });
 }
 
 export async function deleteCustomClient(guid: string) {
-  return request(`/api/custom-clients/${guid}`, { method: 'DELETE' });
+  return request(`/api/custom-clients/${guid}`, {
+    method: 'DELETE',
+    skipErrorHandler: true,
+  });
 }
 
 export async function downloadCustomClient(guid: string, options?: { [key: string]: any }) {

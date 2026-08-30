@@ -38,7 +38,7 @@ const OidcProviderList: React.FC = () => {
     async (name?: string) => {
       setLoading(true);
       try {
-        const result = await getOidcProviderList({ name });
+        const result = await getOidcProviderList({ name }, { skipErrorHandler: true });
         setDataSource(result.data || []);
       } catch (_error) {
         msgApi.error(
@@ -83,7 +83,7 @@ const OidcProviderList: React.FC = () => {
 
   const handleEdit = async (record: API.OidcProvider) => {
     try {
-      const detail = await getOidcProvider(record.guid);
+      const detail = await getOidcProvider(record.guid, { skipErrorHandler: true });
       setCurrentRecord(detail);
       setEditModalVisible(true);
     } catch (_error) {

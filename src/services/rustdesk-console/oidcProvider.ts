@@ -33,6 +33,7 @@ export async function createOidcProvider(data: API.CreateOidcProviderParams) {
   return request<API.OidcProvider>('/api/oidc-providers', {
     method: 'POST',
     data,
+    skipErrorHandler: true,
   });
 }
 
@@ -43,11 +44,15 @@ export async function updateOidcProvider(
   return request<API.OidcProvider>(`/api/oidc-providers/${guid}`, {
     method: 'PATCH',
     data,
+    skipErrorHandler: true,
   });
 }
 
 export async function deleteOidcProvider(guid: string) {
-  return request(`/api/oidc-providers/${guid}`, { method: 'DELETE' });
+  return request(`/api/oidc-providers/${guid}`, {
+    method: 'DELETE',
+    skipErrorHandler: true,
+  });
 }
 
 export async function toggleOidcProvider(
@@ -57,12 +62,14 @@ export async function toggleOidcProvider(
   return request<API.OidcProvider>(`/api/oidc-providers/${guid}/toggle`, {
     method: 'PATCH',
     data,
+    skipErrorHandler: true,
   });
 }
 
 export async function testOidcProvider(guid: string) {
   return request<API.OidcTestResult>(`/api/oidc-providers/${guid}/test`, {
     method: 'POST',
+    skipErrorHandler: true,
   });
 }
 
@@ -70,5 +77,6 @@ export async function sortOidcProviderList(guids: string[]) {
   return request('/api/oidc-providers/sort', {
     method: 'PATCH',
     data: guids,
+    skipErrorHandler: true,
   });
 }

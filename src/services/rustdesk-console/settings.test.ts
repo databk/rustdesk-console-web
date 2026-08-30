@@ -42,5 +42,6 @@ test('uses the admin general-settings API contract', async () => {
   expect(requestMock).toHaveBeenNthCalledWith(2, '/api/settings/general', {
     method: 'PUT',
     data: settings,
+    skipErrorHandler: true,
   });
 });

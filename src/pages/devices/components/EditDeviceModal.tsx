@@ -47,9 +47,9 @@ const EditDeviceModal: React.FC<EditDeviceModalProps> = ({
   const fetchOptions = async () => {
     try {
       const [usersRes, groupsRes, strategiesRes] = await Promise.all([
-        getAdminUserList({ current: 1, pageSize: 1000 }),
-        getDeviceGroupList({ current: 1, pageSize: 1000 }),
-        getStrategyList({ current: 1, pageSize: 1000 }),
+        getAdminUserList({ current: 1, pageSize: 1000 }, { skipErrorHandler: true }),
+        getDeviceGroupList({ current: 1, pageSize: 1000 }, { skipErrorHandler: true }),
+        getStrategyList({ current: 1, pageSize: 1000 }, { skipErrorHandler: true }),
       ]);
       setUserOptions(
         (usersRes.data || []).map((u) => ({ label: u.name, value: u.name })),

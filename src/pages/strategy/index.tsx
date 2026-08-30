@@ -57,7 +57,7 @@ const StrategyList: React.FC = () => {
 
   const handleEdit = async (record: API.StrategyItem) => {
     try {
-      const detail = await getStrategy(record.guid);
+      const detail = await getStrategy(record.guid, { skipErrorHandler: true });
       setCurrentRecord(detail);
       setEditModalVisible(true);
     } catch {
