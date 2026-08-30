@@ -1,6 +1,6 @@
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { ModalForm } from '@ant-design/pro-components';
-import { FormattedMessage, useIntl } from '@umijs/max';
+import { FormattedMessage, useAccess, useIntl } from '@umijs/max';
 import {
   App,
   Button,
@@ -16,7 +16,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import {
   assignStrategy,
   getDeviceGroupList,
-  getDeviceList,
+  getAdminDeviceList,
   getAdminUserList,
   getStrategyAssignments,
   unassignStrategy,
@@ -77,6 +77,7 @@ const AssignModal: React.FC<AssignModalProps> = ({
   onSuccess,
 }) => {
   const intl = useIntl();
+  const access = useAccess();
   const { message: msgApi } = App.useApp();
   const [targetType, setTargetType] = useState<TargetType>('device');
   const [selectedGuids, setSelectedGuids] = useState<string[]>([]);
@@ -164,12 +165,23 @@ const AssignModal: React.FC<AssignModalProps> = ({
 
   useEffect(() => {
     if (!open) return;
+    if (targetType === 'device' && !access.canDevicesView) {
+      setTargetType(access.canUsersView ? 'user' : 'device_group');
+      return;
+    }
+    if (targetType === 'user' && !access.canUsersView) {
+      setTargetType(access.canDevicesView ? 'device' : 'device_group');
+      return;
+    }
     setOptionsLoading(true);
     const loadOptions = async () => {
       try {
         switch (targetType) {
           case 'device': {
-            const result = await getDeviceList({ current: 1, pageSize: 200 });
+            const result = await getAdminDeviceList({
+              current: 1,
+              pageSize: 200,
+            });
             setDeviceList(result.data || []);
             break;
           }
@@ -202,7 +214,14 @@ const AssignModal: React.FC<AssignModalProps> = ({
       }
     };
     loadOptions();
-  }, [open, targetType]);
+  }, [
+    access.canDevicesView,
+    access.canUsersView,
+    intl,
+    msgApi,
+    open,
+    targetType,
+  ]);
 
   const handleAssign = async () => {
     if (!record || selectedGuids.length === 0) return;
@@ -434,7 +453,12 @@ const AssignModal: React.FC<AssignModalProps> = ({
           />
         </div>
         <Radio.Group
-          options={targetTypeOptions}
+          options={targetTypeOptions.map((option) => ({
+            ...option,
+            disabled:
+              (option.value === 'device' && !access.canDevicesView) ||
+              (option.value === 'user' && !access.canUsersView),
+          }))}
           value={targetType}
           onChange={(e) => {
             setTargetType(e.target.value);

@@ -11,7 +11,7 @@ import {
 } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { FormattedMessage, useIntl, useModel } from '@umijs/max';
+import { FormattedMessage, useAccess, useIntl, useModel } from '@umijs/max';
 import {
   App,
   Button,
@@ -39,11 +39,13 @@ import {
   updateUserSecurity,
 } from '@/services/rustdesk-console/user';
 import { getAllUserGroups } from '@/services/rustdesk-console/userGroup';
+import UserRolesModal from './components/UserRolesModal';
 
 const UserList: React.FC = () => {
   const intl = useIntl();
   const { message: msgApi } = App.useApp();
   const { initialState } = useModel('@@initialState');
+  const access = useAccess();
   const currentUser = initialState?.currentUser;
   const actionRef = useRef<ActionType>(null);
 
@@ -52,6 +54,7 @@ const UserList: React.FC = () => {
   const [inviteModalVisible, setInviteModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [securityModalVisible, setSecurityModalVisible] = useState(false);
+  const [rolesModalVisible, setRolesModalVisible] = useState(false);
 
   // Form instances
   const [createForm] = Form.useForm();
@@ -70,7 +73,13 @@ const UserList: React.FC = () => {
   // Current user being edited
   const [editingUser, setEditingUser] = useState<API.UserItem | null>(null);
 
+  const openRolesModal = (record: API.UserItem) => {
+    setEditingUser(record);
+    setRolesModalVisible(true);
+  };
+
   const loadUserGroups = async () => {
+    if (!access.canUserGroupsView || !access.canUserGroupsMembership) return [];
     if (userGroups.length > 0) return userGroups;
     setUserGroupsLoading(true);
     try {
@@ -374,8 +383,8 @@ const UserList: React.FC = () => {
       display_name: record.display_name,
       email: record.email,
       note: record.note,
-      status: record.status,
-      is_admin: record.is_admin,
+      status: access.canUsersStatus ? record.status : undefined,
+      is_admin: access.isSuperAdmin ? record.is_admin : undefined,
     });
     setEditModalVisible(true);
   };
@@ -564,68 +573,87 @@ const UserList: React.FC = () => {
         <FormattedMessage id="pages.common.action" defaultMessage="Action" />
       ),
       valueType: 'option',
-      width: 220,
+      width: 360,
       fixed: 'right',
       render: (_: unknown, record: API.UserItem) => (
         <Space size={0} split={<Divider type="vertical" />}>
-          <Button
-            key="edit"
-            type="link"
-            size="small"
-            icon={<EditOutlined />}
-            onClick={() => openEditModal(record)}
-          >
-            <FormattedMessage id="pages.common.edit" defaultMessage="Edit" />
-          </Button>
-          <Button
-            key="security"
-            type="link"
-            size="small"
-            icon={<SafetyOutlined />}
-            onClick={() => openSecurityModal(record)}
-          >
-            <FormattedMessage
-              id="pages.users.security"
-              defaultMessage="Security"
-            />
-          </Button>
-          <Button
-            key="logout"
-            type="link"
-            size="small"
-            icon={<LogoutOutlined />}
-            onClick={() => handleForceLogout(record.guid)}
-          >
-            <FormattedMessage
-              id="pages.users.forceLogout"
-              defaultMessage="Logout"
-            />
-          </Button>
-          <Popconfirm
-            key="delete"
-            title={
+          {access.canUsersEdit && (
+            <Button
+              key="edit"
+              type="link"
+              size="small"
+              icon={<EditOutlined />}
+              onClick={() => openEditModal(record)}
+            >
+              <FormattedMessage id="pages.common.edit" defaultMessage="Edit" />
+            </Button>
+          )}
+          {access.isSuperAdmin && (
+            <Button
+              key="roles"
+              type="link"
+              size="small"
+              icon={<TeamOutlined />}
+              onClick={() => openRolesModal(record)}
+            >
+              <FormattedMessage id="pages.users.roles" defaultMessage="Roles" />
+            </Button>
+          )}
+          {access.canUsersSecurity && (
+            <Button
+              key="security"
+              type="link"
+              size="small"
+              icon={<SafetyOutlined />}
+              onClick={() => openSecurityModal(record)}
+            >
               <FormattedMessage
-                id="pages.users.deleteConfirm"
-                defaultMessage="Are you sure to delete this user?"
-              />
-            }
-            onConfirm={() => handleDelete(record.guid)}
-            okText={intl.formatMessage({
-              id: 'pages.common.confirm',
-              defaultMessage: 'Yes',
-            })}
-            cancelText={intl.formatMessage({
-              id: 'pages.common.cancel',
-              defaultMessage: 'No',
-            })}
-          >
-            <Button type="link" size="small" danger icon={<DeleteOutlined />}>
-              <FormattedMessage
-                id="pages.common.delete"
-                defaultMessage="Delete"
+                id="pages.users.security"
+                defaultMessage="Security"
               />
             </Button>
-          </Popconfirm>
+          )}
+          {access.canUsersForceLogout && (
+            <Button
+              key="logout"
+              type="link"
+              size="small"
+              icon={<LogoutOutlined />}
+              onClick={() => handleForceLogout(record.guid)}
+            >
+              <FormattedMessage
+                id="pages.users.forceLogout"
+                defaultMessage="Logout"
+              />
+            </Button>
+          )}
+          {access.canUsersDelete && (
+            <Popconfirm
+              key="delete"
+              title={
+                <FormattedMessage
+                  id="pages.users.deleteConfirm"
+                  defaultMessage="Are you sure to delete this user?"
+                />
+              }
+              onConfirm={() => handleDelete(record.guid)}
+              okText={intl.formatMessage({
+                id: 'pages.common.confirm',
+                defaultMessage: 'Yes',
+              })}
+              cancelText={intl.formatMessage({
+                id: 'pages.common.cancel',
+                defaultMessage: 'No',
+              })}
+            >
+              <Button type="link" size="small" danger icon={<DeleteOutlined />}>
+                <FormattedMessage
+                  id="pages.common.delete"
+                  defaultMessage="Delete"
+                />
+              </Button>
+            </Popconfirm>
+          )}
         </Space>
       ),
     },
@@ -660,102 +688,112 @@ const UserList: React.FC = () => {
         }}
         actionRef={actionRef}
         rowKey="guid"
-        rowSelection={{
-          selectedRowKeys,
-          onChange: (keys, rows) => {
-            setSelectedRowKeys(keys);
-            setSelectedRows(rows);
-          },
-        }}
+        rowSelection={
+          access.canUsersStatus || access.canUsersForceLogout
+            ? {
+                selectedRowKeys,
+                onChange: (keys, rows) => {
+                  setSelectedRowKeys(keys);
+                  setSelectedRows(rows);
+                },
+              }
+            : undefined
+        }
         tableAlertOptionRender={() => (
           <Space size={16}>
-            <Popconfirm
-              title={
-                <FormattedMessage
-                  id="pages.users.batchEnableConfirm"
-                  defaultMessage="Are you sure to enable selected users?"
-                />
-              }
-              onConfirm={handleBatchEnable}
-              okText={intl.formatMessage({
-                id: 'pages.common.confirm',
-                defaultMessage: 'Yes',
-              })}
-              cancelText={intl.formatMessage({
-                id: 'pages.common.cancel',
-                defaultMessage: 'No',
-              })}
-            >
-              <Button
-                type="link"
-                icon={<PlusCircleOutlined />}
-                loading={batchStatusUpdating}
-                style={{ padding: 0 }}
+            {access.canUsersStatus && (
+              <>
+                <Popconfirm
+                  title={
+                    <FormattedMessage
+                      id="pages.users.batchEnableConfirm"
+                      defaultMessage="Are you sure to enable selected users?"
+                    />
+                  }
+                  onConfirm={handleBatchEnable}
+                  okText={intl.formatMessage({
+                    id: 'pages.common.confirm',
+                    defaultMessage: 'Yes',
+                  })}
+                  cancelText={intl.formatMessage({
+                    id: 'pages.common.cancel',
+                    defaultMessage: 'No',
+                  })}
+                >
+                  <Button
+                    type="link"
+                    icon={<PlusCircleOutlined />}
+                    loading={batchStatusUpdating}
+                    style={{ padding: 0 }}
+                  >
+                    <FormattedMessage
+                      id="pages.users.batchEnable"
+                      defaultMessage="Batch Enable"
+                    />
+                  </Button>
+                </Popconfirm>
+                <Popconfirm
+                  title={
+                    <FormattedMessage
+                      id="pages.users.batchDisableConfirm"
+                      defaultMessage="Are you sure to disable selected users?"
+                    />
+                  }
+                  onConfirm={handleBatchDisable}
+                  okText={intl.formatMessage({
+                    id: 'pages.common.confirm',
+                    defaultMessage: 'Yes',
+                  })}
+                  cancelText={intl.formatMessage({
+                    id: 'pages.common.cancel',
+                    defaultMessage: 'No',
+                  })}
+                >
+                  <Button
+                    type="link"
+                    icon={<MinusCircleOutlined />}
+                    loading={batchStatusUpdating}
+                    style={{ padding: 0 }}
+                  >
+                    <FormattedMessage
+                      id="pages.users.batchDisable"
+                      defaultMessage="Batch Disable"
+                    />
+                  </Button>
+                </Popconfirm>
+              </>
+            )}
+            {access.canUsersForceLogout && (
+              <Popconfirm
+                title={
+                  <FormattedMessage
+                    id="pages.users.batchForceLogoutConfirm"
+                    defaultMessage="Are you sure to force logout selected users?"
+                  />
+                }
+                onConfirm={handleBatchForceLogout}
+                okText={intl.formatMessage({
+                  id: 'pages.common.confirm',
+                  defaultMessage: 'Yes',
+                })}
+                cancelText={intl.formatMessage({
+                  id: 'pages.common.cancel',
+                  defaultMessage: 'No',
+                })}
               >
-                <FormattedMessage
-                  id="pages.users.batchEnable"
-                  defaultMessage="Batch Enable"
-                />
-              </Button>
-            </Popconfirm>
-            <Popconfirm
-              title={
-                <FormattedMessage
-                  id="pages.users.batchDisableConfirm"
-                  defaultMessage="Are you sure to disable selected users?"
-                />
-              }
-              onConfirm={handleBatchDisable}
-              okText={intl.formatMessage({
-                id: 'pages.common.confirm',
-                defaultMessage: 'Yes',
-              })}
-              cancelText={intl.formatMessage({
-                id: 'pages.common.cancel',
-                defaultMessage: 'No',
-              })}
-            >
-              <Button
-                type="link"
-                icon={<MinusCircleOutlined />}
-                loading={batchStatusUpdating}
-                style={{ padding: 0 }}
-              >
-                <FormattedMessage
-                  id="pages.users.batchDisable"
-                  defaultMessage="Batch Disable"
-                />
-              </Button>
-            </Popconfirm>
-            <Popconfirm
-              title={
-                <FormattedMessage
-                  id="pages.users.batchForceLogoutConfirm"
-                  defaultMessage="Are you sure to force logout selected users?"
-                />
-              }
-              onConfirm={handleBatchForceLogout}
-              okText={intl.formatMessage({
-                id: 'pages.common.confirm',
-                defaultMessage: 'Yes',
-              })}
-              cancelText={intl.formatMessage({
-                id: 'pages.common.cancel',
-                defaultMessage: 'No',
-              })}
-            >
-              <Button
-                type="link"
-                icon={<LogoutOutlined />}
-                loading={batchForceLoggingOut}
-                style={{ padding: 0 }}
-              >
-                <FormattedMessage
-                  id="pages.users.batchForceLogout"
-                  defaultMessage="Batch Force Logout"
-                />
-              </Button>
-            </Popconfirm>
+                <Button
+                  type="link"
+                  icon={<LogoutOutlined />}
+                  loading={batchForceLoggingOut}
+                  style={{ padding: 0 }}
+                >
+                  <FormattedMessage
+                    id="pages.users.batchForceLogout"
+                    defaultMessage="Batch Force Logout"
+                  />
+                </Button>
+              </Popconfirm>
+            )}
           </Space>
         )}
         request={async (params) => {
@@ -789,24 +827,34 @@ const UserList: React.FC = () => {
           showSizeChanger: true,
           showQuickJumper: true,
         }}
-        scroll={{ x: 1540 }}
-        toolBarRender={() => [
-          <Button
-            key="create"
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={openCreateModal}
-          >
-            <FormattedMessage id="pages.users.create" defaultMessage="Create" />
-          </Button>,
-          <Button
-            key="invite"
-            icon={<PlusOutlined />}
-            onClick={openInviteModal}
-          >
-            <FormattedMessage id="pages.users.invite" defaultMessage="Invite" />
-          </Button>,
-        ]}
+        scroll={{ x: 1680 }}
+        toolBarRender={() =>
+          access.canUsersCreate
+            ? [
+                <Button
+                  key="create"
+                  type="primary"
+                  icon={<PlusOutlined />}
+                  onClick={openCreateModal}
+                >
+                  <FormattedMessage
+                    id="pages.users.create"
+                    defaultMessage="Create"
+                  />
+                </Button>,
+                <Button
+                  key="invite"
+                  icon={<PlusOutlined />}
+                  onClick={openInviteModal}
+                >
+                  <FormattedMessage
+                    id="pages.users.invite"
+                    defaultMessage="Invite"
+                  />
+                </Button>,
+              ]
+            : []
+        }
         options={{
           density: true,
           setting: {
@@ -906,30 +954,32 @@ const UserList: React.FC = () => {
           >
             <Input.TextArea />
           </Form.Item>
-          <Form.Item
-            name="user_group_guid"
-            label={
-              <FormattedMessage
-                id="pages.users.userGroup"
-                defaultMessage="User Group"
+          {access.canUserGroupsView && access.canUserGroupsMembership && (
+            <Form.Item
+              name="user_group_guid"
+              label={
+                <FormattedMessage
+                  id="pages.users.userGroup"
+                  defaultMessage="User Group"
+                />
+              }
+            >
+              <Select
+                allowClear
+                showSearch
+                optionFilterProp="label"
+                loading={userGroupsLoading}
+                placeholder={intl.formatMessage({
+                  id: 'pages.users.selectUserGroup',
+                  defaultMessage: 'Select user group',
+                })}
+                options={userGroups.map((group) => ({
+                  label: group.name,
+                  value: group.guid,
+                }))}
               />
-            }
-          >
-            <Select
-              allowClear
-              showSearch
-              optionFilterProp="label"
-              loading={userGroupsLoading}
-              placeholder={intl.formatMessage({
-                id: 'pages.users.selectUserGroup',
-                defaultMessage: 'Select user group',
-              })}
-              options={userGroups.map((group) => ({
-                label: group.name,
-                value: group.guid,
-              }))}
-            />
-          </Form.Item>
+            </Form.Item>
+          )}
         </Form>
       </Modal>
 
@@ -1009,30 +1059,32 @@ const UserList: React.FC = () => {
           >
             <Input.TextArea />
           </Form.Item>
-          <Form.Item
-            name="user_group_guid"
-            label={
-              <FormattedMessage
-                id="pages.users.userGroup"
-                defaultMessage="User Group"
+          {access.canUserGroupsView && access.canUserGroupsMembership && (
+            <Form.Item
+              name="user_group_guid"
+              label={
+                <FormattedMessage
+                  id="pages.users.userGroup"
+                  defaultMessage="User Group"
+                />
+              }
+            >
+              <Select
+                allowClear
+                showSearch
+                optionFilterProp="label"
+                loading={userGroupsLoading}
+                placeholder={intl.formatMessage({
+                  id: 'pages.users.selectUserGroup',
+                  defaultMessage: 'Select user group',
+                })}
+                options={userGroups.map((group) => ({
+                  label: group.name,
+                  value: group.guid,
+                }))}
               />
-            }
-          >
-            <Select
-              allowClear
-              showSearch
-              optionFilterProp="label"
-              loading={userGroupsLoading}
-              placeholder={intl.formatMessage({
-                id: 'pages.users.selectUserGroup',
-                defaultMessage: 'Select user group',
-              })}
-              options={userGroups.map((group) => ({
-                label: group.name,
-                value: group.guid,
-              }))}
-            />
-          </Form.Item>
+            </Form.Item>
+          )}
         </Form>
       </Modal>
 
@@ -1106,53 +1158,57 @@ const UserList: React.FC = () => {
           >
             <Input.TextArea />
           </Form.Item>
-          <Form.Item
-            name="status"
-            label={
-              <FormattedMessage
-                id="pages.users.status"
-                defaultMessage="Status"
+          {access.canUsersStatus && (
+            <Form.Item
+              name="status"
+              label={
+                <FormattedMessage
+                  id="pages.users.status"
+                  defaultMessage="Status"
+                />
+              }
+            >
+              <Select
+                options={[
+                  {
+                    label: intl.formatMessage({
+                      id: 'pages.users.active',
+                      defaultMessage: 'Active',
+                    }),
+                    value: 1,
+                  },
+                  {
+                    label: intl.formatMessage({
+                      id: 'pages.users.disabled',
+                      defaultMessage: 'Disabled',
+                    }),
+                    value: 0,
+                  },
+                  {
+                    label: intl.formatMessage({
+                      id: 'pages.users.unverified',
+                      defaultMessage: 'Unverified',
+                    }),
+                    value: -1,
+                  },
+                ]}
               />
-            }
-          >
-            <Select
-              options={[
-                {
-                  label: intl.formatMessage({
-                    id: 'pages.users.active',
-                    defaultMessage: 'Active',
-                  }),
-                  value: 1,
-                },
-                {
-                  label: intl.formatMessage({
-                    id: 'pages.users.disabled',
-                    defaultMessage: 'Disabled',
-                  }),
-                  value: 0,
-                },
-                {
-                  label: intl.formatMessage({
-                    id: 'pages.users.unverified',
-                    defaultMessage: 'Unverified',
-                  }),
-                  value: -1,
-                },
-              ]}
-            />
-          </Form.Item>
-          <Form.Item
-            name="is_admin"
-            label={
-              <FormattedMessage
-                id="pages.users.isAdmin"
-                defaultMessage="Admin"
-              />
-            }
-            valuePropName="checked"
-          >
-            <Switch />
-          </Form.Item>
+            </Form.Item>
+          )}
+          {access.isSuperAdmin && (
+            <Form.Item
+              name="is_admin"
+              label={
+                <FormattedMessage
+                  id="pages.users.isAdmin"
+                  defaultMessage="Admin"
+                />
+              }
+              valuePropName="checked"
+            >
+              <Switch />
+            </Form.Item>
+          )}
         </Form>
       </Modal>
 
@@ -1203,6 +1259,16 @@ const UserList: React.FC = () => {
           </Form.Item>
         </Form>
       </Modal>
+
+      <UserRolesModal
+        open={rolesModalVisible}
+        user={editingUser}
+        onOpenChange={(open) => {
+          setRolesModalVisible(open);
+          if (!open) setEditingUser(null);
+        }}
+        onSuccess={() => actionRef.current?.reload()}
+      />
     </PageContainer>
   );
 };

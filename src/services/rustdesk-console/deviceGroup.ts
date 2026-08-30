@@ -1,7 +1,7 @@
 import { request } from '@umijs/max';
 
 export async function getDeviceGroupList(
-  params: { current: number; pageSize: number },
+  params: { current: number; pageSize: number; name?: string },
   options?: { [key: string]: any },
 ) {
   return request<API.PaginatedResult<API.DeviceGroupItem>>('/api/device-groups', {
@@ -33,4 +33,22 @@ export async function removeDeviceFromGroup(guid: string, deviceIds: string[]) {
 
 export async function getAccessibleGroups() {
   return request('/api/device-group/accessible', { method: 'GET' });
+}
+
+/** Load all existing groups through the paginated admin endpoint. */
+export async function getAllDeviceGroups(options?: { [key: string]: any }) {
+  const groups: API.DeviceGroupItem[] = [];
+  let current = 1;
+  let total = 0;
+  do {
+    const page = await getDeviceGroupList(
+      { current, pageSize: 100 },
+      options,
+    );
+    groups.push(...(page.data || []));
+    total = page.total || groups.length;
+    current += 1;
+    if (!page.data?.length) break;
+  } while (groups.length < total);
+  return groups;
 }

@@ -12,6 +12,7 @@ import {
   ThemeToggle,
 } from '@/components';
 import { currentUser as queryCurrentUser } from '@/services/rustdesk-console/auth';
+import { getMyPermissions } from '@/services/rustdesk-console/permission';
 import { getToken, TOKEN_KEY } from '@/utils/auth';
 import defaultSettings from '../config/defaultSettings';
 import { errorConfig } from './requestErrorConfig';
@@ -45,13 +46,26 @@ function storeThemeSettings(settings: Partial<LayoutSettings>) {
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
   currentUser?: API.CurrentUser;
+  permissions?: API.EffectivePermissions;
   loading?: boolean;
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
+  fetchPermissions?: () => Promise<API.EffectivePermissions | undefined>;
 }> {
   const fetchUserInfo = async () => {
     try {
       const msg = await queryCurrentUser();
       return msg;
+    } catch (error: any) {
+      const status = error?.response?.status;
+      if (status === 401) {
+        history.push(loginPath);
+      }
+    }
+    return undefined;
+  };
+  const fetchPermissions = async () => {
+    try {
+      return await getMyPermissions();
     } catch (error: any) {
       const status = error?.response?.status;
       if (status === 401) {
@@ -69,14 +83,18 @@ export async function getInitialState(): Promise<{
   const { location } = history;
   if (![loginPath].includes(location.pathname) && getToken()) {
     const currentUser = await fetchUserInfo();
+    const permissions = currentUser ? await fetchPermissions() : undefined;
     return {
       fetchUserInfo,
+      fetchPermissions,
       currentUser,
+      permissions,
       settings: initialSettings,
     };
   }
   return {
     fetchUserInfo,
+    fetchPermissions,
     settings: initialSettings,
   };
 }
@@ -86,13 +104,21 @@ const AuthSync: React.FC = () => {
 
   useEffect(() => {
     const handleSessionExpired = () => {
-      setInitialState((s) => ({ ...s, currentUser: undefined }));
+      setInitialState((s) => ({
+        ...s,
+        currentUser: undefined,
+        permissions: undefined,
+      }));
     };
 
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === TOKEN_KEY) {
         if (!e.newValue) {
-          setInitialState((s) => ({ ...s, currentUser: undefined }));
+          setInitialState((s) => ({
+            ...s,
+            currentUser: undefined,
+            permissions: undefined,
+          }));
           if (history.location.pathname !== loginPath) {
             history.push(loginPath);
           }

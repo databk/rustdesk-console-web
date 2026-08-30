@@ -128,7 +128,8 @@ const ConnectionAudit: React.FC = () => {
   const intl = useIntl();
   const { message: msgApi, modal } = App.useApp();
   const access = useAccess();
-  const canEdit = access.canAdmin;
+  const canEdit = access.isSuperAdmin;
+  const canDisconnect = access.canDevicesDisconnect;
 
   const [pageParams, setPageParams] =
     useState<Partial<ConnectionAuditSearchParams>>();
@@ -554,10 +555,10 @@ const ConnectionAudit: React.FC = () => {
         <FormattedMessage id="pages.common.action" defaultMessage="Action" />
       ),
       search: false,
-      hideInTable: !canEdit,
+      hideInTable: !canDisconnect,
       width: 120,
       render: (_, record) => {
-        if (!canEdit) {
+        if (!canDisconnect) {
           return <Text type="secondary">-</Text>;
         }
         const isActive = record.action === 'established' && !record.closedAt;

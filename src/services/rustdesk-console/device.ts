@@ -31,6 +31,33 @@ export async function getDeviceList(
   });
 }
 
+export async function getAdminDeviceList(
+  params: {
+    current?: number;
+    pageSize?: number;
+    id?: string;
+    device_name?: string;
+    user_name?: string;
+    device_username?: string;
+    device_group_name?: string;
+  },
+  options?: { [key: string]: any },
+) {
+  return request<API.PaginatedResult<API.DeviceItem>>('/api/devices', {
+    method: 'GET',
+    params: {
+      current: params.current || 1,
+      pageSize: params.pageSize || 20,
+      id: params.id,
+      device_name: params.device_name,
+      user_name: params.user_name,
+      device_username: params.device_username,
+      device_group_name: params.device_group_name,
+    },
+    ...(options || {}),
+  });
+}
+
 export async function batchUpdateDeviceStatus(params: {
   guids: string[];
   status: 'enabled' | 'disabled';

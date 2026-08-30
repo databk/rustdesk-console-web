@@ -444,6 +444,7 @@ declare namespace API {
     guid: string;
     name: string;
     note?: string;
+    permissions?: string[];
     permission_count?: number;
     created_at?: string;
     updated_at?: string;
@@ -453,7 +454,7 @@ declare namespace API {
   type CreateRoleParams = {
     name: string;
     note?: string;
-    permissions?: string[];
+    permissions: string[];
   };
 
   type UpdateRoleParams = {
@@ -463,11 +464,54 @@ declare namespace API {
   };
 
   type PermissionItem = {
-    id: string;
+    code: string;
+    resource: string;
+    action: string;
     name: string;
-    description?: string;
+    description: string;
+    scope: 'global' | 'device_group';
+    // `id`/`module` are retained as optional aliases for older deployments.
+    id?: string;
     module?: string;
     [key: string]: any;
+  };
+
+  type PermissionScopeType = 'global' | 'device_group' | 'none';
+
+  type EffectivePermissionScope = {
+    scope_type: PermissionScopeType;
+    device_group_guids: string[];
+  };
+
+  type EffectivePermissions = {
+    permissions: string[];
+    scopes: Record<string, EffectivePermissionScope>;
+  };
+
+  type UserRoleAssignment = {
+    guid: string;
+    role_guid: string;
+    role_name: string;
+    scope_type: 'global' | 'device_group';
+    device_group_guids: string[];
+    permissions: string[];
+    created_at?: string;
+    updated_at?: string;
+  };
+
+  type UserRolesResponse = {
+    data: UserRoleAssignment[];
+    effective_scope: Record<string, EffectivePermissionScope>;
+  };
+
+  type UserRoleAssignmentParams = {
+    role_guid: string;
+    scope_type: 'global' | 'device_group';
+    device_group_guids?: string[];
+  };
+
+  type ReplaceUserRolesParams = {
+    assignments: UserRoleAssignmentParams[];
   };
 
   type StrategyItem = {

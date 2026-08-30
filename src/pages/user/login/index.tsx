@@ -44,6 +44,7 @@ import {
   getLoginOptions,
   oidcAuth,
 } from '@/services/rustdesk-console/auth';
+import { getMyPermissions } from '@/services/rustdesk-console/permission';
 import Settings from '../../../../config/defaultSettings';
 
 // --- Auth step types ---
@@ -434,11 +435,19 @@ const Login: React.FC = () => {
           defaultMessage: 'Login successful!',
         }),
       );
-      if (user) {
+      let permissions: API.EffectivePermissions | undefined;
+      try {
+        permissions = await getMyPermissions();
+      } catch {
+        // The shell remains usable while capabilities are refreshed on the
+        // next initial-state load. Protected API calls still enforce access.
+      }
+      if (user || permissions) {
         flushSync(() => {
           setInitialState((s) => ({
             ...s,
             currentUser: user,
+            permissions,
           }));
         });
       }

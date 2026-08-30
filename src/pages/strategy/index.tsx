@@ -1,7 +1,7 @@
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { FormattedMessage, useIntl } from '@umijs/max';
+import { FormattedMessage, useAccess, useIntl } from '@umijs/max';
 import { App, Button } from 'antd';
 import React, { useRef, useState } from 'react';
 import {
@@ -17,6 +17,7 @@ import StrategyForm from './components/StrategyForm';
 
 const StrategyList: React.FC = () => {
   const intl = useIntl();
+  const access = useAccess();
   const { message: msgApi } = App.useApp();
   const actionRef = useRef<ActionType>(null);
 
@@ -124,6 +125,9 @@ const StrategyList: React.FC = () => {
     onEdit: handleEdit,
     onDelete: handleDelete,
     onAssign: handleAssign,
+    canEdit: access.canStrategiesEdit,
+    canDelete: access.canStrategiesDelete,
+    canAssign: access.canStrategiesAssign,
   });
 
   return (
@@ -160,19 +164,23 @@ const StrategyList: React.FC = () => {
           showQuickJumper: true,
         }}
         scroll={{ x: 1000 }}
-        toolBarRender={() => [
-          <Button
-            key="create"
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={() => setCreateModalVisible(true)}
-          >
-            <FormattedMessage
-              id="pages.strategies.create"
-              defaultMessage="Create Strategy"
-            />
-          </Button>,
-        ]}
+        toolBarRender={() =>
+          access.canStrategiesCreate
+            ? [
+                <Button
+                  key="create"
+                  type="primary"
+                  icon={<PlusOutlined />}
+                  onClick={() => setCreateModalVisible(true)}
+                >
+                  <FormattedMessage
+                    id="pages.strategies.create"
+                    defaultMessage="Create Strategy"
+                  />
+                </Button>,
+              ]
+            : []
+        }
         options={{
           density: true,
           setting: { listsHeight: 400 },
@@ -196,12 +204,14 @@ const StrategyList: React.FC = () => {
         currentRecord={currentRecord}
       />
 
-      <AssignModal
-        open={assignModalVisible}
-        onOpenChange={setAssignModalVisible}
-        record={assignRecord}
-        onSuccess={() => actionRef.current?.reload()}
-      />
+      {access.canStrategiesAssign && (
+        <AssignModal
+          open={assignModalVisible}
+          onOpenChange={setAssignModalVisible}
+          record={assignRecord}
+          onSuccess={() => actionRef.current?.reload()}
+        />
+      )}
     </PageContainer>
   );
 };

@@ -7,12 +7,13 @@ import {
 import {
   batchUpdateDeviceStatus,
   deleteDevice,
+  getAdminDeviceList,
   getDeviceList,
 } from '@/services/rustdesk-console/device';
 import { removeDeviceFromGroup } from '@/services/rustdesk-console/deviceGroup';
 import type { ActionType } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { FormattedMessage, useIntl } from '@umijs/max';
+import { FormattedMessage, useAccess, useIntl } from '@umijs/max';
 import { App, Button, Popconfirm, Space } from 'antd';
 import React, { useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
@@ -34,6 +35,7 @@ const DeviceList: React.FC<DeviceListProps> = ({
   onBack,
 }) => {
   const intl = useIntl();
+  const access = useAccess();
   const { message: msgApi } = App.useApp();
   const actionRef = useRef<ActionType>(null);
 
@@ -297,6 +299,10 @@ const DeviceList: React.FC<DeviceListProps> = ({
     onDelete: handleDelete,
     onRemoveFromGroup: handleRemoveFromGroup,
     deviceGroupGuid,
+    canEdit: access.canDevicesEdit,
+    canStatus: access.canDevicesStatus,
+    canDelete: access.canDevicesDelete,
+    canManageGroup: access.isSuperAdmin,
   });
 
   const columns = [...filteredColumns, actionColumn];
@@ -335,13 +341,18 @@ const DeviceList: React.FC<DeviceListProps> = ({
           }}
           actionRef={actionRef}
           rowKey="guid"
-          rowSelection={{
-            selectedRowKeys,
-            onChange: (keys, rows) => {
-              setSelectedRowKeys(keys);
-              setSelectedRows(rows);
-            },
-          }}
+          rowSelection={
+            (deviceGroupGuid && access.isSuperAdmin) ||
+            (!deviceGroupGuid && access.canDevicesStatus)
+              ? {
+                  selectedRowKeys,
+                  onChange: (keys, rows) => {
+                    setSelectedRowKeys(keys);
+                    setSelectedRows(rows);
+                  },
+                }
+              : undefined
+          }
           tableAlertOptionRender={() => (
             <Space size={16}>
               {deviceGroupGuid ? (
@@ -440,17 +451,24 @@ const DeviceList: React.FC<DeviceListProps> = ({
             </Space>
           )}
           request={async (params) => {
-            const result = await getDeviceList({
-              current: params.current || 1,
-              pageSize: params.pageSize || 20,
-              id: params.id,
-              status: params.status,
-              is_online: params.is_online,
-              user_name: params.user_name,
-              device_group_name: params.device_group_name_search,
-              device_group_guid: deviceGroupGuid,
-              os: params.os,
-            });
+            const result = deviceGroupGuid
+              ? await getDeviceList({
+                  current: params.current || 1,
+                  pageSize: params.pageSize || 20,
+                  id: params.id,
+                  status: params.status,
+                  is_online: params.is_online,
+                  user_name: params.user_name,
+                  device_group_guid: deviceGroupGuid,
+                  os: params.os,
+                })
+              : await getAdminDeviceList({
+                  current: params.current || 1,
+                  pageSize: params.pageSize || 20,
+                  id: params.id,
+                  user_name: params.user_name,
+                  device_group_name: params.device_group_name_search,
+                });
             return {
               data: result.data || [],
               total: result.total || 0,
@@ -472,7 +490,7 @@ const DeviceList: React.FC<DeviceListProps> = ({
           }}
           scroll={{ x: '100%' }}
           toolBarRender={() =>
-            deviceGroupGuid
+            deviceGroupGuid && access.isSuperAdmin
               ? [
                   <Button
                     key="import"
@@ -509,6 +527,7 @@ const DeviceList: React.FC<DeviceListProps> = ({
         <EditDeviceModal
           open={editModalVisible}
           record={editingRecord}
+          isSuperAdmin={access.isSuperAdmin}
           onCancel={() => {
             setEditModalVisible(false);
             setEditingRecord(null);

@@ -46,6 +46,7 @@ export default [
     path: '/devices',
     name: 'devices',
     icon: 'desktop',
+    access: 'canDevicesView',
     component: './devices/list',
   },
   {
@@ -80,7 +81,7 @@ export default [
     path: '/groups',
     name: 'groups',
     icon: 'team',
-    access: 'canAdmin',
+    access: 'canGroups',
     routes: [
       {
         path: '/groups',
@@ -90,16 +91,19 @@ export default [
         name: 'user',
         icon: 'user',
         path: '/groups/user',
+        access: 'canUserGroupsView',
         component: './groups/user',
       },
       {
         name: 'device',
         icon: 'device',
         path: '/groups/device',
+        access: 'canAdmin',
         component: './device-groups/list',
       },
       {
         path: '/groups/device/:guid',
+        access: 'canAdmin',
         component: './device-groups/detail',
         hideInMenu: true,
       },
@@ -109,7 +113,7 @@ export default [
     path: '/users',
     name: 'users',
     icon: 'user',
-    access: 'canAdmin',
+    access: 'canUsersView',
     component: './users/list',
   },
   {
@@ -123,7 +127,7 @@ export default [
     path: '/audits',
     name: 'audits',
     icon: 'FileSearchOutlined',
-    access: 'canAdmin',
+    access: 'canAuditView',
     routes: [
       {
         path: '/audits',
@@ -159,7 +163,7 @@ export default [
     path: '/strategy',
     name: 'strategies',
     icon: 'solution',
-    access: 'canAdmin',
+    access: 'canStrategiesView',
     component: './strategy',
   },
   {

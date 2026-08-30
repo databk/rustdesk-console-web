@@ -6,7 +6,7 @@ import {
 } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { FormattedMessage, history, useIntl, useModel } from '@umijs/max';
+import { FormattedMessage, history, useAccess, useIntl } from '@umijs/max';
 import {
   App,
   Button,
@@ -21,6 +21,7 @@ import React, { useRef, useState } from 'react';
 import {
   addSharedAddressBook,
   deleteSharedAddressBooks,
+  getSharedAddressBooks,
   getWebSharedAddressBooks,
   updateSharedAddressBook,
 } from '@/services/rustdesk-console/addressBook';
@@ -29,8 +30,8 @@ import UserGroupAccessModal from './components/UserGroupAccessModal';
 const SharedAddressBook: React.FC = () => {
   const intl = useIntl();
   const { message: msgApi } = App.useApp();
-  const { initialState } = useModel('@@initialState');
-  const isAdmin = initialState?.currentUser?.is_admin === true;
+  const access = useAccess();
+  const canManage = access.canAddressBooksEdit || access.canAddressBooksShare;
   const actionRef = useRef<ActionType>(null);
   const [createModalVisible, setCreateModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
@@ -132,7 +133,7 @@ const SharedAddressBook: React.FC = () => {
       dataIndex: 'note',
       ellipsis: true,
     },
-    ...(isAdmin
+    ...(canManage
       ? [
           {
             title: (
@@ -146,63 +147,69 @@ const SharedAddressBook: React.FC = () => {
             render: (_: unknown, record: API.SharedAddressBook) =>
               record.is_owner ? (
                 <Space size={0} split={<Divider type="vertical" />}>
-                  <Button
-                    key="groupAccess"
-                    type="link"
-                    size="small"
-                    icon={<ShareAltOutlined />}
-                    onClick={() => setAccessRecord(record)}
-                  >
-                    <FormattedMessage
-                      id="pages.addressBook.groupAccess"
-                      defaultMessage="Group access"
-                    />
-                  </Button>
-                  <Button
-                    key="edit"
-                    type="link"
-                    size="small"
-                    icon={<EditOutlined />}
-                    onClick={() => {
-                      editForm.setFieldsValue(record);
-                      setEditModalVisible(true);
-                    }}
-                  >
-                    <FormattedMessage
-                      id="pages.common.edit"
-                      defaultMessage="Edit"
-                    />
-                  </Button>
-                  <Popconfirm
-                    key="delete"
-                    title={
-                      <FormattedMessage
-                        id="pages.addressBook.deleteConfirm"
-                        defaultMessage="Are you sure to delete this address book?"
-                      />
-                    }
-                    onConfirm={() => handleDelete([record.guid])}
-                    okText={intl.formatMessage({
-                      id: 'pages.common.confirm',
-                      defaultMessage: 'Yes',
-                    })}
-                    cancelText={intl.formatMessage({
-                      id: 'pages.common.cancel',
-                      defaultMessage: 'No',
-                    })}
-                  >
+                  {access.canAddressBooksShare && (
                     <Button
+                      key="groupAccess"
                       type="link"
                       size="small"
-                      danger
-                      icon={<DeleteOutlined />}
+                      icon={<ShareAltOutlined />}
+                      onClick={() => setAccessRecord(record)}
                     >
                       <FormattedMessage
-                        id="pages.common.delete"
-                        defaultMessage="Delete"
+                        id="pages.addressBook.groupAccess"
+                        defaultMessage="Group access"
                       />
                     </Button>
-                  </Popconfirm>
+                  )}
+                  {access.canAddressBooksEdit && (
+                    <Button
+                      key="edit"
+                      type="link"
+                      size="small"
+                      icon={<EditOutlined />}
+                      onClick={() => {
+                        editForm.setFieldsValue(record);
+                        setEditModalVisible(true);
+                      }}
+                    >
+                      <FormattedMessage
+                        id="pages.common.edit"
+                        defaultMessage="Edit"
+                      />
+                    </Button>
+                  )}
+                  {access.canAddressBooksEdit && (
+                    <Popconfirm
+                      key="delete"
+                      title={
+                        <FormattedMessage
+                          id="pages.addressBook.deleteConfirm"
+                          defaultMessage="Are you sure to delete this address book?"
+                        />
+                      }
+                      onConfirm={() => handleDelete([record.guid])}
+                      okText={intl.formatMessage({
+                        id: 'pages.common.confirm',
+                        defaultMessage: 'Yes',
+                      })}
+                      cancelText={intl.formatMessage({
+                        id: 'pages.common.cancel',
+                        defaultMessage: 'No',
+                      })}
+                    >
+                      <Button
+                        type="link"
+                        size="small"
+                        danger
+                        icon={<DeleteOutlined />}
+                      >
+                        <FormattedMessage
+                          id="pages.common.delete"
+                          defaultMessage="Delete"
+                        />
+                      </Button>
+                    </Popconfirm>
+                  )}
                 </Space>
               ) : (
                 '-'
@@ -228,11 +235,14 @@ const SharedAddressBook: React.FC = () => {
         actionRef={actionRef}
         rowKey="guid"
         request={async (params) => {
-          const result = await getWebSharedAddressBooks({
+          const requestParams = {
             pageSize: params.pageSize || 20,
             current: params.current || 1,
             name: params.name,
-          });
+          };
+          const result = access.canAddressBooksView
+            ? await getWebSharedAddressBooks(requestParams)
+            : await getSharedAddressBooks(requestParams);
           return {
             data: result.data || [],
             total: result.total || 0,
@@ -241,7 +251,7 @@ const SharedAddressBook: React.FC = () => {
         }}
         columns={columns}
         rowSelection={
-          isAdmin
+          access.canAddressBooksEdit
             ? {
                 selectedRowKeys,
                 onChange: setSelectedRowKeys,
@@ -257,20 +267,22 @@ const SharedAddressBook: React.FC = () => {
           showQuickJumper: true,
         }}
         toolBarRender={() =>
-          isAdmin
+          access.canAddressBooksShare || access.canAddressBooksEdit
             ? [
-                <Button
-                  key="create"
-                  type="primary"
-                  icon={<PlusOutlined />}
-                  onClick={() => setCreateModalVisible(true)}
-                >
-                  <FormattedMessage
-                    id="pages.addressBook.create"
-                    defaultMessage="Create Address Book"
-                  />
-                </Button>,
-                selectedRowKeys.length > 0 && (
+                access.canAddressBooksShare && (
+                  <Button
+                    key="create"
+                    type="primary"
+                    icon={<PlusOutlined />}
+                    onClick={() => setCreateModalVisible(true)}
+                  >
+                    <FormattedMessage
+                      id="pages.addressBook.create"
+                      defaultMessage="Create Address Book"
+                    />
+                  </Button>
+                ),
+                access.canAddressBooksEdit && selectedRowKeys.length > 0 && (
                   <Popconfirm
                     key="batchDelete"
                     title={
@@ -419,11 +431,13 @@ const SharedAddressBook: React.FC = () => {
         </Form>
       </Modal>
 
-      <UserGroupAccessModal
-        open={!!accessRecord}
-        addressBook={accessRecord}
-        onOpenChange={(open) => !open && setAccessRecord(null)}
-      />
+      {access.canAddressBooksShare && (
+        <UserGroupAccessModal
+          open={!!accessRecord}
+          addressBook={accessRecord}
+          onOpenChange={(open) => !open && setAccessRecord(null)}
+        />
+      )}
     </PageContainer>
   );
 };
