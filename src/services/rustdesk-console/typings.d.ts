@@ -7,10 +7,10 @@ declare namespace API {
     avatar?: string;
     status?: number;
     is_admin?: boolean;
-    tfa_enabled?: boolean;
     third_auth_type?: string;
-    has_password?: boolean;
     info?: {
+      has_password?: boolean;
+      has_totp?: boolean;
       email_verification?: boolean;
       email_alarm_notification?: boolean;
       other?: Record<string, any>;
