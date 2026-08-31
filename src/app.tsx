@@ -133,7 +133,7 @@ export const AuthSync: React.FC = () => {
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === TOKEN_KEY) {
         permissionRefreshRef.current += 1;
-        if (!e.newValue) {
+        if (!getToken()) {
           setInitialState((s) => ({
             ...s,
             currentUser: undefined,
@@ -142,7 +142,7 @@ export const AuthSync: React.FC = () => {
           if (history.location.pathname !== loginPath) {
             history.push(loginPath);
           }
-        } else if (e.newValue) {
+        } else {
           refresh();
         }
       }
