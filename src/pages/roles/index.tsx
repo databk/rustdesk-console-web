@@ -91,7 +91,12 @@ const RoleList: React.FC = () => {
       .sort(([a], [b]) => a.localeCompare(b))
       .map(([resource, values]) => ({
         key: `resource:${resource}`,
-        title: resource,
+        title: (
+          <FormattedMessage
+            id={`pages.roles.permissionResource.${resource}`}
+            defaultMessage={resource}
+          />
+        ),
         children: values
           .sort((a, b) =>
             (a.code || a.id || '').localeCompare(b.code || b.id || ''),
@@ -102,13 +107,11 @@ const RoleList: React.FC = () => {
               key: code,
               title: (
                 <Space size={4}>
-                  <span>{permission.name}</span>
+                  <FormattedMessage
+                    id={`pages.roles.permission.${code}`}
+                    defaultMessage={code}
+                  />
                   <Typography.Text type="secondary">({code})</Typography.Text>
-                  {permission.description && (
-                    <Tooltip title={permission.description}>
-                      <InfoCircleOutlined />
-                    </Tooltip>
-                  )}
                 </Space>
               ),
               disabled: !code,

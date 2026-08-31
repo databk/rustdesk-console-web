@@ -375,7 +375,15 @@ const UserRolesModal: React.FC<UserRolesModalProps> = ({
                     )}
                     <Space wrap size={[4, 4]}>
                       {(role?.permissions || []).map((permission) => (
-                        <Tag key={permission}>{permission}</Tag>
+                        <Tag
+                          key={permission}
+                          title={permission}
+                        >
+                          {intl.formatMessage({
+                            id: `pages.roles.permission.${permission}`,
+                            defaultMessage: permission,
+                          })}
+                        </Tag>
                       ))}
                     </Space>
                   </Space>
@@ -418,7 +426,15 @@ const UserRolesModal: React.FC<UserRolesModalProps> = ({
                   .sort(([a], [b]) => a.localeCompare(b))
                   .map(([permission, scope]) => (
                     <Space key={permission} wrap>
-                      <Typography.Text code>{permission}</Typography.Text>
+                      <Typography.Text>
+                        {intl.formatMessage({
+                          id: `pages.roles.permission.${permission}`,
+                          defaultMessage: permission,
+                        })}
+                      </Typography.Text>
+                      <Typography.Text type="secondary" code>
+                        ({permission})
+                      </Typography.Text>
                       {scope.scope_type === 'global' ? (
                         <Tag color="green">
                           <FormattedMessage
