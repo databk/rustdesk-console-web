@@ -40,6 +40,7 @@ export default [
     path: '/dashboard',
     name: 'dashboard',
     icon: 'dashboard',
+    access: 'canAdmin',
     component: './dashboard',
   },
   {
