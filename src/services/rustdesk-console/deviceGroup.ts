@@ -45,10 +45,13 @@ export async function getAllDeviceGroups(options?: { [key: string]: any }) {
       { current, pageSize: 100 },
       options,
     );
-    groups.push(...(page.data || []));
-    total = page.total || groups.length;
+    if (!Array.isArray(page.data) || typeof page.total !== 'number') {
+      throw new Error('Invalid device group response');
+    }
+    groups.push(...page.data);
+    total = page.total;
     current += 1;
-    if (!page.data?.length) break;
+    if (!page.data.length) break;
   } while (groups.length < total);
   return groups;
 }

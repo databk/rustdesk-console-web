@@ -1,4 +1,10 @@
 export default {
+  'pages.request.loginExpired': 'Login expired, please sign in again',
+  'pages.request.accessDenied':
+    'You do not have permission to perform this action',
+  'pages.request.responseStatus': 'Request failed (HTTP {status})',
+  'pages.request.noResponse': 'The server did not respond. Please try again.',
+  'pages.request.error': 'The request failed. Please try again.',
   'pages.login.success': 'Login successful!',
   'pages.login.failure': 'Login failed, please try again!',
   'pages.login.username.placeholder': 'Username',

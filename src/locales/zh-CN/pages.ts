@@ -1,4 +1,9 @@
 export default {
+  'pages.request.loginExpired': '登录状态已失效，请重新登录',
+  'pages.request.accessDenied': '您没有执行此操作的权限',
+  'pages.request.responseStatus': '请求失败（HTTP {status}）',
+  'pages.request.noResponse': '服务器未响应，请稍后重试',
+  'pages.request.error': '请求失败，请稍后重试',
   'pages.login.success': '登录成功！',
   'pages.login.failure': '登录失败，请重试！',
   'pages.login.username.placeholder': '用户名',

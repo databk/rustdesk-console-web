@@ -14,8 +14,23 @@ export async function getPermissionList(options?: { [key: string]: any }) {
 
 /** Load the caller's current effective permissions and scopes. */
 export async function getMyPermissions(options?: { [key: string]: any }) {
-  return request<API.EffectivePermissions>('/api/permissions/me', {
+  const response = await request<unknown>('/api/permissions/me', {
     method: 'GET',
     ...(options || {}),
   });
+  const payload = response as Partial<API.EffectivePermissions> | null;
+  if (
+    !payload ||
+    typeof payload !== 'object' ||
+    !Array.isArray(payload.permissions) ||
+    !payload.permissions.every(
+      (permission) => typeof permission === 'string',
+    ) ||
+    !payload.scopes ||
+    typeof payload.scopes !== 'object' ||
+    Array.isArray(payload.scopes)
+  ) {
+    throw new Error('Invalid effective permissions response');
+  }
+  return payload as API.EffectivePermissions;
 }

@@ -240,9 +240,12 @@ const SharedAddressBook: React.FC = () => {
             name: params.name,
           };
           const result = await getWebSharedAddressBooks(requestParams);
+          if (!Array.isArray(result.data) || typeof result.total !== 'number') {
+            throw new Error('Invalid shared address book response');
+          }
           return {
-            data: result.data || [],
-            total: result.total || 0,
+            data: result.data,
+            total: result.total,
             success: true,
           };
         }}

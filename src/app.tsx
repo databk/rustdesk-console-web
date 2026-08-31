@@ -3,7 +3,7 @@ import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { SettingDrawer } from '@ant-design/pro-components';
 import type { RequestConfig, RunTimeLayoutConfig } from '@umijs/max';
 import { history, Link, useModel } from '@umijs/max';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   AvatarDropdown,
   AvatarName,
@@ -101,9 +101,11 @@ export async function getInitialState(): Promise<{
 
 const AuthSync: React.FC = () => {
   const { initialState, setInitialState, refresh } = useModel('@@initialState');
+  const permissionRefreshRef = useRef(0);
 
   useEffect(() => {
     const handleSessionExpired = () => {
+      permissionRefreshRef.current += 1;
       setInitialState((s) => ({
         ...s,
         currentUser: undefined,
@@ -111,8 +113,26 @@ const AuthSync: React.FC = () => {
       }));
     };
 
+    const handlePermissionsStale = async () => {
+      const requestId = ++permissionRefreshRef.current;
+      try {
+        const permissions = await getMyPermissions({ skipErrorHandler: true });
+        if (requestId !== permissionRefreshRef.current) return;
+        setInitialState((s) => ({ ...s, permissions }));
+      } catch (error: any) {
+        if (requestId !== permissionRefreshRef.current) return;
+        if (error?.response?.status === 401) {
+          window.dispatchEvent(new CustomEvent('auth:session-expired'));
+          history.push(loginPath);
+          return;
+        }
+        setInitialState((s) => ({ ...s, permissions: undefined }));
+      }
+    };
+
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === TOKEN_KEY) {
+        permissionRefreshRef.current += 1;
         if (!e.newValue) {
           setInitialState((s) => ({
             ...s,
@@ -129,9 +149,14 @@ const AuthSync: React.FC = () => {
     };
 
     window.addEventListener('auth:session-expired', handleSessionExpired);
+    window.addEventListener('auth:permissions-stale', handlePermissionsStale);
     window.addEventListener('storage', handleStorageChange);
     return () => {
       window.removeEventListener('auth:session-expired', handleSessionExpired);
+      window.removeEventListener(
+        'auth:permissions-stale',
+        handlePermissionsStale,
+      );
       window.removeEventListener('storage', handleStorageChange);
     };
   }, [initialState?.currentUser, setInitialState, refresh]);

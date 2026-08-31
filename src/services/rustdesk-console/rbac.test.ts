@@ -10,7 +10,7 @@ const requestMock = jest.mocked(request);
 
 beforeEach(() => {
   requestMock.mockReset();
-  requestMock.mockResolvedValue({});
+  requestMock.mockResolvedValue({ permissions: [], scopes: {} });
 });
 
 test('uses the backend-owned permission and role contracts', async () => {
@@ -75,5 +75,13 @@ test('uses atomic user-role replacement with explicit scope fields', async () =>
       },
       skipErrorHandler: true,
     },
+  );
+});
+
+test('rejects malformed effective-permission responses', async () => {
+  requestMock.mockResolvedValueOnce({ permissions: {}, scopes: {} });
+
+  await expect(getMyPermissions()).rejects.toThrow(
+    'Invalid effective permissions response',
   );
 });
