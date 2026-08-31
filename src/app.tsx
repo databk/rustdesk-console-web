@@ -99,8 +99,8 @@ export async function getInitialState(): Promise<{
   };
 }
 
-const AuthSync: React.FC = () => {
-  const { initialState, setInitialState, refresh } = useModel('@@initialState');
+export const AuthSync: React.FC = () => {
+  const { setInitialState, refresh } = useModel('@@initialState');
   const permissionRefreshRef = useRef(0);
 
   useEffect(() => {
@@ -142,7 +142,7 @@ const AuthSync: React.FC = () => {
           if (history.location.pathname !== loginPath) {
             history.push(loginPath);
           }
-        } else if (e.newValue && !initialState?.currentUser) {
+        } else if (e.newValue) {
           refresh();
         }
       }
@@ -159,7 +159,7 @@ const AuthSync: React.FC = () => {
       );
       window.removeEventListener('storage', handleStorageChange);
     };
-  }, [initialState?.currentUser, setInitialState, refresh]);
+  }, [setInitialState, refresh]);
 
   return null;
 };
