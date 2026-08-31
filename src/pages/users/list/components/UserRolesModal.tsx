@@ -14,7 +14,13 @@ import {
   Tag,
   Typography,
 } from 'antd';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { getAllDeviceGroups } from '@/services/rustdesk-console/deviceGroup';
 import { getRoleList } from '@/services/rustdesk-console/role';
 import {
@@ -47,10 +53,13 @@ const loadAllRoles = async () => {
   let total = 0;
   do {
     const page = await getRoleList({ current, pageSize: 100 });
-    roles.push(...(page.data || []));
+    if (!Array.isArray(page.data)) {
+      throw new Error('Invalid role list response');
+    }
+    roles.push(...page.data);
     total = page.total || roles.length;
     current += 1;
-    if (!page.data?.length) break;
+    if (page.data.length === 0) break;
   } while (roles.length < total);
   return roles;
 };
@@ -71,6 +80,9 @@ const UserRolesModal: React.FC<UserRolesModalProps> = ({
   >({});
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const loadRequestRef = useRef(0);
+  const saveRequestRef = useRef(0);
+  const userGuid = user?.guid;
 
   const groupNameByGuid = useMemo(
     () => new Map(groups.map((group) => [group.guid, group.name])),
@@ -78,18 +90,27 @@ const UserRolesModal: React.FC<UserRolesModalProps> = ({
   );
 
   const loadData = useCallback(async () => {
-    if (!open || !user) return;
+    if (!open || !userGuid) return;
+    const requestId = ++loadRequestRef.current;
     setLoading(true);
+    setSaving(false);
     try {
       const [roleItems, groupItems, assignmentResponse] = await Promise.all([
         loadAllRoles(),
         getAllDeviceGroups(),
-        getUserRoles(user.guid),
+        getUserRoles(userGuid),
       ]);
+      if (requestId !== loadRequestRef.current) return;
+      if (
+        !Array.isArray(groupItems) ||
+        !Array.isArray(assignmentResponse.data)
+      ) {
+        throw new Error('Invalid user role response');
+      }
       setRoles(roleItems);
       setGroups(groupItems);
       setDrafts(
-        (assignmentResponse.data || []).map((assignment, index) => ({
+        assignmentResponse.data.map((assignment, index) => ({
           key: assignment.guid || `${assignment.role_guid}-${index}`,
           role_guid: assignment.role_guid,
           scope_type: assignment.scope_type,
@@ -98,6 +119,7 @@ const UserRolesModal: React.FC<UserRolesModalProps> = ({
       );
       setEffectiveScope(assignmentResponse.effective_scope || {});
     } catch (error) {
+      if (requestId !== loadRequestRef.current) return;
       msgApi.error(
         getRequestErrorMessage(
           error,
@@ -108,12 +130,16 @@ const UserRolesModal: React.FC<UserRolesModalProps> = ({
         ),
       );
     } finally {
-      setLoading(false);
+      if (requestId === loadRequestRef.current) setLoading(false);
     }
-  }, [intl, msgApi, open, user]);
+  }, [intl, msgApi, open, userGuid]);
 
   useEffect(() => {
     void loadData();
+    return () => {
+      loadRequestRef.current += 1;
+      saveRequestRef.current += 1;
+    };
   }, [loadData]);
 
   const roleByGuid = useMemo(
@@ -168,7 +194,9 @@ const UserRolesModal: React.FC<UserRolesModalProps> = ({
   };
 
   const handleSave = async () => {
-    if (!user) return;
+    if (!userGuid) return;
+    const viewRequestId = loadRequestRef.current;
+    const saveRequestId = ++saveRequestRef.current;
     const validationError = validateAssignments(drafts, roleByGuid);
     if (validationError) {
       const errorMessages: Record<AssignmentValidationError, string> = {
@@ -198,9 +226,15 @@ const UserRolesModal: React.FC<UserRolesModalProps> = ({
     setSaving(true);
     try {
       const response = await replaceUserRoles(
-        user.guid,
+        userGuid,
         toReplaceUserRolesParams(drafts),
       );
+      if (
+        viewRequestId !== loadRequestRef.current ||
+        saveRequestId !== saveRequestRef.current
+      ) {
+        return;
+      }
       setEffectiveScope(response.effective_scope || {});
       msgApi.success(
         intl.formatMessage({
@@ -210,6 +244,12 @@ const UserRolesModal: React.FC<UserRolesModalProps> = ({
       );
       onSuccess?.();
     } catch (error) {
+      if (
+        viewRequestId !== loadRequestRef.current ||
+        saveRequestId !== saveRequestRef.current
+      ) {
+        return;
+      }
       msgApi.error(
         getRequestErrorMessage(
           error,
@@ -220,7 +260,12 @@ const UserRolesModal: React.FC<UserRolesModalProps> = ({
         ),
       );
     } finally {
-      setSaving(false);
+      if (
+        viewRequestId === loadRequestRef.current &&
+        saveRequestId === saveRequestRef.current
+      ) {
+        setSaving(false);
+      }
     }
   };
 

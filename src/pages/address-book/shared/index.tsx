@@ -21,7 +21,6 @@ import React, { useRef, useState } from 'react';
 import {
   addSharedAddressBook,
   deleteSharedAddressBooks,
-  getSharedAddressBooks,
   getWebSharedAddressBooks,
   updateSharedAddressBook,
 } from '@/services/rustdesk-console/addressBook';
@@ -240,9 +239,7 @@ const SharedAddressBook: React.FC = () => {
             current: params.current || 1,
             name: params.name,
           };
-          const result = access.canAddressBooksView
-            ? await getWebSharedAddressBooks(requestParams)
-            : await getSharedAddressBooks(requestParams);
+          const result = await getWebSharedAddressBooks(requestParams);
           return {
             data: result.data || [],
             total: result.total || 0,

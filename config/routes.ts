@@ -68,10 +68,12 @@ export default [
         name: 'shared',
         icon: 'team',
         path: '/address-book/shared',
+        access: 'canAddressBooksView',
         component: './address-book/shared',
       },
       {
         path: '/address-book/shared/:guid',
+        access: 'canAddressBooksView',
         component: './address-book/shared/detail',
         hideInMenu: true,
       },

@@ -48,13 +48,17 @@ const RoleList: React.FC = () => {
   const [catalogLoading, setCatalogLoading] = useState(false);
   const [detailLoading, setDetailLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const detailRequestRef = useRef(0);
 
   const loadCatalog = async () => {
     if (catalog.length > 0) return catalog;
     setCatalogLoading(true);
     try {
       const response = await getPermissionList();
-      const items = Array.isArray(response) ? response : response?.data || [];
+      const items = Array.isArray(response) ? response : response?.data;
+      if (!Array.isArray(items)) {
+        throw new Error('Invalid permission catalog response');
+      }
       setCatalog(items);
       return items;
     } catch (error) {
@@ -121,27 +125,34 @@ const RoleList: React.FC = () => {
   }, [catalog]);
 
   const closeModal = () => {
+    detailRequestRef.current += 1;
     setModalOpen(false);
     setEditingRole(null);
     setCheckedKeys([]);
+    setDetailLoading(false);
     form.resetFields();
   };
 
   const openCreate = () => {
+    detailRequestRef.current += 1;
     setEditingRole(null);
     setCheckedKeys([]);
+    setDetailLoading(false);
     form.resetFields();
     setModalOpen(true);
     void loadCatalog();
   };
 
   const openEdit = async (record: API.RoleItem) => {
+    const requestId = ++detailRequestRef.current;
     setEditingRole(record);
     setModalOpen(true);
     setDetailLoading(true);
     const loadedCatalog = await loadCatalog();
+    if (requestId !== detailRequestRef.current) return;
     try {
       const detail = await getRoleDetail(record.guid);
+      if (requestId !== detailRequestRef.current) return;
       form.setFieldsValue({ name: detail.name, note: detail.note || '' });
       const validCodes = new Set(
         loadedCatalog.map((permission) => permission.code || permission.id),
@@ -150,6 +161,7 @@ const RoleList: React.FC = () => {
         (detail.permissions || []).filter((code) => validCodes.has(code)),
       );
     } catch (error) {
+      if (requestId !== detailRequestRef.current) return;
       msgApi.error(
         getRequestErrorMessage(
           error,
@@ -161,7 +173,7 @@ const RoleList: React.FC = () => {
       );
       closeModal();
     } finally {
-      setDetailLoading(false);
+      if (requestId === detailRequestRef.current) setDetailLoading(false);
     }
   };
 
@@ -366,10 +378,11 @@ const RoleList: React.FC = () => {
             pageSize: params.pageSize,
             search: params.name,
           });
+          const data = Array.isArray(result.data) ? result.data : [];
           return {
-            data: result.data || [],
-            total: result.total || 0,
-            success: true,
+            data,
+            total: result.total || data.length,
+            success: Array.isArray(result.data),
           };
         }}
         columns={columns}
