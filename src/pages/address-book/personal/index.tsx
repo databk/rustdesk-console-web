@@ -1,45 +1,14 @@
-import type { ActionType, ProColumns } from '@ant-design/pro-components';
-import { PageContainer, ProTable } from '@ant-design/pro-components';
+import type { ActionType } from '@ant-design/pro-components';
+import { PageContainer } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
-import {
-  Alert,
-  App,
-  Button,
-  ColorPicker,
-  Divider,
-  Form,
-  Input,
-  Modal,
-  Popconfirm,
-  Radio,
-  Select,
-  Space,
-  Tag,
-  Table,
-  Tooltip,
-  Typography,
-} from 'antd';
-import {
-  DeleteOutlined,
-  EditOutlined,
-  InfoCircleOutlined,
-  PlusOutlined,
-  SelectOutlined,
-  WindowsFilled,
-  AndroidFilled,
-  AppleFilled,
-  QqCircleFilled,
-} from '@ant-design/icons';
+import { App, Form } from 'antd';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Helmet } from 'react-helmet-async';
-import Settings from '../../../../config/defaultSettings';
 import {
   getPersonalAddressBook,
   getAllCustomAddressBooks,
   addCustomAddressBook,
   updateCustomAddressBook,
   deleteCustomAddressBooks,
-  getPeers,
   addPeer,
   updatePeer,
   deletePeer,
@@ -49,44 +18,19 @@ import {
   updateTagColor,
   deleteTag,
 } from '@/services/rustdesk-console/addressBook';
-import DeviceSelectTable from '@/components/DeviceSelectTable';
-
-const { Text } = Typography;
-
-const argbToHex = (color: number | undefined): string => {
-  if (!color) return '#1677ff';
-  return `#${color.toString(16).padStart(8, '0').slice(-6)}`;
-};
-
-const getOSIcon = (os: string): React.ReactNode => {
-  const osLower = (os || '').toLowerCase();
-
-  if (osLower.includes('windows')) {
-    return <WindowsFilled />;
-  }
-  if (osLower.includes('android')) {
-    return <AndroidFilled />;
-  }
-  if (
-    osLower.includes('macos') ||
-    osLower.includes('ios') ||
-    osLower.includes('mac')
-  ) {
-    return <AppleFilled />;
-  }
-  if (osLower.includes('linux')) {
-    return <QqCircleFilled />;
-  }
-
-  return null;
-};
-
-export interface PersonalAddressBookProps {
-  guid?: string;
-  title?: string;
-  onBack?: () => void;
-  canWrite?: boolean;
-}
+import type { PersonalAddressBookProps } from './types';
+import { rgbToArgb } from './utils';
+import AddressBookSelector from './components/AddressBookSelector';
+import AddressBookModal from './components/AddressBookModal';
+import AddPeerModal from './components/AddPeerModal';
+import EditPeerModal from './components/EditPeerModal';
+import AddTagModal from './components/AddTagModal';
+import TagManagementModal from './components/TagManagementModal';
+import ImportDevicesModal from './components/ImportDevicesModal';
+import TagFilterBar from './components/TagFilterBar';
+import PeerTable from './components/PeerTable';
+import { usePeerColumns } from './components/PeerColumns';
+import { useTagColumns } from './components/TagColumns';
 
 const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
   guid: propGuid,
@@ -107,11 +51,11 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
   const [selectedDeviceKeys, setSelectedDeviceKeys] = useState<React.Key[]>([]);
   const [importing, setImporting] = useState(false);
 
-  const [addPeerForm] = Form.useForm();
-  const [editPeerForm] = Form.useForm();
+  const [addPeerForm] = Form.useForm<API.AddPeerParams>();
+  const [editPeerForm] = Form.useForm<API.UpdatePeerParams>();
   const [addTagForm] = Form.useForm();
-  const [renameTagForm] = Form.useForm();
-  const [addressBookForm] = Form.useForm();
+  const [renameTagForm] = Form.useForm<API.RenameTagParams>();
+  const [addressBookForm] = Form.useForm<{ name: string; note?: string }>();
 
   const [addPeerError, setAddPeerError] = useState('');
   const [editPeerError, setEditPeerError] = useState('');
@@ -447,8 +391,7 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
       };
 
       if (values.color?.toRgb) {
-        const rgb = values.color.toRgb();
-        tagData.color = 0xff000000 + (rgb.r << 16) + (rgb.g << 8) + rgb.b;
+        tagData.color = rgbToArgb(values.color.toRgb());
       }
 
       await addTag(abGuid, tagData);
@@ -582,1018 +525,146 @@ const PersonalAddressBook: React.FC<PersonalAddressBookProps> = ({
     }
   };
 
-  const columns: ProColumns<API.PeerItem>[] = [
-    {
-      title: <FormattedMessage id="pages.common.id" defaultMessage="ID" />,
-      dataIndex: 'id',
-      width: '15%',
-      ellipsis: true,
-      sorter: true,
-      render: (_: unknown, record: API.PeerItem) => {
-        const peerRecord = record as API.PeerItem & { platform?: string };
-        const platformParts = (peerRecord.platform || '').split(' / ');
-        const osIcon = getOSIcon(peerRecord.platform || '');
-        const osTooltip = platformParts[1] || platformParts[0] || '';
+  const columns = usePeerColumns({
+    tags,
+    onEditPeer: handleEditPeer,
+    onDeletePeer: handleDeletePeer,
+  });
 
-        return (
-          <span>
-            {osIcon && osTooltip && (
-              <Tooltip
-                title={osTooltip}
-                styles={{
-                  root: {
-                    maxWidth: 'none',
-                  },
-                }}
-                overlayStyle={{
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                <span>{osIcon}</span>
-              </Tooltip>
-            )}
-            {osIcon && <>&nbsp;&nbsp;</>}
-            {record.id}
-          </span>
-        );
-      },
-    },
-    {
-      title: (
-        <span>
-          <FormattedMessage
-            id="pages.addressBook.device"
-            defaultMessage="Device"
-          />
-          <Tooltip
-            title={intl.formatMessage({
-              id: 'pages.addressBook.deviceInfo',
-              defaultMessage: 'username@device_name',
-            })}
-          >
-            <InfoCircleOutlined style={{ marginLeft: 4 }} />
-          </Tooltip>
-        </span>
-      ),
-      dataIndex: 'hostname',
-      width: 150,
-      ellipsis: true,
-      search: false,
-      sorter: true,
-      render: (_: unknown, record: API.PeerItem) => {
-        const username = (record as API.PeerItem & { username?: string })
-          .username;
-        const hostname = record.hostname;
-        if (username && hostname) return `${username}@${hostname}`;
-        return hostname || username || '-';
-      },
-    },
-    {
-      title: (
-        <FormattedMessage id="pages.addressBook.alias" defaultMessage="Alias" />
-      ),
-      dataIndex: 'alias',
-      width: 150,
-      ellipsis: true,
-      search: false,
-      sorter: true,
-      render: (_: unknown, record: API.PeerItem) =>
-        (record as API.PeerItem & { alias?: string }).alias || '-',
-    },
-    {
-      title: (
-        <FormattedMessage id="pages.addressBook.tags" defaultMessage="Tags" />
-      ),
-      dataIndex: 'tags',
-      width: 200,
-      search: false,
-      render: (_: unknown, record: API.PeerItem) => {
-        const peerTags = record.tags || [];
-        if (peerTags.length === 0) return '-';
-        return (
-          <Space size={[0, 4]} wrap>
-            {peerTags.map((tag: string) => {
-              const tagInfo = (tags as API.TagItem[]).find(
-                (t: API.TagItem) => t.name === tag,
-              );
-              return (
-                <Tag key={tag} color={argbToHex(tagInfo?.color)}>
-                  {tag}
-                </Tag>
-              );
-            })}
-          </Space>
-        );
-      },
-    },
-    {
-      title: (
-        <FormattedMessage id="pages.addressBook.note" defaultMessage="Note" />
-      ),
-      dataIndex: 'note',
-      width: 150,
-      ellipsis: true,
-      search: false,
-      sorter: true,
-      render: (_: unknown, record: API.PeerItem) => record.note || '-',
-    },
-    {
-      title: (
-        <FormattedMessage id="pages.common.action" defaultMessage="Action" />
-      ),
-      valueType: 'option',
-      width: 160,
-      fixed: 'right',
-      render: (_: unknown, record: API.PeerItem) => (
-        <Space size={0} split={<Divider type="vertical" />}>
-          <Button
-            key="edit"
-            type="link"
-            size="small"
-            onClick={() => handleEditPeer(record)}
-          >
-            <FormattedMessage id="pages.common.edit" defaultMessage="Edit" />
-          </Button>
-          <Popconfirm
-            key="delete"
-            title={
-              <FormattedMessage
-                id="pages.addressBook.deletePeerConfirm"
-                defaultMessage="Are you sure to delete this peer?"
-              />
-            }
-            onConfirm={() => handleDeletePeer(record.id)}
-            okText={intl.formatMessage({
-              id: 'pages.common.confirm',
-              defaultMessage: 'Yes',
-            })}
-            cancelText={intl.formatMessage({
-              id: 'pages.common.cancel',
-              defaultMessage: 'No',
-            })}
-          >
-            <Button type="link" size="small" danger>
-              <FormattedMessage
-                id="pages.common.delete"
-                defaultMessage="Delete"
-              />
-            </Button>
-          </Popconfirm>
-        </Space>
-      ),
-    },
-  ];
+  const tagColumns = useTagColumns({
+    pendingColorUpdates,
+    renameTagForm,
+    modal,
+    onUpdateTagColor: handleUpdateTagColor,
+    onRenameTag: handleRenameTag,
+    onDeleteTag: handleDeleteTag,
+  });
 
-  const tagColumns = [
-    {
-      title: intl.formatMessage({
-        id: 'pages.addressBook.tagName',
-        defaultMessage: 'Tag Name',
-      }),
-      dataIndex: 'name',
-      key: 'name',
-      width: 200,
-      render: (text: string, record: API.TagItem) => (
-        <Tag color={argbToHex(record.color)} style={{ marginRight: 8 }}>
-          {text}
-        </Tag>
-      ),
-    },
-    {
-      title: intl.formatMessage({
-        id: 'pages.addressBook.color',
-        defaultMessage: 'Color',
-      }),
-      dataIndex: 'color',
-      key: 'color',
-      width: 120,
-      render: (color: number, record: API.TagItem) => {
-        const displayColor = pendingColorUpdates[record.name] ?? color;
-        return (
-          <ColorPicker
-            size="small"
-            disabledAlpha
-            value={argbToHex(displayColor)}
-            onChangeComplete={(colorValue) => {
-              const rgb = colorValue.toRgb();
-              const newArgb = 0xff000000 + (rgb.r << 16) + (rgb.g << 8) + rgb.b;
-              setPendingColorUpdates((prev) => ({
-                ...prev,
-                [record.name]: newArgb,
-              }));
-              handleUpdateTagColor(record.name, newArgb);
-            }}
-          />
-        );
-      },
-    },
-    {
-      title: intl.formatMessage({
-        id: 'pages.common.action',
-        defaultMessage: 'Action',
-      }),
-      key: 'action',
-      width: 180,
-      render: (_: unknown, record: API.TagItem) => (
-        <Space size={0} split={<Divider type="vertical" />}>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
-              modal.confirm({
-                title: intl.formatMessage({
-                  id: 'pages.addressBook.renameTag',
-                  defaultMessage: 'Rename Tag',
-                }),
-                content: (
-                  <Form
-                    form={renameTagForm}
-                    initialValues={{ old: record.name, new: '' }}
-                  >
-                    <Form.Item name="old" hidden>
-                      <Input />
-                    </Form.Item>
-                    <Form.Item
-                      name="new"
-                      label={intl.formatMessage({
-                        id: 'pages.addressBook.newTagName',
-                        defaultMessage: 'New Tag Name',
-                      })}
-                      rules={[{ required: true }]}
-                    >
-                      <Input />
-                    </Form.Item>
-                  </Form>
-                ),
-                onOk: () =>
-                  renameTagForm.validateFields().then(handleRenameTag),
-              });
-            }}
-          >
-            <FormattedMessage
-              id="pages.common.rename"
-              defaultMessage="Rename"
-            />
-          </Button>
-          <Popconfirm
-            title={
-              <FormattedMessage
-                id="pages.addressBook.deleteTagConfirm"
-                defaultMessage="Are you sure to delete this tag?"
-              />
-            }
-            onConfirm={() => handleDeleteTag(record.name)}
-            okText={intl.formatMessage({
-              id: 'pages.common.confirm',
-              defaultMessage: 'Yes',
-            })}
-            cancelText={intl.formatMessage({
-              id: 'pages.common.cancel',
-              defaultMessage: 'No',
-            })}
-          >
-            <Button type="link" size="small" danger>
-              <FormattedMessage
-                id="pages.common.delete"
-                defaultMessage="Delete"
-              />
-            </Button>
-          </Popconfirm>
-        </Space>
-      ),
-    },
-  ];
+  const headerTitle = propTitle || currentAddressBook?.name || (
+    <FormattedMessage
+      id="pages.addressBook.personal"
+      defaultMessage="Personal Address Book"
+    />
+  );
 
   return (
-    <>
-      {propTitle && (
-        <Helmet>
-          <title>
-            {propTitle}
-            {Settings.title && ` - ${Settings.title}`}
-          </title>
-        </Helmet>
-      )}
-      <PageContainer title={propTitle} onBack={onBack}>
-        {!propGuid && (
-          <div
-            style={{
-              marginBottom: 16,
-              display: 'flex',
-              alignItems: 'center',
-              flexWrap: 'wrap',
-              gap: 8,
-            }}
-          >
-            <Text strong>
-              <FormattedMessage
-                id="pages.addressBook.currentAddressBook"
-                defaultMessage="Address book"
-              />
-            </Text>
-            <Select
-              aria-label={intl.formatMessage({
-                id: 'pages.addressBook.currentAddressBook',
-                defaultMessage: 'Address book',
-              })}
-              value={abGuid}
-              loading={abLoading}
-              showSearch
-              optionFilterProp="label"
-              options={addressBooks.map((profile) => ({
-                value: profile.guid,
-                label: profile.name,
-              }))}
-              onChange={selectAddressBook}
-              style={{ width: 280, maxWidth: '100%' }}
-            />
-            <Tooltip
-              title={intl.formatMessage({
-                id: 'pages.addressBook.create',
-                defaultMessage: 'Create address book',
-              })}
-            >
-              <Button
-                aria-label={intl.formatMessage({
-                  id: 'pages.addressBook.create',
-                  defaultMessage: 'Create address book',
-                })}
-                type="text"
-                icon={<PlusOutlined />}
-                disabled={addressBookSaving}
-                onClick={openCreateAddressBook}
-                style={{ width: 32 }}
-              />
-            </Tooltip>
-            <Tooltip
-              title={intl.formatMessage({
-                id: 'pages.addressBook.edit',
-                defaultMessage: 'Edit address book',
-              })}
-            >
-              <span style={{ display: 'inline-flex' }}>
-                <Button
-                  aria-label={intl.formatMessage({
-                    id: 'pages.addressBook.edit',
-                    defaultMessage: 'Edit address book',
-                  })}
-                  type="text"
-                  icon={<EditOutlined />}
-                  disabled={isDefaultAddressBook || addressBookSaving}
-                  onClick={openEditAddressBook}
-                  style={{ width: 32 }}
-                />
-              </span>
-            </Tooltip>
-            <Tooltip
-              title={intl.formatMessage({
-                id: 'pages.common.delete',
-                defaultMessage: 'Delete',
-              })}
-            >
-              <span style={{ display: 'inline-flex' }}>
-                <Button
-                  aria-label={intl.formatMessage({
-                    id: 'pages.common.delete',
-                    defaultMessage: 'Delete',
-                  })}
-                  type="text"
-                  danger
-                  icon={<DeleteOutlined />}
-                  disabled={isDefaultAddressBook || addressBookSaving}
-                  onClick={confirmDeleteAddressBook}
-                  style={{ width: 32 }}
-                />
-              </span>
-            </Tooltip>
-          </div>
-        )}
-
-        {/* Tags Area */}
-        <div
-          style={{
-            marginBottom: 16,
-            display: 'flex',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-            gap: 8,
-          }}
-        >
-          <span style={{ fontWeight: 500, marginRight: 4 }}>
-            <FormattedMessage
-              id="pages.addressBook.tags"
-              defaultMessage="Tags"
-            />
-          </span>
-          <Tag
-            style={{ cursor: 'pointer', padding: '2px 8px' }}
-            color={selectedTags.length === 0 ? 'blue' : undefined}
-            onClick={() => {
-              setSelectedTags([]);
-              actionRef.current?.reload();
-            }}
-          >
-            <FormattedMessage
-              id="pages.addressBook.untagged"
-              defaultMessage="Untagged"
-            />
-          </Tag>
-          {(tags as API.TagItem[]).map((tag: API.TagItem) => {
-            const displayColor = argbToHex(
-              pendingColorUpdates[tag.name] ?? tag.color,
-            );
-            const isSelected = selectedTags.includes(tag.name);
-            return (
-              <Tag
-                key={tag.name}
-                color={isSelected ? displayColor : undefined}
-                style={{
-                  cursor: 'pointer',
-                  padding: '2px 8px',
-                  paddingLeft: 0,
-                }}
-                closable={canWrite}
-                closeIcon={
-                  <Popconfirm
-                    title={
-                      <FormattedMessage
-                        id="pages.addressBook.deleteTagConfirm"
-                        defaultMessage="Are you sure to delete this tag?"
-                      />
-                    }
-                    okText={intl.formatMessage({
-                      id: 'pages.common.confirm',
-                      defaultMessage: 'Yes',
-                    })}
-                    cancelText={intl.formatMessage({
-                      id: 'pages.common.cancel',
-                      defaultMessage: 'No',
-                    })}
-                    onConfirm={(e) => {
-                      e?.stopPropagation();
-                      handleDeleteTag(tag.name);
-                    }}
-                    onCancel={(e) => {
-                      e?.stopPropagation();
-                    }}
-                  >
-                    <span
-                      onClick={(e) => e.stopPropagation()}
-                      style={{
-                        marginLeft: 4,
-                        cursor: 'pointer',
-                        color: isSelected ? '#fff' : undefined,
-                      }}
-                    >
-                      ×
-                    </span>
-                  </Popconfirm>
-                }
-                onClose={(e) => {
-                  e.preventDefault();
-                }}
-                onClick={() => {
-                  setSelectedTags((prev) =>
-                    isSelected
-                      ? prev.filter((t) => t !== tag.name)
-                      : [...prev, tag.name],
-                  );
-                  actionRef.current?.reload();
-                }}
-              >
-                <span
-                  style={{
-                    paddingLeft: 6,
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                  }}
-                >
-                  <ColorPicker
-                    disabled={!canWrite}
-                    disabledAlpha
-                    value={displayColor}
-                    open={canWrite && hoveredColorDot === tag.name}
-                    onOpenChange={(open) => {
-                      if (!open) {
-                        setHoveredColorDot(null);
-                      }
-                    }}
-                    onChange={(colorValue) => {
-                      const rgb = colorValue.toRgb();
-                      const newArgb =
-                        0xff000000 + (rgb.r << 16) + (rgb.g << 8) + rgb.b;
-                      setPendingColorUpdates((prev) => ({
-                        ...prev,
-                        [tag.name]: newArgb,
-                      }));
-                    }}
-                    onChangeComplete={(colorValue) => {
-                      const rgb = colorValue.toRgb();
-                      const newArgb =
-                        0xff000000 + (rgb.r << 16) + (rgb.g << 8) + rgb.b;
-                      handleUpdateTagColor(tag.name, newArgb);
-                    }}
-                    panelRender={(panel) => (
-                      <div
-                        onMouseEnter={() => {
-                          if (colorPickerCloseTimerRef.current) {
-                            clearTimeout(colorPickerCloseTimerRef.current);
-                            colorPickerCloseTimerRef.current = null;
-                          }
-                        }}
-                        onMouseLeave={() => {
-                          colorPickerCloseTimerRef.current = setTimeout(() => {
-                            setHoveredColorDot(null);
-                          }, 100);
-                        }}
-                      >
-                        {panel}
-                      </div>
-                    )}
-                  >
-                    <span
-                      onMouseEnter={() => {
-                        if (!canWrite) return;
-                        if (colorPickerCloseTimerRef.current) {
-                          clearTimeout(colorPickerCloseTimerRef.current);
-                          colorPickerCloseTimerRef.current = null;
-                        }
-                        setHoveredColorDot(tag.name);
-                      }}
-                      onMouseLeave={() => {
-                        if (!canWrite) return;
-                        colorPickerCloseTimerRef.current = setTimeout(() => {
-                          setHoveredColorDot(null);
-                        }, 100);
-                      }}
-                      style={{
-                        display: 'inline-block',
-                        width: 8,
-                        height: 8,
-                        borderRadius: '50%',
-                        backgroundColor: isSelected ? '#fff' : displayColor,
-                        cursor: canWrite ? 'pointer' : 'default',
-                      }}
-                    />
-                  </ColorPicker>
-                  <span style={{ display: 'inline-block', width: 8 }} />
-                </span>
-                {tag.name}
-              </Tag>
-            );
-          })}
-          {canWrite && (
-            <Button
-              size="small"
-              type="dashed"
-              icon={<PlusOutlined />}
-              onClick={() => setAddTagModalVisible(true)}
-            />
-          )}
-          {selectedTags.length > 1 && (
-            <Radio.Group
-              size="small"
-              value={tagMode}
-              onChange={(e) => {
-                setTagMode(e.target.value);
-                actionRef.current?.reload();
-              }}
-              optionType="button"
-              buttonStyle="solid"
-            >
-              <Radio.Button value="union">
-                <FormattedMessage
-                  id="pages.addressBook.tagModeUnion"
-                  defaultMessage="Any"
-                />
-              </Radio.Button>
-              <Radio.Button value="intersection">
-                <FormattedMessage
-                  id="pages.addressBook.tagModeIntersection"
-                  defaultMessage="All"
-                />
-              </Radio.Button>
-            </Radio.Group>
-          )}
-        </div>
-
-        <ProTable<API.PeerItem>
-          key={abGuid || 'loading'}
-          headerTitle={
-            propTitle ||
-            currentAddressBook?.name || (
-              <FormattedMessage
-                id="pages.addressBook.personal"
-                defaultMessage="Personal Address Book"
-              />
-            )
-          }
-          columnsState={{
-            persistenceType: 'localStorage',
-            persistenceKey: 'personal_address_book_columns_state',
-          }}
-          actionRef={actionRef}
-          rowKey="id"
-          loading={abLoading}
-          request={async (params) => {
-            if (!abGuid) {
-              return { data: [], total: 0, success: true };
-            }
-            const result = await getPeers({
-              current: params.current || 1,
-              pageSize: params.pageSize || 20,
-              ab: abGuid,
-              id: params.id,
-              tags: selectedTags.length > 0 ? selectedTags : undefined,
-              tagMode: selectedTags.length > 1 ? tagMode : undefined,
-            });
-            return {
-              data: result.data || [],
-              total: result.total || 0,
-              success: true,
-            };
-          }}
-          columns={
-            canWrite
-              ? columns
-              : columns.filter((column) => column.valueType !== 'option')
-          }
-          search={{
-            labelWidth: 'auto',
-            defaultCollapsed: false,
-            optionRender: (_searchConfig, _formProps, dom) => [dom[1], dom[0]],
-          }}
-          pagination={{
-            defaultPageSize: 20,
-            showSizeChanger: true,
-            showQuickJumper: true,
-          }}
-          scroll={{ x: 1100 }}
-          toolBarRender={() =>
-            canWrite
-              ? [
-                  <Button
-                    key="import"
-                    type="primary"
-                    icon={<SelectOutlined />}
-                    onClick={() => setImportDevicesModalVisible(true)}
-                  >
-                    <FormattedMessage
-                      id="pages.addressBook.import"
-                      defaultMessage="Import from devices"
-                    />
-                  </Button>,
-                  <Button
-                    key="add"
-                    icon={<PlusOutlined />}
-                    onClick={() => setAddPeerModalVisible(true)}
-                  >
-                    <FormattedMessage
-                      id="pages.addressBook.addPeer"
-                      defaultMessage="Add by ID"
-                    />
-                  </Button>,
-                  <Button key="recycle" icon={<DeleteOutlined />}>
-                    <FormattedMessage
-                      id="pages.addressBook.recycleBin"
-                      defaultMessage="Recycle Bin"
-                    />
-                  </Button>,
-                ]
-              : []
-          }
-          options={{
-            density: true,
-            setting: {
-              listsHeight: 400,
-            },
-            fullScreen: false,
-            reload: true,
-          }}
+    <PageContainer title={propTitle} onBack={onBack}>
+      {!propGuid && (
+        <AddressBookSelector
+          abGuid={abGuid}
+          abLoading={abLoading}
+          addressBooks={addressBooks}
+          addressBookSaving={addressBookSaving}
+          isDefaultAddressBook={isDefaultAddressBook}
+          onSelectAddressBook={selectAddressBook}
+          onOpenCreate={openCreateAddressBook}
+          onOpenEdit={openEditAddressBook}
+          onConfirmDelete={confirmDeleteAddressBook}
         />
+      )}
 
-        <Modal
-          title={
-            addressBookModalMode === 'create' ? (
-              <FormattedMessage
-                id="pages.addressBook.create"
-                defaultMessage="Create Address Book"
-              />
-            ) : (
-              <FormattedMessage
-                id="pages.addressBook.edit"
-                defaultMessage="Edit Address Book"
-              />
-            )
-          }
-          open={addressBookModalMode !== null}
-          confirmLoading={addressBookSaving}
-          onCancel={() => {
-            setAddressBookModalMode(null);
-            addressBookForm.resetFields();
-          }}
-          onOk={() => addressBookForm.submit()}
-        >
-          <Form
-            form={addressBookForm}
-            layout="vertical"
-            onFinish={handleAddressBookSubmit}
-          >
-            <Form.Item
-              name="name"
-              label={
-                <FormattedMessage
-                  id="pages.addressBook.name"
-                  defaultMessage="Name"
-                />
-              }
-              rules={[
-                {
-                  required: true,
-                  whitespace: true,
-                  message: intl.formatMessage({
-                    id: 'pages.common.pleaseEnterName',
-                    defaultMessage: 'Please enter name',
-                  }),
-                },
-              ]}
-            >
-              <Input maxLength={255} />
-            </Form.Item>
-            <Form.Item
-              name="note"
-              label={
-                <FormattedMessage
-                  id="pages.addressBook.note"
-                  defaultMessage="Note"
-                />
-              }
-            >
-              <Input.TextArea maxLength={2000} rows={3} />
-            </Form.Item>
-          </Form>
-        </Modal>
+      <TagFilterBar
+        tags={tags}
+        selectedTags={selectedTags}
+        tagMode={tagMode}
+        pendingColorUpdates={pendingColorUpdates}
+        hoveredColorDot={hoveredColorDot}
+        canWrite={canWrite}
+        colorPickerCloseTimerRef={colorPickerCloseTimerRef}
+        onSelectTags={setSelectedTags}
+        onSetTagMode={(mode) => {
+          setTagMode(mode);
+          actionRef.current?.reload();
+        }}
+        onSetHoveredColorDot={setHoveredColorDot}
+        onUpdatePendingColor={(tagName, color) => {
+          setPendingColorUpdates((prev) => ({
+            ...prev,
+            [tagName]: color,
+          }));
+        }}
+        onUpdateTagColor={handleUpdateTagColor}
+        onDeleteTag={handleDeleteTag}
+        onOpenAddTag={() => setAddTagModalVisible(true)}
+        onClearTags={() => {
+          setSelectedTags([]);
+          actionRef.current?.reload();
+        }}
+      />
 
-        {/* Add Peer Modal */}
-        <Modal
-          title={
-            <FormattedMessage
-              id="pages.addressBook.addPeer"
-              defaultMessage="Add by ID"
-            />
-          }
-          open={addPeerModalVisible}
-          onCancel={() => setAddPeerModalVisible(false)}
-          onOk={() => addPeerForm.submit()}
-        >
-          {addPeerError && (
-            <Alert
-              message={addPeerError}
-              type="error"
-              showIcon
-              style={{ marginBottom: 16 }}
-            />
-          )}
-          <Form form={addPeerForm} onFinish={handleAddPeer} layout="vertical">
-            <Form.Item
-              name="id"
-              label={
-                <FormattedMessage id="pages.common.id" defaultMessage="ID" />
-              }
-              rules={[
-                {
-                  required: true,
-                  message: intl.formatMessage({
-                    id: 'pages.common.pleaseEnterId',
-                    defaultMessage: 'Please enter ID',
-                  }),
-                },
-              ]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              name="alias"
-              label={
-                <FormattedMessage
-                  id="pages.addressBook.alias"
-                  defaultMessage="Alias"
-                />
-              }
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              name="note"
-              label={
-                <FormattedMessage
-                  id="pages.addressBook.note"
-                  defaultMessage="Note"
-                />
-              }
-            >
-              <Input.TextArea />
-            </Form.Item>
-            <Form.Item
-              name="tags"
-              label={
-                <FormattedMessage
-                  id="pages.addressBook.tags"
-                  defaultMessage="Tags"
-                />
-              }
-            >
-              <Select
-                mode="multiple"
-                placeholder={intl.formatMessage({
-                  id: 'pages.addressBook.selectTags',
-                  defaultMessage: 'Select tags',
-                })}
-                options={(tags as API.TagItem[]).map((tag) => ({
-                  label: tag.name,
-                  value: tag.name,
-                }))}
-              />
-            </Form.Item>
-          </Form>
-        </Modal>
+      <PeerTable
+        abGuid={abGuid}
+        abLoading={abLoading}
+        columns={columns}
+        selectedTags={selectedTags}
+        tagMode={tagMode}
+        canWrite={canWrite}
+        headerTitle={headerTitle}
+        actionRef={actionRef}
+        onOpenImport={() => setImportDevicesModalVisible(true)}
+        onOpenAddPeer={() => setAddPeerModalVisible(true)}
+      />
 
-        {/* Edit Peer Modal */}
-        <Modal
-          title={
-            <FormattedMessage id="pages.common.edit" defaultMessage="Edit" />
-          }
-          open={editPeerModalVisible}
-          onCancel={() => {
-            setEditPeerModalVisible(false);
-            setEditingPeer(null);
-            editPeerForm.resetFields();
-          }}
-          onOk={() => editPeerForm.submit()}
-        >
-          {editPeerError && (
-            <Alert
-              message={editPeerError}
-              type="error"
-              showIcon
-              style={{ marginBottom: 16 }}
-            />
-          )}
-          <Form
-            form={editPeerForm}
-            onFinish={handleUpdatePeer}
-            layout="vertical"
-          >
-            <Form.Item
-              name="id"
-              label={
-                <FormattedMessage id="pages.common.id" defaultMessage="ID" />
-              }
-            >
-              <Text>{editingPeer?.id}</Text>
-            </Form.Item>
-            <Form.Item
-              name="alias"
-              label={
-                <FormattedMessage
-                  id="pages.addressBook.alias"
-                  defaultMessage="Alias"
-                />
-              }
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              name="note"
-              label={
-                <FormattedMessage
-                  id="pages.addressBook.note"
-                  defaultMessage="Note"
-                />
-              }
-            >
-              <Input.TextArea />
-            </Form.Item>
-            <Form.Item
-              name="tags"
-              label={
-                <FormattedMessage
-                  id="pages.addressBook.tags"
-                  defaultMessage="Tags"
-                />
-              }
-            >
-              <Select
-                mode="multiple"
-                placeholder={intl.formatMessage({
-                  id: 'pages.addressBook.selectTags',
-                  defaultMessage: 'Select tags',
-                })}
-                options={(tags as API.TagItem[]).map((tag) => ({
-                  label: tag.name,
-                  value: tag.name,
-                }))}
-              />
-            </Form.Item>
-          </Form>
-        </Modal>
+      <AddressBookModal
+        mode={addressBookModalMode}
+        saving={addressBookSaving}
+        form={addressBookForm}
+        onSubmit={handleAddressBookSubmit}
+        onCancel={() => {
+          setAddressBookModalMode(null);
+          addressBookForm.resetFields();
+        }}
+      />
 
-        {/* Add Tag Modal */}
-        <Modal
-          title={
-            <FormattedMessage
-              id="pages.addressBook.addTag"
-              defaultMessage="Add Tag"
-            />
-          }
-          open={addTagModalVisible}
-          onCancel={() => setAddTagModalVisible(false)}
-          onOk={() => addTagForm.submit()}
-        >
-          <Form form={addTagForm} onFinish={handleAddTag} layout="vertical">
-            <Form.Item
-              name="name"
-              label={
-                <FormattedMessage
-                  id="pages.addressBook.tagName"
-                  defaultMessage="Tag Name"
-                />
-              }
-              rules={[
-                {
-                  required: true,
-                  message: intl.formatMessage({
-                    id: 'pages.common.pleaseEnterTagName',
-                    defaultMessage: 'Please enter tag name',
-                  }),
-                },
-              ]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              name="color"
-              label={
-                <FormattedMessage
-                  id="pages.addressBook.color"
-                  defaultMessage="Color"
-                />
-              }
-            >
-              <ColorPicker disabledAlpha />
-            </Form.Item>
-          </Form>
-        </Modal>
+      <AddPeerModal
+        visible={addPeerModalVisible}
+        error={addPeerError}
+        tags={tags}
+        form={addPeerForm}
+        onSubmit={handleAddPeer}
+        onCancel={() => setAddPeerModalVisible(false)}
+      />
 
-        {/* Tag Management Modal */}
-        <Modal
-          title={
-            <FormattedMessage
-              id="pages.addressBook.manageTags"
-              defaultMessage="Manage Tags"
-            />
-          }
-          open={tagManagementVisible}
-          onCancel={() => setTagManagementVisible(false)}
-          footer={null}
-          width={700}
-        >
-          <Table
-            dataSource={tags as API.TagItem[]}
-            columns={tagColumns}
-            rowKey="name"
-            pagination={false}
-            size="middle"
-          />
-        </Modal>
+      <EditPeerModal
+        visible={editPeerModalVisible}
+        error={editPeerError}
+        editingPeer={editingPeer}
+        tags={tags}
+        form={editPeerForm}
+        onSubmit={handleUpdatePeer}
+        onCancel={() => {
+          setEditPeerModalVisible(false);
+          setEditingPeer(null);
+          editPeerForm.resetFields();
+        }}
+      />
 
-        {/* Import Devices Modal */}
-        <Modal
-          title={
-            <FormattedMessage
-              id="pages.addressBook.importDevices"
-              defaultMessage="Import Devices"
-            />
-          }
-          open={importDevicesModalVisible}
-          onCancel={() => {
-            setImportDevicesModalVisible(false);
-            setSelectedDeviceKeys([]);
-          }}
-          onOk={handleImportDevices}
-          okButtonProps={{
-            loading: importing,
-            disabled: selectedDeviceKeys.length === 0,
-          }}
-          width={1000}
-        >
-          <DeviceSelectTable
-            selectedRowKeys={selectedDeviceKeys}
-            onSelectionChange={setSelectedDeviceKeys}
-          />
-        </Modal>
-      </PageContainer>
-    </>
+      <AddTagModal
+        visible={addTagModalVisible}
+        form={addTagForm}
+        onSubmit={handleAddTag}
+        onCancel={() => setAddTagModalVisible(false)}
+      />
+
+      <TagManagementModal
+        visible={tagManagementVisible}
+        tags={tags}
+        columns={tagColumns}
+        onCancel={() => setTagManagementVisible(false)}
+      />
+
+      <ImportDevicesModal
+        visible={importDevicesModalVisible}
+        importing={importing}
+        selectedDeviceKeys={selectedDeviceKeys}
+        onSelectionChange={setSelectedDeviceKeys}
+        onOk={handleImportDevices}
+        onCancel={() => {
+          setImportDevicesModalVisible(false);
+          setSelectedDeviceKeys([]);
+        }}
+      />
+    </PageContainer>
   );
 };
 

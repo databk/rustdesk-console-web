@@ -1,14 +1,4 @@
-import {
-  CameraOutlined,
-  CodeOutlined,
-  DownloadOutlined,
-  EditTwoTone,
-  FileSyncOutlined,
-  FundProjectionScreenOutlined,
-  QuestionOutlined,
-  RetweetOutlined,
-} from '@ant-design/icons';
-import type { ActionType, ProColumns } from '@ant-design/pro-components';
+import type { ActionType } from '@ant-design/pro-components';
 import {
   ModalForm,
   PageContainer,
@@ -26,110 +16,26 @@ import {
   Typography,
 } from 'antd';
 import dayjs from 'dayjs';
-import React, { Fragment, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   disconnectConnection,
   getConnectionAudits,
   updateConnectionAudit,
 } from '@/services/rustdesk-console/audit';
-import { renderNameIp } from '@/utils/audit';
+import { DownloadOutlined } from '@ant-design/icons';
+import type { ConnectionAuditSearchParams } from './types';
+import { useConnColumns } from './components/ConnColumns';
+import { useDetailFields } from './components/DetailFields';
+import { useCsvExport } from './components/useCsvExport';
 
 const { Text } = Typography;
-
-const DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss';
-
-const formatDateTime = (val?: string): string =>
-  val ? dayjs(val).format(DATE_FORMAT) : '-';
-
-const renderLocalField = (record: API.ConnectionAuditItem): string =>
-  renderNameIp(record.peerName, record.ip);
-
-const sanitizeCsvCell = (cell: string): string => {
-  let safe = cell.replace(/"/g, '""');
-  if (/^[=+\-@\t\r]/.test(safe)) {
-    safe = `'${safe}`;
-  }
-  return `"${safe}"`;
-};
-
-const renderDuration = (record: API.ConnectionAuditItem): string => {
-  if (!record.establishedAt || !record.closedAt) return '-';
-  const start = dayjs(record.establishedAt);
-  const end = dayjs(record.closedAt);
-  const durationSeconds = end.diff(start, 'second');
-  if (durationSeconds < 0) return '-';
-
-  const days = Math.floor(durationSeconds / 86400);
-  const hours = Math.floor((durationSeconds % 86400) / 3600);
-  const minutes = Math.floor((durationSeconds % 3600) / 60);
-  const seconds = durationSeconds % 60;
-
-  const parts: string[] = [];
-  if (days > 0) parts.push(`${days}d`);
-  if (hours > 0) parts.push(`${hours}h`);
-  if (minutes > 0) parts.push(`${minutes}m`);
-  if (seconds > 0 || parts.length === 0) parts.push(`${seconds}s`);
-
-  return parts.join(' ');
-};
-
-const renderConnTypeIcon = (type?: number) => {
-  switch (type) {
-    case -1:
-      return <QuestionOutlined />;
-    case 0:
-      return <FundProjectionScreenOutlined />;
-    case 1:
-      return <FileSyncOutlined />;
-    case 2:
-      return <RetweetOutlined />;
-    case 3:
-      return <CameraOutlined />;
-    case 4:
-      return <CodeOutlined />;
-    default:
-      return <QuestionOutlined />;
-  }
-};
-
-const getConnTypeMsgId = (type?: number): string => {
-  switch (type) {
-    case -1:
-      return 'pages.audits.connType.notLoggedIn';
-    case 0:
-      return 'pages.audits.connType.remoteDesktop';
-    case 1:
-      return 'pages.audits.connType.fileTransfer';
-    case 2:
-      return 'pages.audits.connType.portTransfer';
-    case 3:
-      return 'pages.audits.connType.viewCamera';
-    case 4:
-      return 'pages.audits.connType.terminal';
-    default:
-      return 'pages.audits.connType.notLoggedIn';
-  }
-};
-
-interface DetailField {
-  label: string;
-  dataIndex?: keyof API.ConnectionAuditItem;
-  render?: (r: API.ConnectionAuditItem) => string;
-}
-
-interface ConnectionAuditSearchParams extends API.PageParams {
-  deviceId?: string;
-  type?: number;
-  createdAt?: [string, string];
-}
 
 const ConnectionAudit: React.FC = () => {
   const actionRef = useRef<ActionType>(null);
   const intl = useIntl();
-  const { message: msgApi, modal } = App.useApp();
+  const { message: msgApi } = App.useApp();
   const access = useAccess();
-  const canEdit = access.isSuperAdmin;
-  const canDisconnect = access.canDevicesDisconnect;
+  const canEdit = !!access.canAdmin;
 
   const [pageParams, setPageParams] =
     useState<Partial<ConnectionAuditSearchParams>>();
@@ -143,6 +49,8 @@ const ConnectionAudit: React.FC = () => {
     uuid: string;
     connId: number;
   }>();
+
+  const { exportCsv } = useCsvExport({ pageParams });
 
   const handleDisconnect = async () => {
     if (!disconnectTarget) return;
@@ -211,440 +119,26 @@ const ConnectionAudit: React.FC = () => {
     }
   };
 
-  const fetchExportData = async (): Promise<API.ConnectionAuditItem[]> => {
-    let allItems: API.ConnectionAuditItem[] = [];
-    let total = 0;
-    const pageSize = 100;
-    let current = 0;
-
-    do {
-      current++;
-      const items = await getConnectionAudits({
-        ...pageParams,
-        current,
-        pageSize,
+  const columns = useConnColumns({
+    canEdit,
+    onViewDetail: (record) => {
+      setCurrentRow(record);
+      setDrawerOpen(true);
+    },
+    onEditNote: (record) => {
+      setCurrentRow(record);
+      setEditModalVisible(true);
+    },
+    onDisconnect: (record) => {
+      setDisconnectTarget({
+        uuid: record.deviceUuid || '',
+        connId: Number(record.connId || record.id),
       });
-      if (total === 0 && items.total != null) {
-        total = items.total;
-      }
-      if (items.data != null) {
-        allItems = allItems.concat(items.data);
-      }
-    } while (current < 10 && pageSize * current < total);
+      setDisconnectModalOpen(true);
+    },
+  });
 
-    return allItems;
-  };
-
-  const generateCsvContent = (items: API.ConnectionAuditItem[]): string => {
-    const titles = [
-      intl.formatMessage({ id: 'pages.audits.type', defaultMessage: 'Type' }),
-      intl.formatMessage({
-        id: 'pages.audits.remote',
-        defaultMessage: 'Remote',
-      }),
-      intl.formatMessage({
-        id: 'pages.audits.local',
-        defaultMessage: 'Local',
-      }),
-      intl.formatMessage({
-        id: 'pages.audits.requestedAt',
-        defaultMessage: 'Requested At',
-      }),
-      intl.formatMessage({
-        id: 'pages.audits.establishedAt',
-        defaultMessage: 'Established At',
-      }),
-      intl.formatMessage({
-        id: 'pages.audits.closedAt',
-        defaultMessage: 'Closed At',
-      }),
-      intl.formatMessage({
-        id: 'pages.audits.duration',
-        defaultMessage: 'Duration',
-      }),
-      intl.formatMessage({
-        id: 'pages.audits.note',
-        defaultMessage: 'Note',
-      }),
-    ];
-
-    const rows: string[][] = [];
-    items.forEach((record) => {
-      const row: string[] = [];
-      row.push(
-        intl.formatMessage({
-          id: getConnTypeMsgId(record.type),
-          defaultMessage: '-',
-        }),
-      );
-      row.push(record.deviceId || '');
-      row.push(renderLocalField(record));
-      row.push(record.requestedAt || '');
-      row.push(record.establishedAt || '');
-      row.push(record.closedAt || '');
-      row.push(renderDuration(record));
-      row.push(record.note || '');
-      rows.push(row);
-    });
-
-    return [
-      titles.map(sanitizeCsvCell).join(','),
-      ...rows.map((row) => row.map(sanitizeCsvCell).join(',')),
-    ].join('\n');
-  };
-
-  const downloadCsv = (csvContent: string) => {
-    const blob = new Blob([`\ufeff${csvContent}`], {
-      type: 'text/csv;charset=utf-8;',
-    });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `connection-audit-${dayjs().format('YYYY-MM-DD-HHmmss')}.csv`;
-    link.click();
-    URL.revokeObjectURL(link.href);
-  };
-
-  const exportCsv = async () => {
-    modal.confirm({
-      title: intl.formatMessage({
-        id: 'pages.audits.exportConfirmTitle',
-        defaultMessage: 'Export CSV',
-      }),
-      content: intl.formatMessage({
-        id: 'pages.audits.exportConfirmContent',
-        defaultMessage: 'Export up to 1000 records. Continue?',
-      }),
-      okText: intl.formatMessage({
-        id: 'pages.common.confirm',
-        defaultMessage: 'Yes',
-      }),
-      cancelText: intl.formatMessage({
-        id: 'pages.common.cancel',
-        defaultMessage: 'No',
-      }),
-      onOk: async () => {
-        try {
-          const items = await fetchExportData();
-          if (items.length === 0) {
-            msgApi.warning(
-              intl.formatMessage({
-                id: 'pages.audits.noDataToExport',
-                defaultMessage: 'No data to export',
-              }),
-            );
-            return;
-          }
-          const csvContent = generateCsvContent(items);
-          downloadCsv(csvContent);
-          msgApi.success(
-            intl.formatMessage({
-              id: 'pages.audits.exportSuccess',
-              defaultMessage: 'Export successful',
-            }),
-          );
-        } catch (_error) {
-          msgApi.error(
-            intl.formatMessage({
-              id: 'pages.audits.exportFailed',
-              defaultMessage: 'Export failed',
-            }),
-          );
-        }
-      },
-    });
-  };
-
-  const connTypeValueEnum: Record<number, { text: string }> = {
-    [-1]: {
-      text: intl.formatMessage({
-        id: 'pages.audits.connType.notLoggedIn',
-        defaultMessage: 'Not Logged In',
-      }),
-    },
-    0: {
-      text: intl.formatMessage({
-        id: 'pages.audits.connType.remoteDesktop',
-        defaultMessage: 'Remote Desktop',
-      }),
-    },
-    1: {
-      text: intl.formatMessage({
-        id: 'pages.audits.connType.fileTransfer',
-        defaultMessage: 'File Transfer',
-      }),
-    },
-    2: {
-      text: intl.formatMessage({
-        id: 'pages.audits.connType.portTransfer',
-        defaultMessage: 'Port Transfer',
-      }),
-    },
-    3: {
-      text: intl.formatMessage({
-        id: 'pages.audits.connType.viewCamera',
-        defaultMessage: 'View Camera',
-      }),
-    },
-    4: {
-      text: intl.formatMessage({
-        id: 'pages.audits.connType.terminal',
-        defaultMessage: 'Terminal',
-      }),
-    },
-  };
-
-  const columns: ProColumns<API.ConnectionAuditItem>[] = [
-    {
-      title: <FormattedMessage id="pages.audits.type" defaultMessage="Type" />,
-      dataIndex: 'type',
-      width: 60,
-      valueType: 'select',
-      valueEnum: connTypeValueEnum,
-      render: (_, record) => {
-        const icon = renderConnTypeIcon(record.type);
-        const msgId = getConnTypeMsgId(record.type);
-        return (
-          <Button
-            type="link"
-            style={{ padding: 0 }}
-            onClick={() => {
-              setCurrentRow(record);
-              setDrawerOpen(true);
-            }}
-          >
-            <Tooltip title={intl.formatMessage({ id: msgId })}>{icon}</Tooltip>
-          </Button>
-        );
-      },
-    },
-    {
-      title: (
-        <FormattedMessage id="pages.audits.remote" defaultMessage="Remote" />
-      ),
-      dataIndex: 'deviceId',
-      tip: intl.formatMessage({
-        id: 'pages.audits.remoteSearchTip',
-        defaultMessage: 'Search by remote device ID (fuzzy match)',
-      }),
-      fieldProps: {
-        placeholder: intl.formatMessage({
-          id: 'pages.audits.remotePlaceholder',
-          defaultMessage: 'Enter remote device ID',
-        }),
-      },
-      hideInTable: true,
-    },
-    {
-      title: (
-        <FormattedMessage id="pages.audits.remote" defaultMessage="Remote" />
-      ),
-      dataIndex: 'deviceId',
-      tip: intl.formatMessage({
-        id: 'pages.audits.remoteTip',
-        defaultMessage: 'Remotely controlled computer or terminal',
-      }),
-      hideInSearch: true,
-      render: (_, record) => record.deviceId || '-',
-    },
-    {
-      title: (
-        <FormattedMessage id="pages.audits.local" defaultMessage="Local" />
-      ),
-      dataIndex: 'local',
-      search: false,
-      width: 200,
-      render: (_, record) => renderLocalField(record),
-    },
-    {
-      title: <FormattedMessage id="pages.audits.time" defaultMessage="Time" />,
-      dataIndex: 'createdAt',
-      valueType: 'dateTimeRange',
-      hideInTable: true,
-      fieldProps: {
-        placeholder: [
-          intl.formatMessage({
-            id: 'pages.audits.startTime',
-            defaultMessage: 'Start Time',
-          }),
-          intl.formatMessage({
-            id: 'pages.audits.endTime',
-            defaultMessage: 'End Time',
-          }),
-        ],
-      },
-    },
-    {
-      title: (
-        <FormattedMessage
-          id="pages.audits.requestedAt"
-          defaultMessage="Requested At"
-        />
-      ),
-      dataIndex: 'requestedAt',
-      width: 180,
-      search: false,
-      render: (_, record) => formatDateTime(record.requestedAt),
-    },
-    {
-      title: (
-        <FormattedMessage
-          id="pages.audits.establishedAt"
-          defaultMessage="Established At"
-        />
-      ),
-      dataIndex: 'establishedAt',
-      width: 180,
-      search: false,
-      render: (_, record) => formatDateTime(record.establishedAt),
-    },
-    {
-      title: (
-        <FormattedMessage
-          id="pages.audits.closedAt"
-          defaultMessage="Closed At"
-        />
-      ),
-      dataIndex: 'closedAt',
-      width: 180,
-      search: false,
-      render: (_, record) => formatDateTime(record.closedAt),
-    },
-    {
-      title: (
-        <FormattedMessage
-          id="pages.audits.duration"
-          defaultMessage="Duration"
-        />
-      ),
-      dataIndex: 'duration',
-      search: false,
-      width: 120,
-      render: (_, record) => renderDuration(record),
-    },
-    {
-      title: <FormattedMessage id="pages.audits.note" defaultMessage="Note" />,
-      dataIndex: 'note',
-      valueType: 'textarea',
-      search: false,
-      width: 200,
-      ellipsis: true,
-      render: (_, record) => (
-        <Fragment>
-          <Text
-            ellipsis={{ tooltip: record.note || '' }}
-            style={{ maxWidth: 150 }}
-          >
-            {record.note || ''}
-          </Text>
-          {canEdit && (
-            <Button
-              icon={<EditTwoTone />}
-              type="text"
-              size="small"
-              onClick={() => {
-                setCurrentRow(record);
-                setEditModalVisible(true);
-              }}
-            />
-          )}
-        </Fragment>
-      ),
-    },
-    {
-      title: (
-        <FormattedMessage id="pages.common.action" defaultMessage="Action" />
-      ),
-      search: false,
-      hideInTable: !canDisconnect,
-      width: 120,
-      render: (_, record) => {
-        if (!canDisconnect) {
-          return <Text type="secondary">-</Text>;
-        }
-        const isActive = record.action === 'established' && !record.closedAt;
-        if (!isActive) return '';
-        return (
-          <Button
-            size="small"
-            type="default"
-            danger
-            onClick={() => {
-              setDisconnectTarget({
-                uuid: record.deviceUuid || '',
-                connId: Number(record.connId || record.id),
-              });
-              setDisconnectModalOpen(true);
-            }}
-          >
-            <FormattedMessage
-              id="pages.audits.disconnect"
-              defaultMessage="Disconnect"
-            />
-          </Button>
-        );
-      },
-    },
-  ];
-
-  const detailFields: DetailField[] = [
-    {
-      label: intl.formatMessage({
-        id: 'pages.audits.type',
-        defaultMessage: 'Type',
-      }),
-      render: (r: API.ConnectionAuditItem) =>
-        intl.formatMessage({ id: getConnTypeMsgId(r.type) }),
-    },
-    {
-      label: intl.formatMessage({
-        id: 'pages.audits.remote',
-        defaultMessage: 'Remote',
-      }),
-      dataIndex: 'deviceId',
-    },
-    {
-      label: intl.formatMessage({
-        id: 'pages.audits.local',
-        defaultMessage: 'Local',
-      }),
-      render: renderLocalField,
-    },
-    {
-      label: intl.formatMessage({
-        id: 'pages.audits.requestedAt',
-        defaultMessage: 'Requested At',
-      }),
-      render: (r: API.ConnectionAuditItem) => formatDateTime(r.requestedAt),
-    },
-    {
-      label: intl.formatMessage({
-        id: 'pages.audits.establishedAt',
-        defaultMessage: 'Established At',
-      }),
-      render: (r: API.ConnectionAuditItem) => formatDateTime(r.establishedAt),
-    },
-    {
-      label: intl.formatMessage({
-        id: 'pages.audits.closedAt',
-        defaultMessage: 'Closed At',
-      }),
-      render: (r: API.ConnectionAuditItem) => formatDateTime(r.closedAt),
-    },
-    {
-      label: intl.formatMessage({
-        id: 'pages.audits.duration',
-        defaultMessage: 'Duration',
-      }),
-      render: renderDuration,
-    },
-    {
-      label: intl.formatMessage({
-        id: 'pages.audits.note',
-        defaultMessage: 'Note',
-      }),
-      dataIndex: 'note',
-    },
-  ];
+  const detailFields = useDetailFields();
 
   return (
     <PageContainer
@@ -741,7 +235,7 @@ const ConnectionAudit: React.FC = () => {
           showSizeChanger: true,
           showQuickJumper: true,
         }}
-        scroll={{ x: 1500 }}
+        scroll={{ x: '100%' }}
         options={{
           density: true,
           setting: { listsHeight: 400 },

@@ -11,6 +11,9 @@ const PUBLIC_PATH: string = '/';
 
 export default defineConfig({
   hash: true,
+  codeSplitting: {
+    jsStrategy: 'granularChunks',
+  },
   publicPath: PUBLIC_PATH,
   routes,
   ignoreMomentLocale: true,
@@ -29,7 +32,7 @@ export default defineConfig({
     plugins: ['duration'],
   },
   locale: {
-    default: 'zh-CN',
+    default: 'en-US',
     antd: true,
     baseNavigator: true,
   },
@@ -48,9 +51,19 @@ export default defineConfig({
   request: {},
   access: {},
   headScripts: [{ src: join(PUBLIC_PATH, 'scripts/loading.js'), async: true }],
+  links: [{ rel: 'manifest', href: join(PUBLIC_PATH, 'manifest.json') }],
+  metas: [
+    { name: 'theme-color', content: '#1890ff' },
+    { name: 'application-name', content: 'RustDesk Console' },
+    { name: 'apple-mobile-web-app-capable', content: 'yes' },
+    { name: 'apple-mobile-web-app-status-bar-style', content: 'default' },
+    { name: 'apple-mobile-web-app-title', content: 'RustDesk Console' },
+    { name: 'mobile-web-app-capable', content: 'yes' },
+  ],
   presets: ['umi-presets-pro'],
   mock: false,
   mako: {},
+  devtool: process.env.NODE_ENV === 'development' ? 'source-map' : false,
   esbuildMinifyIIFE: true,
   requestRecord: {},
   define: {

@@ -24,7 +24,7 @@ import {
   getWebSharedAddressBooks,
   updateSharedAddressBook,
 } from '@/services/rustdesk-console/addressBook';
-import UserGroupAccessModal from './components/UserGroupAccessModal';
+import ShareAccessModal from './components/ShareAccessModal';
 
 const SharedAddressBook: React.FC = () => {
   const intl = useIntl();
@@ -431,13 +431,11 @@ const SharedAddressBook: React.FC = () => {
         </Form>
       </Modal>
 
-      {access.canAddressBooksShare && (
-        <UserGroupAccessModal
-          open={!!accessRecord}
-          addressBook={accessRecord}
-          onOpenChange={(open) => !open && setAccessRecord(null)}
-        />
-      )}
+      <ShareAccessModal
+        open={!!accessRecord}
+        addressBook={accessRecord}
+        onOpenChange={(open) => !open && setAccessRecord(null)}
+      />
     </PageContainer>
   );
 };

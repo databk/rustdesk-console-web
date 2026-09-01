@@ -1,12 +1,7 @@
-import {
-  DeleteOutlined,
-  EditOutlined,
-  PlusOutlined,
-  TeamOutlined,
-} from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { ModalForm, PageContainer, ProTable } from '@ant-design/pro-components';
-import { FormattedMessage, useAccess, useIntl } from '@umijs/max';
+import { FormattedMessage, history, useAccess, useIntl } from '@umijs/max';
 import {
   App,
   Button,
@@ -24,7 +19,6 @@ import {
   getUserGroupList,
   updateUserGroup,
 } from '@/services/rustdesk-console/userGroup';
-import UserGroupMembersModal from './components/UserGroupMembersModal';
 
 const UserGroupList: React.FC = () => {
   const intl = useIntl();
@@ -36,9 +30,7 @@ const UserGroupList: React.FC = () => {
   const [currentGroup, setCurrentGroup] = useState<API.UserGroupItem | null>(
     null,
   );
-  const [membersGroup, setMembersGroup] = useState<API.UserGroupItem | null>(
-    null,
-  );
+
   const [form] = Form.useForm();
 
   const handleCreate = async (values: API.CreateUserGroupParams) => {
@@ -113,12 +105,6 @@ const UserGroupList: React.FC = () => {
 
   const columns: ProColumns<API.UserGroupItem>[] = [
     {
-      title: '',
-      dataIndex: 'index',
-      valueType: 'indexBorder',
-      width: 50,
-    },
-    {
       title: (
         <FormattedMessage
           id="pages.userGroups.name"
@@ -129,8 +115,16 @@ const UserGroupList: React.FC = () => {
       width: 200,
       render: (_, record) => (
         <Space>
-          <TeamOutlined style={{ color: '#13c2c2' }} />
-          <span>{record.name}</span>
+          <a
+            onClick={() => {
+              history.push(`/groups/user/${record.guid}`, {
+                name: record.name,
+              });
+            }}
+            style={{ cursor: 'pointer' }}
+          >
+            {record.name}
+          </a>
           {record.is_default && (
             <Tag color="blue">
               <FormattedMessage
@@ -149,6 +143,7 @@ const UserGroupList: React.FC = () => {
       dataIndex: 'note',
       width: 250,
       ellipsis: true,
+      search: false,
       render: (_, record) => record.note || '-',
     },
     {
@@ -167,7 +162,7 @@ const UserGroupList: React.FC = () => {
         <FormattedMessage id="pages.common.action" defaultMessage="Action" />
       ),
       valueType: 'option',
-      width: 280,
+      width: 200,
       fixed: 'right',
       hideInTable:
         !access.canUserGroupsMembership &&
@@ -175,19 +170,6 @@ const UserGroupList: React.FC = () => {
         !access.canUserGroupsDelete,
       render: (_, record) => (
         <Space size={0} split={<Divider type="vertical" />}>
-          {access.canUserGroupsMembership && (
-            <Button
-              type="link"
-              size="small"
-              icon={<TeamOutlined />}
-              onClick={() => setMembersGroup(record)}
-            >
-              <FormattedMessage
-                id="pages.userGroups.members"
-                defaultMessage="Members"
-              />
-            </Button>
-          )}
           {access.canUserGroupsEdit && (
             <Button
               type="link"
@@ -408,15 +390,6 @@ const UserGroupList: React.FC = () => {
           />
         </Form.Item>
       </ModalForm>
-
-      {access.canUserGroupsMembership && (
-        <UserGroupMembersModal
-          open={!!membersGroup}
-          group={membersGroup}
-          onOpenChange={(open) => !open && setMembersGroup(null)}
-          onChanged={() => actionRef.current?.reload()}
-        />
-      )}
     </PageContainer>
   );
 };

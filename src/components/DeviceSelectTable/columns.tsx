@@ -87,7 +87,7 @@ export const getDeviceColumns = (options?: {
     {
       title: <FormattedMessage id="pages.common.id" defaultMessage="ID" />,
       dataIndex: 'id',
-      width: '15%',
+      width: '11%',
       ellipsis: true,
       sorter: true,
       render: (_: unknown, record: API.DeviceItem) => {
@@ -135,7 +135,7 @@ export const getDeviceColumns = (options?: {
               </Tooltip>
             )}
             {osIcon && <>&nbsp;&nbsp;</>}
-            <a>{record.id}</a>
+            <a href={`rustdesk://${record.id}`}>{record.id}</a>
           </span>
         );
       },
@@ -259,6 +259,7 @@ export const getDeviceColumns = (options?: {
         <FormattedMessage id="pages.devices.status" defaultMessage="Status" />
       ),
       dataIndex: 'status_display',
+      width: 71,
       search: false,
       sorter: true,
       render: (_: unknown, record: API.DeviceItem) => {
@@ -300,7 +301,12 @@ export const getDeviceColumns = (options?: {
       search: false,
       render: (_: unknown, record: API.DeviceItem) => {
         if (!record.info) return '-';
-        return `${record.info.os || ''} ${record.info.ip || ''}`.trim() || '-';
+        const parts = [
+          record.info.cpu,
+          record.info.memory,
+          record.info.version,
+        ].filter(Boolean);
+        return parts.join(' | ') || '-';
       },
     },
     {

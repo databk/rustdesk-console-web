@@ -5,6 +5,7 @@ import {
   GithubOutlined,
   LoadingOutlined,
   PlusOutlined,
+  RedoOutlined,
   WarningOutlined,
 } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
@@ -26,6 +27,7 @@ interface BuildListProps {
   onUnbind: () => void;
   onCreate: () => void;
   onRepoRequired: () => void;
+  onRetry: (record: API.BuildRecord) => void;
 }
 
 const statusConfig: Record<string, { color: string; icon: React.ReactNode }> = {
@@ -42,6 +44,7 @@ const BuildList: React.FC<BuildListProps> = ({
   onUnbind,
   onCreate,
   onRepoRequired,
+  onRetry,
 }) => {
   const intl = useIntl();
   const { message: msgApi } = App.useApp();
@@ -224,6 +227,19 @@ const BuildList: React.FC<BuildListProps> = ({
 
         return (
           <Space size={0} split={<span style={{ color: '#d9d9d9' }}>|</span>}>
+            {record.status === 'failed' && (
+              <Button
+                type="link"
+                size="small"
+                icon={<RedoOutlined />}
+                onClick={() => onRetry(record)}
+              >
+                <FormattedMessage
+                  id="pages.nexus.retryBuild"
+                  defaultMessage="Retry"
+                />
+              </Button>
+            )}
             {record.status === 'completed' &&
               files.map((file) => (
                 <Button

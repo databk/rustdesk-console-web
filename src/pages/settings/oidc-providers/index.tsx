@@ -1,14 +1,15 @@
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType } from '@ant-design/pro-components';
-import { PageContainer, ProTable } from '@ant-design/pro-components';
+import { DragSortTable, PageContainer } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
 import { App, Button } from 'antd';
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   createOidcProvider,
   deleteOidcProvider,
   getOidcProvider,
   getOidcProviderList,
+  sortOidcProviderList,
   testOidcProvider,
   toggleOidcProvider,
   updateOidcProvider,
@@ -22,6 +23,8 @@ const OidcProviderList: React.FC = () => {
   const { message: msgApi } = App.useApp();
   const actionRef = useRef<ActionType>(null);
 
+  const [dataSource, setDataSource] = useState<API.OidcProvider[]>([]);
+  const [loading, setLoading] = useState(false);
   const [createModalVisible, setCreateModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [currentRecord, setCurrentRecord] = useState<API.OidcProvider | null>(
@@ -30,6 +33,30 @@ const OidcProviderList: React.FC = () => {
   const [testingGuid, setTestingGuid] = useState<string | null>(null);
   const [testResultVisible, setTestResultVisible] = useState(false);
   const [testResult, setTestResult] = useState<API.OidcTestResult | null>(null);
+
+  const fetchData = useCallback(
+    async (name?: string) => {
+      setLoading(true);
+      try {
+        const result = await getOidcProviderList({ name });
+        setDataSource(result.data || []);
+      } catch (_error) {
+        msgApi.error(
+          intl.formatMessage({
+            id: 'pages.oidcProviders.fetchDetailFailed',
+            defaultMessage: 'Failed to fetch provider details',
+          }),
+        );
+      } finally {
+        setLoading(false);
+      }
+    },
+    [msgApi, intl],
+  );
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   const handleCreate = async (values: API.CreateOidcProviderParams) => {
     try {
@@ -41,7 +68,7 @@ const OidcProviderList: React.FC = () => {
         }),
       );
       setCreateModalVisible(false);
-      actionRef.current?.reload();
+      fetchData();
       return true;
     } catch (_error) {
       msgApi.error(
@@ -81,7 +108,7 @@ const OidcProviderList: React.FC = () => {
       );
       setEditModalVisible(false);
       setCurrentRecord(null);
-      actionRef.current?.reload();
+      fetchData();
       return true;
     } catch (_error) {
       msgApi.error(
@@ -103,7 +130,7 @@ const OidcProviderList: React.FC = () => {
           defaultMessage: 'OIDC provider deleted',
         }),
       );
-      actionRef.current?.reload();
+      fetchData();
     } catch (_error) {
       msgApi.error(
         intl.formatMessage({
@@ -127,7 +154,7 @@ const OidcProviderList: React.FC = () => {
             : 'OIDC provider disabled',
         }),
       );
-      actionRef.current?.reload();
+      fetchData();
     } catch (_error) {
       msgApi.error(
         intl.formatMessage({
@@ -168,9 +195,26 @@ const OidcProviderList: React.FC = () => {
     testingGuid,
   });
 
+  const handleDragSortEnd = (
+    _beforeIndex: number,
+    _afterIndex: number,
+    newDataSource: API.OidcProvider[],
+  ) => {
+    setDataSource(newDataSource);
+    sortOidcProviderList(newDataSource.map((item) => item.guid)).catch(() => {
+      msgApi.error(
+        intl.formatMessage({
+          id: 'pages.oidcProviders.sortFailed',
+          defaultMessage: 'Failed to update provider order',
+        }),
+      );
+      fetchData();
+    });
+  };
+
   return (
     <PageContainer>
-      <ProTable<API.OidcProvider>
+      <DragSortTable<API.OidcProvider>
         headerTitle={
           <FormattedMessage
             id="pages.oidcProviders.list"
@@ -183,24 +227,12 @@ const OidcProviderList: React.FC = () => {
         }}
         actionRef={actionRef}
         rowKey="guid"
-        request={async (params) => {
-          const result = await getOidcProviderList({
-            current: params.current,
-            pageSize: params.pageSize,
-            name: params.name,
-          });
-          return {
-            data: result.data || [],
-            total: result.total || 0,
-            success: true,
-          };
-        }}
+        dragSortKey="sort"
+        onDragSortEnd={handleDragSortEnd}
+        dataSource={dataSource}
+        loading={loading}
         columns={columns}
-        pagination={{
-          defaultPageSize: 20,
-          showSizeChanger: true,
-          showQuickJumper: true,
-        }}
+        pagination={false}
         scroll={{ x: 1100 }}
         toolBarRender={() => [
           <Button

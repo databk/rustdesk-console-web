@@ -2,8 +2,8 @@ import { LinkOutlined } from '@ant-design/icons';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { SettingDrawer } from '@ant-design/pro-components';
 import type { RequestConfig, RunTimeLayoutConfig } from '@umijs/max';
-import { history, Link, useModel } from '@umijs/max';
-import React, { useEffect, useRef } from 'react';
+import { getAllLocales, history, Link, setLocale } from '@umijs/max';
+import React from 'react';
 import {
   AvatarDropdown,
   AvatarName,
@@ -13,13 +13,33 @@ import {
 } from '@/components';
 import { currentUser as queryCurrentUser } from '@/services/rustdesk-console/auth';
 import { getMyPermissions } from '@/services/rustdesk-console/permission';
-import { getToken, TOKEN_KEY } from '@/utils/auth';
+import { getFrontendSettings } from '@/services/rustdesk-console/settings';
+import { getToken } from '@/utils/auth';
+import {
+  DEFAULT_FRONTEND_SETTINGS,
+  getUsernameWatermark,
+} from '@/utils/generalSettings';
+import AuthSync from '@/components/AuthSync';
 import defaultSettings from '../config/defaultSettings';
 import { errorConfig } from './requestErrorConfig';
 import '@ant-design/v5-patch-for-react-19';
 
 const isDev = process.env.NODE_ENV === 'development' || process.env.CI;
 const loginPath = '/user/login';
+const LOCALE_STORAGE_KEY = 'umi_locale';
+
+function applyDefaultLanguage(lang?: string) {
+  if (!lang) return;
+  try {
+    if (localStorage.getItem(LOCALE_STORAGE_KEY)) return;
+    const supported = getAllLocales();
+    if (supported.includes(lang)) {
+      setLocale(lang, false);
+    }
+  } catch {
+    // ignore locale application failures
+  }
+}
 
 const THEME_KEY = 'rustdesk_theme_settings';
 
@@ -50,6 +70,7 @@ export async function getInitialState(): Promise<{
   loading?: boolean;
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
   fetchPermissions?: () => Promise<API.EffectivePermissions | undefined>;
+  frontendSettings?: API.FrontendSettings;
 }> {
   const fetchUserInfo = async () => {
     try {
@@ -79,96 +100,50 @@ export async function getInitialState(): Promise<{
     ...(defaultSettings as Partial<LayoutSettings>),
     ...storedTheme,
   };
+  const frontendSettingsPromise = getFrontendSettings({
+    skipErrorHandler: true,
+  }).catch(() => DEFAULT_FRONTEND_SETTINGS);
 
   const { location } = history;
   if (![loginPath].includes(location.pathname) && getToken()) {
-    const currentUser = await fetchUserInfo();
+    const [currentUser, frontendSettings] = await Promise.all([
+      fetchUserInfo(),
+      frontendSettingsPromise,
+    ]);
     const permissions = currentUser ? await fetchPermissions() : undefined;
+    applyDefaultLanguage(frontendSettings.defaultLanguage);
     return {
       fetchUserInfo,
       fetchPermissions,
       currentUser,
       permissions,
       settings: initialSettings,
+      frontendSettings,
     };
   }
+  const frontendSettings = await frontendSettingsPromise;
+  applyDefaultLanguage(frontendSettings.defaultLanguage);
   return {
     fetchUserInfo,
     fetchPermissions,
     settings: initialSettings,
+    frontendSettings,
   };
 }
-
-export const AuthSync: React.FC = () => {
-  const { setInitialState, refresh } = useModel('@@initialState');
-  const permissionRefreshRef = useRef(0);
-
-  useEffect(() => {
-    const handleSessionExpired = () => {
-      permissionRefreshRef.current += 1;
-      setInitialState((s) => ({
-        ...s,
-        currentUser: undefined,
-        permissions: undefined,
-      }));
-    };
-
-    const handlePermissionsStale = async () => {
-      const requestId = ++permissionRefreshRef.current;
-      try {
-        const permissions = await getMyPermissions({ skipErrorHandler: true });
-        if (requestId !== permissionRefreshRef.current) return;
-        setInitialState((s) => ({ ...s, permissions }));
-      } catch (error: any) {
-        if (requestId !== permissionRefreshRef.current) return;
-        if (error?.response?.status === 401) {
-          window.dispatchEvent(new CustomEvent('auth:session-expired'));
-          history.push(loginPath);
-          return;
-        }
-        setInitialState((s) => ({ ...s, permissions: undefined }));
-      }
-    };
-
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === TOKEN_KEY) {
-        permissionRefreshRef.current += 1;
-        if (!getToken()) {
-          setInitialState((s) => ({
-            ...s,
-            currentUser: undefined,
-            permissions: undefined,
-          }));
-          if (history.location.pathname !== loginPath) {
-            history.push(loginPath);
-          }
-        } else {
-          refresh();
-        }
-      }
-    };
-
-    window.addEventListener('auth:session-expired', handleSessionExpired);
-    window.addEventListener('auth:permissions-stale', handlePermissionsStale);
-    window.addEventListener('storage', handleStorageChange);
-    return () => {
-      window.removeEventListener('auth:session-expired', handleSessionExpired);
-      window.removeEventListener(
-        'auth:permissions-stale',
-        handlePermissionsStale,
-      );
-      window.removeEventListener('storage', handleStorageChange);
-    };
-  }, [setInitialState, refresh]);
-
-  return null;
-};
 
 export const layout: RunTimeLayoutConfig = ({
   initialState,
   setInitialState,
 }) => {
+  const frontendSettings =
+    initialState?.frontendSettings || DEFAULT_FRONTEND_SETTINGS;
+  const waterMarkProps = getUsernameWatermark(
+    frontendSettings,
+    initialState?.currentUser?.name,
+  );
+
   return {
+    ...initialState?.settings,
     actionsRender: () => [
       <ThemeToggle key="ThemeToggle" />,
       <SelectLang key="SelectLang" />,
@@ -180,9 +155,7 @@ export const layout: RunTimeLayoutConfig = ({
         return <AvatarDropdown>{avatarChildren}</AvatarDropdown>;
       },
     },
-    waterMarkProps: {
-      content: initialState?.currentUser?.name,
-    },
+    ...(waterMarkProps ? { waterMarkProps } : {}),
     footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;
@@ -222,7 +195,6 @@ export const layout: RunTimeLayoutConfig = ({
         </>
       );
     },
-    ...initialState?.settings,
   };
 };
 

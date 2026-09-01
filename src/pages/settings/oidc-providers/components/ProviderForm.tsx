@@ -1,6 +1,6 @@
 import { ModalForm } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
-import { Collapse, Form, Input, InputNumber, Select, Switch } from 'antd';
+import { Collapse, Form, Input, Select, Switch } from 'antd';
 import React, { useEffect } from 'react';
 
 interface ProviderFormProps {
@@ -36,7 +36,6 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
         userinfoEndpoint: currentRecord.userinfoEndpoint,
         jwksUri: currentRecord.jwksUri,
         enabled: currentRecord.enabled,
-        priority: currentRecord.priority,
       });
     }
   }, [isEdit, open, currentRecord, form]);
@@ -251,18 +250,6 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
         initialValue={true}
       >
         <Switch />
-      </Form.Item>
-      <Form.Item
-        name="priority"
-        label={
-          <FormattedMessage
-            id="pages.oidcProviders.priority"
-            defaultMessage="Priority"
-          />
-        }
-        initialValue={0}
-      >
-        <InputNumber min={0} style={{ width: '100%' }} />
       </Form.Item>
     </ModalForm>
   );

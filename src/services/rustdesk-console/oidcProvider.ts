@@ -65,3 +65,10 @@ export async function testOidcProvider(guid: string) {
     method: 'POST',
   });
 }
+
+export async function sortOidcProviderList(guids: string[]) {
+  return request('/api/oidc-providers/sort', {
+    method: 'PATCH',
+    data: guids,
+  });
+}

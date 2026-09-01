@@ -3,398 +3,42 @@ import {
   MailOutlined,
   UserOutlined,
   SafetyCertificateOutlined,
-  ArrowLeftOutlined,
-  GithubOutlined,
-  GoogleOutlined,
-  GitlabOutlined,
+  KeyOutlined,
 } from '@ant-design/icons';
 import { LoginForm, ProFormText } from '@ant-design/pro-components';
 import {
   FormattedMessage,
   Helmet,
-  SelectLang,
   useIntl,
   useModel,
   history,
 } from '@umijs/max';
-import {
-  Alert,
-  App,
-  Button,
-  Checkbox,
-  Divider,
-  Form,
-  Input,
-  Typography,
-} from 'antd';
-import { createStyles, keyframes } from 'antd-style';
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { App, Button, Checkbox, Form } from 'antd';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { flushSync } from 'react-dom';
-import Bowser from 'bowser';
 import { setToken } from '@/utils/auth';
 import { Footer } from '@/components';
-import {
-  login,
-  getLoginOptions,
-  oidcAuth,
-} from '@/services/rustdesk-console/auth';
+import { login, getLoginOptions } from '@/services/rustdesk-console/auth';
 import { getMyPermissions } from '@/services/rustdesk-console/permission';
+import {
+  passkeyAuthBegin,
+  passkeyAuthVerify,
+} from '@/services/rustdesk-console/passkey';
+import {
+  isWebAuthnSupported,
+  prepareRequestOptions,
+  serializeAuthenticationResponse,
+} from '@/utils/webauthn';
 import Settings from '../../../../config/defaultSettings';
+import type { AuthStep, VerifySession } from './types';
+import { getDeviceInfo, parseOidcOptions } from './utils';
+import { useStyles } from './styles';
+import Lang from './components/Lang';
+import LoginMessage from './components/LoginMessage';
+import OidcLogin from './components/OidcLogin';
+import VerifyStep from './components/VerifyStep';
+import PasskeyVerifyStep from './components/PasskeyVerifyStep';
 
-// --- Auth step types ---
-type AuthStep = 'account' | 'email_check' | 'tfa_check';
-
-// --- Session data for 2nd-step verification ---
-type VerifySession = {
-  username: string;
-  secret: string;
-  emailHint?: string;
-};
-
-// --- Device info ---
-function getDeviceInfo(): API.DeviceInfo {
-  const browser = Bowser.getParser(window.navigator.userAgent);
-  return {
-    os: browser.getOSName(true),
-    type: 'browser',
-    name: `${browser.getBrowserName()} - ${browser.getBrowserVersion()}`,
-  };
-}
-
-// --- OIDC icon mapping ---
-const OIDC_ICONS: Record<string, React.ReactNode> = {
-  github: <GithubOutlined style={{ fontSize: 20 }} />,
-  gitlab: <GitlabOutlined style={{ fontSize: 20 }} />,
-  google: <GoogleOutlined style={{ fontSize: 20 }} />,
-};
-
-const OIDC_LABELS: Record<string, string> = {
-  github: 'GitHub',
-  gitlab: 'GitLab',
-  google: 'Google',
-};
-
-// --- Styles ---
-const fadeInAnimation = keyframes`
-  from { opacity: 0; }
-  to { opacity: 1; }
-`;
-
-const useStyles = createStyles(({ token }) => ({
-  lang: {
-    width: 42,
-    height: 42,
-    lineHeight: '42px',
-    position: 'fixed',
-    right: 16,
-    borderRadius: token.borderRadius,
-    ':hover': {
-      backgroundColor: token.colorBgTextHover,
-    },
-  },
-  container: {
-    display: 'flex',
-    flexDirection: 'column',
-    height: '100vh',
-    overflow: 'auto',
-    backgroundImage:
-      "url('https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/V-_oS6r-i7wAAAAAAAAAAAAAFl94AQBr')",
-    backgroundSize: '100% 100%',
-  },
-  loginFormExtra: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  forgotPassword: {
-    color: token.colorPrimary,
-    cursor: 'pointer',
-    transition: `color ${token.motionDurationMid} ${token.motionEaseInOut}`,
-    ':hover': {
-      color: token.colorPrimaryHover,
-      textDecoration: 'underline',
-    },
-  },
-  verifySection: {
-    marginTop: 8,
-    opacity: 0,
-    animation: `${fadeInAnimation} ${token.motionDurationSlow} ${token.motionEaseInOut} forwards`,
-  },
-  verifyHint: {
-    color: token.colorTextSecondary,
-    marginBottom: 16,
-    fontSize: 14,
-  },
-  otpInput: {
-    justifyContent: 'center',
-    marginBottom: 24,
-  },
-  oidcSection: {
-    marginTop: 24,
-  },
-  oidcDivider: {
-    color: token.colorTextSecondary,
-    fontSize: 13,
-  },
-  oidcButton: {
-    width: '100%',
-    height: 40,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    marginBottom: 8,
-  },
-  verifyIcon: {
-    fontSize: 40,
-    color: token.colorPrimary,
-    marginBottom: 12,
-  },
-}));
-
-// --- Lang selector ---
-const Lang = () => {
-  const { styles } = useStyles();
-  return (
-    <div className={styles.lang} data-lang>
-      {SelectLang && <SelectLang />}
-    </div>
-  );
-};
-
-// --- Error alert ---
-const LoginMessage: React.FC<{ content: string }> = ({ content }) => (
-  <Alert style={{ marginBottom: 24 }} message={content} type="error" showIcon />
-);
-
-// --- OIDC login buttons ---
-const OidcLogin: React.FC<{
-  options: API.OidcLoginInfo[];
-  loading: boolean;
-}> = ({ options, loading }) => {
-  const { styles } = useStyles();
-  const intl = useIntl();
-  const { message } = App.useApp();
-  const [oidcLoading, setOidcLoading] = useState<string>('');
-
-  if (options.length === 0) return null;
-
-  const handleOidcLogin = async (provider: string) => {
-    if (loading || oidcLoading) return;
-
-    setOidcLoading(provider);
-    try {
-      const deviceInfo = getDeviceInfo();
-      const callbackUrl = `${window.location.origin}/#/dashboard`;
-
-      const response = await oidcAuth({
-        op: provider,
-        deviceInfo,
-        callbackUrl,
-      });
-
-      if (response.url) {
-        window.location.href = response.url;
-      } else {
-        message.error(
-          intl.formatMessage({
-            id: 'pages.login.oidc.authFailed',
-            defaultMessage: 'Failed to get authorization URL',
-          }),
-        );
-      }
-    } catch (error: unknown) {
-      const err = error as {
-        response?: {
-          status?: number;
-          data?: { error?: string; message?: string };
-        };
-      };
-      const errorMsg =
-        err?.response?.data?.error ||
-        err?.response?.data?.message ||
-        intl.formatMessage({
-          id: 'pages.login.oidc.authFailed',
-          defaultMessage: 'Failed to initiate OIDC login',
-        });
-      message.error(errorMsg);
-    } finally {
-      setOidcLoading('');
-    }
-  };
-
-  return (
-    <div className={styles.oidcSection}>
-      <Divider className={styles.oidcDivider}>
-        {intl.formatMessage({
-          id: 'pages.login.oidc.divider',
-          defaultMessage: 'Or continue with',
-        })}
-      </Divider>
-      {options.map((item) => {
-        const label = OIDC_LABELS[item.name.toLowerCase()] || item.name;
-        const icon = OIDC_ICONS[item.name.toLowerCase()];
-        return (
-          <Button
-            key={item.name}
-            className={styles.oidcButton}
-            disabled={loading || oidcLoading !== ''}
-            loading={oidcLoading === item.name}
-            onClick={() => handleOidcLogin(item.name)}
-          >
-            {icon}
-            {intl.formatMessage(
-              {
-                id: 'pages.login.oidc.continueWith',
-                defaultMessage: 'Continue with {provider}',
-              },
-              { provider: label },
-            )}
-          </Button>
-        );
-      })}
-    </div>
-  );
-};
-
-// --- Verify Step (shared by email_check and tfa_check) ---
-const VerifyStep: React.FC<{
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-  resetKey: string;
-  error: string;
-  submitting: boolean;
-  onSubmit: (code: string) => void;
-  onBack: () => void;
-}> = ({
-  icon,
-  title,
-  description,
-  resetKey,
-  error,
-  submitting,
-  onSubmit,
-  onBack,
-}) => {
-  const { styles } = useStyles();
-  const intl = useIntl();
-  const [otpValue, setOtpValue] = useState('');
-  const submittingRef = useRef(false);
-
-  // Reset OTP when step changes
-  useEffect(() => {
-    setOtpValue('');
-    submittingRef.current = false;
-  }, [resetKey]);
-
-  // Reset ref when submission completes (success or failure)
-  useEffect(() => {
-    if (!submitting) {
-      submittingRef.current = false;
-    }
-  }, [submitting]);
-
-  const handleSubmit = useCallback(
-    (code: string) => {
-      if (submittingRef.current) return;
-      submittingRef.current = true;
-      onSubmit(code);
-    },
-    [onSubmit],
-  );
-
-  const handleChange = useCallback(
-    (value: string) => {
-      setOtpValue(value);
-      if (value.length === 6) {
-        handleSubmit(value);
-      }
-    },
-    [handleSubmit],
-  );
-
-  return (
-    <div className={styles.verifySection}>
-      {error && <LoginMessage content={error} />}
-
-      <div style={{ textAlign: 'center', marginBottom: 24 }}>
-        {icon}
-        <Typography.Title level={5}>{title}</Typography.Title>
-        <Typography.Text className={styles.verifyHint}>
-          {description}
-        </Typography.Text>
-      </div>
-
-      <Input.OTP
-        key={resetKey}
-        length={6}
-        value={otpValue}
-        onChange={handleChange}
-        variant="outlined"
-        size="large"
-        autoFocus
-        className={styles.otpInput}
-      />
-
-      <Button
-        type="primary"
-        size="large"
-        block
-        loading={submitting}
-        disabled={otpValue.length < 6}
-        onClick={() => handleSubmit(otpValue)}
-      >
-        {intl.formatMessage({
-          id: 'pages.login.verifyCode.submit',
-          defaultMessage: 'Verify',
-        })}
-      </Button>
-
-      <Button
-        size="large"
-        block
-        style={{ marginTop: 12 }}
-        icon={<ArrowLeftOutlined />}
-        onClick={onBack}
-      >
-        {intl.formatMessage({
-          id: 'pages.login.back',
-          defaultMessage: 'Back',
-        })}
-      </Button>
-    </div>
-  );
-};
-
-// --- Parse OIDC login options from API response ---
-function parseOidcOptions(res: string[]): API.OidcLoginInfo[] {
-  const ops: API.OidcLoginInfo[] = [];
-  for (const item of res) {
-    if (item.startsWith('common-oidc/')) {
-      try {
-        const parsed = JSON.parse(item.substring('common-oidc/'.length));
-        if (Array.isArray(parsed)) {
-          ops.push(...parsed);
-        }
-      } catch {
-        // Skip malformed JSON entries
-      }
-    } else if (item.startsWith('oidc/')) {
-      ops.push({ name: item.substring('oidc/'.length) });
-    }
-  }
-  return ops;
-}
-
-// --- Main Login Component ---
 const Login: React.FC = () => {
   const [authStep, setAuthStep] = useState<AuthStep>('account');
   const [verifySession, setVerifySession] = useState<VerifySession | null>(
@@ -406,15 +50,20 @@ const Login: React.FC = () => {
   );
   const [submitting, setSubmitting] = useState(false);
   const [oidcOptions, setOidcOptions] = useState<API.OidcLoginInfo[]>([]);
-  const { setInitialState } = useModel('@@initialState');
+  const [passkeySupported] = useState(() => isWebAuthnSupported());
+  const { initialState, setInitialState } = useModel('@@initialState');
+  const webauthnEnabled =
+    initialState?.frontendSettings?.webauthnEnabled ?? false;
   const { styles } = useStyles();
   const { message } = App.useApp();
   const intl = useIntl();
   const [accountForm] = Form.useForm();
 
-  const isVerifyStep = authStep === 'email_check' || authStep === 'tfa_check';
+  const isVerifyStep =
+    authStep === 'email_check' ||
+    authStep === 'tfa_check' ||
+    authStep === 'passkey_check';
 
-  // Fetch OIDC login options on mount
   useEffect(() => {
     (async () => {
       try {
@@ -485,6 +134,87 @@ const Login: React.FC = () => {
     [intl],
   );
 
+  const completePasskeyAuth = useCallback(
+    async (
+      secret: string,
+      options: API.PublicKeyCredentialRequestOptionsJSON,
+    ): Promise<API.LoginResponse> => {
+      const publicKey = prepareRequestOptions(options);
+      const credential = await navigator.credentials.get({ publicKey });
+      if (!credential || !(credential instanceof PublicKeyCredential)) {
+        throw new Error('No credential returned');
+      }
+      const response = serializeAuthenticationResponse(credential);
+      const deviceInfo = getDeviceInfo();
+      return passkeyAuthVerify({ secret, response, deviceInfo });
+    },
+    [],
+  );
+
+  const handlePasskeyVerify = useCallback(async () => {
+    if (!verifySession?.passkeyOptions || !verifySession?.secret) return;
+    setLoginError('');
+    setSubmitting(true);
+    try {
+      const msg = await completePasskeyAuth(
+        verifySession.secret,
+        verifySession.passkeyOptions,
+      );
+      if (msg.access_token) {
+        await handleLoginSuccess(msg.access_token, msg.user);
+      }
+    } catch (error: unknown) {
+      const err = error as { name?: string };
+      if (err?.name === 'NotAllowedError') {
+        setLoginError(
+          intl.formatMessage({
+            id: 'pages.login.passkey.cancelled',
+            defaultMessage: 'Passkey verification was cancelled',
+          }),
+        );
+      } else {
+        handleLoginError(
+          error,
+          'pages.login.passkey.failed',
+          'Passkey verification failed',
+        );
+      }
+    } finally {
+      setSubmitting(false);
+    }
+  }, [
+    verifySession,
+    completePasskeyAuth,
+    handleLoginSuccess,
+    handleLoginError,
+    intl,
+  ]);
+
+  const handlePasskeyLogin = useCallback(async () => {
+    setLoginError('');
+    setSubmitting(true);
+    try {
+      const beginRes = await passkeyAuthBegin();
+      const msg = await completePasskeyAuth(beginRes.secret, beginRes.options);
+      if (msg.access_token) {
+        await handleLoginSuccess(msg.access_token, msg.user);
+      }
+    } catch (error: unknown) {
+      const err = error as { name?: string };
+      if (err?.name === 'NotAllowedError') {
+        // User cancelled - silently reset, no error message
+      } else {
+        handleLoginError(
+          error,
+          'pages.login.passkey.failed',
+          'Passkey login failed',
+        );
+      }
+    } finally {
+      setSubmitting(false);
+    }
+  }, [completePasskeyAuth, handleLoginSuccess, handleLoginError, intl]);
+
   const handleAccountSubmit = useCallback(
     async (values: API.LoginParams) => {
       setLoginError('');
@@ -529,6 +259,16 @@ const Login: React.FC = () => {
             secret: msg.secret || '',
           });
           setAuthStep('tfa_check');
+          return;
+        }
+
+        if (msg.type === 'passkey_check') {
+          setVerifySession({
+            username: values.username?.trim() || '',
+            secret: msg.secret || '',
+            passkeyOptions: msg.passkey_options,
+          });
+          setAuthStep('passkey_check');
           return;
         }
 
@@ -580,7 +320,6 @@ const Login: React.FC = () => {
           return;
         }
 
-        // TFA check might follow email check
         if (msg.type === 'tfa_check') {
           setVerifySession((prev) =>
             prev ? { ...prev, secret: msg.secret || '' } : null,
@@ -695,7 +434,7 @@ const Login: React.FC = () => {
       <Helmet>
         <title>
           {intl.formatMessage({ id: 'menu.login', defaultMessage: 'Login' })}
-          {Settings.title && ` - ${Settings.title}`}
+          {` - ${Settings.title}`}
         </title>
       </Helmet>
       <Lang />
@@ -738,7 +477,6 @@ const Login: React.FC = () => {
                 }
           }
         >
-          {/* Account Login Step */}
           {authStep === 'account' && (
             <div>
               {loginError && <LoginMessage content={loginError} />}
@@ -811,11 +549,26 @@ const Login: React.FC = () => {
                 </a>
               </div>
 
+              {passkeySupported && webauthnEnabled && (
+                <Button
+                  block
+                  size="large"
+                  icon={<KeyOutlined />}
+                  loading={submitting}
+                  onClick={handlePasskeyLogin}
+                  style={{ marginTop: 16 }}
+                >
+                  {intl.formatMessage({
+                    id: 'pages.login.passkey.login',
+                    defaultMessage: 'Sign in with Passkey',
+                  })}
+                </Button>
+              )}
+
               <OidcLogin options={oidcOptions} loading={submitting} />
             </div>
           )}
 
-          {/* Email Verification Step */}
           {authStep === 'email_check' && (
             <VerifyStep
               icon={<MailOutlined className={styles.verifyIcon} />}
@@ -829,7 +582,6 @@ const Login: React.FC = () => {
             />
           )}
 
-          {/* TFA Verification Step */}
           {authStep === 'tfa_check' && (
             <VerifyStep
               icon={<SafetyCertificateOutlined className={styles.verifyIcon} />}
@@ -839,6 +591,15 @@ const Login: React.FC = () => {
               error={loginError}
               submitting={submitting}
               onSubmit={handleVerifySubmit}
+              onBack={handleBackToAccount}
+            />
+          )}
+
+          {authStep === 'passkey_check' && (
+            <PasskeyVerifyStep
+              error={loginError}
+              submitting={submitting}
+              onVerify={handlePasskeyVerify}
               onBack={handleBackToAccount}
             />
           )}

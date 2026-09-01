@@ -1,38 +1,24 @@
 export default [
   {
-    path: '/user',
+    path: '/user/login',
     layout: false,
+    name: 'login',
+    component: './user/login',
+  },
+  {
+    path: '/user',
     routes: [
       {
-        path: '/user/login',
-        layout: false,
-        name: 'login',
-        component: './user/login',
+        path: '/user/center',
+        name: 'center',
+        locale: 'menu.user.center',
+        icon: 'user',
+        hideInMenu: true,
+        component: './user/center',
       },
       {
         path: '/user',
-        redirect: '/user/login',
-      },
-      {
-        component: '404',
-        path: '/user/*',
-      },
-    ],
-  },
-  {
-    path: '/account',
-    name: 'account',
-    icon: 'user',
-    hideInMenu: true,
-    routes: [
-      {
-        path: '/account',
-        redirect: '/account/center',
-      },
-      {
-        name: 'center',
-        path: '/account/center',
-        component: './account/center',
+        redirect: '/user/center',
       },
     ],
   },
@@ -48,7 +34,7 @@ export default [
     name: 'devices',
     icon: 'desktop',
     access: 'canDevicesView',
-    component: './devices/list',
+    component: './devices',
   },
   {
     path: '/address-book',
@@ -73,6 +59,7 @@ export default [
         component: './address-book/shared',
       },
       {
+        name: 'shared',
         path: '/address-book/shared/:guid',
         access: 'canAddressBooksView',
         component: './address-book/shared/detail',
@@ -98,16 +85,24 @@ export default [
         component: './groups/user',
       },
       {
+        name: 'user',
+        path: '/groups/user/:guid',
+        access: 'canUserGroupsView',
+        component: './groups/user/detail',
+        hideInMenu: true,
+      },
+      {
         name: 'device',
         icon: 'device',
         path: '/groups/device',
         access: 'canAdmin',
-        component: './device-groups/list',
+        component: './groups/device/list',
       },
       {
+        name: 'device',
         path: '/groups/device/:guid',
         access: 'canAdmin',
-        component: './device-groups/detail',
+        component: './groups/device/detail',
         hideInMenu: true,
       },
     ],
@@ -117,7 +112,7 @@ export default [
     name: 'users',
     icon: 'user',
     access: 'canUsersView',
-    component: './users/list',
+    component: './users',
   },
   {
     path: '/roles',
@@ -125,6 +120,7 @@ export default [
     icon: 'audit',
     access: 'canAdmin',
     component: './roles',
+    hideInMenu: true,
   },
   {
     path: '/audits',
@@ -159,6 +155,7 @@ export default [
         icon: 'code',
         path: '/audits/console',
         component: './audits/console',
+        hideInMenu: true,
       },
     ],
   },
@@ -184,7 +181,13 @@ export default [
     routes: [
       {
         path: '/settings',
-        redirect: '/settings/smtp',
+        redirect: '/settings/general',
+      },
+      {
+        name: 'general',
+        icon: 'setting',
+        path: '/settings/general',
+        component: './settings/general',
       },
       {
         name: 'smtp',

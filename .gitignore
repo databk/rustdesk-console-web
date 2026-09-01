@@ -37,3 +37,6 @@ screenshot
 .firebase
 
 build
+
+# rust
+server/target

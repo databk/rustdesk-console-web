@@ -29,7 +29,7 @@ jest.mock('@ant-design/pro-components', () => ({
 }));
 jest.mock('@ant-design/v5-patch-for-react-19', () => ({}));
 
-import { AuthSync } from './app';
+import { AuthSync } from './components/AuthSync';
 
 const historyPushMock = jest.mocked(history.push);
 

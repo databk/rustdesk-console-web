@@ -1,9 +1,12 @@
-import { useIntl } from '@umijs/max';
+import { getIntl } from '@umijs/max';
 import { Button, message, notification } from 'antd';
 import defaultSettings from '../config/defaultSettings';
 
 const { pwa } = defaultSettings;
 const isHttps = document.location.protocol === 'https:';
+const isLocalhost =
+  document.location.hostname === 'localhost' ||
+  document.location.hostname === '127.0.0.1';
 
 const clearCache = () => {
   // remove all caches
@@ -23,7 +26,7 @@ const clearCache = () => {
 if (pwa) {
   // Notify user if offline now
   window.addEventListener('sw.offline', () => {
-    message.warning(useIntl().formatMessage({ id: 'app.pwa.offline' }));
+    message.warning(getIntl().formatMessage({ id: 'app.pwa.offline' }));
   });
 
   // Pop up a prompt on the page asking the user if they want to use the latest version
@@ -62,12 +65,12 @@ if (pwa) {
           reloadSW();
         }}
       >
-        {useIntl().formatMessage({ id: 'app.pwa.serviceworker.updated.ok' })}
+        {getIntl().formatMessage({ id: 'app.pwa.serviceworker.updated.ok' })}
       </Button>
     );
     notification.open({
-      message: useIntl().formatMessage({ id: 'app.pwa.serviceworker.updated' }),
-      description: useIntl().formatMessage({
+      message: getIntl().formatMessage({ id: 'app.pwa.serviceworker.updated' }),
+      description: getIntl().formatMessage({
         id: 'app.pwa.serviceworker.updated.hint',
       }),
       btn,
@@ -75,6 +78,40 @@ if (pwa) {
       onClose: async () => null,
     });
   });
+
+  // Register service worker
+  if ('serviceWorker' in navigator && (isHttps || isLocalhost)) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker
+        .register('/sw.js', { scope: '/' })
+        .then((registration) => {
+          registration.addEventListener('updatefound', () => {
+            const newWorker = registration.installing;
+            if (!newWorker) return;
+            newWorker.addEventListener('statechange', () => {
+              if (
+                newWorker.state === 'installed' &&
+                navigator.serviceWorker.controller
+              ) {
+                window.dispatchEvent(
+                  new CustomEvent('sw.updated', {
+                    detail: { waiting: registration.waiting },
+                  }),
+                );
+              }
+            });
+          });
+        })
+        .catch((error) => {
+          console.warn('Service worker registration failed:', error);
+        });
+    });
+
+    // Notify offline status
+    window.addEventListener('offline', () => {
+      window.dispatchEvent(new CustomEvent('sw.offline'));
+    });
+  }
 } else if ('serviceWorker' in navigator && isHttps) {
   // unregister service worker
   const { serviceWorker } = navigator;

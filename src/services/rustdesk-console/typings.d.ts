@@ -66,10 +66,119 @@ declare namespace API {
 
   type LoginResponse = {
     access_token?: string;
-    type?: 'access_token' | 'email_check' | 'tfa_check';
+    type?: 'access_token' | 'email_check' | 'tfa_check' | 'passkey_check';
     tfa_type?: 'email_check' | 'tfa_check';
     secret?: string;
+    passkey_options?: PublicKeyCredentialRequestOptionsJSON;
     user?: CurrentUser;
+  };
+
+  // --- WebAuthn JSON types (base64url-encoded, as returned by the server) ---
+
+  type PublicKeyCredentialCreationOptionsJSON = {
+    rp: { name: string; id?: string };
+    user: { id: string; name: string; displayName: string };
+    challenge: string;
+    pubKeyCredParams: Array<{ type: 'public-key'; alg: number }>;
+    authenticatorSelection?: {
+      authenticatorAttachment?: string;
+      residentKey?: string;
+      userVerification?: string;
+    };
+    excludeCredentials?: Array<{
+      id: string;
+      type: 'public-key';
+      transports?: string[];
+    }>;
+    timeout?: number;
+    attestation?: string;
+  };
+
+  type PublicKeyCredentialRequestOptionsJSON = {
+    challenge: string;
+    rpId?: string;
+    timeout?: number;
+    allowCredentials?: Array<{
+      id: string;
+      type: 'public-key';
+      transports?: string[];
+    }>;
+    userVerification?: string;
+  };
+
+  type RegistrationResponseJSON = {
+    id: string;
+    rawId: string;
+    response: {
+      attestationObject: string;
+      clientDataJSON: string;
+      transports?: string[];
+    };
+    authenticatorAttachment?: string;
+    clientExtensionResults: Record<string, any>;
+    type: 'public-key';
+  };
+
+  type AuthenticationResponseJSON = {
+    id: string;
+    rawId: string;
+    response: {
+      authenticatorData: string;
+      clientDataJSON: string;
+      signature: string;
+      userHandle?: string;
+    };
+    authenticatorAttachment?: string;
+    clientExtensionResults: Record<string, any>;
+    type: 'public-key';
+  };
+
+  // --- Passkey API types ---
+
+  type PasskeyAuthBeginResponse = {
+    secret: string;
+    options: PublicKeyCredentialRequestOptionsJSON;
+  };
+
+  type PasskeyRegistrationVerifyParams = {
+    response: RegistrationResponseJSON;
+    name?: string;
+  };
+
+  type PasskeyAuthVerifyParams = {
+    secret: string;
+    response: AuthenticationResponseJSON;
+    id?: string;
+    uuid?: string;
+    deviceInfo?: DeviceInfo;
+  };
+
+  type PasskeyCredential = {
+    guid: string;
+    userGuid: string;
+    credentialId: string;
+    counter: number;
+    transports: string;
+    deviceType: string;
+    backedUp: boolean;
+    name: string;
+    createdAt: string;
+    updatedAt: string;
+  };
+
+  type PasskeyTfaToggleParams = {
+    enabled: boolean;
+  };
+
+  type SessionItem = {
+    jti: string;
+    deviceId?: string | null;
+    deviceUuid?: string | null;
+    deviceOs?: string;
+    deviceType?: 'browser' | 'client';
+    deviceName?: string;
+    createdAt?: string;
+    expiresAt?: string;
   };
 
   type OidcLoginInfo = {
@@ -147,6 +256,7 @@ declare namespace API {
     note?: string;
     status?: number;
     is_admin?: boolean;
+    user_group_guid?: string;
   };
 
   type BatchUpdateUserStatusParams = {
@@ -186,6 +296,8 @@ declare namespace API {
     is_admin?: 0 | 1;
     third_auth_type?: string;
     strategy_name?: string;
+    user_group_guid?: string;
+    user_group_name?: string;
   };
 
   type DeviceItem = {
@@ -734,11 +846,30 @@ declare namespace API {
       status: 'success' | 'failed' | 'warning';
     }>;
     systemStatus: {
-      cpu: number;
-      memory: number;
-      disk: number;
-      uptime: number;
+      cpu: number | null;
+      memory: number | null;
+      disk: number | null;
+      uptime: number | null;
     };
+  };
+
+  type GeneralSettings = {
+    watermarkEnabled: boolean;
+    defaultLanguage: string;
+    site: {
+      frontendUrl: string;
+      backendUrl: string;
+    };
+    webauthn: {
+      enabled: boolean;
+      rpName: string;
+    };
+  };
+
+  type FrontendSettings = {
+    watermarkEnabled: boolean;
+    defaultLanguage: string;
+    webauthnEnabled: boolean;
   };
 
   type SMTPConfig = {
@@ -810,7 +941,6 @@ declare namespace API {
     userinfoEndpoint?: string;
     jwksUri?: string;
     enabled?: boolean;
-    priority?: number;
   };
 
   type UpdateOidcProviderParams = {
@@ -825,7 +955,6 @@ declare namespace API {
     userinfoEndpoint?: string;
     jwksUri?: string;
     enabled?: boolean;
-    priority?: number;
   };
 
   type ToggleOidcProviderParams = {

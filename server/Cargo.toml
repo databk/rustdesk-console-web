@@ -1,0 +1,24 @@
+[package]
+name = "rustdesk-console-web"
+version = "0.0.0"  # Dynamically set from package.json at build time via build.rs
+edition = "2024"
+description = "Web frontend for RustDesk Console"
+authors = ["databk"]
+license = "AGPL-3.0"
+repository = "https://github.com/databk/rustdesk-console-web"
+homepage = "https://databk.github.io/rustdesk-console-web/"
+keywords = ["rustdesk", "rustdesk-console", "remote-desktop", "admin-panel", "web-app"]
+
+[dependencies]
+actix-web = "4"
+rust-embed = "8"
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls"] }
+tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
+mime_guess = "2"
+log = "0.4"
+env_logger = "0.11"
+
+[profile.release]
+opt-level = "s"
+lto = true
+strip = true

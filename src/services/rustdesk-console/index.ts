@@ -93,6 +93,7 @@ export {
   deleteOidcProvider,
   toggleOidcProvider,
   testOidcProvider,
+  sortOidcProviderList,
 } from './oidcProvider';
 export {
   getStrategyList,
@@ -117,3 +118,13 @@ export {
   getBuildFiles,
   downloadBuildFile,
 } from './nexus';
+export {
+  passkeyRegisterBegin,
+  passkeyRegisterVerify,
+  passkeyAuthBegin,
+  passkeyAuthVerify,
+  getPasskeyList,
+  deletePasskey,
+  togglePasskeyTfa,
+} from './passkey';
+export { getSessions, revokeSession } from './session';
