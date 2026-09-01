@@ -1,6 +1,6 @@
 import type { ActionType } from '@ant-design/pro-components';
 import { PageContainer } from '@ant-design/pro-components';
-import { FormattedMessage, useIntl } from '@umijs/max';
+import { FormattedMessage, useAccess, useIntl } from '@umijs/max';
 import { App, Form } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import {
@@ -26,6 +26,7 @@ import MoveUserModal from './components/MoveUserModal';
 import ImportUsersModal from './components/ImportUsersModal';
 import UserTable from './components/UserTable';
 import { useUserColumns } from './components/UserColumns';
+import UserRolesModal from './components/UserRolesModal';
 
 const UserList: React.FC<UserListProps> = ({
   userGroupGuid,
@@ -33,6 +34,7 @@ const UserList: React.FC<UserListProps> = ({
   onBack,
 }) => {
   const intl = useIntl();
+  const access = useAccess();
   const { message: msgApi } = App.useApp();
 
   const actionRef = useRef<ActionType>(null);
@@ -41,6 +43,7 @@ const UserList: React.FC<UserListProps> = ({
   const [inviteModalVisible, setInviteModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [securityModalVisible, setSecurityModalVisible] = useState(false);
+  const [rolesUser, setRolesUser] = useState<API.UserItem | null>(null);
 
   const [createForm] = Form.useForm<API.CreateUserParams>();
   const [inviteForm] = Form.useForm<API.InviteUserParams>();
@@ -61,8 +64,11 @@ const UserList: React.FC<UserListProps> = ({
   const [importModalVisible, setImportModalVisible] = useState(false);
   const [moveUser, setMoveUser] = useState<API.UserItem | null>(null);
   const [moveDestinationGuid, setMoveDestinationGuid] = useState<string>();
+  const canManageMembership =
+    access.canUserGroupsView && access.canUserGroupsMembership;
 
   const loadUserGroups = async () => {
+    if (!canManageMembership) return [];
     if (userGroups.length > 0) return userGroups;
     setUserGroupsLoading(true);
     try {
@@ -83,10 +89,10 @@ const UserList: React.FC<UserListProps> = ({
   };
 
   useEffect(() => {
-    if (!userGroupGuid) return;
+    if (!userGroupGuid || !canManageMembership) return;
     void loadUserGroups();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userGroupGuid]);
+  }, [userGroupGuid, canManageMembership]);
 
   const handleMove = async (targetGuid: string, userGuids: string[]) => {
     if (!targetGuid || userGuids.length === 0) return;
@@ -387,15 +393,18 @@ const UserList: React.FC<UserListProps> = ({
 
   const openEditModal = (record: API.UserItem) => {
     setEditingUser(record);
-    void loadUserGroups();
+    editForm.resetFields();
+    if (canManageMembership) void loadUserGroups();
     editForm.setFieldsValue({
       name: record.name,
       display_name: record.display_name,
       email: record.email,
       note: record.note,
-      status: record.status,
-      is_admin: record.is_admin,
-      user_group_guid: record.user_group_guid,
+      status: access.canUsersStatus ? record.status : undefined,
+      is_admin: access.isSuperAdmin ? record.is_admin : undefined,
+      user_group_guid: canManageMembership
+        ? record.user_group_guid
+        : undefined,
     });
     setEditModalVisible(true);
   };
@@ -408,7 +417,14 @@ const UserList: React.FC<UserListProps> = ({
 
   const columns = useUserColumns({
     userGroupGuid,
+    canEdit: access.canUsersEdit,
+    canManageRoles: access.isSuperAdmin,
+    canManageSecurity: access.canUsersSecurity,
+    canForceLogout: access.canUsersForceLogout,
+    canDelete: access.canUsersDelete,
+    canMove: canManageMembership,
     onEdit: openEditModal,
+    onManageRoles: setRolesUser,
     onSecurity: openSecurityModal,
     onForceLogout: handleForceLogout,
     onDelete: handleDelete,
@@ -457,51 +473,68 @@ const UserList: React.FC<UserListProps> = ({
         onOpenImport={() => setImportModalVisible(true)}
         onOpenCreate={openCreateModal}
         onOpenInvite={openInviteModal}
+        canCreate={access.canUsersCreate}
+        canManageMembership={canManageMembership}
+        canUpdateStatus={access.canUsersStatus}
+        canForceLogout={access.canUsersForceLogout}
       />
 
-      <CreateUserModal
-        visible={createModalVisible}
-        userGroups={userGroups}
-        userGroupsLoading={userGroupsLoading}
-        form={createForm}
-        onSubmit={handleCreate}
-        onCancel={() => setCreateModalVisible(false)}
-      />
+      {access.canUsersCreate && (
+        <>
+          <CreateUserModal
+            visible={createModalVisible}
+            userGroups={userGroups}
+            userGroupsLoading={userGroupsLoading}
+            canAssignGroup={canManageMembership}
+            form={createForm}
+            onSubmit={handleCreate}
+            onCancel={() => setCreateModalVisible(false)}
+          />
 
-      <InviteUserModal
-        visible={inviteModalVisible}
-        userGroups={userGroups}
-        userGroupsLoading={userGroupsLoading}
-        form={inviteForm}
-        onSubmit={handleInvite}
-        onCancel={() => setInviteModalVisible(false)}
-      />
+          <InviteUserModal
+            visible={inviteModalVisible}
+            userGroups={userGroups}
+            userGroupsLoading={userGroupsLoading}
+            canAssignGroup={canManageMembership}
+            form={inviteForm}
+            onSubmit={handleInvite}
+            onCancel={() => setInviteModalVisible(false)}
+          />
+        </>
+      )}
 
-      <EditUserModal
-        visible={editModalVisible}
-        userGroups={userGroups}
-        userGroupsLoading={userGroupsLoading}
-        form={editForm}
-        onSubmit={handleEdit}
-        onCancel={() => {
-          setEditModalVisible(false);
-          setEditingUser(null);
-          editForm.resetFields();
-        }}
-      />
+      {access.canUsersEdit && (
+        <EditUserModal
+          visible={editModalVisible}
+          userGroups={userGroups}
+          userGroupsLoading={userGroupsLoading}
+          canEditStatus={access.canUsersStatus}
+          canEditGroup={canManageMembership}
+          canEditAdmin={access.isSuperAdmin}
+          form={editForm}
+          onSubmit={handleEdit}
+          onCancel={() => {
+            setEditModalVisible(false);
+            setEditingUser(null);
+            editForm.resetFields();
+          }}
+        />
+      )}
 
-      <SecurityModal
-        visible={securityModalVisible}
-        form={securityForm}
-        onSubmit={handleUpdateSecurity}
-        onCancel={() => {
-          setSecurityModalVisible(false);
-          setEditingUser(null);
-          securityForm.resetFields();
-        }}
-      />
+      {access.canUsersSecurity && (
+        <SecurityModal
+          visible={securityModalVisible}
+          form={securityForm}
+          onSubmit={handleUpdateSecurity}
+          onCancel={() => {
+            setSecurityModalVisible(false);
+            setEditingUser(null);
+            securityForm.resetFields();
+          }}
+        />
+      )}
 
-      {userGroupGuid && (
+      {userGroupGuid && canManageMembership && (
         <ImportUsersModal
           open={importModalVisible}
           userGroupGuid={userGroupGuid}
@@ -510,25 +543,38 @@ const UserList: React.FC<UserListProps> = ({
         />
       )}
 
-      <MoveUserModal
-        visible={!!moveUser}
-        userGroups={userGroups}
-        userGroupsLoading={userGroupsLoading}
-        currentGroupGuid={userGroupGuid}
-        destinationGuid={moveDestinationGuid}
-        onDestinationChange={setMoveDestinationGuid}
-        onOk={() => {
-          if (moveUser && moveDestinationGuid) {
-            void handleMove(moveDestinationGuid, [moveUser.guid]);
+      {canManageMembership && (
+        <MoveUserModal
+          visible={!!moveUser}
+          userGroups={userGroups}
+          userGroupsLoading={userGroupsLoading}
+          currentGroupGuid={userGroupGuid}
+          destinationGuid={moveDestinationGuid}
+          onDestinationChange={setMoveDestinationGuid}
+          onOk={() => {
+            if (moveUser && moveDestinationGuid) {
+              void handleMove(moveDestinationGuid, [moveUser.guid]);
+              setMoveUser(null);
+              setMoveDestinationGuid(undefined);
+            }
+          }}
+          onCancel={() => {
             setMoveUser(null);
             setMoveDestinationGuid(undefined);
-          }
-        }}
-        onCancel={() => {
-          setMoveUser(null);
-          setMoveDestinationGuid(undefined);
-        }}
-      />
+          }}
+        />
+      )}
+
+      {access.isSuperAdmin && (
+        <UserRolesModal
+          open={!!rolesUser}
+          user={rolesUser}
+          onOpenChange={(open) => {
+            if (!open) setRolesUser(null);
+          }}
+          onSuccess={() => actionRef.current?.reload()}
+        />
+      )}
     </PageContainer>
   );
 };

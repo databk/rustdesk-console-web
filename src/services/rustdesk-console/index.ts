@@ -1,4 +1,6 @@
 export { login, logout, currentUser } from './auth';
+export { getPermissionList, getMyPermissions } from './permission';
+export { getUserRoles, replaceUserRoles, revokeUserRole } from './userRole';
 export {
   updateProfile,
   uploadAvatar,
@@ -8,7 +10,14 @@ export {
   disable2FA,
   changePassword,
 } from './account';
-export { getDeviceList, batchUpdateDeviceStatus, deleteDevice, updateDevice, assignDevice } from './device';
+export {
+  getDeviceList,
+  getAdminDeviceList,
+  batchUpdateDeviceStatus,
+  deleteDevice,
+  updateDevice,
+  assignDevice,
+} from './device';
 export {
   getAdminUserList,
   createUser,
@@ -29,6 +38,7 @@ export {
   addDeviceToGroup,
   removeDeviceFromGroup,
   getAccessibleGroups,
+  getAllDeviceGroups,
 } from './deviceGroup';
 export {
   getLegacyAddressBook,

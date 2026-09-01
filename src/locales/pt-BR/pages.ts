@@ -1,4 +1,12 @@
 export default {
+  'pages.request.loginExpired':
+    'A sessão expirou. Entre novamente para continuar',
+  'pages.request.accessDenied':
+    'Você não tem permissão para executar esta ação',
+  'pages.request.responseStatus': 'Falha na solicitação (HTTP {status})',
+  'pages.request.noResponse':
+    'O servidor não respondeu. Tente novamente mais tarde.',
+  'pages.request.error': 'Falha na solicitação. Tente novamente mais tarde.',
   'pages.login.success': 'Login realizado com sucesso!',
   'pages.login.failure': 'Falha no login, tente novamente!',
   'pages.login.username.placeholder': 'Nome de usuário',

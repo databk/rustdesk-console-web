@@ -2,8 +2,8 @@ import { LinkOutlined } from '@ant-design/icons';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { SettingDrawer } from '@ant-design/pro-components';
 import type { RequestConfig, RunTimeLayoutConfig } from '@umijs/max';
-import { history, Link, useModel, setLocale, getAllLocales } from '@umijs/max';
-import React, { useEffect } from 'react';
+import { getAllLocales, history, Link, setLocale } from '@umijs/max';
+import React from 'react';
 import {
   AvatarDropdown,
   AvatarName,
@@ -12,12 +12,14 @@ import {
   ThemeToggle,
 } from '@/components';
 import { currentUser as queryCurrentUser } from '@/services/rustdesk-console/auth';
+import { getMyPermissions } from '@/services/rustdesk-console/permission';
 import { getFrontendSettings } from '@/services/rustdesk-console/settings';
-import { getToken, TOKEN_KEY } from '@/utils/auth';
+import { getToken } from '@/utils/auth';
 import {
   DEFAULT_FRONTEND_SETTINGS,
   getUsernameWatermark,
 } from '@/utils/generalSettings';
+import AuthSync from '@/components/AuthSync';
 import defaultSettings from '../config/defaultSettings';
 import { errorConfig } from './requestErrorConfig';
 import '@ant-design/v5-patch-for-react-19';
@@ -64,14 +66,27 @@ function storeThemeSettings(settings: Partial<LayoutSettings>) {
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
   currentUser?: API.CurrentUser;
+  permissions?: API.EffectivePermissions;
   loading?: boolean;
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
+  fetchPermissions?: () => Promise<API.EffectivePermissions | undefined>;
   frontendSettings?: API.FrontendSettings;
 }> {
   const fetchUserInfo = async () => {
     try {
       const msg = await queryCurrentUser();
       return msg;
+    } catch (error: any) {
+      const status = error?.response?.status;
+      if (status === 401) {
+        history.push(loginPath);
+      }
+    }
+    return undefined;
+  };
+  const fetchPermissions = async () => {
+    try {
+      return await getMyPermissions();
     } catch (error: any) {
       const status = error?.response?.status;
       if (status === 401) {
@@ -95,10 +110,13 @@ export async function getInitialState(): Promise<{
       fetchUserInfo(),
       frontendSettingsPromise,
     ]);
+    const permissions = currentUser ? await fetchPermissions() : undefined;
     applyDefaultLanguage(frontendSettings.defaultLanguage);
     return {
       fetchUserInfo,
+      fetchPermissions,
       currentUser,
+      permissions,
       settings: initialSettings,
       frontendSettings,
     };
@@ -107,42 +125,11 @@ export async function getInitialState(): Promise<{
   applyDefaultLanguage(frontendSettings.defaultLanguage);
   return {
     fetchUserInfo,
+    fetchPermissions,
     settings: initialSettings,
     frontendSettings,
   };
 }
-
-const AuthSync: React.FC = () => {
-  const { initialState, setInitialState, refresh } = useModel('@@initialState');
-
-  useEffect(() => {
-    const handleSessionExpired = () => {
-      setInitialState((s) => ({ ...s, currentUser: undefined }));
-    };
-
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === TOKEN_KEY) {
-        if (!e.newValue) {
-          setInitialState((s) => ({ ...s, currentUser: undefined }));
-          if (history.location.pathname !== loginPath) {
-            history.push(loginPath);
-          }
-        } else if (e.newValue && !initialState?.currentUser) {
-          refresh();
-        }
-      }
-    };
-
-    window.addEventListener('auth:session-expired', handleSessionExpired);
-    window.addEventListener('storage', handleStorageChange);
-    return () => {
-      window.removeEventListener('auth:session-expired', handleSessionExpired);
-      window.removeEventListener('storage', handleStorageChange);
-    };
-  }, [initialState?.currentUser, setInitialState, refresh]);
-
-  return null;
-};
 
 export const layout: RunTimeLayoutConfig = ({
   initialState,

@@ -6,92 +6,220 @@ import {
   SafetyCertificateOutlined,
 } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
-import { ModalForm, PageContainer, ProTable } from '@ant-design/pro-components';
+import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
 import {
+  Alert,
   App,
   Button,
-  Checkbox,
   Divider,
   Form,
   Input,
+  Modal,
   Popconfirm,
   Space,
+  Spin,
   Tag,
   Tooltip,
   Tree,
+  Typography,
 } from 'antd';
-import React, { useRef, useState } from 'react';
+import type { DataNode } from 'antd/es/tree';
+import React, { useMemo, useRef, useState } from 'react';
 import {
   createRole,
   deleteRole,
   getPermissionList,
+  getRoleDetail,
   getRoleList,
   updateRole,
 } from '@/services/rustdesk-console/role';
+import { getRequestErrorMessage } from '@/utils/requestError';
 
 const RoleList: React.FC = () => {
   const intl = useIntl();
   const { message: msgApi } = App.useApp();
   const actionRef = useRef<ActionType>(null);
-  const [createModalVisible, setCreateModalVisible] = useState(false);
-  const [editModalVisible, setEditModalVisible] = useState(false);
-  const [currentRole, setCurrentRole] = useState<API.RoleItem | null>(null);
-  const [permissions, setPermissions] = useState<API.PermissionItem[]>([]);
-  const [form] = Form.useForm();
+  const [form] = Form.useForm<API.CreateRoleParams>();
+  const [modalOpen, setModalOpen] = useState(false);
+  const [editingRole, setEditingRole] = useState<API.RoleItem | null>(null);
+  const [catalog, setCatalog] = useState<API.PermissionItem[]>([]);
+  const [checkedKeys, setCheckedKeys] = useState<string[]>([]);
+  const [catalogLoading, setCatalogLoading] = useState(false);
+  const [detailLoading, setDetailLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const detailRequestRef = useRef(0);
 
-  const fetchPermissions = async () => {
+  const loadCatalog = async () => {
+    if (catalog.length > 0) return catalog;
+    setCatalogLoading(true);
     try {
-      const data = await getPermissionList();
-      setPermissions(data || []);
+      const response = await getPermissionList();
+      const items = Array.isArray(response) ? response : response?.data;
+      if (!Array.isArray(items)) {
+        throw new Error('Invalid permission catalog response');
+      }
+      setCatalog(items);
+      return items;
     } catch (error) {
-      console.error('Failed to fetch permissions:', error);
+      msgApi.error(
+        getRequestErrorMessage(
+          error,
+          intl.formatMessage({
+            id: 'pages.roles.permissionsLoadFailed',
+            defaultMessage: 'Failed to load the permission catalog',
+          }),
+        ),
+      );
+      return [];
+    } finally {
+      setCatalogLoading(false);
     }
   };
 
-  const handleCreate = async (values: API.CreateRoleParams) => {
+  const permissionCodes = useMemo(
+    () =>
+      new Set(catalog.map((permission) => permission.code || permission.id)),
+    [catalog],
+  );
+
+  const treeData = useMemo<DataNode[]>(() => {
+    const grouped = new Map<string, API.PermissionItem[]>();
+    for (const permission of catalog) {
+      const resource = permission.resource || permission.module || 'other';
+      const values = grouped.get(resource) || [];
+      values.push(permission);
+      grouped.set(resource, values);
+    }
+    return [...grouped.entries()]
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([resource, values]) => ({
+        key: `resource:${resource}`,
+        title: (
+          <FormattedMessage
+            id={`pages.roles.permissionResource.${resource}`}
+            defaultMessage={resource}
+          />
+        ),
+        children: values
+          .sort((a, b) =>
+            (a.code || a.id || '').localeCompare(b.code || b.id || ''),
+          )
+          .map((permission) => {
+            const code = permission.code || permission.id || '';
+            return {
+              key: code,
+              title: (
+                <Space size={4}>
+                  <FormattedMessage
+                    id={`pages.roles.permission.${code}`}
+                    defaultMessage={code}
+                  />
+                  <Typography.Text type="secondary">({code})</Typography.Text>
+                </Space>
+              ),
+              disabled: !code,
+            };
+          }),
+      }));
+  }, [catalog]);
+
+  const closeModal = () => {
+    detailRequestRef.current += 1;
+    setModalOpen(false);
+    setEditingRole(null);
+    setCheckedKeys([]);
+    setDetailLoading(false);
+    form.resetFields();
+  };
+
+  const openCreate = () => {
+    detailRequestRef.current += 1;
+    setEditingRole(null);
+    setCheckedKeys([]);
+    setDetailLoading(false);
+    form.resetFields();
+    setModalOpen(true);
+    void loadCatalog();
+  };
+
+  const openEdit = async (record: API.RoleItem) => {
+    const requestId = ++detailRequestRef.current;
+    setEditingRole(record);
+    setModalOpen(true);
+    setDetailLoading(true);
+    const loadedCatalog = await loadCatalog();
+    if (requestId !== detailRequestRef.current) return;
     try {
-      await createRole(values);
-      msgApi.success(
-        intl.formatMessage({
-          id: 'pages.roles.createSuccess',
-          defaultMessage: 'Role created successfully',
-        }),
+      const detail = await getRoleDetail(record.guid);
+      if (requestId !== detailRequestRef.current) return;
+      form.setFieldsValue({ name: detail.name, note: detail.note || '' });
+      const validCodes = new Set(
+        loadedCatalog.map((permission) => permission.code || permission.id),
       );
-      setCreateModalVisible(false);
-      form.resetFields();
-      actionRef.current?.reload();
+      setCheckedKeys(
+        (detail.permissions || []).filter((code) => validCodes.has(code)),
+      );
     } catch (error) {
+      if (requestId !== detailRequestRef.current) return;
       msgApi.error(
-        intl.formatMessage({
-          id: 'pages.roles.createFailed',
-          defaultMessage: 'Failed to create role',
-        }),
+        getRequestErrorMessage(
+          error,
+          intl.formatMessage({
+            id: 'pages.roles.detailLoadFailed',
+            defaultMessage: 'Failed to load role details',
+          }),
+        ),
       );
+      closeModal();
+    } finally {
+      if (requestId === detailRequestRef.current) setDetailLoading(false);
     }
   };
 
-  const handleUpdate = async (values: API.UpdateRoleParams) => {
-    if (!currentRole) return;
+  const handleSubmit = async () => {
     try {
-      await updateRole(currentRole.guid, values);
+      const values = await form.validateFields();
+      setSaving(true);
+      const payload: API.CreateRoleParams = {
+        name: values.name.trim(),
+        note: values.note,
+        permissions: checkedKeys.filter((code) => permissionCodes.has(code)),
+      };
+      if (editingRole) {
+        await updateRole(editingRole.guid, payload);
+      } else {
+        await createRole(payload);
+      }
       msgApi.success(
         intl.formatMessage({
-          id: 'pages.roles.updateSuccess',
-          defaultMessage: 'Role updated successfully',
+          id: editingRole
+            ? 'pages.roles.updateSuccess'
+            : 'pages.roles.createSuccess',
+          defaultMessage: editingRole
+            ? 'Role updated successfully'
+            : 'Role created successfully',
         }),
       );
-      setEditModalVisible(false);
-      setCurrentRole(null);
-      form.resetFields();
+      closeModal();
       actionRef.current?.reload();
     } catch (error) {
+      if ((error as { errorFields?: unknown })?.errorFields) return;
       msgApi.error(
-        intl.formatMessage({
-          id: 'pages.roles.updateFailed',
-          defaultMessage: 'Failed to update role',
-        }),
+        getRequestErrorMessage(
+          error,
+          intl.formatMessage({
+            id: editingRole
+              ? 'pages.roles.updateFailed'
+              : 'pages.roles.createFailed',
+            defaultMessage: editingRole
+              ? 'Failed to update role'
+              : 'Failed to create role',
+          }),
+        ),
       );
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -107,22 +235,15 @@ const RoleList: React.FC = () => {
       actionRef.current?.reload();
     } catch (error) {
       msgApi.error(
-        intl.formatMessage({
-          id: 'pages.roles.deleteFailed',
-          defaultMessage: 'Failed to delete role',
-        }),
+        getRequestErrorMessage(
+          error,
+          intl.formatMessage({
+            id: 'pages.roles.deleteFailed',
+            defaultMessage: 'Failed to delete role',
+          }),
+        ),
       );
     }
-  };
-
-  const handleEdit = (record: API.RoleItem) => {
-    setCurrentRole(record);
-    form.setFieldsValue({
-      name: record.name,
-      note: record.note,
-    });
-    setEditModalVisible(true);
-    fetchPermissions();
   };
 
   const columns: ProColumns<API.RoleItem>[] = [
@@ -137,7 +258,7 @@ const RoleList: React.FC = () => {
         <FormattedMessage id="pages.roles.name" defaultMessage="Role Name" />
       ),
       dataIndex: 'name',
-      width: 200,
+      width: 220,
       render: (_, record) => (
         <Space>
           <SafetyCertificateOutlined style={{ color: '#1677ff' }} />
@@ -148,7 +269,7 @@ const RoleList: React.FC = () => {
     {
       title: <FormattedMessage id="pages.roles.note" defaultMessage="Note" />,
       dataIndex: 'note',
-      width: 250,
+      width: 260,
       ellipsis: true,
       render: (_, record) => record.note || '-',
     },
@@ -169,11 +290,13 @@ const RoleList: React.FC = () => {
           </Tooltip>
         </span>
       ),
-      dataIndex: 'permission_count',
-      width: 120,
+      dataIndex: 'permissions',
+      width: 130,
       search: false,
       render: (_, record) => (
-        <Tag color="blue">{record.permission_count || 0}</Tag>
+        <Tag color="blue">
+          {record.permissions?.length ?? record.permission_count ?? 0}
+        </Tag>
       ),
     },
     {
@@ -181,7 +304,7 @@ const RoleList: React.FC = () => {
         <FormattedMessage id="pages.common.action" defaultMessage="Action" />
       ),
       valueType: 'option',
-      width: 180,
+      width: 190,
       fixed: 'right',
       render: (_, record) => (
         <Space size={0} split={<Divider type="vertical" />}>
@@ -190,7 +313,7 @@ const RoleList: React.FC = () => {
             type="link"
             size="small"
             icon={<EditOutlined />}
-            onClick={() => handleEdit(record)}
+            onClick={() => void openEdit(record)}
           >
             <FormattedMessage id="pages.common.edit" defaultMessage="Edit" />
           </Button>
@@ -199,7 +322,7 @@ const RoleList: React.FC = () => {
               id: 'pages.roles.deleteConfirm',
               defaultMessage: 'Are you sure to delete this role?',
             })}
-            onConfirm={() => handleDelete(record.guid)}
+            onConfirm={() => void handleDelete(record.guid)}
             okText={intl.formatMessage({
               id: 'pages.common.confirm',
               defaultMessage: 'Yes',
@@ -227,38 +350,18 @@ const RoleList: React.FC = () => {
     },
   ];
 
-  const buildPermissionTree = () => {
-    const grouped = permissions.reduce(
-      (acc, perm) => {
-        const module = perm.module || 'Other';
-        if (!acc[module]) acc[module] = [];
-        acc[module].push(perm);
-        return acc;
-      },
-      {} as Record<string, API.PermissionItem[]>,
-    );
-
-    return Object.entries(grouped).map(([module, perms]) => ({
-      title: module,
-      key: module,
-      children: perms.map((perm) => ({
-        title: (
-          <Space>
-            <span>{perm.name}</span>
-            {perm.description && (
-              <Tooltip title={perm.description}>
-                <InfoCircleOutlined style={{ color: '#999' }} />
-              </Tooltip>
-            )}
-          </Space>
-        ),
-        key: perm.id,
-      })),
-    }));
-  };
-
   return (
     <PageContainer>
+      <Alert
+        type="info"
+        showIcon
+        style={{ marginBottom: 16 }}
+        message={intl.formatMessage({
+          id: 'pages.roles.superAdminInfo',
+          defaultMessage:
+            'Super-administrator access is protected separately and cannot be granted through a role.',
+        })}
+      />
       <ProTable<API.RoleItem>
         headerTitle={
           <FormattedMessage id="pages.roles.list" defaultMessage="Role List" />
@@ -275,10 +378,11 @@ const RoleList: React.FC = () => {
             pageSize: params.pageSize,
             search: params.name,
           });
+          const data = Array.isArray(result.data) ? result.data : [];
           return {
-            data: result.data || [],
-            total: result.total || 0,
-            success: true,
+            data,
+            total: result.total || data.length,
+            success: Array.isArray(result.data),
           };
         }}
         columns={columns}
@@ -287,16 +391,14 @@ const RoleList: React.FC = () => {
           showSizeChanger: true,
           showQuickJumper: true,
         }}
-        scroll={{ x: 800 }}
+        scroll={{ x: 900 }}
+        search={{ labelWidth: 'auto' }}
         toolBarRender={() => [
           <Button
             key="create"
             type="primary"
             icon={<PlusOutlined />}
-            onClick={() => {
-              setCreateModalVisible(true);
-              fetchPermissions();
-            }}
+            onClick={openCreate}
           >
             <FormattedMessage
               id="pages.roles.create"
@@ -306,166 +408,93 @@ const RoleList: React.FC = () => {
         ]}
         options={{
           density: true,
-          setting: {
-            listsHeight: 400,
-          },
+          setting: { listsHeight: 400 },
           fullScreen: false,
           reload: true,
         }}
       />
 
-      {/* Create Role Modal */}
-      <ModalForm
+      <Modal
         title={
           <FormattedMessage
-            id="pages.roles.create"
-            defaultMessage="Create Role"
+            id={editingRole ? 'pages.roles.edit' : 'pages.roles.create'}
+            defaultMessage={editingRole ? 'Edit Role' : 'Create Role'}
           />
         }
-        open={createModalVisible}
-        onOpenChange={setCreateModalVisible}
-        onFinish={handleCreate}
-        form={form}
-        layout="vertical"
-        width={600}
-        modalProps={{
-          destroyOnClose: true,
-        }}
+        open={modalOpen}
+        onCancel={closeModal}
+        onOk={() => void handleSubmit()}
+        confirmLoading={saving}
+        destroyOnClose
+        width={680}
       >
-        <Form.Item
-          name="name"
-          label={
-            <FormattedMessage
-              id="pages.roles.name"
-              defaultMessage="Role Name"
-            />
-          }
-          rules={[
-            {
-              required: true,
-              message: intl.formatMessage({
-                id: 'pages.common.pleaseEnterRoleName',
-                defaultMessage: 'Please enter role name',
-              }),
-            },
-          ]}
-        >
-          <Input
-            placeholder={intl.formatMessage({
-              id: 'pages.common.pleaseEnterRoleName',
-              defaultMessage: 'Please enter role name',
-            })}
-          />
-        </Form.Item>
-        <Form.Item
-          name="note"
-          label={
-            <FormattedMessage id="pages.roles.note" defaultMessage="Note" />
-          }
-        >
-          <Input.TextArea
-            rows={3}
-            placeholder={intl.formatMessage({
-              id: 'pages.common.enterDescription',
-              defaultMessage: 'Enter description',
-            })}
-          />
-        </Form.Item>
-        <Form.Item
-          name="permissions"
-          label={
-            <FormattedMessage
-              id="pages.roles.selectPermissions"
-              defaultMessage="Select Permissions"
-            />
-          }
-        >
-          <Checkbox.Group style={{ width: '100%' }}>
-            <Tree
-              checkable
-              treeData={buildPermissionTree()}
-              defaultExpandAll
-              height={300}
-              style={{ overflow: 'auto' }}
-            />
-          </Checkbox.Group>
-        </Form.Item>
-      </ModalForm>
-
-      {/* Edit Role Modal */}
-      <ModalForm
-        title={
-          <FormattedMessage id="pages.roles.edit" defaultMessage="Edit Role" />
-        }
-        open={editModalVisible}
-        onOpenChange={setEditModalVisible}
-        onFinish={handleUpdate}
-        form={form}
-        layout="vertical"
-        width={600}
-        modalProps={{
-          destroyOnClose: true,
-        }}
-      >
-        <Form.Item
-          name="name"
-          label={
-            <FormattedMessage
-              id="pages.roles.name"
-              defaultMessage="Role Name"
-            />
-          }
-          rules={[
-            {
-              required: true,
-              message: intl.formatMessage({
-                id: 'pages.common.pleaseEnterRoleName',
-                defaultMessage: 'Please enter role name',
-              }),
-            },
-          ]}
-        >
-          <Input
-            placeholder={intl.formatMessage({
-              id: 'pages.common.pleaseEnterRoleName',
-              defaultMessage: 'Please enter role name',
-            })}
-          />
-        </Form.Item>
-        <Form.Item
-          name="note"
-          label={
-            <FormattedMessage id="pages.roles.note" defaultMessage="Note" />
-          }
-        >
-          <Input.TextArea
-            rows={3}
-            placeholder={intl.formatMessage({
-              id: 'pages.common.enterDescription',
-              defaultMessage: 'Enter description',
-            })}
-          />
-        </Form.Item>
-        <Form.Item
-          name="permissions"
-          label={
-            <FormattedMessage
-              id="pages.roles.selectPermissions"
-              defaultMessage="Select Permissions"
-            />
-          }
-        >
-          <Checkbox.Group style={{ width: '100%' }}>
-            <Tree
-              checkable
-              treeData={buildPermissionTree()}
-              defaultExpandAll
-              height={300}
-              style={{ overflow: 'auto' }}
-            />
-          </Checkbox.Group>
-        </Form.Item>
-      </ModalForm>
+        {detailLoading || catalogLoading ? (
+          <div style={{ textAlign: 'center', padding: 32 }}>
+            <Spin />
+          </div>
+        ) : (
+          <Form form={form} layout="vertical">
+            <Form.Item
+              name="name"
+              label={
+                <FormattedMessage
+                  id="pages.roles.name"
+                  defaultMessage="Role Name"
+                />
+              }
+              rules={[
+                {
+                  required: true,
+                  whitespace: true,
+                  message: intl.formatMessage({
+                    id: 'pages.common.pleaseEnterRoleName',
+                    defaultMessage: 'Please enter role name',
+                  }),
+                },
+              ]}
+            >
+              <Input maxLength={255} />
+            </Form.Item>
+            <Form.Item
+              name="note"
+              label={
+                <FormattedMessage id="pages.roles.note" defaultMessage="Note" />
+              }
+            >
+              <Input.TextArea rows={3} maxLength={2000} />
+            </Form.Item>
+            <Form.Item
+              label={
+                <FormattedMessage
+                  id="pages.roles.selectPermissions"
+                  defaultMessage="Select Permissions"
+                />
+              }
+              extra={intl.formatMessage({
+                id: 'pages.roles.permissionScopeInfo',
+                defaultMessage:
+                  'Device actions can be assigned globally or to selected device groups when a user receives this role.',
+              })}
+            >
+              <Tree
+                checkable
+                defaultExpandAll
+                height={320}
+                treeData={treeData}
+                checkedKeys={checkedKeys}
+                onCheck={(keys) => {
+                  const values = Array.isArray(keys) ? keys : keys.checked;
+                  setCheckedKeys(
+                    values
+                      .map(String)
+                      .filter((code) => permissionCodes.has(code)),
+                  );
+                }}
+              />
+            </Form.Item>
+          </Form>
+        )}
+      </Modal>
     </PageContainer>
   );
 };

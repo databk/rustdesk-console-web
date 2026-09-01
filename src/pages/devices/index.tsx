@@ -12,7 +12,7 @@ import {
 import { removeDeviceFromGroup } from '@/services/rustdesk-console/deviceGroup';
 import type { ActionType } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { FormattedMessage, useIntl } from '@umijs/max';
+import { FormattedMessage, useAccess, useIntl } from '@umijs/max';
 import { App, Button, Popconfirm, Space } from 'antd';
 import React, { useRef, useState } from 'react';
 import { getDeviceColumns } from '@/components/DeviceSelectTable/columns';
@@ -32,6 +32,7 @@ const DeviceList: React.FC<DeviceListProps> = ({
   onBack,
 }) => {
   const intl = useIntl();
+  const access = useAccess();
   const { message: msgApi } = App.useApp();
   const actionRef = useRef<ActionType>(null);
 
@@ -299,6 +300,11 @@ const DeviceList: React.FC<DeviceListProps> = ({
       onDelete: handleDelete,
       onRemoveFromGroup: handleRemoveFromGroup,
       deviceGroupGuid,
+      canEdit: access.canDevicesEdit,
+      canStatus: access.canDevicesStatus,
+      canDelete: access.canDevicesDelete,
+      // Device-group structure and membership remain super-admin-only.
+      canManageGroup: access.isSuperAdmin,
     },
     actionWidth,
   );
@@ -504,6 +510,7 @@ const DeviceList: React.FC<DeviceListProps> = ({
       <EditDeviceModal
         open={editModalVisible}
         record={editingRecord}
+        isSuperAdmin={access.isSuperAdmin}
         onCancel={() => {
           setEditModalVisible(false);
           setEditingRecord(null);

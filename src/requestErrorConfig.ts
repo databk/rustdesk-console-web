@@ -1,10 +1,16 @@
 import type { RequestOptions } from '@@/plugin-request/request';
 import type { RequestConfig } from '@umijs/max';
-import { history } from '@umijs/max';
+import { getIntl, history } from '@umijs/max';
 import { message, notification } from 'antd';
 import { getToken, removeToken } from '@/utils/auth';
 
 const loginPath = '/user/login';
+
+const formatMessage = (
+  id: string,
+  defaultMessage: string,
+  values?: Record<string, string | number>,
+) => getIntl().formatMessage({ id, defaultMessage }, values);
 
 enum ErrorShowType {
   SILENT = 0,
@@ -67,18 +73,45 @@ export const errorConfig: RequestConfig = {
           removeToken();
           window.dispatchEvent(new CustomEvent('auth:session-expired'));
           history.push(loginPath);
-          message.error('Login expired, please login again');
+          message.error(
+            formatMessage(
+              'pages.request.loginExpired',
+              'Login expired, please sign in again',
+            ),
+          );
           return;
         }
         if (status === 403) {
-          message.error('Access denied');
+          window.dispatchEvent(new CustomEvent('auth:permissions-stale'));
+          message.error(
+            formatMessage(
+              'pages.request.accessDenied',
+              'You do not have permission to perform this action',
+            ),
+          );
           return;
         }
-        message.error(`Response status: ${status}`);
+        message.error(
+          formatMessage(
+            'pages.request.responseStatus',
+            'Request failed (HTTP {status})',
+            { status },
+          ),
+        );
       } else if (error.request) {
-        message.error('No response received, please retry.');
+        message.error(
+          formatMessage(
+            'pages.request.noResponse',
+            'The server did not respond. Please try again.',
+          ),
+        );
       } else {
-        message.error('Request error, please retry.');
+        message.error(
+          formatMessage(
+            'pages.request.error',
+            'The request failed. Please try again.',
+          ),
+        );
       }
     },
   },

@@ -20,6 +20,10 @@ interface UserTableProps {
   moving: boolean;
   batchStatusUpdating: boolean;
   batchForceLoggingOut: boolean;
+  canCreate: boolean;
+  canManageMembership: boolean;
+  canUpdateStatus: boolean;
+  canForceLogout: boolean;
   onDestinationChange: (guid: string | undefined) => void;
   onBatchMove: () => void;
   onBatchEnable: () => void;
@@ -43,6 +47,10 @@ const UserTable: React.FC<UserTableProps> = ({
   moving,
   batchStatusUpdating,
   batchForceLoggingOut,
+  canCreate,
+  canManageMembership,
+  canUpdateStatus,
+  canForceLogout,
   onDestinationChange,
   onBatchMove,
   onBatchEnable,
@@ -63,45 +71,59 @@ const UserTable: React.FC<UserTableProps> = ({
       }}
       actionRef={actionRef}
       rowKey="guid"
-      rowSelection={{
-        selectedRowKeys,
-        onChange: (keys, rows) => onSelectionChange(keys, rows),
-      }}
+      rowSelection={
+        canManageMembership || canUpdateStatus || canForceLogout
+          ? {
+              selectedRowKeys,
+              onChange: (keys, rows) => onSelectionChange(keys, rows),
+            }
+          : undefined
+      }
       tableAlertOptionRender={() =>
         userGroupGuid ? (
-          <BatchActionsBar
-            mode="move"
-            userGroups={userGroups}
-            userGroupsLoading={userGroupsLoading}
-            currentGroupGuid={userGroupGuid}
-            destinationGuid={destinationGuid}
-            moving={moving}
-            batchStatusUpdating={batchStatusUpdating}
-            batchForceLoggingOut={batchForceLoggingOut}
-            selectedRowCount={selectedRows.length}
-            onDestinationChange={onDestinationChange}
-            onBatchMove={onBatchMove}
-            onBatchEnable={onBatchEnable}
-            onBatchDisable={onBatchDisable}
-            onBatchForceLogout={onBatchForceLogout}
-          />
+          canManageMembership ? (
+            <BatchActionsBar
+              mode="move"
+              userGroups={userGroups}
+              userGroupsLoading={userGroupsLoading}
+              currentGroupGuid={userGroupGuid}
+              destinationGuid={destinationGuid}
+              moving={moving}
+              batchStatusUpdating={batchStatusUpdating}
+              batchForceLoggingOut={batchForceLoggingOut}
+              selectedRowCount={selectedRows.length}
+              canManageMembership={canManageMembership}
+              canUpdateStatus={canUpdateStatus}
+              canForceLogout={canForceLogout}
+              onDestinationChange={onDestinationChange}
+              onBatchMove={onBatchMove}
+              onBatchEnable={onBatchEnable}
+              onBatchDisable={onBatchDisable}
+              onBatchForceLogout={onBatchForceLogout}
+            />
+          ) : null
         ) : (
-          <BatchActionsBar
-            mode="status"
-            userGroups={userGroups}
-            userGroupsLoading={userGroupsLoading}
-            currentGroupGuid={userGroupGuid}
-            destinationGuid={destinationGuid}
-            moving={moving}
-            batchStatusUpdating={batchStatusUpdating}
-            batchForceLoggingOut={batchForceLoggingOut}
-            selectedRowCount={selectedRows.length}
-            onDestinationChange={onDestinationChange}
-            onBatchMove={onBatchMove}
-            onBatchEnable={onBatchEnable}
-            onBatchDisable={onBatchDisable}
-            onBatchForceLogout={onBatchForceLogout}
-          />
+          canUpdateStatus || canForceLogout ? (
+            <BatchActionsBar
+              mode="status"
+              userGroups={userGroups}
+              userGroupsLoading={userGroupsLoading}
+              currentGroupGuid={userGroupGuid}
+              destinationGuid={destinationGuid}
+              moving={moving}
+              batchStatusUpdating={batchStatusUpdating}
+              batchForceLoggingOut={batchForceLoggingOut}
+              selectedRowCount={selectedRows.length}
+              canManageMembership={canManageMembership}
+              canUpdateStatus={canUpdateStatus}
+              canForceLogout={canForceLogout}
+              onDestinationChange={onDestinationChange}
+              onBatchMove={onBatchMove}
+              onBatchEnable={onBatchEnable}
+              onBatchDisable={onBatchDisable}
+              onBatchForceLogout={onBatchForceLogout}
+            />
+          ) : null
         )
       }
       request={async (params) => {
@@ -145,41 +167,45 @@ const UserTable: React.FC<UserTableProps> = ({
       scroll={{ x: 'max-content' }}
       toolBarRender={() =>
         userGroupGuid
-          ? [
-              <Button
-                key="import"
-                icon={<SelectOutlined />}
-                onClick={onOpenImport}
-              >
-                <FormattedMessage
-                  id="pages.userGroups.import"
-                  defaultMessage="Import"
-                />
-              </Button>,
-            ]
-          : [
-              <Button
-                key="create"
-                type="primary"
-                icon={<PlusOutlined />}
-                onClick={onOpenCreate}
-              >
-                <FormattedMessage
-                  id="pages.users.create"
-                  defaultMessage="Create"
-                />
-              </Button>,
-              <Button
-                key="invite"
-                icon={<PlusOutlined />}
-                onClick={onOpenInvite}
-              >
-                <FormattedMessage
-                  id="pages.users.invite"
-                  defaultMessage="Invite"
-                />
-              </Button>,
-            ]
+          ? canManageMembership
+            ? [
+                <Button
+                  key="import"
+                  icon={<SelectOutlined />}
+                  onClick={onOpenImport}
+                >
+                  <FormattedMessage
+                    id="pages.userGroups.import"
+                    defaultMessage="Import"
+                  />
+                </Button>,
+              ]
+            : []
+          : canCreate
+            ? [
+                <Button
+                  key="create"
+                  type="primary"
+                  icon={<PlusOutlined />}
+                  onClick={onOpenCreate}
+                >
+                  <FormattedMessage
+                    id="pages.users.create"
+                    defaultMessage="Create"
+                  />
+                </Button>,
+                <Button
+                  key="invite"
+                  icon={<PlusOutlined />}
+                  onClick={onOpenInvite}
+                >
+                  <FormattedMessage
+                    id="pages.users.invite"
+                    defaultMessage="Invite"
+                  />
+                </Button>,
+              ]
+            : []
       }
       options={{
         density: true,

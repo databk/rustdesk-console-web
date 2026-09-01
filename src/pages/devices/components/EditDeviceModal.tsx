@@ -9,6 +9,7 @@ import React, { useEffect, useState } from 'react';
 export interface EditDeviceModalProps {
   open: boolean;
   record: API.DeviceItem | null;
+  isSuperAdmin: boolean;
   onCancel: () => void;
   onSuccess: () => void;
 }
@@ -16,6 +17,7 @@ export interface EditDeviceModalProps {
 const EditDeviceModal: React.FC<EditDeviceModalProps> = ({
   open,
   record,
+  isSuperAdmin,
   onCancel,
   onSuccess,
 }) => {
@@ -40,9 +42,9 @@ const EditDeviceModal: React.FC<EditDeviceModalProps> = ({
         strategyName: record?.strategy_name || undefined,
         note: record?.note || '',
       });
-      fetchOptions();
+      if (isSuperAdmin) void fetchOptions();
     }
-  }, [open, record]);
+  }, [form, isSuperAdmin, open, record]);
 
   const fetchOptions = async () => {
     try {
@@ -79,10 +81,14 @@ const EditDeviceModal: React.FC<EditDeviceModalProps> = ({
         note: record.note,
       };
       const fieldMap: Record<string, keyof API.UpdateDeviceParams> = {
-        userName: 'userName',
-        deviceGroupName: 'deviceGroupName',
-        strategyName: 'strategyName',
         note: 'note',
+        ...(isSuperAdmin
+          ? {
+              userName: 'userName' as const,
+              deviceGroupName: 'deviceGroupName' as const,
+              strategyName: 'strategyName' as const,
+            }
+          : {}),
       };
       for (const [formKey, paramKey] of Object.entries(fieldMap)) {
         const originalValue = original[formKey] || '';
@@ -128,67 +134,74 @@ const EditDeviceModal: React.FC<EditDeviceModalProps> = ({
       onOk={() => form.submit()}
     >
       <Form form={form} onFinish={handleFinish} layout="vertical">
-        <Form.Item
-          name="userName"
-          label={
-            <FormattedMessage id="pages.devices.user" defaultMessage="User" />
-          }
-        >
-          <Select
-            allowClear
-            showSearch
-            options={userOptions}
-            placeholder={intl.formatMessage({
-              id: 'pages.devices.selectUser',
-              defaultMessage: 'Select user',
-            })}
-          />
-        </Form.Item>
-        <Form.Item
-          name="deviceGroupName"
-          label={
-            <FormattedMessage
-              id="pages.devices.deviceGroup"
-              defaultMessage="Group"
-            />
-          }
-        >
-          <Select
-            allowClear
-            showSearch
-            options={deviceGroupOptions}
-            placeholder={intl.formatMessage({
-              id: 'pages.devices.selectDeviceGroup',
-              defaultMessage: 'Select device group',
-            })}
-          />
-        </Form.Item>
-        <Form.Item
-          name="strategyName"
-          label={
-            <FormattedMessage
-              id="pages.devices.strategy"
-              defaultMessage="Strategy"
-            />
-          }
-        >
-          <Select
-            allowClear
-            showSearch
-            options={strategyOptions}
-            placeholder={intl.formatMessage({
-              id: 'pages.devices.selectStrategy',
-              defaultMessage: 'Select strategy',
-            })}
-          />
-        </Form.Item>
+        {isSuperAdmin && (
+          <>
+            <Form.Item
+              name="userName"
+              label={
+                <FormattedMessage
+                  id="pages.devices.user"
+                  defaultMessage="User"
+                />
+              }
+            >
+              <Select
+                allowClear
+                showSearch
+                options={userOptions}
+                placeholder={intl.formatMessage({
+                  id: 'pages.devices.selectUser',
+                  defaultMessage: 'Select user',
+                })}
+              />
+            </Form.Item>
+            <Form.Item
+              name="deviceGroupName"
+              label={
+                <FormattedMessage
+                  id="pages.devices.deviceGroup"
+                  defaultMessage="Group"
+                />
+              }
+            >
+              <Select
+                allowClear
+                showSearch
+                options={deviceGroupOptions}
+                placeholder={intl.formatMessage({
+                  id: 'pages.devices.selectDeviceGroup',
+                  defaultMessage: 'Select device group',
+                })}
+              />
+            </Form.Item>
+            <Form.Item
+              name="strategyName"
+              label={
+                <FormattedMessage
+                  id="pages.devices.strategy"
+                  defaultMessage="Strategy"
+                />
+              }
+            >
+              <Select
+                allowClear
+                showSearch
+                options={strategyOptions}
+                placeholder={intl.formatMessage({
+                  id: 'pages.devices.selectStrategy',
+                  defaultMessage: 'Select strategy',
+                })}
+              />
+            </Form.Item>
+          </>
+        )}
         <Form.Item
           name="note"
           label={
             <FormattedMessage id="pages.devices.note" defaultMessage="Note" />
           }
         >
-          <Input.TextArea />
+          <Input.TextArea maxLength={500} />
         </Form.Item>
       </Form>
     </Modal>

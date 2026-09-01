@@ -18,6 +18,9 @@ interface BatchActionsBarProps {
   batchStatusUpdating: boolean;
   batchForceLoggingOut: boolean;
   selectedRowCount: number;
+  canManageMembership: boolean;
+  canUpdateStatus: boolean;
+  canForceLogout: boolean;
   onDestinationChange: (guid: string | undefined) => void;
   onBatchMove: () => void;
   onBatchEnable: () => void;
@@ -35,6 +38,9 @@ const BatchActionsBar: React.FC<BatchActionsBarProps> = ({
   batchStatusUpdating,
   batchForceLoggingOut,
   selectedRowCount,
+  canManageMembership,
+  canUpdateStatus,
+  canForceLogout,
   onDestinationChange,
   onBatchMove,
   onBatchEnable,
@@ -44,6 +50,7 @@ const BatchActionsBar: React.FC<BatchActionsBarProps> = ({
   const intl = useIntl();
 
   if (mode === 'move') {
+    if (!canManageMembership) return null;
     return (
       <Space size={16}>
         <Select
@@ -82,95 +89,103 @@ const BatchActionsBar: React.FC<BatchActionsBarProps> = ({
     );
   }
 
+  if (!canUpdateStatus && !canForceLogout) return null;
+
   return (
     <Space size={16}>
-      <Popconfirm
-        title={
-          <FormattedMessage
-            id="pages.users.batchEnableConfirm"
-            defaultMessage="Are you sure to enable selected users?"
-          />
-        }
-        onConfirm={onBatchEnable}
-        okText={intl.formatMessage({
-          id: 'pages.common.confirm',
-          defaultMessage: 'Yes',
-        })}
-        cancelText={intl.formatMessage({
-          id: 'pages.common.cancel',
-          defaultMessage: 'No',
-        })}
-      >
-        <Button
-          type="link"
-          icon={<PlusCircleOutlined />}
-          loading={batchStatusUpdating}
-          style={{ padding: 0 }}
+      {canUpdateStatus && (
+        <>
+          <Popconfirm
+            title={
+              <FormattedMessage
+                id="pages.users.batchEnableConfirm"
+                defaultMessage="Are you sure to enable selected users?"
+              />
+            }
+            onConfirm={onBatchEnable}
+            okText={intl.formatMessage({
+              id: 'pages.common.confirm',
+              defaultMessage: 'Yes',
+            })}
+            cancelText={intl.formatMessage({
+              id: 'pages.common.cancel',
+              defaultMessage: 'No',
+            })}
+          >
+            <Button
+              type="link"
+              icon={<PlusCircleOutlined />}
+              loading={batchStatusUpdating}
+              style={{ padding: 0 }}
+            >
+              <FormattedMessage
+                id="pages.users.batchEnable"
+                defaultMessage="Batch Enable"
+              />
+            </Button>
+          </Popconfirm>
+          <Popconfirm
+            title={
+              <FormattedMessage
+                id="pages.users.batchDisableConfirm"
+                defaultMessage="Are you sure to disable selected users?"
+              />
+            }
+            onConfirm={onBatchDisable}
+            okText={intl.formatMessage({
+              id: 'pages.common.confirm',
+              defaultMessage: 'Yes',
+            })}
+            cancelText={intl.formatMessage({
+              id: 'pages.common.cancel',
+              defaultMessage: 'No',
+            })}
+          >
+            <Button
+              type="link"
+              icon={<MinusCircleOutlined />}
+              loading={batchStatusUpdating}
+              style={{ padding: 0 }}
+            >
+              <FormattedMessage
+                id="pages.users.batchDisable"
+                defaultMessage="Batch Disable"
+              />
+            </Button>
+          </Popconfirm>
+        </>
+      )}
+      {canForceLogout && (
+        <Popconfirm
+          title={
+            <FormattedMessage
+              id="pages.users.batchForceLogoutConfirm"
+              defaultMessage="Are you sure to force logout selected users?"
+            />
+          }
+          onConfirm={onBatchForceLogout}
+          okText={intl.formatMessage({
+            id: 'pages.common.confirm',
+            defaultMessage: 'Yes',
+          })}
+          cancelText={intl.formatMessage({
+            id: 'pages.common.cancel',
+            defaultMessage: 'No',
+          })}
         >
-          <FormattedMessage
-            id="pages.users.batchEnable"
-            defaultMessage="Batch Enable"
-          />
-        </Button>
-      </Popconfirm>
-      <Popconfirm
-        title={
-          <FormattedMessage
-            id="pages.users.batchDisableConfirm"
-            defaultMessage="Are you sure to disable selected users?"
-          />
-        }
-        onConfirm={onBatchDisable}
-        okText={intl.formatMessage({
-          id: 'pages.common.confirm',
-          defaultMessage: 'Yes',
-        })}
-        cancelText={intl.formatMessage({
-          id: 'pages.common.cancel',
-          defaultMessage: 'No',
-        })}
-      >
-        <Button
-          type="link"
-          icon={<MinusCircleOutlined />}
-          loading={batchStatusUpdating}
-          style={{ padding: 0 }}
-        >
-          <FormattedMessage
-            id="pages.users.batchDisable"
-            defaultMessage="Batch Disable"
-          />
-        </Button>
-      </Popconfirm>
-      <Popconfirm
-        title={
-          <FormattedMessage
-            id="pages.users.batchForceLogoutConfirm"
-            defaultMessage="Are you sure to force logout selected users?"
-          />
-        }
-        onConfirm={onBatchForceLogout}
-        okText={intl.formatMessage({
-          id: 'pages.common.confirm',
-          defaultMessage: 'Yes',
-        })}
-        cancelText={intl.formatMessage({
-          id: 'pages.common.cancel',
-          defaultMessage: 'No',
-        })}
-      >
-        <Button
-          type="link"
-          icon={<LogoutOutlined />}
-          loading={batchForceLoggingOut}
-          style={{ padding: 0 }}
-        >
-          <FormattedMessage
-            id="pages.users.batchForceLogout"
-            defaultMessage="Batch Force Logout"
-          />
-        </Button>
-      </Popconfirm>
+          <Button
+            type="link"
+            icon={<LogoutOutlined />}
+            loading={batchForceLoggingOut}
+            style={{ padding: 0 }}
+          >
+            <FormattedMessage
+              id="pages.users.batchForceLogout"
+              defaultMessage="Batch Force Logout"
+            />
+          </Button>
+        </Popconfirm>
+      )}
     </Space>
   );
 };

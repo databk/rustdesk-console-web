@@ -26,12 +26,14 @@ export default [
     path: '/dashboard',
     name: 'dashboard',
     icon: 'dashboard',
+    access: 'canAdmin',
     component: './dashboard',
   },
   {
     path: '/devices',
     name: 'devices',
     icon: 'desktop',
+    access: 'canDevicesView',
     component: './devices',
   },
   {
@@ -53,11 +55,13 @@ export default [
         name: 'shared',
         icon: 'team',
         path: '/address-book/shared',
+        access: 'canAddressBooksView',
         component: './address-book/shared',
       },
       {
         name: 'shared',
         path: '/address-book/shared/:guid',
+        access: 'canAddressBooksView',
         component: './address-book/shared/detail',
         hideInMenu: true,
       },
@@ -67,7 +71,7 @@ export default [
     path: '/groups',
     name: 'groups',
     icon: 'team',
-    access: 'canAdmin',
+    access: 'canGroups',
     routes: [
       {
         path: '/groups',
@@ -77,11 +81,13 @@ export default [
         name: 'user',
         icon: 'user',
         path: '/groups/user',
+        access: 'canUserGroupsView',
         component: './groups/user',
       },
       {
         name: 'user',
         path: '/groups/user/:guid',
+        access: 'canUserGroupsView',
         component: './groups/user/detail',
         hideInMenu: true,
       },
@@ -89,11 +95,13 @@ export default [
         name: 'device',
         icon: 'device',
         path: '/groups/device',
+        access: 'canAdmin',
         component: './groups/device/list',
       },
       {
         name: 'device',
         path: '/groups/device/:guid',
+        access: 'canAdmin',
         component: './groups/device/detail',
         hideInMenu: true,
       },
@@ -103,7 +111,7 @@ export default [
     path: '/users',
     name: 'users',
     icon: 'user',
-    access: 'canAdmin',
+    access: 'canUsersView',
     component: './users',
   },
   {
@@ -118,7 +126,7 @@ export default [
     path: '/audits',
     name: 'audits',
     icon: 'FileSearchOutlined',
-    access: 'canAdmin',
+    access: 'canAuditView',
     routes: [
       {
         path: '/audits',
@@ -155,7 +163,7 @@ export default [
     path: '/strategy',
     name: 'strategies',
     icon: 'solution',
-    access: 'canAdmin',
+    access: 'canStrategiesView',
     component: './strategy',
   },
   {

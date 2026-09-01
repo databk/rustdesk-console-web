@@ -1,7 +1,7 @@
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { ModalForm, PageContainer, ProTable } from '@ant-design/pro-components';
-import { FormattedMessage, history, useIntl } from '@umijs/max';
+import { FormattedMessage, history, useAccess, useIntl } from '@umijs/max';
 import {
   App,
   Button,
@@ -22,6 +22,7 @@ import {
 
 const UserGroupList: React.FC = () => {
   const intl = useIntl();
+  const access = useAccess();
   const { message: msgApi } = App.useApp();
   const actionRef = useRef<ActionType>(null);
   const [createModalVisible, setCreateModalVisible] = useState(false);
@@ -163,57 +164,69 @@ const UserGroupList: React.FC = () => {
       valueType: 'option',
       width: 200,
       fixed: 'right',
+      hideInTable:
+        !access.canUserGroupsMembership &&
+        !access.canUserGroupsEdit &&
+        !access.canUserGroupsDelete,
       render: (_, record) => (
         <Space size={0} split={<Divider type="vertical" />}>
-          <Button
-            type="link"
-            size="small"
-            icon={<EditOutlined />}
-            onClick={() => {
-              setCurrentGroup(record);
-              form.setFieldsValue(record);
-              setEditModalVisible(true);
-            }}
-          >
-            <FormattedMessage id="pages.common.edit" defaultMessage="Edit" />
-          </Button>
-          {record.is_default ? (
+          {access.canUserGroupsEdit && (
             <Button
               type="link"
               size="small"
-              danger
-              disabled
-              icon={<DeleteOutlined />}
+              icon={<EditOutlined />}
+              onClick={() => {
+                setCurrentGroup(record);
+                form.setFieldsValue(record);
+                setEditModalVisible(true);
+              }}
             >
-              <FormattedMessage
-                id="pages.common.delete"
-                defaultMessage="Delete"
-              />
+              <FormattedMessage id="pages.common.edit" defaultMessage="Edit" />
             </Button>
-          ) : (
-            <Popconfirm
-              title={intl.formatMessage({
-                id: 'pages.userGroups.deleteConfirm',
-                defaultMessage: 'Delete this user group?',
-              })}
-              onConfirm={() => handleDelete(record.guid)}
-              okText={intl.formatMessage({
-                id: 'pages.common.confirm',
-                defaultMessage: 'Yes',
-              })}
-              cancelText={intl.formatMessage({
-                id: 'pages.common.cancel',
-                defaultMessage: 'No',
-              })}
-            >
-              <Button type="link" size="small" danger icon={<DeleteOutlined />}>
+          )}
+          {access.canUserGroupsDelete &&
+            (record.is_default ? (
+              <Button
+                type="link"
+                size="small"
+                danger
+                disabled
+                icon={<DeleteOutlined />}
+              >
                 <FormattedMessage
                   id="pages.common.delete"
                   defaultMessage="Delete"
                 />
               </Button>
-            </Popconfirm>
-          )}
+            ) : (
+              <Popconfirm
+                title={intl.formatMessage({
+                  id: 'pages.userGroups.deleteConfirm',
+                  defaultMessage: 'Delete this user group?',
+                })}
+                onConfirm={() => handleDelete(record.guid)}
+                okText={intl.formatMessage({
+                  id: 'pages.common.confirm',
+                  defaultMessage: 'Yes',
+                })}
+                cancelText={intl.formatMessage({
+                  id: 'pages.common.cancel',
+                  defaultMessage: 'No',
+                })}
+              >
+                <Button
+                  type="link"
+                  size="small"
+                  danger
+                  icon={<DeleteOutlined />}
+                >
+                  <FormattedMessage
+                    id="pages.common.delete"
+                    defaultMessage="Delete"
+                  />
+                </Button>
+              </Popconfirm>
+            ))}
         </Space>
       ),
     },
@@ -253,19 +266,23 @@ const UserGroupList: React.FC = () => {
           showQuickJumper: true,
         }}
         scroll={{ x: 800 }}
-        toolBarRender={() => [
-          <Button
-            key="create"
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={() => setCreateModalVisible(true)}
-          >
-            <FormattedMessage
-              id="pages.userGroups.create"
-              defaultMessage="Create User Group"
-            />
-          </Button>,
-        ]}
+        toolBarRender={() =>
+          access.canUserGroupsCreate
+            ? [
+                <Button
+                  key="create"
+                  type="primary"
+                  icon={<PlusOutlined />}
+                  onClick={() => setCreateModalVisible(true)}
+                >
+                  <FormattedMessage
+                    id="pages.userGroups.create"
+                    defaultMessage="Create User Group"
+                  />
+                </Button>,
+              ]
+            : []
+        }
         options={{
           density: true,
           setting: { listsHeight: 400 },

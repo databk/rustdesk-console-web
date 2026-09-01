@@ -16,6 +16,10 @@ export interface ActionColumnCallbacks {
   onDelete: (guid: string) => void;
   onRemoveFromGroup: (deviceId: string) => void;
   deviceGroupGuid?: string;
+  canEdit: boolean;
+  canStatus: boolean;
+  canDelete: boolean;
+  canManageGroup: boolean;
 }
 
 export const getActionColumn = (
@@ -30,6 +34,10 @@ export const getActionColumn = (
     onDelete,
     onRemoveFromGroup,
     deviceGroupGuid,
+    canEdit,
+    canStatus,
+    canDelete,
+    canManageGroup,
   } = callbacks;
 
   return {
@@ -39,11 +47,16 @@ export const getActionColumn = (
     valueType: 'option',
     width: width ?? '14%',
     fixed: 'right',
+    hideInTable:
+      deviceGroupGuid !== undefined
+        ? !canManageGroup
+        : !canEdit && !canStatus && !canDelete,
     render: (_: unknown, record: API.DeviceItem) => {
       const isDisabled = record.status === 0;
 
       // When in device group context, only show remove button
       if (deviceGroupGuid) {
+        if (!canManageGroup) return null;
         return (
           <Popconfirm
             key="remove"
@@ -76,43 +89,46 @@ export const getActionColumn = (
       // Normal device list (not in device group context)
       return (
         <Space size={0} split={<Divider type="vertical" />}>
-          <Button
-            key="edit"
-            type="link"
-            size="small"
-            icon={<EditOutlined />}
-            onClick={() => onEdit(record)}
-          >
-            <FormattedMessage id="pages.common.edit" defaultMessage="Edit" />
-          </Button>
-          {isDisabled ? (
+          {canEdit && (
             <Button
-              key="enable"
+              key="edit"
               type="link"
               size="small"
-              icon={<PlusCircleOutlined />}
-              onClick={() => onEnable(record.guid)}
+              icon={<EditOutlined />}
+              onClick={() => onEdit(record)}
             >
-              <FormattedMessage
-                id="pages.devices.enable"
-                defaultMessage="Enable"
-              />
-            </Button>
-          ) : (
-            <Button
-              key="disable"
-              type="link"
-              size="small"
-              icon={<MinusCircleOutlined />}
-              onClick={() => onDisable(record.guid)}
-            >
-              <FormattedMessage
-                id="pages.devices.disable"
-                defaultMessage="Disable"
-              />
+              <FormattedMessage id="pages.common.edit" defaultMessage="Edit" />
             </Button>
           )}
-          {isDisabled && (
+          {canStatus &&
+            (isDisabled ? (
+              <Button
+                key="enable"
+                type="link"
+                size="small"
+                icon={<PlusCircleOutlined />}
+                onClick={() => onEnable(record.guid)}
+              >
+                <FormattedMessage
+                  id="pages.devices.enable"
+                  defaultMessage="Enable"
+                />
+              </Button>
+            ) : (
+              <Button
+                key="disable"
+                type="link"
+                size="small"
+                icon={<MinusCircleOutlined />}
+                onClick={() => onDisable(record.guid)}
+              >
+                <FormattedMessage
+                  id="pages.devices.disable"
+                  defaultMessage="Disable"
+                />
+              </Button>
+            ))}
+          {canDelete && isDisabled && (
             <Popconfirm
               key="delete"
               title={

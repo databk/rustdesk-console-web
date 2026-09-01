@@ -7,6 +7,9 @@ interface EditUserModalProps {
   visible: boolean;
   userGroups: API.UserGroupItem[];
   userGroupsLoading: boolean;
+  canEditStatus?: boolean;
+  canEditGroup?: boolean;
+  canEditAdmin?: boolean;
   form: FormInstance<API.UpdateUserParams>;
   onSubmit: (values: API.UpdateUserParams) => Promise<void>;
   onCancel: () => void;
@@ -16,6 +19,9 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
   visible,
   userGroups,
   userGroupsLoading,
+  canEditStatus = true,
+  canEditGroup = true,
+  canEditAdmin = true,
   form,
   onSubmit,
   onCancel,
@@ -85,71 +91,86 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
         >
           <Input.TextArea />
         </Form.Item>
-        <Form.Item
-          name="status"
-          label={
-            <FormattedMessage id="pages.users.status" defaultMessage="Status" />
-          }
-        >
-          <Select
-            options={[
-              {
-                label: intl.formatMessage({
-                  id: 'pages.users.active',
-                  defaultMessage: 'Active',
-                }),
-                value: 1,
-              },
-              {
-                label: intl.formatMessage({
-                  id: 'pages.users.disabled',
-                  defaultMessage: 'Disabled',
-                }),
-                value: 0,
-              },
-              {
-                label: intl.formatMessage({
-                  id: 'pages.users.unverified',
-                  defaultMessage: 'Unverified',
-                }),
-                value: -1,
-              },
-            ]}
-          />
-        </Form.Item>
-        <Form.Item
-          name="user_group_guid"
-          label={
-            <FormattedMessage
-              id="pages.users.userGroup"
-              defaultMessage="User Group"
+        {canEditStatus && (
+          <Form.Item
+            name="status"
+            preserve={false}
+            label={
+              <FormattedMessage
+                id="pages.users.status"
+                defaultMessage="Status"
+              />
+            }
+          >
+            <Select
+              options={[
+                {
+                  label: intl.formatMessage({
+                    id: 'pages.users.active',
+                    defaultMessage: 'Active',
+                  }),
+                  value: 1,
+                },
+                {
+                  label: intl.formatMessage({
+                    id: 'pages.users.disabled',
+                    defaultMessage: 'Disabled',
+                  }),
+                  value: 0,
+                },
+                {
+                  label: intl.formatMessage({
+                    id: 'pages.users.unverified',
+                    defaultMessage: 'Unverified',
+                  }),
+                  value: -1,
+                },
+              ]}
             />
-          }
-        >
-          <Select
-            allowClear
-            showSearch
-            optionFilterProp="label"
-            loading={userGroupsLoading}
-            placeholder={intl.formatMessage({
-              id: 'pages.users.selectUserGroup',
-              defaultMessage: 'Select user group',
-            })}
-            options={userGroups.map((group) => ({
-              label: group.name,
-              value: group.guid,
-            }))}
-          />
-        </Form.Item>
-        <Form.Item
-          name="is_admin"
-          label={
-            <FormattedMessage id="pages.users.isAdmin" defaultMessage="Admin" />
-          }
-          valuePropName="checked"
-        >
-          <Switch />
-        </Form.Item>
+          </Form.Item>
+        )}
+        {canEditGroup && (
+          <Form.Item
+            name="user_group_guid"
+            preserve={false}
+            label={
+              <FormattedMessage
+                id="pages.users.userGroup"
+                defaultMessage="User Group"
+              />
+            }
+          >
+            <Select
+              allowClear
+              showSearch
+              optionFilterProp="label"
+              loading={userGroupsLoading}
+              placeholder={intl.formatMessage({
+                id: 'pages.users.selectUserGroup',
+                defaultMessage: 'Select user group',
+              })}
+              options={userGroups.map((group) => ({
+                label: group.name,
+                value: group.guid,
+              }))}
+            />
+          </Form.Item>
+        )}
+        {canEditAdmin && (
+          <Form.Item
+            name="is_admin"
+            preserve={false}
+            label={
+              <FormattedMessage
+                id="pages.users.isAdmin"
+                defaultMessage="Admin"
+              />
+            }
+            valuePropName="checked"
+          >
+            <Switch />
+          </Form.Item>
+        )}
       </Form>
     </Modal>
   );

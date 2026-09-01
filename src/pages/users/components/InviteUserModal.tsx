@@ -7,6 +7,7 @@ interface InviteUserModalProps {
   visible: boolean;
   userGroups: API.UserGroupItem[];
   userGroupsLoading: boolean;
+  canAssignGroup?: boolean;
   form: FormInstance<API.InviteUserParams>;
   onSubmit: (values: API.InviteUserParams) => Promise<void>;
   onCancel: () => void;
@@ -16,6 +17,7 @@ const InviteUserModal: React.FC<InviteUserModalProps> = ({
   visible,
   userGroups,
   userGroupsLoading,
+  canAssignGroup = true,
   form,
   onSubmit,
   onCancel,
@@ -95,30 +97,33 @@ const InviteUserModal: React.FC<InviteUserModalProps> = ({
         >
           <Input.TextArea />
         </Form.Item>
-        <Form.Item
-          name="user_group_guid"
-          label={
-            <FormattedMessage
-              id="pages.users.userGroup"
-              defaultMessage="User Group"
+        {canAssignGroup && (
+          <Form.Item
+            name="user_group_guid"
+            preserve={false}
+            label={
+              <FormattedMessage
+                id="pages.users.userGroup"
+                defaultMessage="User Group"
+              />
+            }
+          >
+            <Select
+              allowClear
+              showSearch
+              optionFilterProp="label"
+              loading={userGroupsLoading}
+              placeholder={intl.formatMessage({
+                id: 'pages.users.selectUserGroup',
+                defaultMessage: 'Select user group',
+              })}
+              options={userGroups.map((group) => ({
+                label: group.name,
+                value: group.guid,
+              }))}
             />
-          }
-        >
-          <Select
-            allowClear
-            showSearch
-            optionFilterProp="label"
-            loading={userGroupsLoading}
-            placeholder={intl.formatMessage({
-              id: 'pages.users.selectUserGroup',
-              defaultMessage: 'Select user group',
-            })}
-            options={userGroups.map((group) => ({
-              label: group.name,
-              value: group.guid,
-            }))}
-          />
-        </Form.Item>
+          </Form.Item>
+        )}
       </Form>
     </Modal>
   );

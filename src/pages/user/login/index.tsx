@@ -19,6 +19,7 @@ import { flushSync } from 'react-dom';
 import { setToken } from '@/utils/auth';
 import { Footer } from '@/components';
 import { login, getLoginOptions } from '@/services/rustdesk-console/auth';
+import { getMyPermissions } from '@/services/rustdesk-console/permission';
 import {
   passkeyAuthBegin,
   passkeyAuthVerify,
@@ -83,11 +84,19 @@ const Login: React.FC = () => {
           defaultMessage: 'Login successful!',
         }),
       );
-      if (user) {
+      let permissions: API.EffectivePermissions | undefined;
+      try {
+        permissions = await getMyPermissions();
+      } catch {
+        // The shell remains usable while capabilities are refreshed on the
+        // next initial-state load. Protected API calls still enforce access.
+      }
+      if (user || permissions) {
         flushSync(() => {
           setInitialState((s) => ({
             ...s,
             currentUser: user,
+            permissions,
           }));
         });
       }
