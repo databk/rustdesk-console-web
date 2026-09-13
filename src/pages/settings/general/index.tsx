@@ -349,6 +349,20 @@ const GeneralSettings: React.FC = () => {
                         defaultMessage: 'Please enter a positive integer',
                       }),
                     },
+                    {
+                      validator: (_: unknown, value: number) =>
+                        value >= 1
+                          ? Promise.resolve()
+                          : Promise.reject(
+                              new Error(
+                                intl.formatMessage({
+                                  id: 'pages.settings.generalSection.jwtExpiryDaysRequired',
+                                  defaultMessage:
+                                    'Please enter a positive integer',
+                                }),
+                              ),
+                            ),
+                    },
                   ]}
                 >
                   <InputNumber
@@ -378,6 +392,20 @@ const GeneralSettings: React.FC = () => {
                         id: 'pages.settings.generalSection.auditRetentionDaysRequired',
                         defaultMessage: 'Please enter a non-negative integer',
                       }),
+                    },
+                    {
+                      validator: (_: unknown, value: number) =>
+                        value >= 0
+                          ? Promise.resolve()
+                          : Promise.reject(
+                              new Error(
+                                intl.formatMessage({
+                                  id: 'pages.settings.generalSection.auditRetentionDaysRequired',
+                                  defaultMessage:
+                                    'Please enter a non-negative integer',
+                                }),
+                              ),
+                            ),
                     },
                   ]}
                 >
