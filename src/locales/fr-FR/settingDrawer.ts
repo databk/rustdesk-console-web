@@ -20,13 +20,14 @@ export default {
   'app.setting.fixedheader': 'En-tête fixe',
   'app.setting.fixedsidebar': 'Barre latérale fixe',
   'app.setting.fixedsidebar.hint': 'Fonctionne avec le menu latéral',
-  'app.setting.hideheader': 'Masquer l\'en-tête au défilement',
-  'app.setting.hideheader.hint': 'Fonctionne lorsque le masquage de l\'en-tête est activé',
+  'app.setting.hideheader': "Masquer l'en-tête au défilement",
+  'app.setting.hideheader.hint':
+    "Fonctionne lorsque le masquage de l'en-tête est activé",
   'app.setting.othersettings': 'Autres paramètres',
   'app.setting.weakmode': 'Mode daltonien',
   'app.setting.copy': 'Copier la configuration',
   'app.setting.copyinfo':
     'Copié avec succès, veuillez remplacer defaultSettings dans src/models/setting.js',
   'app.setting.production.hint':
-    'Le panneau de configuration s\'affiche uniquement en environnement de développement, veuillez modifier manuellement',
+    "Le panneau de configuration s'affiche uniquement en environnement de développement, veuillez modifier manuellement",
 };

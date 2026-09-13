@@ -14,5 +14,6 @@ export default {
   'app.updateCheck.viewRelease': 'Voir la version',
   'app.updateCheck.recheck': 'Vérifier à nouveau',
   'app.updateCheck.close': 'Fermer',
-  'app.updateCheck.failed': 'Échec de la vérification des mises à jour, veuillez réessayer plus tard',
+  'app.updateCheck.failed':
+    'Échec de la vérification des mises à jour, veuillez réessayer plus tard',
 };

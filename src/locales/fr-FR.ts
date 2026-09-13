@@ -10,7 +10,7 @@ export default {
   'navBar.lang': 'Langues',
   'layout.user.link.help': 'Aide',
   'layout.user.link.privacy': 'Confidentialité',
-  'layout.user.link.terms': 'Conditions d\'utilisation',
+  'layout.user.link.terms': "Conditions d'utilisation",
   'layout.user.logout': 'Déconnexion',
   'layout.user.accountCenter': 'Mon compte',
   ...globalHeader,
