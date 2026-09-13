@@ -938,6 +938,8 @@ declare namespace API {
   type GeneralSettings = {
     watermarkEnabled: boolean;
     defaultLanguage: string;
+    jwtExpiryDays: number;
+    auditRetentionDays: number;
     site: {
       frontendUrl: string;
       backendUrl: string;

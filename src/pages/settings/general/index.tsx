@@ -1,4 +1,5 @@
 import {
+  FieldTimeOutlined,
   GlobalOutlined,
   HighlightOutlined,
   LinkOutlined,
@@ -14,6 +15,7 @@ import {
   Card,
   Form,
   Input,
+  InputNumber,
   Select,
   Space,
   Spin,
@@ -310,6 +312,79 @@ const GeneralSettings: React.FC = () => {
                       id: 'pages.settings.generalSection.rpNamePlaceholder',
                       defaultMessage: 'RustDesk Console',
                     })}
+                  />
+                </Form.Item>
+              </Card>
+
+              <Card
+                title={
+                  <Space>
+                    <FieldTimeOutlined />
+                    <FormattedMessage
+                      id="pages.settings.generalSection.security"
+                      defaultMessage="Security & Maintenance"
+                    />
+                  </Space>
+                }
+              >
+                <Form.Item
+                  name="jwtExpiryDays"
+                  label={
+                    <FormattedMessage
+                      id="pages.settings.generalSection.jwtExpiryDays"
+                      defaultMessage="JWT Token Expiry (Days)"
+                    />
+                  }
+                  extra={
+                    <FormattedMessage
+                      id="pages.settings.generalSection.jwtExpiryDaysExtra"
+                      defaultMessage="Number of days before signed-in user tokens expire. Must be at least 1."
+                    />
+                  }
+                  rules={[
+                    {
+                      required: true,
+                      message: intl.formatMessage({
+                        id: 'pages.settings.generalSection.jwtExpiryDaysRequired',
+                        defaultMessage: 'Please enter a positive integer',
+                      }),
+                    },
+                  ]}
+                >
+                  <InputNumber
+                    min={1}
+                    precision={0}
+                    style={{ width: '100%' }}
+                  />
+                </Form.Item>
+                <Form.Item
+                  name="auditRetentionDays"
+                  label={
+                    <FormattedMessage
+                      id="pages.settings.generalSection.auditRetentionDays"
+                      defaultMessage="Audit Log Retention (Days)"
+                    />
+                  }
+                  extra={
+                    <FormattedMessage
+                      id="pages.settings.generalSection.auditRetentionDaysExtra"
+                      defaultMessage="Number of days to keep audit logs before automatic cleanup. Set to 0 to disable auto-cleanup."
+                    />
+                  }
+                  rules={[
+                    {
+                      required: true,
+                      message: intl.formatMessage({
+                        id: 'pages.settings.generalSection.auditRetentionDaysRequired',
+                        defaultMessage: 'Please enter a non-negative integer',
+                      }),
+                    },
+                  ]}
+                >
+                  <InputNumber
+                    min={0}
+                    precision={0}
+                    style={{ width: '100%' }}
                   />
                 </Form.Item>
               </Card>

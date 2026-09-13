@@ -458,6 +458,19 @@ export default {
   'pages.settings.generalSection.rpNameExtra':
     'Nome amigável exibido no prompt de passkey.',
   'pages.settings.generalSection.rpNamePlaceholder': 'RustDesk Console',
+  'pages.settings.generalSection.security': 'Segurança e Manutenção',
+  'pages.settings.generalSection.jwtExpiryDays':
+    'Expiração do Token JWT (Dias)',
+  'pages.settings.generalSection.jwtExpiryDaysExtra':
+    'Número de dias antes que os tokens de usuários expirem. Deve ser pelo menos 1.',
+  'pages.settings.generalSection.jwtExpiryDaysRequired':
+    'Informe um número inteiro positivo',
+  'pages.settings.generalSection.auditRetentionDays':
+    'Retenção de Logs de Auditoria (Dias)',
+  'pages.settings.generalSection.auditRetentionDaysExtra':
+    'Número de dias para manter os logs de auditoria antes da limpeza automática. Defina como 0 para desativar.',
+  'pages.settings.generalSection.auditRetentionDaysRequired':
+    'Informe um número inteiro não negativo',
   'pages.strategies.list': 'Lista de Estratégias',
   'pages.strategies.name': 'Nome da Estratégia',
   'pages.strategies.note': 'Observação',

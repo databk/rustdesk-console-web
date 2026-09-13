@@ -17,6 +17,8 @@ test('maps general settings to frontend settings', () => {
   const general: API.GeneralSettings = {
     watermarkEnabled: true,
     defaultLanguage: 'en-US',
+    jwtExpiryDays: 30,
+    auditRetentionDays: 0,
     site: {
       frontendUrl: 'https://a.example.com',
       backendUrl: 'https://b.example.com',

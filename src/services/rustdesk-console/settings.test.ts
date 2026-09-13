@@ -28,6 +28,8 @@ test('uses the admin general-settings API contract', async () => {
   const settings: API.GeneralSettings = {
     watermarkEnabled: false,
     defaultLanguage: 'en-US',
+    jwtExpiryDays: 30,
+    auditRetentionDays: 0,
     site: { frontendUrl: 'https://console.example.com', backendUrl: '' },
     webauthn: { enabled: true, rpName: 'RustDesk Console' },
   };

@@ -1,6 +1,8 @@
 export const DEFAULT_GENERAL_SETTINGS: API.GeneralSettings = {
   watermarkEnabled: true,
   defaultLanguage: 'en-US',
+  jwtExpiryDays: 30,
+  auditRetentionDays: 0,
   site: {
     frontendUrl: '',
     backendUrl: '',

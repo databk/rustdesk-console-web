@@ -456,6 +456,19 @@ export default {
   'pages.settings.generalSection.rpNameExtra':
     'Понятное пользователю название, отображаемое в запросе на использование passkey.',
   'pages.settings.generalSection.rpNamePlaceholder': 'RustDesk Console',
+  'pages.settings.generalSection.security': 'Безопасность и обслуживание',
+  'pages.settings.generalSection.jwtExpiryDays':
+    'Срок действия JWT-токена (дни)',
+  'pages.settings.generalSection.jwtExpiryDaysExtra':
+    'Количество дней до истечения срока действия токенов пользователей. Должно быть не менее 1.',
+  'pages.settings.generalSection.jwtExpiryDaysRequired':
+    'Введите положительное целое число',
+  'pages.settings.generalSection.auditRetentionDays':
+    'Хранение журналов аудита (дни)',
+  'pages.settings.generalSection.auditRetentionDaysExtra':
+    'Количество дней хранения журналов аудита перед автоматической очисткой. Установите 0 для отключения.',
+  'pages.settings.generalSection.auditRetentionDaysRequired':
+    'Введите неотрицательное целое число',
   'pages.strategies.list': 'Список стратегий',
   'pages.strategies.name': 'Название стратегии',
   'pages.strategies.note': 'Примечание',
