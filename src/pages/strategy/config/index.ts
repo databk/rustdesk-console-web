@@ -1,17 +1,15 @@
-import type { ConfigOption } from './types';
-
-import { options as connectionOptions } from './options/connection';
-import { options as securityOptions } from './options/security';
-import { options as displayOptions } from './options/display';
-import { options as avOptions } from './options/av';
-import { options as fileOptions } from './options/file';
 import { options as advancedOptions } from './options/advanced';
+import { options as avOptions } from './options/av';
+import { options as connectionOptions } from './options/connection';
+import { options as displayOptions } from './options/display';
+import { options as fileOptions } from './options/file';
 import { options as floatingOptions } from './options/floating';
 import { options as privacyOptions } from './options/privacy';
-import { options as hideOptions } from './options/hide';
+import { options as securityOptions } from './options/security';
+import type { ConfigOption } from './types';
 
-export type { ConfigOptionType, ConfigOption, ConfigCategory } from './types';
 export { configCategories } from './categories';
+export type { ConfigCategory, ConfigOption, ConfigOptionType } from './types';
 
 export const configOptions: ConfigOption[] = [
   ...connectionOptions,
@@ -22,7 +20,6 @@ export const configOptions: ConfigOption[] = [
   ...advancedOptions,
   ...floatingOptions,
   ...privacyOptions,
-  ...hideOptions,
 ];
 
 export const configOptionsMap = configOptions.reduce<

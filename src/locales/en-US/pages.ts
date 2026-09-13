@@ -497,7 +497,6 @@ export default {
   'pages.strategies.category.advanced': 'Advanced',
   'pages.strategies.category.floating': 'Floating Window',
   'pages.strategies.category.privacy': 'Privacy & Recording',
-  'pages.strategies.category.hide': 'UI Hiding',
   'pages.strategies.values.yes': 'Yes',
   'pages.strategies.values.no': 'No',
   'pages.strategies.option.access-mode.label': 'Access Mode',
@@ -532,20 +531,12 @@ export default {
     'Lock After Session End',
   'pages.strategies.option.allow-remote-cm-modification.label':
     'Allow Remote Client Modification',
-  'pages.strategies.option.remove-preset-password-warning.label':
-    'Remove Preset Password Warning',
   'pages.strategies.option.enable-trusted-devices.label':
     'Enable Trusted Devices',
-  'pages.strategies.option.allow-logon-screen-password.label':
-    'Allow Logon Screen Password',
   'pages.strategies.option.allow-numeric-one-time-password.label':
     'Allow Numeric One-Time Password',
   'pages.strategies.option.allow-insecure-tls-fallback.label':
     'Allow Insecure TLS Fallback',
-  'pages.strategies.option.disable-change-permanent-password.label':
-    'Disable Permanent Password Changes',
-  'pages.strategies.option.disable-change-id.label': 'Disable ID Changes',
-  'pages.strategies.option.disable-unlock-pin.label': 'Disable Unlock PIN',
   'pages.strategies.option.theme.label': 'Theme',
   'pages.strategies.option.lang.label': 'Language',
   'pages.strategies.option.enable-confirm-closing-tabs.label':
@@ -578,8 +569,6 @@ export default {
   'pages.strategies.option.trackpad-speed.label': 'Trackpad Speed',
   'pages.strategies.option.disable-group-panel.label': 'Disable Group Panel',
   'pages.strategies.option.keep-screen-on.label': 'Keep Screen On',
-  'pages.strategies.option.main-window-always-on-top.label':
-    'Main Window Always on Top',
   'pages.strategies.option.disable-discovery-panel.label':
     'Disable Discovery Panel',
   'pages.strategies.option.touch-mode.label': 'Touch Mode',
@@ -604,10 +593,6 @@ export default {
   'pages.strategies.option.enable-file-copy-paste.label':
     'Enable File Copy and Paste',
   'pages.strategies.option.disable-clipboard.label': 'Disable Clipboard',
-  'pages.strategies.option.one-way-clipboard-redirection.label':
-    'One-way Clipboard Redirection',
-  'pages.strategies.option.one-way-file-transfer.label':
-    'One-way File Transfer',
   'pages.strategies.option.sync-init-clipboard.label': 'Sync Initial Clipboard',
   'pages.strategies.option.enable-lan-discovery.label': 'Enable LAN Discovery',
   'pages.strategies.option.direct-server.label': 'Direct Server',
@@ -629,13 +614,7 @@ export default {
   'pages.strategies.option.keep-awake-during-outgoing-sessions.label':
     'Keep Awake During Outgoing Sessions',
   'pages.strategies.option.disable-udp.label': 'Disable UDP',
-  'pages.strategies.option.allow-https-21114.label':
-    'Allow HTTPS on Port 21114',
-  'pages.strategies.option.allow-hostname-as-id.label': 'Allow Hostname as ID',
   'pages.strategies.option.allow-websocket.label': 'Allow WebSocket',
-  'pages.strategies.option.register-device.label': 'Register Device',
-  'pages.strategies.option.allow-command-line-settings-when-settings-disabled.label':
-    'Allow Command-Line Settings When Settings Are Disabled',
   'pages.strategies.option.disable-floating-window.label':
     'Disable Floating Window',
   'pages.strategies.option.floating-window-size.label': 'Floating Window Size',
@@ -650,21 +629,6 @@ export default {
   'pages.strategies.option.allow-auto-record-outgoing.label':
     'Allow Automatic Recording for Outgoing Sessions',
   'pages.strategies.option.privacy-mode.label': 'Privacy Mode',
-  'pages.strategies.option.hide-security-settings.label':
-    'Hide Security Settings',
-  'pages.strategies.option.hide-network-settings.label':
-    'Hide Network Settings',
-  'pages.strategies.option.hide-server-settings.label': 'Hide Server Settings',
-  'pages.strategies.option.hide-proxy-settings.label': 'Hide Proxy Settings',
-  'pages.strategies.option.hide-websocket-settings.label':
-    'Hide WebSocket Settings',
-  'pages.strategies.option.hide-remote-printer-settings.label':
-    'Hide Remote Printer Settings',
-  'pages.strategies.option.hide-username-on-card.label':
-    'Hide Username on Card',
-  'pages.strategies.option.hide-help-cards.label': 'Hide Help Cards',
-  'pages.strategies.option.hide-tray.label': 'Hide Tray',
-  'pages.strategies.option.hide-stop-service.label': 'Hide Stop Service',
   'pages.strategies.option.auto-disconnect-timeout.description':
     'Timeout in minutes',
   'pages.strategies.option.lang.description': 'Language code',

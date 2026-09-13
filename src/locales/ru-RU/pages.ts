@@ -519,7 +519,6 @@ export default {
   'pages.strategies.category.advanced': 'Расширенные',
   'pages.strategies.category.floating': 'Плавающее окно',
   'pages.strategies.category.privacy': 'Конфиденциальность и запись',
-  'pages.strategies.category.hide': 'Скрытие интерфейса',
   'pages.strategies.values.yes': 'Да',
   'pages.strategies.values.no': 'Нет',
   'pages.strategies.option.access-mode.label': 'Режим доступа',
@@ -556,21 +555,12 @@ export default {
     'Блокировать после завершения сеанса',
   'pages.strategies.option.allow-remote-cm-modification.label':
     'Разрешить удалённое изменение клиента',
-  'pages.strategies.option.remove-preset-password-warning.label':
-    'Убрать предупреждение о заданном пароле',
   'pages.strategies.option.enable-trusted-devices.label':
     'Включить доверенные устройства',
-  'pages.strategies.option.allow-logon-screen-password.label':
-    'Разрешить пароль на экране входа',
   'pages.strategies.option.allow-numeric-one-time-password.label':
     'Разрешить числовой одноразовый пароль',
   'pages.strategies.option.allow-insecure-tls-fallback.label':
     'Разрешить небезопасный откат TLS',
-  'pages.strategies.option.disable-change-permanent-password.label':
-    'Запретить изменение постоянного пароля',
-  'pages.strategies.option.disable-change-id.label': 'Запретить изменение ID',
-  'pages.strategies.option.disable-unlock-pin.label':
-    'Запретить PIN разблокировки',
   'pages.strategies.option.theme.label': 'Тема',
   'pages.strategies.option.lang.label': 'Язык',
   'pages.strategies.option.enable-confirm-closing-tabs.label':
@@ -609,8 +599,6 @@ export default {
   'pages.strategies.option.trackpad-speed.label': 'Скорость трекпада',
   'pages.strategies.option.disable-group-panel.label': 'Отключить панель групп',
   'pages.strategies.option.keep-screen-on.label': 'Не выключать экран',
-  'pages.strategies.option.main-window-always-on-top.label':
-    'Главное окно поверх остальных',
   'pages.strategies.option.disable-discovery-panel.label':
     'Отключить панель обнаружения',
   'pages.strategies.option.touch-mode.label': 'Сенсорный режим',
@@ -638,10 +626,6 @@ export default {
   'pages.strategies.option.enable-file-copy-paste.label':
     'Включить копирование и вставку файлов',
   'pages.strategies.option.disable-clipboard.label': 'Отключить буфер обмена',
-  'pages.strategies.option.one-way-clipboard-redirection.label':
-    'Односторонняя переадресация буфера обмена',
-  'pages.strategies.option.one-way-file-transfer.label':
-    'Односторонняя передача файлов',
   'pages.strategies.option.sync-init-clipboard.label':
     'Синхронизировать исходный буфер обмена',
   'pages.strategies.option.enable-lan-discovery.label':
@@ -667,15 +651,7 @@ export default {
   'pages.strategies.option.keep-awake-during-outgoing-sessions.label':
     'Не отключать сон во время исходящих сеансов',
   'pages.strategies.option.disable-udp.label': 'Отключить UDP',
-  'pages.strategies.option.allow-https-21114.label':
-    'Разрешить HTTPS на порту 21114',
-  'pages.strategies.option.allow-hostname-as-id.label':
-    'Разрешить имя хоста как ID',
   'pages.strategies.option.allow-websocket.label': 'Разрешить WebSocket',
-  'pages.strategies.option.register-device.label':
-    'Зарегистрировать устройство',
-  'pages.strategies.option.allow-command-line-settings-when-settings-disabled.label':
-    'Разрешить настройки командной строки при отключённых настройках',
   'pages.strategies.option.disable-floating-window.label':
     'Отключить плавающее окно',
   'pages.strategies.option.floating-window-size.label':
@@ -691,25 +667,6 @@ export default {
   'pages.strategies.option.allow-auto-record-outgoing.label':
     'Разрешить автоматическую запись исходящих сеансов',
   'pages.strategies.option.privacy-mode.label': 'Режим конфиденциальности',
-  'pages.strategies.option.hide-security-settings.label':
-    'Скрывать настройки безопасности',
-  'pages.strategies.option.hide-network-settings.label':
-    'Скрывать сетевые настройки',
-  'pages.strategies.option.hide-server-settings.label':
-    'Скрывать настройки сервера',
-  'pages.strategies.option.hide-proxy-settings.label':
-    'Скрывать настройки прокси',
-  'pages.strategies.option.hide-websocket-settings.label':
-    'Скрывать настройки WebSocket',
-  'pages.strategies.option.hide-remote-printer-settings.label':
-    'Скрывать настройки удалённого принтера',
-  'pages.strategies.option.hide-username-on-card.label':
-    'Скрывать имя пользователя на карточке',
-  'pages.strategies.option.hide-help-cards.label':
-    'Скрывать справочные карточки',
-  'pages.strategies.option.hide-tray.label': 'Скрывать трей',
-  'pages.strategies.option.hide-stop-service.label':
-    'Скрывать остановку службы',
   'pages.strategies.option.auto-disconnect-timeout.description':
     'Тайм-аут в минутах',
   'pages.strategies.option.lang.description': 'Код языка',

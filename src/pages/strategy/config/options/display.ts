@@ -196,14 +196,6 @@ export const options: ConfigOption[] = [
     options: ['never', 'during-controlled', 'service-on'],
   },
   {
-    key: 'main-window-always-on-top',
-    label: 'main-window-always-on-top',
-    category: 'display',
-    type: 'switch',
-    defaultValue: 'N',
-    options: ['Y', 'N'],
-  },
-  {
     key: 'disable-discovery-panel',
     label: 'disable-discovery-panel',
     category: 'display',

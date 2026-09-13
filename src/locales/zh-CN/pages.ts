@@ -462,7 +462,6 @@ export default {
   'pages.strategies.category.advanced': '高级设置',
   'pages.strategies.category.floating': '浮动窗口',
   'pages.strategies.category.privacy': '隐私与录制',
-  'pages.strategies.category.hide': '界面隐藏',
   'pages.strategies.values.yes': '是',
   'pages.strategies.values.no': '否',
   'pages.strategies.option.access-mode.label': '访问模式',
@@ -491,19 +490,11 @@ export default {
   'pages.strategies.option.lock-after-session-end.label': '会话结束后锁定',
   'pages.strategies.option.allow-remote-cm-modification.label':
     '允许远程客户端修改',
-  'pages.strategies.option.remove-preset-password-warning.label':
-    '移除预设密码警告',
   'pages.strategies.option.enable-trusted-devices.label': '启用受信任设备',
-  'pages.strategies.option.allow-logon-screen-password.label':
-    '允许登录屏幕密码',
   'pages.strategies.option.allow-numeric-one-time-password.label':
     '允许数字一次性密码',
   'pages.strategies.option.allow-insecure-tls-fallback.label':
     '允许不安全 TLS 回退',
-  'pages.strategies.option.disable-change-permanent-password.label':
-    '禁止修改永久密码',
-  'pages.strategies.option.disable-change-id.label': '禁止修改 ID',
-  'pages.strategies.option.disable-unlock-pin.label': '禁止解锁 PIN',
   'pages.strategies.option.theme.label': '主题',
   'pages.strategies.option.lang.label': '语言',
   'pages.strategies.option.enable-confirm-closing-tabs.label': '确认关闭标签页',
@@ -531,7 +522,6 @@ export default {
   'pages.strategies.option.trackpad-speed.label': '触控板速度',
   'pages.strategies.option.disable-group-panel.label': '禁用分组面板',
   'pages.strategies.option.keep-screen-on.label': '保持屏幕开启',
-  'pages.strategies.option.main-window-always-on-top.label': '主窗口置顶',
   'pages.strategies.option.disable-discovery-panel.label': '禁用发现面板',
   'pages.strategies.option.touch-mode.label': '触控模式',
   'pages.strategies.option.show-virtual-mouse.label': '显示虚拟鼠标',
@@ -552,9 +542,6 @@ export default {
   'pages.strategies.option.allow-d3d-render.label': '允许 D3D 渲染',
   'pages.strategies.option.enable-file-copy-paste.label': '启用文件复制和粘贴',
   'pages.strategies.option.disable-clipboard.label': '禁用剪贴板',
-  'pages.strategies.option.one-way-clipboard-redirection.label':
-    '单向剪贴板重定向',
-  'pages.strategies.option.one-way-file-transfer.label': '单向文件传输',
   'pages.strategies.option.sync-init-clipboard.label': '同步初始剪贴板',
   'pages.strategies.option.enable-lan-discovery.label': '启用局域网发现',
   'pages.strategies.option.direct-server.label': '直连服务器',
@@ -573,13 +560,7 @@ export default {
   'pages.strategies.option.keep-awake-during-outgoing-sessions.label':
     '传出会话期间保持唤醒',
   'pages.strategies.option.disable-udp.label': '禁用 UDP',
-  'pages.strategies.option.allow-https-21114.label':
-    '允许 21114 端口使用 HTTPS',
-  'pages.strategies.option.allow-hostname-as-id.label': '允许使用主机名作为 ID',
   'pages.strategies.option.allow-websocket.label': '允许 WebSocket',
-  'pages.strategies.option.register-device.label': '注册设备',
-  'pages.strategies.option.allow-command-line-settings-when-settings-disabled.label':
-    '禁用设置时允许命令行修改',
   'pages.strategies.option.disable-floating-window.label': '禁用浮动窗口',
   'pages.strategies.option.floating-window-size.label': '浮动窗口大小',
   'pages.strategies.option.floating-window-untouchable.label':
@@ -592,18 +573,6 @@ export default {
   'pages.strategies.option.allow-auto-record-outgoing.label':
     '允许自动录制传出会话',
   'pages.strategies.option.privacy-mode.label': '隐私模式',
-  'pages.strategies.option.hide-security-settings.label': '隐藏安全设置',
-  'pages.strategies.option.hide-network-settings.label': '隐藏网络设置',
-  'pages.strategies.option.hide-server-settings.label': '隐藏服务器设置',
-  'pages.strategies.option.hide-proxy-settings.label': '隐藏代理设置',
-  'pages.strategies.option.hide-websocket-settings.label':
-    '隐藏 WebSocket 设置',
-  'pages.strategies.option.hide-remote-printer-settings.label':
-    '隐藏远程打印机设置',
-  'pages.strategies.option.hide-username-on-card.label': '隐藏卡片上的用户名',
-  'pages.strategies.option.hide-help-cards.label': '隐藏帮助卡片',
-  'pages.strategies.option.hide-tray.label': '隐藏托盘图标',
-  'pages.strategies.option.hide-stop-service.label': '隐藏停止服务',
   'pages.strategies.option.auto-disconnect-timeout.description':
     '超时时间（分钟）',
   'pages.strategies.option.lang.description': '语言代码',

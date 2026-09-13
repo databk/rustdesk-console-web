@@ -9,5 +9,4 @@ export const configCategories: ConfigCategory[] = [
   { key: 'advanced', label: 'Advanced' },
   { key: 'floating', label: 'Floating Window' },
   { key: 'privacy', label: 'Privacy & Recording' },
-  { key: 'hide', label: 'UI Hiding' },
 ];

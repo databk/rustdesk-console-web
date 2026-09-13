@@ -420,7 +420,6 @@ export default {
   'pages.strategies.category.advanced': 'Avancé',
   'pages.strategies.category.floating': 'Fenêtre flottante',
   'pages.strategies.category.privacy': 'Confidentialité & Enregistrement',
-  'pages.strategies.category.hide': "Masquage de l'interface",
   'pages.users.inviteSuccess': 'Invitation envoyée',
   'pages.users.inviteFailed': "Échec de l'envoi de l'invitation",
   'pages.users.active': 'Actif',
@@ -1021,19 +1020,11 @@ export default {
     "Autoriser l'enregistrement automatique des sessions sortantes",
   'pages.strategies.option.allow-auto-update.label':
     'Autoriser les mises à jour automatiques',
-  'pages.strategies.option.allow-command-line-settings-when-settings-disabled.label':
-    'Autoriser les paramètres en ligne de commande lorsque les paramètres sont désactivés',
   'pages.strategies.option.allow-d3d-render.label': 'Autoriser le rendu D3D',
-  'pages.strategies.option.allow-hostname-as-id.label':
-    "Autoriser le nom d'hôte comme ID",
-  'pages.strategies.option.allow-https-21114.label':
-    'Autoriser HTTPS sur le port 21114',
   'pages.strategies.option.allow-insecure-tls-fallback.label':
     'Autoriser le repli TLS non sécurisé',
   'pages.strategies.option.allow-linux-headless.label':
     'Autoriser le mode Linux headless',
-  'pages.strategies.option.allow-logon-screen-password.label':
-    "Autoriser le mot de passe de l'écran de connexion",
   'pages.strategies.option.allow-numeric-one-time-password.label':
     'Autoriser le mot de passe à usage unique numérique',
   'pages.strategies.option.allow-only-conn-window-open.label':
@@ -1060,10 +1051,6 @@ export default {
     "Qualité d'image personnalisée",
   'pages.strategies.option.direct-server.label': 'Serveur direct',
   'pages.strategies.option.disable-audio.label': "Désactiver l'audio",
-  'pages.strategies.option.disable-change-id.label':
-    "Désactiver les changements d'ID",
-  'pages.strategies.option.disable-change-permanent-password.label':
-    'Désactiver les changements de mot de passe permanent',
   'pages.strategies.option.disable-clipboard.label':
     'Désactiver le presse-papiers',
   'pages.strategies.option.disable-discovery-panel.label':
@@ -1073,8 +1060,6 @@ export default {
   'pages.strategies.option.disable-group-panel.label':
     'Désactiver le panneau de groupe',
   'pages.strategies.option.disable-udp.label': 'Désactiver UDP',
-  'pages.strategies.option.disable-unlock-pin.label':
-    'Désactiver le code de déverrouillage',
   'pages.strategies.option.displays-as-individual-windows.label':
     'Affichages en fenêtres individuelles',
   'pages.strategies.option.edge-scroll-edge-thickness.label':
@@ -1130,24 +1115,6 @@ export default {
     'Suivre le curseur distant',
   'pages.strategies.option.follow-remote-window.label':
     'Suivre la fenêtre distante',
-  'pages.strategies.option.hide-help-cards.label': "Masquer les cartes d'aide",
-  'pages.strategies.option.hide-network-settings.label':
-    'Masquer les paramètres réseau',
-  'pages.strategies.option.hide-proxy-settings.label':
-    'Masquer les paramètres proxy',
-  'pages.strategies.option.hide-remote-printer-settings.label':
-    "Masquer les paramètres d'imprimante distante",
-  'pages.strategies.option.hide-security-settings.label':
-    'Masquer les paramètres de sécurité',
-  'pages.strategies.option.hide-server-settings.label':
-    'Masquer les paramètres du serveur',
-  'pages.strategies.option.hide-stop-service.label':
-    "Masquer l'arrêt du service",
-  'pages.strategies.option.hide-tray.label': "Masquer la barre d'état système",
-  'pages.strategies.option.hide-username-on-card.label':
-    "Masquer le nom d'utilisateur sur la carte",
-  'pages.strategies.option.hide-websocket-settings.label':
-    'Masquer les paramètres WebSocket',
   'pages.strategies.option.i444.label': 'Format de couleur I444',
   'pages.strategies.option.image-quality.label': "Qualité d'image",
   'pages.strategies.option.image-quality.value.balanced': 'Équilibrée',
@@ -1167,12 +1134,6 @@ export default {
   'pages.strategies.option.lang.label': 'Langue',
   'pages.strategies.option.lock-after-session-end.label':
     'Verrouiller après la fin de la session',
-  'pages.strategies.option.main-window-always-on-top.label':
-    'Fenêtre principale toujours au premier plan',
-  'pages.strategies.option.one-way-clipboard-redirection.label':
-    'Redirection du presse-papiers unidirectionnelle',
-  'pages.strategies.option.one-way-file-transfer.label':
-    'Transfert de fichiers unidirectionnel',
   'pages.strategies.option.peer-card-ui-type.label':
     "Type d'UI de la carte de pair",
   'pages.strategies.option.peer-card-ui-type.value.0': 'Style de carte 0',
@@ -1184,9 +1145,6 @@ export default {
   'pages.strategies.option.peer-sorting.value.username': "Nom d'utilisateur",
   'pages.strategies.option.pre-elevate-service.label': 'Pré-élever le service',
   'pages.strategies.option.privacy-mode.label': 'Mode de confidentialité',
-  'pages.strategies.option.register-device.label': "Enregistrer l'appareil",
-  'pages.strategies.option.remove-preset-password-warning.label':
-    "Supprimer l'avertissement de mot de passe prédéfini",
   'pages.strategies.option.reverse-mouse-wheel.label':
     'Inverser la molette de la souris',
   'pages.strategies.option.scroll-style.label': 'Style de défilement',

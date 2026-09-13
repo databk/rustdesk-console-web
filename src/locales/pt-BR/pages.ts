@@ -522,7 +522,6 @@ export default {
   'pages.strategies.category.advanced': 'Avançado',
   'pages.strategies.category.floating': 'Janela Flutuante',
   'pages.strategies.category.privacy': 'Privacidade e Gravação',
-  'pages.strategies.category.hide': 'Ocultação da Interface',
   'pages.strategies.values.yes': 'Sim',
   'pages.strategies.values.no': 'Não',
   'pages.strategies.option.access-mode.label': 'Modo de Acesso',
@@ -560,22 +559,12 @@ export default {
     'Bloquear Após o Fim da Sessão',
   'pages.strategies.option.allow-remote-cm-modification.label':
     'Permitir Modificação Remota do Cliente',
-  'pages.strategies.option.remove-preset-password-warning.label':
-    'Remover Aviso de Senha Predefinida',
   'pages.strategies.option.enable-trusted-devices.label':
     'Ativar Dispositivos Confiáveis',
-  'pages.strategies.option.allow-logon-screen-password.label':
-    'Permitir Senha na Tela de Login',
   'pages.strategies.option.allow-numeric-one-time-password.label':
     'Permitir Senha Numérica de Uso Único',
   'pages.strategies.option.allow-insecure-tls-fallback.label':
     'Permitir Fallback TLS Inseguro',
-  'pages.strategies.option.disable-change-permanent-password.label':
-    'Desativar Alteração de Senha Permanente',
-  'pages.strategies.option.disable-change-id.label':
-    'Desativar Alteração do ID',
-  'pages.strategies.option.disable-unlock-pin.label':
-    'Desativar PIN de Desbloqueio',
   'pages.strategies.option.theme.label': 'Tema',
   'pages.strategies.option.lang.label': 'Idioma',
   'pages.strategies.option.enable-confirm-closing-tabs.label':
@@ -612,8 +601,6 @@ export default {
   'pages.strategies.option.disable-group-panel.label':
     'Desativar Painel de Grupos',
   'pages.strategies.option.keep-screen-on.label': 'Manter Tela Ligada',
-  'pages.strategies.option.main-window-always-on-top.label':
-    'Manter Janela Principal no Topo',
   'pages.strategies.option.disable-discovery-panel.label':
     'Desativar Painel de Descoberta',
   'pages.strategies.option.touch-mode.label': 'Modo de Toque',
@@ -641,10 +628,6 @@ export default {
     'Ativar Cópia e Colagem de Arquivos',
   'pages.strategies.option.disable-clipboard.label':
     'Desativar Área de Transferência',
-  'pages.strategies.option.one-way-clipboard-redirection.label':
-    'Redirecionamento Unidirecional da Área de Transferência',
-  'pages.strategies.option.one-way-file-transfer.label':
-    'Transferência Unidirecional de Arquivos',
   'pages.strategies.option.sync-init-clipboard.label':
     'Sincronizar Área de Transferência Inicial',
   'pages.strategies.option.enable-lan-discovery.label':
@@ -670,14 +653,7 @@ export default {
   'pages.strategies.option.keep-awake-during-outgoing-sessions.label':
     'Manter Ativo Durante Sessões de Saída',
   'pages.strategies.option.disable-udp.label': 'Desativar UDP',
-  'pages.strategies.option.allow-https-21114.label':
-    'Permitir HTTPS na Porta 21114',
-  'pages.strategies.option.allow-hostname-as-id.label':
-    'Permitir Nome de Host como ID',
   'pages.strategies.option.allow-websocket.label': 'Permitir WebSocket',
-  'pages.strategies.option.register-device.label': 'Registrar Dispositivo',
-  'pages.strategies.option.allow-command-line-settings-when-settings-disabled.label':
-    'Permitir Configurações por Linha de Comando Quando Desativadas',
   'pages.strategies.option.disable-floating-window.label':
     'Desativar Janela Flutuante',
   'pages.strategies.option.floating-window-size.label':
@@ -693,23 +669,6 @@ export default {
   'pages.strategies.option.allow-auto-record-outgoing.label':
     'Permitir Gravação Automática de Sessões de Saída',
   'pages.strategies.option.privacy-mode.label': 'Modo de Privacidade',
-  'pages.strategies.option.hide-security-settings.label':
-    'Ocultar Configurações de Segurança',
-  'pages.strategies.option.hide-network-settings.label':
-    'Ocultar Configurações de Rede',
-  'pages.strategies.option.hide-server-settings.label':
-    'Ocultar Configurações do Servidor',
-  'pages.strategies.option.hide-proxy-settings.label':
-    'Ocultar Configurações de Proxy',
-  'pages.strategies.option.hide-websocket-settings.label':
-    'Ocultar Configurações de WebSocket',
-  'pages.strategies.option.hide-remote-printer-settings.label':
-    'Ocultar Configurações da Impressora Remota',
-  'pages.strategies.option.hide-username-on-card.label':
-    'Ocultar Usuário no Cartão',
-  'pages.strategies.option.hide-help-cards.label': 'Ocultar Cartões de Ajuda',
-  'pages.strategies.option.hide-tray.label': 'Ocultar Bandeja',
-  'pages.strategies.option.hide-stop-service.label': 'Ocultar Parar Serviço',
   'pages.strategies.option.auto-disconnect-timeout.description':
     'Tempo limite em minutos',
   'pages.strategies.option.lang.description': 'Código do idioma',

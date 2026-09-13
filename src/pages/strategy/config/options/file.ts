@@ -18,22 +18,6 @@ export const options: ConfigOption[] = [
     options: ['Y', 'N'],
   },
   {
-    key: 'one-way-clipboard-redirection',
-    label: 'one-way-clipboard-redirection',
-    category: 'file',
-    type: 'switch',
-    defaultValue: 'N',
-    options: ['Y', 'N'],
-  },
-  {
-    key: 'one-way-file-transfer',
-    label: 'one-way-file-transfer',
-    category: 'file',
-    type: 'switch',
-    defaultValue: 'N',
-    options: ['Y', 'N'],
-  },
-  {
     key: 'sync-init-clipboard',
     label: 'sync-init-clipboard',
     category: 'file',
