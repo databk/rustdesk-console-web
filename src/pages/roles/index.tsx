@@ -345,12 +345,6 @@ const RoleList: React.FC = () => {
 
   const columns: ProColumns<RoleListRow>[] = [
     {
-      title: '',
-      dataIndex: 'index',
-      valueType: 'indexBorder',
-      width: 50,
-    },
-    {
       title: (
         <FormattedMessage id="pages.roles.name" defaultMessage="Role Name" />
       ),
