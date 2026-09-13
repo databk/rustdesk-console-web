@@ -428,6 +428,13 @@ export default {
     'Échec de la mise à jour des paramètres de sécurité',
   'pages.users.tfaEnforce': "Imposer l'authentification à deux facteurs",
   'pages.users.emailVerification': "Exiger la vérification de l'e-mail",
+  'pages.users.resetPassword': 'Réinitialiser le mot de passe',
+  'pages.users.resetPasswordTooltip':
+    'Laisser vide pour conserver le mot de passe actuel',
+  'pages.users.confirmPassword': 'Confirmer le mot de passe',
+  'pages.users.passwordMismatch': 'Les mots de passe ne correspondent pas',
+  'pages.users.passwordTooShort':
+    'Le mot de passe doit contenir au moins 6 caractères',
   'pages.users.forceLogout': 'Déconnexion',
   'pages.users.forceLogoutSuccess': 'Déconnexion forcée réussie',
   'pages.users.forceLogoutFailed': 'Échec de la déconnexion forcée',

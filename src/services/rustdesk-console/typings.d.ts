@@ -280,6 +280,7 @@ declare namespace API {
   type UpdateUserSecurityParams = {
     tfa_enforce?: boolean;
     email_verification?: boolean;
+    new_password?: string;
   };
 
   type BatchResult = {

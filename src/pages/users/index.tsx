@@ -576,6 +576,7 @@ const UserList: React.FC<UserListProps> = ({
         visible={securityModalVisible}
         form={securityForm}
         onSubmit={handleUpdateSecurity}
+        thirdAuthType={editingUser?.third_auth_type}
         onCancel={() => {
           setSecurityModalVisible(false);
           setEditingUser(null);

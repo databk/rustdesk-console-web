@@ -821,6 +821,13 @@ export default {
     'Falha ao atualizar configurações de segurança',
   'pages.users.tfaEnforce': 'Exigir Autenticação em Dois Fatores',
   'pages.users.emailVerification': 'Exigir Verificação por E-mail',
+  'pages.users.resetPassword': 'Redefinir Senha',
+  'pages.users.resetPasswordTooltip':
+    'Deixe em branco para manter a senha atual',
+  'pages.users.confirmPassword': 'Confirmar Senha',
+  'pages.users.passwordMismatch': 'As senhas não coincidem',
+  'pages.users.passwordTooShort':
+    'A senha deve ter pelo menos 6 caracteres',
   'pages.users.forceLogout': 'Encerrar Sessão',
   'pages.users.forceLogoutSuccess': 'Sessão encerrada com sucesso',
   'pages.users.forceLogoutFailed': 'Falha ao encerrar sessão',

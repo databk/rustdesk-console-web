@@ -819,6 +819,13 @@ export default {
     'Не удалось обновить настройки безопасности',
   'pages.users.tfaEnforce': 'Обязательная двухфакторная аутентификация',
   'pages.users.emailVerification': 'Требовать подтверждение email',
+  'pages.users.resetPassword': 'Сбросить пароль',
+  'pages.users.resetPasswordTooltip':
+    'Оставьте пустым, чтобы сохранить текущий пароль',
+  'pages.users.confirmPassword': 'Подтвердите пароль',
+  'pages.users.passwordMismatch': 'Пароли не совпадают',
+  'pages.users.passwordTooShort':
+    'Пароль должен содержать не менее 6 символов',
   'pages.users.forceLogout': 'Принудительный выход',
   'pages.users.forceLogoutSuccess': 'Принудительный выход выполнен успешно',
   'pages.users.forceLogoutFailed': 'Не удалось выполнить принудительный выход',
