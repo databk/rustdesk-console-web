@@ -89,8 +89,7 @@ const SecurityModal: React.FC<SecurityModalProps> = ({
                   min: 6,
                   message: intl.formatMessage({
                     id: 'pages.users.passwordTooShort',
-                    defaultMessage:
-                      'Password must be at least 6 characters',
+                    defaultMessage: 'Password must be at least 6 characters',
                   }),
                 },
               ]}

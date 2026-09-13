@@ -826,8 +826,7 @@ export default {
     'Deixe em branco para manter a senha atual',
   'pages.users.confirmPassword': 'Confirmar Senha',
   'pages.users.passwordMismatch': 'As senhas não coincidem',
-  'pages.users.passwordTooShort':
-    'A senha deve ter pelo menos 6 caracteres',
+  'pages.users.passwordTooShort': 'A senha deve ter pelo menos 6 caracteres',
   'pages.users.forceLogout': 'Encerrar Sessão',
   'pages.users.forceLogoutSuccess': 'Sessão encerrada com sucesso',
   'pages.users.forceLogoutFailed': 'Falha ao encerrar sessão',
