@@ -37,6 +37,7 @@ const LANGUAGE_OPTIONS = [
   { value: 'en-US', label: 'English' },
   { value: 'zh-CN', label: '中文' },
   { value: 'pt-BR', label: 'Português' },
+  { value: 'ru-RU', label: 'Русский' },
   { value: 'fr-FR', label: 'Français' },
 ];
 

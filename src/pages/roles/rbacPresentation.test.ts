@@ -1,5 +1,6 @@
 import { expect, test } from '@jest/globals';
 import enUS from '../../locales/en-US/pages';
+import frFR from '../../locales/fr-FR/pages';
 import ptBR from '../../locales/pt-BR/pages';
 import ruRU from '../../locales/ru-RU/pages';
 import zhCN from '../../locales/zh-CN/pages';
@@ -60,6 +61,7 @@ const LOCALES: Array<[string, Record<string, string>]> = [
   ['zh-CN', zhCN],
   ['pt-BR', ptBR],
   ['ru-RU', ruRU],
+  ['fr-FR', frFR],
 ];
 
 const SHARED_ADDRESS_BOOK_TERMS: Record<string, RegExp> = {
@@ -67,6 +69,7 @@ const SHARED_ADDRESS_BOOK_TERMS: Record<string, RegExp> = {
   'zh-CN': /共享地址簿/,
   'pt-BR': /endereços compartilhados/i,
   'ru-RU': /общ(?:их|ими) адресн(?:ых|ыми) книг/i,
+  'fr-FR': /carnets? d'adresses? partag/i,
 };
 
 test.each(LOCALES)(

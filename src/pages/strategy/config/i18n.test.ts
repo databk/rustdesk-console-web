@@ -1,5 +1,6 @@
 import { expect, test } from '@jest/globals';
 import enUS from '@/locales/en-US/pages';
+import frFR from '@/locales/fr-FR/pages';
 import ptBR from '@/locales/pt-BR/pages';
 import ruRU from '@/locales/ru-RU/pages';
 import zhCN from '@/locales/zh-CN/pages';
@@ -10,7 +11,7 @@ import {
   humanizeConfigOptionKey,
 } from './i18n';
 
-const locales = { enUS, zhCN, ptBR, ruRU };
+const locales = { enUS, zhCN, ptBR, ruRU, frFR };
 const requiredMessageIds = new Set(
   configOptions.flatMap(getConfigOptionLocaleMessageIds),
 );
