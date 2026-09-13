@@ -1,6 +1,6 @@
 export default {
   'pages.login.success': 'Connexion réussie !',
-  'pages.login.failure': 'Échec de la connexion, veuillez réespayer !',
+  'pages.login.failure': 'Échec de la connexion, veuillez réessayer !',
   'pages.login.username.placeholder': "Nom d'utilisateur",
   'pages.login.username.required': "Veuillez saisir votre nom d'utilisateur !",
   'pages.login.password.placeholder': 'Mot de passe',
