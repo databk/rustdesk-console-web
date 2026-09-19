@@ -1,6 +1,7 @@
 import { ModalForm } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
 import {
+  App,
   Collapse,
   Form,
   Input,
@@ -153,6 +154,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
   const intl = useIntl();
   const [form] = Form.useForm();
   const isEdit = mode === 'edit';
+  const { message } = App.useApp();
   const [iconPreview, setIconPreview] = useState<string | undefined>(undefined);
   const [providerName, setProviderName] = useState<string>('');
 
@@ -197,9 +199,27 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
   };
 
   const handleSvgUpload = (file: File) => {
+    if (file.size > 100 * 1024) {
+      message.error(
+        intl.formatMessage({
+          id: 'pages.oidcProviders.svgTooLarge',
+          defaultMessage: 'SVG file too large (max 100KB)',
+        }),
+      );
+      return false;
+    }
     const reader = new FileReader();
     reader.onload = (e) => {
       const svgContent = e.target?.result as string;
+      if (!/<svg[\s>]/i.test(svgContent)) {
+        message.error(
+          intl.formatMessage({
+            id: 'pages.oidcProviders.invalidSvg',
+            defaultMessage: 'Invalid SVG content',
+          }),
+        );
+        return;
+      }
       form.setFieldValue('icon', svgContent);
       setIconPreview(svgContent);
     };
