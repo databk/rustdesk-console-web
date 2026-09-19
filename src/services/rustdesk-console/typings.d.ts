@@ -1006,6 +1006,7 @@ declare namespace API {
     tokenEndpoint?: string;
     userinfoEndpoint?: string;
     jwksUri?: string;
+    icon?: string;
     enabled: boolean;
     priority: number;
     created_at?: string;
@@ -1024,6 +1025,7 @@ declare namespace API {
     tokenEndpoint?: string;
     userinfoEndpoint?: string;
     jwksUri?: string;
+    icon?: string;
     enabled?: boolean;
   };
 
@@ -1038,6 +1040,7 @@ declare namespace API {
     tokenEndpoint?: string;
     userinfoEndpoint?: string;
     jwksUri?: string;
+    icon?: string;
     enabled?: boolean;
   };
 

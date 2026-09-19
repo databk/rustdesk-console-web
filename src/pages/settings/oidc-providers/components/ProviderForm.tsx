@@ -1,7 +1,17 @@
 import { ModalForm } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
-import { Collapse, Form, Input, Select, Switch } from 'antd';
-import React, { useEffect } from 'react';
+import {
+  Collapse,
+  Form,
+  Input,
+  Select,
+  Switch,
+  Upload,
+  Button,
+  Space,
+} from 'antd';
+import { DeleteOutlined, UploadOutlined } from '@ant-design/icons';
+import React, { useEffect, useState } from 'react';
 
 interface ProviderFormProps {
   mode: 'create' | 'edit';
@@ -10,6 +20,132 @@ interface ProviderFormProps {
   onFinish: (values: any) => Promise<boolean>;
   currentRecord?: API.OidcProvider | null;
 }
+
+const BUILTIN_ICONS = [
+  'github',
+  'gitlab',
+  'google',
+  'apple',
+  'okta',
+  'facebook',
+  'azure',
+  'auth0',
+  'microsoft',
+];
+
+const OIDC_LABELS: Record<string, string> = {
+  github: 'GitHub',
+  gitlab: 'GitLab',
+  google: 'Google',
+  apple: 'Apple',
+  okta: 'Okta',
+  facebook: 'Facebook',
+  azure: 'Microsoft',
+  auth0: 'Auth0',
+  microsoft: 'Microsoft',
+};
+
+const BUILTIN_PROVIDER_PRESETS: Record<
+  string,
+  {
+    name: string;
+    type: 'oidc' | 'oauth2';
+    issuer?: string;
+    scope?: string;
+    authorizationEndpoint?: string;
+    tokenEndpoint?: string;
+    userinfoEndpoint?: string;
+  }
+> = {
+  google: {
+    name: 'google',
+    type: 'oidc',
+    issuer: 'https://accounts.google.com',
+    scope: 'openid email profile',
+    authorizationEndpoint: 'https://accounts.google.com/o/oauth2/v2/auth',
+    tokenEndpoint: 'https://oauth2.googleapis.com/token',
+    userinfoEndpoint: 'https://openidconnect.googleapis.com/v1/userinfo',
+  },
+  github: {
+    name: 'github',
+    type: 'oauth2',
+    issuer: 'https://github.com',
+    scope: 'read:user user:email',
+    authorizationEndpoint: 'https://github.com/login/oauth/authorize',
+    tokenEndpoint: 'https://github.com/login/oauth/access_token',
+    userinfoEndpoint: 'https://api.github.com/user',
+  },
+  gitlab: {
+    name: 'gitlab',
+    type: 'oauth2',
+    issuer: 'https://gitlab.com',
+    scope: 'read_user',
+    authorizationEndpoint: 'https://gitlab.com/oauth/authorize',
+    tokenEndpoint: 'https://gitlab.com/oauth/token',
+    userinfoEndpoint: 'https://gitlab.com/api/v4/user',
+  },
+  apple: {
+    name: 'apple',
+    type: 'oidc',
+    issuer: 'https://appleid.apple.com',
+    scope: 'name email',
+    authorizationEndpoint: 'https://appleid.apple.com/auth/authorize',
+    tokenEndpoint: 'https://appleid.apple.com/auth/token',
+  },
+  facebook: {
+    name: 'facebook',
+    type: 'oauth2',
+    issuer: 'https://graph.facebook.com',
+    scope: 'email public_profile',
+    authorizationEndpoint: 'https://www.facebook.com/v18.0/dialog/oauth',
+    tokenEndpoint: 'https://graph.facebook.com/v18.0/oauth/access_token',
+    userinfoEndpoint: 'https://graph.facebook.com/me',
+  },
+  okta: {
+    name: 'okta',
+    type: 'oidc',
+    scope: 'openid email profile',
+  },
+  azure: {
+    name: 'azure',
+    type: 'oidc',
+    scope: 'openid email profile',
+  },
+  auth0: {
+    name: 'auth0',
+    type: 'oidc',
+    scope: 'openid email profile',
+  },
+  microsoft: {
+    name: 'microsoft',
+    type: 'oidc',
+    issuer: 'https://login.microsoftonline.com/common',
+    scope: 'openid email profile',
+  },
+};
+
+const IconPreview: React.FC<{ name: string; icon?: string }> = ({
+  name,
+  icon,
+}) => {
+  if (icon) {
+    return (
+      <span
+        style={{ display: 'inline-flex', width: 24, height: 24 }}
+        dangerouslySetInnerHTML={{ __html: icon }}
+      />
+    );
+  }
+  const lowerName = name.toLowerCase();
+  const svgName = BUILTIN_ICONS.includes(lowerName) ? lowerName : 'default';
+  return (
+    <img
+      src={`/oidc-icons/auth-${svgName}.svg`}
+      alt={name}
+      style={{ width: 24, height: 24 }}
+    />
+  );
+};
 
 const ProviderForm: React.FC<ProviderFormProps> = ({
   mode,
@@ -21,6 +157,8 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
   const intl = useIntl();
   const [form] = Form.useForm();
   const isEdit = mode === 'edit';
+  const [iconPreview, setIconPreview] = useState<string | undefined>(undefined);
+  const [providerName, setProviderName] = useState<string>('');
 
   useEffect(() => {
     if (isEdit && open && currentRecord) {
@@ -35,10 +173,48 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
         tokenEndpoint: currentRecord.tokenEndpoint,
         userinfoEndpoint: currentRecord.userinfoEndpoint,
         jwksUri: currentRecord.jwksUri,
+        icon: currentRecord.icon || undefined,
         enabled: currentRecord.enabled,
       });
+      setIconPreview(currentRecord.icon || undefined);
+      setProviderName(currentRecord.name);
+    } else if (!open) {
+      setIconPreview(undefined);
+      setProviderName('');
     }
   }, [isEdit, open, currentRecord, form]);
+
+  const handlePresetChange = (preset: string) => {
+    if (preset && BUILTIN_PROVIDER_PRESETS[preset]) {
+      const config = BUILTIN_PROVIDER_PRESETS[preset];
+      form.setFieldsValue({
+        name: config.name,
+        type: config.type,
+        issuer: config.issuer || '',
+        scope: config.scope || '',
+        authorizationEndpoint: config.authorizationEndpoint || '',
+        tokenEndpoint: config.tokenEndpoint || '',
+        userinfoEndpoint: config.userinfoEndpoint || '',
+      });
+      setProviderName(config.name);
+    }
+  };
+
+  const handleSvgUpload = (file: File) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const svgContent = e.target?.result as string;
+      form.setFieldValue('icon', svgContent);
+      setIconPreview(svgContent);
+    };
+    reader.readAsText(file);
+    return false;
+  };
+
+  const clearIcon = () => {
+    form.setFieldValue('icon', undefined);
+    setIconPreview(undefined);
+  };
 
   return (
     <ModalForm
@@ -60,6 +236,45 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
       modalProps={{ destroyOnClose: true }}
       width={560}
     >
+      {!isEdit && (
+        <Form.Item
+          name="preset"
+          label={
+            <FormattedMessage
+              id="pages.oidcProviders.preset"
+              defaultMessage="Provider Template"
+            />
+          }
+        >
+          <Select
+            placeholder={intl.formatMessage({
+              id: 'pages.oidcProviders.presetPlaceholder',
+              defaultMessage: 'Select a built-in provider or custom',
+            })}
+            onChange={handlePresetChange}
+            allowClear
+          >
+            {BUILTIN_ICONS.map((name) => (
+              <Select.Option key={name} value={name}>
+                <Space>
+                  <img
+                    src={`/oidc-icons/auth-${name}.svg`}
+                    alt={name}
+                    style={{ width: 16, height: 16 }}
+                  />
+                  {OIDC_LABELS[name] || name}
+                </Space>
+              </Select.Option>
+            ))}
+            <Select.Option value="custom">
+              <FormattedMessage
+                id="pages.oidcProviders.custom"
+                defaultMessage="Custom"
+              />
+            </Select.Option>
+          </Select>
+        </Form.Item>
+      )}
       <Form.Item
         name="name"
         label={
@@ -75,6 +290,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
             id: 'pages.oidcProviders.enterName',
             defaultMessage: 'Enter provider name',
           })}
+          onChange={(e) => setProviderName(e.target.value)}
         />
       </Form.Item>
       <Form.Item
@@ -238,6 +454,46 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
           },
         ]}
       />
+      <Form.Item
+        label={
+          <FormattedMessage
+            id="pages.oidcProviders.icon"
+            defaultMessage="Icon (SVG)"
+          />
+        }
+      >
+        <Space>
+          <IconPreview name={providerName} icon={iconPreview} />
+          <Upload
+            accept=".svg"
+            maxCount={1}
+            showUploadList={false}
+            beforeUpload={handleSvgUpload}
+          >
+            <Button icon={<UploadOutlined />}>
+              <FormattedMessage
+                id="pages.oidcProviders.uploadSvg"
+                defaultMessage="Upload SVG"
+              />
+            </Button>
+          </Upload>
+          {iconPreview && (
+            <Button
+              icon={<DeleteOutlined />}
+              onClick={clearIcon}
+              danger
+            >
+              <FormattedMessage
+                id="pages.oidcProviders.clearIcon"
+                defaultMessage="Clear"
+              />
+            </Button>
+          )}
+        </Space>
+      </Form.Item>
+      <Form.Item name="icon" hidden>
+        <Input />
+      </Form.Item>
       <Form.Item
         name="enabled"
         label={
