@@ -15,7 +15,8 @@ import { DeleteOutlined, UploadOutlined } from '@ant-design/icons';
 import React, { useEffect, useState } from 'react';
 import SvgIcon from '@/components/SvgIcon';
 import { getOidcIconKey } from '@/components/oidcIcon';
-import { OIDC_SVG_ICONS } from '@/components/oidcIcons';
+import { getOidcSvgIcon } from '@/components/oidcIcons';
+import useIsDark from '@/hooks/useIsDark';
 
 interface ProviderFormProps {
   mode: 'create' | 'edit';
@@ -127,9 +128,10 @@ const BuiltinIcon: React.FC<{ name: string; size?: number }> = ({
   name,
   size = 20,
 }) => {
+  const isDark = useIsDark();
   const iconKey = getOidcIconKey(name);
   const svgKey = BUILTIN_ICONS.includes(iconKey) ? iconKey : 'default';
-  const svgContent = OIDC_SVG_ICONS[svgKey];
+  const svgContent = getOidcSvgIcon(svgKey, isDark);
   if (svgContent) {
     return <SvgIcon svg={svgContent} width={size} height={size} alt="" />;
   }

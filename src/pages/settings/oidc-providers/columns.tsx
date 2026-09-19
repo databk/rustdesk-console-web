@@ -6,7 +6,8 @@ import React from 'react';
 
 import SvgIcon from '@/components/SvgIcon';
 import { getOidcIconKey } from '@/components/oidcIcon';
-import { OIDC_SVG_ICONS } from '@/components/oidcIcons';
+import { getOidcSvgIcon } from '@/components/oidcIcons';
+import useIsDark from '@/hooks/useIsDark';
 
 const BUILTIN_ICONS = [
   'github',
@@ -24,12 +25,13 @@ const OidcIcon: React.FC<{ name: string; icon?: string }> = ({
   name,
   icon,
 }) => {
+  const isDark = useIsDark();
   if (icon) {
     return <SvgIcon svg={icon} alt="" />;
   }
   const iconKey = getOidcIconKey(name);
   const svgKey = BUILTIN_ICONS.includes(iconKey) ? iconKey : 'default';
-  const svgContent = OIDC_SVG_ICONS[svgKey];
+  const svgContent = getOidcSvgIcon(svgKey, isDark);
   if (svgContent) {
     return <SvgIcon svg={svgContent} alt="" />;
   }
