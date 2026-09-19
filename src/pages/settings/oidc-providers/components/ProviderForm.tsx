@@ -64,9 +64,7 @@ const BUILTIN_PROVIDER_PRESETS: Record<
     type: 'oidc',
     issuer: 'https://accounts.google.com',
     scope: 'openid email profile',
-    authorizationEndpoint: 'https://accounts.google.com/o/oauth2/v2/auth',
-    tokenEndpoint: 'https://oauth2.googleapis.com/token',
-    userinfoEndpoint: 'https://openidconnect.googleapis.com/v1/userinfo',
+
   },
   github: {
     name: 'github',
@@ -91,8 +89,7 @@ const BUILTIN_PROVIDER_PRESETS: Record<
     type: 'oidc',
     issuer: 'https://appleid.apple.com',
     scope: 'name email',
-    authorizationEndpoint: 'https://appleid.apple.com/auth/authorize',
-    tokenEndpoint: 'https://appleid.apple.com/auth/token',
+
   },
   facebook: {
     name: 'facebook',
