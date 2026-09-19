@@ -976,6 +976,15 @@ export default {
     'Tem certeza de que deseja desativar este provedor?',
   'pages.oidcProviders.testFailed': 'Falha ao testar conexão OIDC',
   'pages.oidcProviders.sortFailed': 'Falha ao atualizar ordem dos provedores',
+  'pages.oidcProviders.preset': 'Modelo de Provedor',
+  'pages.oidcProviders.presetPlaceholder':
+    'Selecione um provedor integrado ou personalizado',
+  'pages.oidcProviders.custom': 'Personalizado',
+  'pages.oidcProviders.icon': 'Ícone (SVG)',
+  'pages.oidcProviders.uploadSvg': 'Carregar SVG',
+  'pages.oidcProviders.clearIcon': 'Limpar',
+  'pages.oidcProviders.svgTooLarge': 'Arquivo SVG muito grande (máx. 100KB)',
+  'pages.oidcProviders.invalidSvg': 'Conteúdo SVG inválido',
   'pages.oidcProviders.fetchDetailFailed':
     'Falha ao obter detalhes do provedor',
   'pages.user.center.tab.basic': 'Informações Básicas',

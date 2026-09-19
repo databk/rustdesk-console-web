@@ -636,6 +636,15 @@ export default {
     'Échec de la récupération des détails du fournisseur',
   'pages.oidcProviders.sortFailed':
     "Échec de la mise à jour de l'ordre des fournisseurs",
+  'pages.oidcProviders.preset': 'Modèle de fournisseur',
+  'pages.oidcProviders.presetPlaceholder':
+    'Sélectionnez un fournisseur intégré ou personnalisé',
+  'pages.oidcProviders.custom': 'Personnalisé',
+  'pages.oidcProviders.icon': 'Icône (SVG)',
+  'pages.oidcProviders.uploadSvg': 'Télécharger SVG',
+  'pages.oidcProviders.clearIcon': 'Effacer',
+  'pages.oidcProviders.svgTooLarge': 'Fichier SVG trop volumineux (max 100Ko)',
+  'pages.oidcProviders.invalidSvg': 'Contenu SVG invalide',
   'pages.user.center.tab.basic': 'Informations de base',
   'pages.user.center.tab.security': 'Sécurité',
   'pages.user.center.basicInfo.displayName': "Nom d'affichage",

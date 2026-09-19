@@ -270,7 +270,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
               <Select.Option key={name} value={name}>
                 <Space>
                   <img
-                    src={`/oidc-icons/${name}.svg`}
+                    src={`/oidc-icons/${getOidcIconKey(name)}.svg`}
                     alt={name}
                     style={{ width: 16, height: 16 }}
                   />

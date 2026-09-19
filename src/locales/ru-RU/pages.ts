@@ -975,6 +975,15 @@ export default {
   'pages.oidcProviders.fetchDetailFailed':
     'Не удалось загрузить детали провайдера',
   'pages.oidcProviders.sortFailed': 'Не удалось обновить порядок провайдеров',
+  'pages.oidcProviders.preset': 'Шаблон провайдера',
+  'pages.oidcProviders.presetPlaceholder':
+    'Выберите встроенного провайдера или пользовательский',
+  'pages.oidcProviders.custom': 'Пользовательский',
+  'pages.oidcProviders.icon': 'Иконка (SVG)',
+  'pages.oidcProviders.uploadSvg': 'Загрузить SVG',
+  'pages.oidcProviders.clearIcon': 'Очистить',
+  'pages.oidcProviders.svgTooLarge': 'SVG-файл слишком большой (макс. 100КБ)',
+  'pages.oidcProviders.invalidSvg': 'Недействительное содержимое SVG',
   'pages.user.center.tab.basic': 'Основная информация',
   'pages.user.center.tab.security': 'Безопасность',
   'pages.user.center.basicInfo.displayName': 'Отображаемое имя',
