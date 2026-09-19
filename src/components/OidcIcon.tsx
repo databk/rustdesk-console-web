@@ -1,7 +1,15 @@
 import React from 'react';
 import SvgIcon from './SvgIcon';
-import { getOidcIconKey } from './oidcIcon';
-import { BUILTIN_MONOCHROME_SVGS } from './builtinOidcIcons';
+import { BUILTIN_SVGS } from './builtinOidcIcons';
+
+const ICON_KEY_MAP: Record<string, string> = {
+  azure: 'microsoft',
+};
+
+function getOidcIconKey(name: string): string {
+  const lowerName = name.toLowerCase();
+  return ICON_KEY_MAP[lowerName] || lowerName;
+}
 
 export const BUILTIN_ICONS = [
   'github',
@@ -45,25 +53,9 @@ const OidcIcon: React.FC<OidcIconProps> = ({
   }
   const iconKey = getOidcIconKey(name);
   const svgName = BUILTIN_ICONS.includes(iconKey) ? iconKey : 'default';
+  const svgContent = BUILTIN_SVGS[svgName] || BUILTIN_SVGS.default;
 
-  if (BUILTIN_MONOCHROME_SVGS[svgName]) {
-    return (
-      <SvgIcon
-        svg={BUILTIN_MONOCHROME_SVGS[svgName]}
-        width={width}
-        height={height}
-        alt={name}
-      />
-    );
-  }
-
-  return (
-    <img
-      src={`/oidc-icons/${svgName}.svg`}
-      alt={name}
-      style={{ width, height }}
-    />
-  );
+  return <SvgIcon svg={svgContent} width={width} height={height} alt={name} />;
 };
 
 export default OidcIcon;
