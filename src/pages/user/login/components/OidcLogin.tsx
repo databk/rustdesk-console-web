@@ -4,50 +4,7 @@ import React, { useState } from 'react';
 import { oidcAuth } from '@/services/rustdesk-console/auth';
 import { getDeviceInfo } from '../utils';
 import { useStyles } from '../styles';
-import SvgIcon from '@/components/SvgIcon';
-import { getOidcIconKey } from '@/components/oidcIcon';
-
-const BUILTIN_ICONS = [
-  'github',
-  'gitlab',
-  'google',
-  'apple',
-  'okta',
-  'facebook',
-  'azure',
-  'auth0',
-  'microsoft',
-];
-
-const OIDC_LABELS: Record<string, string> = {
-  github: 'GitHub',
-  gitlab: 'GitLab',
-  google: 'Google',
-  apple: 'Apple',
-  okta: 'Okta',
-  facebook: 'Facebook',
-  azure: 'Microsoft',
-  auth0: 'Auth0',
-  microsoft: 'Microsoft',
-};
-
-const OidcIcon: React.FC<{ name: string; icon?: string }> = ({
-  name,
-  icon,
-}) => {
-  if (icon) {
-    return <SvgIcon svg={icon} alt={name} />;
-  }
-  const iconKey = getOidcIconKey(name);
-  const svgName = BUILTIN_ICONS.includes(iconKey) ? iconKey : 'default';
-  return (
-    <img
-      src={`/oidc-icons/${svgName}.svg`}
-      alt={name}
-      style={{ width: 20, height: 20 }}
-    />
-  );
-};
+import OidcIcon, { OIDC_LABELS } from '@/components/OidcIcon';
 
 interface OidcLoginProps {
   options: API.OidcLoginInfo[];

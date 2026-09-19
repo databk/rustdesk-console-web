@@ -58,9 +58,14 @@ const OidcProviderList: React.FC = () => {
     fetchData();
   }, [fetchData]);
 
-  const handleCreate = async (values: API.CreateOidcProviderParams) => {
+  const handleCreate = async (
+    values: API.CreateOidcProviderParams & {
+      preset?: string;
+    },
+  ) => {
+    const { preset: _preset, ...payload } = values;
     try {
-      await createOidcProvider(values);
+      await createOidcProvider(payload);
       msgApi.success(
         intl.formatMessage({
           id: 'pages.oidcProviders.createSuccess',
@@ -96,10 +101,15 @@ const OidcProviderList: React.FC = () => {
     }
   };
 
-  const handleUpdate = async (values: API.UpdateOidcProviderParams) => {
+  const handleUpdate = async (
+    values: API.UpdateOidcProviderParams & {
+      preset?: string;
+    },
+  ) => {
+    const { preset: _preset, ...payload } = values;
     if (!currentRecord) return false;
     try {
-      await updateOidcProvider(currentRecord.guid, values);
+      await updateOidcProvider(currentRecord.guid, payload);
       msgApi.success(
         intl.formatMessage({
           id: 'pages.oidcProviders.updateSuccess',

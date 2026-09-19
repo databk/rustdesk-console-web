@@ -13,8 +13,7 @@ import {
 } from 'antd';
 import { DeleteOutlined, UploadOutlined } from '@ant-design/icons';
 import React, { useEffect, useState } from 'react';
-import SvgIcon from '@/components/SvgIcon';
-import { getOidcIconKey } from '@/components/oidcIcon';
+import OidcIcon, { BUILTIN_ICONS, OIDC_LABELS } from '@/components/OidcIcon';
 
 interface ProviderFormProps {
   mode: 'create' | 'edit';
@@ -23,30 +22,6 @@ interface ProviderFormProps {
   onFinish: (values: any) => Promise<boolean>;
   currentRecord?: API.OidcProvider | null;
 }
-
-const BUILTIN_ICONS = [
-  'github',
-  'gitlab',
-  'google',
-  'apple',
-  'okta',
-  'facebook',
-  'azure',
-  'auth0',
-  'microsoft',
-];
-
-const OIDC_LABELS: Record<string, string> = {
-  github: 'GitHub',
-  gitlab: 'GitLab',
-  google: 'Google',
-  apple: 'Apple',
-  okta: 'Okta',
-  facebook: 'Facebook',
-  azure: 'Microsoft',
-  auth0: 'Auth0',
-  microsoft: 'Microsoft',
-};
 
 const BUILTIN_PROVIDER_PRESETS: Record<
   string,
@@ -120,24 +95,6 @@ const BUILTIN_PROVIDER_PRESETS: Record<
     issuer: 'https://login.microsoftonline.com/common',
     scope: 'openid email profile',
   },
-};
-
-const IconPreview: React.FC<{ name: string; icon?: string }> = ({
-  name,
-  icon,
-}) => {
-  if (icon) {
-    return <SvgIcon svg={icon} width={24} height={24} alt={name} />;
-  }
-  const iconKey = getOidcIconKey(name);
-  const svgName = BUILTIN_ICONS.includes(iconKey) ? iconKey : 'default';
-  return (
-    <img
-      src={`/oidc-icons/${svgName}.svg`}
-      alt={name}
-      style={{ width: 24, height: 24 }}
-    />
-  );
 };
 
 const ProviderForm: React.FC<ProviderFormProps> = ({
@@ -269,11 +226,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
             {BUILTIN_ICONS.map((name) => (
               <Select.Option key={name} value={name}>
                 <Space>
-                  <img
-                    src={`/oidc-icons/${getOidcIconKey(name)}.svg`}
-                    alt={name}
-                    style={{ width: 16, height: 16 }}
-                  />
+                  <OidcIcon name={name} width={16} height={16} />
                   {OIDC_LABELS[name] || name}
                 </Space>
               </Select.Option>
@@ -475,7 +428,12 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
         }
       >
         <Space>
-          <IconPreview name={providerName} icon={iconPreview} />
+          <OidcIcon
+            name={providerName}
+            icon={iconPreview}
+            width={24}
+            height={24}
+          />
           <Upload
             accept=".svg"
             maxCount={1}
