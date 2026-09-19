@@ -12,6 +12,7 @@ import {
 } from 'antd';
 import { DeleteOutlined, UploadOutlined } from '@ant-design/icons';
 import React, { useEffect, useState } from 'react';
+import SvgIcon from '@/components/SvgIcon';
 
 interface ProviderFormProps {
   mode: 'create' | 'edit';
@@ -129,12 +130,7 @@ const IconPreview: React.FC<{ name: string; icon?: string }> = ({
   icon,
 }) => {
   if (icon) {
-    return (
-      <span
-        style={{ display: 'inline-flex', width: 24, height: 24 }}
-        dangerouslySetInnerHTML={{ __html: icon }}
-      />
-    );
+    return <SvgIcon svg={icon} width={24} height={24} alt={name} />;
   }
   const lowerName = name.toLowerCase();
   const svgName = BUILTIN_ICONS.includes(lowerName) ? lowerName : 'default';

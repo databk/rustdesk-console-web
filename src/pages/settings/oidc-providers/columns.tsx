@@ -4,6 +4,8 @@ import { FormattedMessage, useIntl } from '@umijs/max';
 import { Button, Divider, Popconfirm, Space, Switch, Tag, Tooltip } from 'antd';
 import React from 'react';
 
+import SvgIcon from '@/components/SvgIcon';
+
 const BUILTIN_ICONS = [
   'github',
   'gitlab',
@@ -21,12 +23,7 @@ const OidcIcon: React.FC<{ name: string; icon?: string }> = ({
   icon,
 }) => {
   if (icon) {
-    return (
-      <span
-        style={{ display: 'inline-flex', width: 20, height: 20 }}
-        dangerouslySetInnerHTML={{ __html: icon }}
-      />
-    );
+    return <SvgIcon svg={icon} alt={name} />;
   }
   const lowerName = name.toLowerCase();
   const svgName = BUILTIN_ICONS.includes(lowerName) ? lowerName : 'default';

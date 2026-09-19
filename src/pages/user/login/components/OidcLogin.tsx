@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { oidcAuth } from '@/services/rustdesk-console/auth';
 import { getDeviceInfo } from '../utils';
 import { useStyles } from '../styles';
+import SvgIcon from '@/components/SvgIcon';
 
 const BUILTIN_ICONS = [
   'github',
@@ -35,12 +36,7 @@ const OidcIcon: React.FC<{ name: string; icon?: string }> = ({
 }) => {
   const lowerName = name.toLowerCase();
   if (icon) {
-    return (
-      <span
-        style={{ display: 'inline-flex', width: 20, height: 20 }}
-        dangerouslySetInnerHTML={{ __html: icon }}
-      />
-    );
+    return <SvgIcon svg={icon} alt={name} />;
   }
   const svgName = BUILTIN_ICONS.includes(lowerName) ? lowerName : 'default';
   return (
