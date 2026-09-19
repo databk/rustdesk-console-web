@@ -199,8 +199,9 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
     }
     if (preset && BUILTIN_PROVIDER_PRESETS[preset]) {
       const config = BUILTIN_PROVIDER_PRESETS[preset];
+      const label = OIDC_LABELS[preset] || config.name;
       form.setFieldsValue({
-        name: config.name,
+        name: label,
         type: config.type,
         issuer: config.issuer || '',
         scope: config.scope || '',
@@ -208,7 +209,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
         tokenEndpoint: config.tokenEndpoint || '',
         userinfoEndpoint: config.userinfoEndpoint || '',
       });
-      setProviderName(config.name);
+      setProviderName(label);
       setIsBuiltin(true);
       setNeedsIssuer(!config.issuer);
     }
@@ -317,13 +318,13 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
           />
         }
         rules={[{ required: true }]}
+        hidden={isBuiltin}
       >
         <Input
           placeholder={intl.formatMessage({
             id: 'pages.oidcProviders.enterName',
             defaultMessage: 'Enter provider name',
           })}
-          disabled={isBuiltin}
           onChange={(e) => setProviderName(e.target.value)}
         />
       </Form.Item>
