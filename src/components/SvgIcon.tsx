@@ -41,6 +41,7 @@ const SvgIcon: React.FC<SvgIconProps> = ({
       ref={containerRef}
       role="img"
       aria-label={alt}
+      // biome-ignore lint/security/noDangerouslySetInnerHtml: SVG is sanitized by DOMPurify before rendering
       dangerouslySetInnerHTML={{ __html: cleanSvg }}
       style={{ display: 'inline-flex', verticalAlign: 'middle' }}
     />
