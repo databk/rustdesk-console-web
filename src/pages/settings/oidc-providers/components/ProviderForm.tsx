@@ -131,7 +131,7 @@ const BuiltinIcon: React.FC<{ name: string; size?: number }> = ({
   const svgKey = BUILTIN_ICONS.includes(iconKey) ? iconKey : 'default';
   const svgContent = OIDC_SVG_ICONS[svgKey];
   if (svgContent) {
-    return <SvgIcon svg={svgContent} width={size} height={size} alt={name} />;
+    return <SvgIcon svg={svgContent} width={size} height={size} alt="" />;
   }
   return null;
 };
@@ -141,7 +141,7 @@ const IconPreview: React.FC<{ name: string; icon?: string }> = ({
   icon,
 }) => {
   if (icon) {
-    return <SvgIcon svg={icon} width={24} height={24} alt={name} />;
+    return <SvgIcon svg={icon} width={24} height={24} alt="" />;
   }
   return <BuiltinIcon name={name} size={24} />;
 };
@@ -180,9 +180,8 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
       });
       setIconPreview(currentRecord.icon || undefined);
       setProviderName(currentRecord.name);
-      const builtin = BUILTIN_ICONS.includes(currentRecord.name.toLowerCase());
-      setIsBuiltin(builtin);
-      setNeedsIssuer(!currentRecord.issuer);
+      setIsBuiltin(false);
+      setNeedsIssuer(true);
     } else if (!open) {
       setIconPreview(undefined);
       setProviderName('');
@@ -193,6 +192,17 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
 
   const handlePresetChange = (preset: string) => {
     if (preset === 'custom') {
+      form.setFieldsValue({
+        name: '',
+        type: 'oidc',
+        issuer: '',
+        scope: '',
+        authorizationEndpoint: '',
+        tokenEndpoint: '',
+        userinfoEndpoint: '',
+        jwksUri: '',
+      });
+      setProviderName('');
       setIsBuiltin(false);
       setNeedsIssuer(true);
       return;

@@ -37,13 +37,13 @@ const OidcIcon: React.FC<{ name: string; icon?: string }> = ({
   icon,
 }) => {
   if (icon) {
-    return <SvgIcon svg={icon} alt={name} />;
+    return <SvgIcon svg={icon} alt="" />;
   }
   const iconKey = getOidcIconKey(name);
   const svgKey = BUILTIN_ICONS.includes(iconKey) ? iconKey : 'default';
   const svgContent = OIDC_SVG_ICONS[svgKey];
   if (svgContent) {
-    return <SvgIcon svg={svgContent} alt={name} />;
+    return <SvgIcon svg={svgContent} alt="" />;
   }
   return null;
 };
