@@ -474,11 +474,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
             </Button>
           </Upload>
           {iconPreview && (
-            <Button
-              icon={<DeleteOutlined />}
-              onClick={clearIcon}
-              danger
-            >
+            <Button icon={<DeleteOutlined />} onClick={clearIcon} danger>
               <FormattedMessage
                 id="pages.oidcProviders.clearIcon"
                 defaultMessage="Clear"

@@ -925,7 +925,8 @@ export default {
   'pages.oidcProviders.fetchDetailFailed': 'Failed to fetch provider details',
   'pages.oidcProviders.sortFailed': 'Failed to update provider order',
   'pages.oidcProviders.preset': 'Provider Template',
-  'pages.oidcProviders.presetPlaceholder': 'Select a built-in provider or custom',
+  'pages.oidcProviders.presetPlaceholder':
+    'Select a built-in provider or custom',
   'pages.oidcProviders.custom': 'Custom',
   'pages.oidcProviders.icon': 'Icon (SVG)',
   'pages.oidcProviders.uploadSvg': 'Upload SVG',
