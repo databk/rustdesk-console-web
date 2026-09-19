@@ -20,9 +20,16 @@ const SvgIcon: React.FC<SvgIconProps> = ({
     () =>
       DOMPurify.sanitize(svg, {
         USE_PROFILES: { svg: true, svgFilters: true },
-        FORBID_TAGS: ['script'],
-        FORBID_ATTR: ['onload', 'onerror', 'onclick', 'onmouseover', 'onfocus'],
-        ALLOWED_URI_REGEXP: /^(?:data:|\/|#)/i,
+        FORBID_TAGS: ['script', 'style'],
+        FORBID_ATTR: [
+          'onload',
+          'onerror',
+          'onclick',
+          'onmouseover',
+          'onfocus',
+          'style',
+        ],
+        ALLOWED_URI_REGEXP: /^(?:data:|\/(?!\/)|#)/i,
       }),
     [svg],
   );
@@ -43,7 +50,13 @@ const SvgIcon: React.FC<SvgIconProps> = ({
       aria-label={alt}
       // biome-ignore lint/security/noDangerouslySetInnerHtml: SVG is sanitized by DOMPurify before rendering
       dangerouslySetInnerHTML={{ __html: cleanSvg }}
-      style={{ display: 'inline-flex', verticalAlign: 'middle' }}
+      style={{
+        display: 'inline-flex',
+        width,
+        height,
+        overflow: 'hidden',
+        verticalAlign: 'middle',
+      }}
     />
   );
 };
