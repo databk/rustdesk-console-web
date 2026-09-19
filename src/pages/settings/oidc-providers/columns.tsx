@@ -6,6 +6,7 @@ import React from 'react';
 
 import SvgIcon from '@/components/SvgIcon';
 import { getOidcIconKey } from '@/components/oidcIcon';
+import { OIDC_SVG_ICONS } from '@/components/oidcIcons';
 
 const BUILTIN_ICONS = [
   'github',
@@ -27,14 +28,12 @@ const OidcIcon: React.FC<{ name: string; icon?: string }> = ({
     return <SvgIcon svg={icon} alt={name} />;
   }
   const iconKey = getOidcIconKey(name);
-  const svgName = BUILTIN_ICONS.includes(iconKey) ? iconKey : 'default';
-  return (
-    <img
-      src={`/oidc-icons/${svgName}.svg`}
-      alt={name}
-      style={{ width: 20, height: 20 }}
-    />
-  );
+  const svgKey = BUILTIN_ICONS.includes(iconKey) ? iconKey : 'default';
+  const svgContent = OIDC_SVG_ICONS[svgKey];
+  if (svgContent) {
+    return <SvgIcon svg={svgContent} alt={name} />;
+  }
+  return null;
 };
 
 interface ColumnHandlers {
