@@ -133,7 +133,7 @@ const IconPreview: React.FC<{ name: string; icon?: string }> = ({
   const svgName = BUILTIN_ICONS.includes(iconKey) ? iconKey : 'default';
   return (
     <img
-      src={`/oidc-icons/auth-${svgName}.svg`}
+      src={`/oidc-icons/${svgName}.svg`}
       alt={name}
       style={{ width: 24, height: 24 }}
     />
@@ -270,7 +270,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
               <Select.Option key={name} value={name}>
                 <Space>
                   <img
-                    src={`/oidc-icons/auth-${name}.svg`}
+                    src={`/oidc-icons/${name}.svg`}
                     alt={name}
                     style={{ width: 16, height: 16 }}
                   />

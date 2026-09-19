@@ -42,7 +42,7 @@ const OidcIcon: React.FC<{ name: string; icon?: string }> = ({
   const svgName = BUILTIN_ICONS.includes(iconKey) ? iconKey : 'default';
   return (
     <img
-      src={`/oidc-icons/auth-${svgName}.svg`}
+      src={`/oidc-icons/${svgName}.svg`}
       alt={name}
       style={{ width: 20, height: 20 }}
     />
