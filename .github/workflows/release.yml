@@ -95,20 +95,21 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y musl-tools
 
-      - name: Install musl cross tools (aarch64)
+      - name: Install cross
         if: matrix.target == 'aarch64-unknown-linux-musl'
-        run: |
-          wget -q https://musl.cc/aarch64-linux-musl-cross.tgz
-          tar xzf aarch64-linux-musl-cross.tgz -C /opt
-          echo "/opt/aarch64-linux-musl-cross/bin" >> "$GITHUB_PATH"
+        run: cargo install cross --locked
 
-      - name: Build
+      - name: Build with cargo
+        if: matrix.target != 'aarch64-unknown-linux-musl'
         working-directory: server
         run: cargo build --release --target ${{ matrix.target }}
         env:
           CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
           CARGO_TARGET_X86_64_UNKNOWN_LINUX_MUSL_LINKER: musl-gcc
-          CARGO_TARGET_AARCH64_UNKNOWN_LINUX_MUSL_LINKER: aarch64-linux-musl-gcc
+
+      - name: Build with cross
+        if: matrix.target == 'aarch64-unknown-linux-musl'
+        run: cross build --release --target ${{ matrix.target }} --manifest-path server/Cargo.toml
 
       - name: Rename binary with target suffix
         shell: bash
