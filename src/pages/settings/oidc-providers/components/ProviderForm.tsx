@@ -99,8 +99,8 @@ const BUILTIN_PROVIDER_PRESETS: Record<
     type: 'oauth2',
     issuer: 'https://graph.facebook.com',
     scope: 'email public_profile',
-    authorizationEndpoint: 'https://www.facebook.com/v18.0/dialog/oauth',
-    tokenEndpoint: 'https://graph.facebook.com/v18.0/oauth/access_token',
+    authorizationEndpoint: 'https://www.facebook.com/v26.0/dialog/oauth',
+    tokenEndpoint: 'https://graph.facebook.com/v26.0/oauth/access_token',
     userinfoEndpoint: 'https://graph.facebook.com/me',
   },
   okta: {
