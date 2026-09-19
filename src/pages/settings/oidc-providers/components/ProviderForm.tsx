@@ -14,6 +14,7 @@ import {
 import { DeleteOutlined, UploadOutlined } from '@ant-design/icons';
 import React, { useEffect, useState } from 'react';
 import SvgIcon from '@/components/SvgIcon';
+import { getOidcIconKey } from '@/components/oidcIcon';
 
 interface ProviderFormProps {
   mode: 'create' | 'edit';
@@ -64,7 +65,6 @@ const BUILTIN_PROVIDER_PRESETS: Record<
     type: 'oidc',
     issuer: 'https://accounts.google.com',
     scope: 'openid email profile',
-
   },
   github: {
     name: 'github',
@@ -89,7 +89,6 @@ const BUILTIN_PROVIDER_PRESETS: Record<
     type: 'oidc',
     issuer: 'https://appleid.apple.com',
     scope: 'name email',
-
   },
   facebook: {
     name: 'facebook',
@@ -130,8 +129,8 @@ const IconPreview: React.FC<{ name: string; icon?: string }> = ({
   if (icon) {
     return <SvgIcon svg={icon} width={24} height={24} alt={name} />;
   }
-  const lowerName = name.toLowerCase();
-  const svgName = BUILTIN_ICONS.includes(lowerName) ? lowerName : 'default';
+  const iconKey = getOidcIconKey(name);
+  const svgName = BUILTIN_ICONS.includes(iconKey) ? iconKey : 'default';
   return (
     <img
       src={`/oidc-icons/auth-${svgName}.svg`}

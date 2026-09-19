@@ -5,6 +5,7 @@ import { oidcAuth } from '@/services/rustdesk-console/auth';
 import { getDeviceInfo } from '../utils';
 import { useStyles } from '../styles';
 import SvgIcon from '@/components/SvgIcon';
+import { getOidcIconKey } from '@/components/oidcIcon';
 
 const BUILTIN_ICONS = [
   'github',
@@ -34,11 +35,11 @@ const OidcIcon: React.FC<{ name: string; icon?: string }> = ({
   name,
   icon,
 }) => {
-  const lowerName = name.toLowerCase();
   if (icon) {
     return <SvgIcon svg={icon} alt={name} />;
   }
-  const svgName = BUILTIN_ICONS.includes(lowerName) ? lowerName : 'default';
+  const iconKey = getOidcIconKey(name);
+  const svgName = BUILTIN_ICONS.includes(iconKey) ? iconKey : 'default';
   return (
     <img
       src={`/oidc-icons/auth-${svgName}.svg`}

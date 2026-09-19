@@ -5,6 +5,7 @@ import { Button, Divider, Popconfirm, Space, Switch, Tag, Tooltip } from 'antd';
 import React from 'react';
 
 import SvgIcon from '@/components/SvgIcon';
+import { getOidcIconKey } from '@/components/oidcIcon';
 
 const BUILTIN_ICONS = [
   'github',
@@ -25,8 +26,8 @@ const OidcIcon: React.FC<{ name: string; icon?: string }> = ({
   if (icon) {
     return <SvgIcon svg={icon} alt={name} />;
   }
-  const lowerName = name.toLowerCase();
-  const svgName = BUILTIN_ICONS.includes(lowerName) ? lowerName : 'default';
+  const iconKey = getOidcIconKey(name);
+  const svgName = BUILTIN_ICONS.includes(iconKey) ? iconKey : 'default';
   return (
     <img
       src={`/oidc-icons/auth-${svgName}.svg`}
