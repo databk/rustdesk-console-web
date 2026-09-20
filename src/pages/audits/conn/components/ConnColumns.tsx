@@ -89,7 +89,7 @@ export const useConnColumns = (
         <FormattedMessage id="pages.audits.remote" defaultMessage="Remote" />
       ),
       dataIndex: 'deviceId',
-      tip: intl.formatMessage({
+      tooltip: intl.formatMessage({
         id: 'pages.audits.remoteSearchTip',
         defaultMessage: 'Search by remote device ID (fuzzy match)',
       }),
@@ -106,11 +106,11 @@ export const useConnColumns = (
         <FormattedMessage id="pages.audits.remote" defaultMessage="Remote" />
       ),
       dataIndex: 'deviceId',
-      tip: intl.formatMessage({
+      tooltip: intl.formatMessage({
         id: 'pages.audits.remoteTip',
         defaultMessage: 'Remotely controlled computer or terminal',
       }),
-      hideInSearch: true,
+      search: false,
       width: 160,
       render: (_, record) => record.deviceId || '-',
     },
