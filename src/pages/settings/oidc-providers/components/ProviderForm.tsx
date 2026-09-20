@@ -150,6 +150,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
         authorizationEndpoint: config.authorizationEndpoint || '',
         tokenEndpoint: config.tokenEndpoint || '',
         userinfoEndpoint: config.userinfoEndpoint || '',
+        jwksUri: '',
       });
       setProviderName(config.name);
       setIsBuiltin(true);
@@ -166,6 +167,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
         authorizationEndpoint: '',
         tokenEndpoint: '',
         userinfoEndpoint: '',
+        jwksUri: '',
       });
       setProviderName('');
       setIsBuiltin(false);
