@@ -107,7 +107,9 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
   const [iconPreview, setIconPreview] = useState<string | undefined>(undefined);
   const [providerName, setProviderName] = useState<string>('');
   const [isBuiltin, setIsBuiltin] = useState(false);
-  const [selectedPreset, setSelectedPreset] = useState<string>('');
+  const [needsIssuer, setNeedsIssuer] = useState(false);
+
+  const PRESETS_WITH_OVERRIDABLE_ISSUER = new Set(['microsoft']);
 
   useEffect(() => {
     if (isEdit && open && currentRecord) {
@@ -131,7 +133,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
       setIconPreview(undefined);
       setProviderName('');
       setIsBuiltin(false);
-      setSelectedPreset('');
+      setNeedsIssuer(false);
     }
   }, [isEdit, open, currentRecord, form]);
 
@@ -149,10 +151,12 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
       });
       setProviderName(config.name);
       setIsBuiltin(true);
-      setSelectedPreset(preset);
+      setNeedsIssuer(
+        !config.issuer || PRESETS_WITH_OVERRIDABLE_ISSUER.has(preset),
+      );
     } else {
       setIsBuiltin(false);
-      setSelectedPreset('');
+      setNeedsIssuer(false);
     }
   };
 
@@ -245,24 +249,30 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
           </Select>
         </Form.Item>
       )}
-      <Form.Item
-        name="name"
-        label={
-          <FormattedMessage
-            id="pages.oidcProviders.name"
-            defaultMessage="Provider Name"
+      {isBuiltin ? (
+        <Form.Item name="name" hidden>
+          <Input />
+        </Form.Item>
+      ) : (
+        <Form.Item
+          name="name"
+          label={
+            <FormattedMessage
+              id="pages.oidcProviders.name"
+              defaultMessage="Provider Name"
+            />
+          }
+          rules={[{ required: true }]}
+        >
+          <Input
+            placeholder={intl.formatMessage({
+              id: 'pages.oidcProviders.enterName',
+              defaultMessage: 'Enter provider name',
+            })}
+            onChange={(e) => setProviderName(e.target.value)}
           />
-        }
-        rules={[{ required: true }]}
-      >
-        <Input
-          placeholder={intl.formatMessage({
-            id: 'pages.oidcProviders.enterName',
-            defaultMessage: 'Enter provider name',
-          })}
-          onChange={(e) => setProviderName(e.target.value)}
-        />
-      </Form.Item>
+        </Form.Item>
+      )}
       {!isBuiltin && (
         <Form.Item
           name="type"
@@ -280,7 +290,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
           </Select>
         </Form.Item>
       )}
-      {(!isBuiltin || selectedPreset === 'microsoft') && (
+      {(!isBuiltin || needsIssuer) && (
         <Form.Item
           name="issuer"
           label={
@@ -432,44 +442,46 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
           ]}
         />
       )}
-      <Form.Item
-        label={
-          <FormattedMessage
-            id="pages.oidcProviders.icon"
-            defaultMessage="Icon (SVG)"
-          />
-        }
-      >
-        <Space>
-          <OidcIcon
-            name={providerName}
-            icon={iconPreview}
-            width={24}
-            height={24}
-          />
-          <Upload
-            accept=".svg"
-            maxCount={1}
-            showUploadList={false}
-            beforeUpload={handleSvgUpload}
-          >
-            <Button icon={<UploadOutlined />}>
-              <FormattedMessage
-                id="pages.oidcProviders.uploadSvg"
-                defaultMessage="Upload SVG"
-              />
-            </Button>
-          </Upload>
-          {iconPreview && (
-            <Button icon={<DeleteOutlined />} onClick={clearIcon} danger>
-              <FormattedMessage
-                id="pages.oidcProviders.clearIcon"
-                defaultMessage="Clear"
-              />
-            </Button>
-          )}
-        </Space>
-      </Form.Item>
+      {!isBuiltin && (
+        <Form.Item
+          label={
+            <FormattedMessage
+              id="pages.oidcProviders.icon"
+              defaultMessage="Icon (SVG)"
+            />
+          }
+        >
+          <Space>
+            <OidcIcon
+              name={providerName}
+              icon={iconPreview}
+              width={24}
+              height={24}
+            />
+            <Upload
+              accept=".svg"
+              maxCount={1}
+              showUploadList={false}
+              beforeUpload={handleSvgUpload}
+            >
+              <Button icon={<UploadOutlined />}>
+                <FormattedMessage
+                  id="pages.oidcProviders.uploadSvg"
+                  defaultMessage="Upload SVG"
+                />
+              </Button>
+            </Upload>
+            {iconPreview && (
+              <Button icon={<DeleteOutlined />} onClick={clearIcon} danger>
+                <FormattedMessage
+                  id="pages.oidcProviders.clearIcon"
+                  defaultMessage="Clear"
+                />
+              </Button>
+            )}
+          </Space>
+        </Form.Item>
+      )}
       <Form.Item name="icon" hidden>
         <Input />
       </Form.Item>
