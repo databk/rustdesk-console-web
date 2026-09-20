@@ -37,6 +37,7 @@ const OidcProviderColumns = (
       ),
       dataIndex: 'name',
       width: 180,
+      search: false,
       render: (_, record) => (
         <Space>
           <OidcIcon name={record.name} icon={record.icon} />
@@ -66,6 +67,7 @@ const OidcProviderColumns = (
       ),
       dataIndex: 'issuer',
       width: 250,
+      search: false,
       ellipsis: { showTitle: false },
       render: (_, record) => (
         <Tooltip placement="topLeft" title={record.issuer}>

@@ -4,7 +4,6 @@ export async function getOidcProviderList(
   params?: {
     current?: number;
     pageSize?: number;
-    name?: string;
   },
   options?: { [key: string]: any },
 ) {
@@ -13,7 +12,6 @@ export async function getOidcProviderList(
     params: {
       current: params?.current || 1,
       pageSize: params?.pageSize || 20,
-      name: params?.name,
     },
     ...(options || {}),
   });

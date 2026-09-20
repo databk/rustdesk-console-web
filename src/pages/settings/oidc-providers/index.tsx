@@ -34,25 +34,22 @@ const OidcProviderList: React.FC = () => {
   const [testResultVisible, setTestResultVisible] = useState(false);
   const [testResult, setTestResult] = useState<API.OidcTestResult | null>(null);
 
-  const fetchData = useCallback(
-    async (name?: string) => {
-      setLoading(true);
-      try {
-        const result = await getOidcProviderList({ name });
-        setDataSource(result.data || []);
-      } catch (_error) {
-        msgApi.error(
-          intl.formatMessage({
-            id: 'pages.oidcProviders.fetchDetailFailed',
-            defaultMessage: 'Failed to fetch provider details',
-          }),
-        );
-      } finally {
-        setLoading(false);
-      }
-    },
-    [msgApi, intl],
-  );
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    try {
+      const result = await getOidcProviderList();
+      setDataSource(result.data || []);
+    } catch (_error) {
+      msgApi.error(
+        intl.formatMessage({
+          id: 'pages.oidcProviders.fetchDetailFailed',
+          defaultMessage: 'Failed to fetch provider details',
+        }),
+      );
+    } finally {
+      setLoading(false);
+    }
+  }, [msgApi, intl]);
 
   useEffect(() => {
     fetchData();
@@ -243,6 +240,7 @@ const OidcProviderList: React.FC = () => {
         loading={loading}
         columns={columns}
         pagination={false}
+        search={false}
         scroll={{ x: 1100 }}
         toolBarRender={() => [
           <Button
