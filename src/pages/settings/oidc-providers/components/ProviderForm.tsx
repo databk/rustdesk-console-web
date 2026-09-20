@@ -155,6 +155,16 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
         !config.issuer || PRESETS_WITH_OVERRIDABLE_ISSUER.has(preset),
       );
     } else {
+      form.setFieldsValue({
+        name: '',
+        type: 'oidc',
+        issuer: '',
+        scope: '',
+        authorizationEndpoint: '',
+        tokenEndpoint: '',
+        userinfoEndpoint: '',
+      });
+      setProviderName('');
       setIsBuiltin(false);
       setNeedsIssuer(false);
     }
