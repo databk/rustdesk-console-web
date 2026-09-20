@@ -108,6 +108,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
   const [providerName, setProviderName] = useState<string>('');
   const [isBuiltin, setIsBuiltin] = useState(false);
   const [needsIssuer, setNeedsIssuer] = useState(false);
+  const [selectedPreset, setSelectedPreset] = useState<string>('');
 
   const PRESETS_WITH_OVERRIDABLE_ISSUER = new Set(['microsoft']);
 
@@ -134,6 +135,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
       setProviderName('');
       setIsBuiltin(false);
       setNeedsIssuer(false);
+      setSelectedPreset('');
     }
   }, [isEdit, open, currentRecord, form]);
 
@@ -151,6 +153,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
       });
       setProviderName(config.name);
       setIsBuiltin(true);
+      setSelectedPreset(preset);
       setNeedsIssuer(
         !config.issuer || PRESETS_WITH_OVERRIDABLE_ISSUER.has(preset),
       );
@@ -166,6 +169,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
       });
       setProviderName('');
       setIsBuiltin(false);
+      setSelectedPreset('');
       setNeedsIssuer(false);
     }
   };
@@ -204,6 +208,26 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
     setIconPreview(undefined);
   };
 
+  const handleFinish = async (values: any) => {
+    const finalValues = { ...values };
+    if (isBuiltin && selectedPreset) {
+      const config = BUILTIN_PROVIDER_PRESETS[selectedPreset];
+      if (config) {
+        if (!finalValues.type) finalValues.type = config.type;
+        if (!finalValues.issuer) finalValues.issuer = config.issuer || '';
+        if (!finalValues.scope) finalValues.scope = config.scope || '';
+        if (!finalValues.authorizationEndpoint)
+          finalValues.authorizationEndpoint =
+            config.authorizationEndpoint || '';
+        if (!finalValues.tokenEndpoint)
+          finalValues.tokenEndpoint = config.tokenEndpoint || '';
+        if (!finalValues.userinfoEndpoint)
+          finalValues.userinfoEndpoint = config.userinfoEndpoint || '';
+      }
+    }
+    return onFinish(finalValues);
+  };
+
   return (
     <ModalForm
       title={
@@ -218,7 +242,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
       }
       open={open}
       onOpenChange={onOpenChange}
-      onFinish={onFinish}
+      onFinish={handleFinish}
       form={form}
       layout="vertical"
       modalProps={{ destroyOnClose: true }}

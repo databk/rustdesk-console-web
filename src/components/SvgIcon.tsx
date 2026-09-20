@@ -38,11 +38,11 @@ const SvgIcon: React.FC<SvgIconProps> = ({
   useEffect(() => {
     const svgEl = containerRef.current?.querySelector('svg');
     if (svgEl) {
-      svgEl.setAttribute('width', String(width));
-      svgEl.setAttribute('height', String(height));
+      svgEl.style.width = '100%';
+      svgEl.style.height = '100%';
       svgEl.style.display = 'block';
     }
-  }, [cleanSvg, width, height]);
+  }, [cleanSvg]);
 
   return (
     <span
