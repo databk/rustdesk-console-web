@@ -110,6 +110,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
   const { message } = App.useApp();
   const [iconPreview, setIconPreview] = useState<string | undefined>(undefined);
   const [providerName, setProviderName] = useState<string>('');
+  const [isBuiltin, setIsBuiltin] = useState(false);
 
   useEffect(() => {
     if (isEdit && open && currentRecord) {
@@ -132,6 +133,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
     } else if (!open) {
       setIconPreview(undefined);
       setProviderName('');
+      setIsBuiltin(false);
     }
   }, [isEdit, open, currentRecord, form]);
 
@@ -148,6 +150,9 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
         userinfoEndpoint: config.userinfoEndpoint || '',
       });
       setProviderName(config.name);
+      setIsBuiltin(true);
+    } else {
+      setIsBuiltin(false);
     }
   };
 
@@ -258,41 +263,45 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
           onChange={(e) => setProviderName(e.target.value)}
         />
       </Form.Item>
-      <Form.Item
-        name="type"
-        label={
-          <FormattedMessage
-            id="pages.oidcProviders.type"
-            defaultMessage="Type"
+      {!isBuiltin && (
+        <Form.Item
+          name="type"
+          label={
+            <FormattedMessage
+              id="pages.oidcProviders.type"
+              defaultMessage="Type"
+            />
+          }
+          initialValue="oidc"
+        >
+          <Select>
+            <Select.Option value="oidc">OIDC</Select.Option>
+            <Select.Option value="oauth2">OAuth2</Select.Option>
+          </Select>
+        </Form.Item>
+      )}
+      {!isBuiltin && (
+        <Form.Item
+          name="issuer"
+          label={
+            <FormattedMessage
+              id="pages.oidcProviders.issuer"
+              defaultMessage="Issuer URL"
+            />
+          }
+          rules={[
+            { required: true },
+            { type: 'url', message: 'Please enter a valid URL' },
+          ]}
+        >
+          <Input
+            placeholder={intl.formatMessage({
+              id: 'pages.oidcProviders.enterIssuer',
+              defaultMessage: 'Enter issuer URL',
+            })}
           />
-        }
-        initialValue="oidc"
-      >
-        <Select>
-          <Select.Option value="oidc">OIDC</Select.Option>
-          <Select.Option value="oauth2">OAuth2</Select.Option>
-        </Select>
-      </Form.Item>
-      <Form.Item
-        name="issuer"
-        label={
-          <FormattedMessage
-            id="pages.oidcProviders.issuer"
-            defaultMessage="Issuer URL"
-          />
-        }
-        rules={[
-          { required: true },
-          { type: 'url', message: 'Please enter a valid URL' },
-        ]}
-      >
-        <Input
-          placeholder={intl.formatMessage({
-            id: 'pages.oidcProviders.enterIssuer',
-            defaultMessage: 'Enter issuer URL',
-          })}
-        />
-      </Form.Item>
+        </Form.Item>
+      )}
       <Form.Item
         name="clientId"
         label={
@@ -326,99 +335,103 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
           })}
         />
       </Form.Item>
-      <Form.Item
-        name="scope"
-        label={
-          <FormattedMessage
-            id="pages.oidcProviders.scope"
-            defaultMessage="Scope"
-          />
-        }
-      >
-        <Input placeholder="openid email profile" />
-      </Form.Item>
-      <Collapse
-        ghost
-        items={[
-          {
-            key: 'endpoints',
-            label: (
-              <FormattedMessage
-                id="pages.oidcProviders.endpointConfig"
-                defaultMessage="Endpoint Configuration"
-              />
-            ),
-            children: (
-              <>
-                <Form.Item
-                  name="authorizationEndpoint"
-                  label={
-                    <FormattedMessage
-                      id="pages.oidcProviders.authorizationEndpoint"
-                      defaultMessage="Authorization Endpoint"
+      {!isBuiltin && (
+        <Form.Item
+          name="scope"
+          label={
+            <FormattedMessage
+              id="pages.oidcProviders.scope"
+              defaultMessage="Scope"
+            />
+          }
+        >
+          <Input placeholder="openid email profile" />
+        </Form.Item>
+      )}
+      {!isBuiltin && (
+        <Collapse
+          ghost
+          items={[
+            {
+              key: 'endpoints',
+              label: (
+                <FormattedMessage
+                  id="pages.oidcProviders.endpointConfig"
+                  defaultMessage="Endpoint Configuration"
+                />
+              ),
+              children: (
+                <>
+                  <Form.Item
+                    name="authorizationEndpoint"
+                    label={
+                      <FormattedMessage
+                        id="pages.oidcProviders.authorizationEndpoint"
+                        defaultMessage="Authorization Endpoint"
+                      />
+                    }
+                  >
+                    <Input
+                      placeholder={intl.formatMessage({
+                        id: 'pages.oidcProviders.enterEndpoint',
+                        defaultMessage: 'Auto-discovered if empty',
+                      })}
                     />
-                  }
-                >
-                  <Input
-                    placeholder={intl.formatMessage({
-                      id: 'pages.oidcProviders.enterEndpoint',
-                      defaultMessage: 'Auto-discovered if empty',
-                    })}
-                  />
-                </Form.Item>
-                <Form.Item
-                  name="tokenEndpoint"
-                  label={
-                    <FormattedMessage
-                      id="pages.oidcProviders.tokenEndpoint"
-                      defaultMessage="Token Endpoint"
+                  </Form.Item>
+                  <Form.Item
+                    name="tokenEndpoint"
+                    label={
+                      <FormattedMessage
+                        id="pages.oidcProviders.tokenEndpoint"
+                        defaultMessage="Token Endpoint"
+                      />
+                    }
+                  >
+                    <Input
+                      placeholder={intl.formatMessage({
+                        id: 'pages.oidcProviders.enterEndpoint',
+                        defaultMessage: 'Auto-discovered if empty',
+                      })}
                     />
-                  }
-                >
-                  <Input
-                    placeholder={intl.formatMessage({
-                      id: 'pages.oidcProviders.enterEndpoint',
-                      defaultMessage: 'Auto-discovered if empty',
-                    })}
-                  />
-                </Form.Item>
-                <Form.Item
-                  name="userinfoEndpoint"
-                  label={
-                    <FormattedMessage
-                      id="pages.oidcProviders.userinfoEndpoint"
-                      defaultMessage="Userinfo Endpoint"
+                  </Form.Item>
+                  <Form.Item
+                    name="userinfoEndpoint"
+                    label={
+                      <FormattedMessage
+                        id="pages.oidcProviders.userinfoEndpoint"
+                        defaultMessage="Userinfo Endpoint"
+                      />
+                    }
+                  >
+                    <Input
+                      placeholder={intl.formatMessage({
+                        id: 'pages.oidcProviders.enterEndpoint',
+                        defaultMessage: 'Auto-discovered if empty',
+                      })}
                     />
-                  }
-                >
-                  <Input
-                    placeholder={intl.formatMessage({
-                      id: 'pages.oidcProviders.enterEndpoint',
-                      defaultMessage: 'Auto-discovered if empty',
-                    })}
-                  />
-                </Form.Item>
-                <Form.Item
-                  name="jwksUri"
-                  label={
-                    <FormattedMessage
-                      id="pages.oidcProviders.jwksUri"
-                      defaultMessage="JWKS URI"
+                  </Form.Item>
+                  <Form.Item
+                    name="jwksUri"
+                    label={
+                      <FormattedMessage
+                        id="pages.oidcProviders.jwksUri"
+                        defaultMessage="JWKS URI"
+                      />
+                    }
+                  >
+                    <Input
+                      placeholder={intl.formatMessage({
+                        id: 'pages.oidcProviders.enterEndpoint',
+                        defaultMessage: 'Auto-discovered if empty',
+                      })}
                     />
-                  }
-                >
-                  <Input
-                    placeholder={intl.formatMessage({
-                      id: 'pages.oidcProviders.enterEndpoint',
-                      defaultMessage: 'Auto-discovered if empty',
-                    })}
-                  />
-                </Form.Item>
-              </>
-            ),
-          },
-        ]}
-      />
+                  </Form.Item>
+                </>
+              ),
+            },
+          ]}
+        />
+      )}
       <Form.Item
         label={
           <FormattedMessage
