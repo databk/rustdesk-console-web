@@ -29,7 +29,8 @@ const SvgIcon: React.FC<SvgIconProps> = ({
           'onfocus',
           'style',
         ],
-        ALLOWED_URI_REGEXP: /^(?:data:|\/(?!\/)|#)/i,
+        ALLOWED_URI_REGEXP:
+          /^(?:(?:data:|\/(?!\/)|#)|[^a-z]|[-a-z+.]+(?:[^-a-z+.:]|$))/i,
       }),
     [svg],
   );
