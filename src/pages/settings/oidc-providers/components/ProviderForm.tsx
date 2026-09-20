@@ -214,16 +214,25 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
       const config = BUILTIN_PROVIDER_PRESETS[selectedPreset];
       if (config) {
         if (!finalValues.type) finalValues.type = config.type;
-        if (!finalValues.issuer) finalValues.issuer = config.issuer || '';
-        if (!finalValues.scope) finalValues.scope = config.scope || '';
-        if (!finalValues.authorizationEndpoint)
-          finalValues.authorizationEndpoint =
-            config.authorizationEndpoint || '';
-        if (!finalValues.tokenEndpoint)
-          finalValues.tokenEndpoint = config.tokenEndpoint || '';
-        if (!finalValues.userinfoEndpoint)
-          finalValues.userinfoEndpoint = config.userinfoEndpoint || '';
+        if (!finalValues.issuer && config.issuer)
+          finalValues.issuer = config.issuer;
+        if (!finalValues.scope && config.scope)
+          finalValues.scope = config.scope;
+        if (!finalValues.authorizationEndpoint && config.authorizationEndpoint)
+          finalValues.authorizationEndpoint = config.authorizationEndpoint;
+        if (!finalValues.tokenEndpoint && config.tokenEndpoint)
+          finalValues.tokenEndpoint = config.tokenEndpoint;
+        if (!finalValues.userinfoEndpoint && config.userinfoEndpoint)
+          finalValues.userinfoEndpoint = config.userinfoEndpoint;
       }
+    }
+    for (const key of [
+      'authorizationEndpoint',
+      'tokenEndpoint',
+      'userinfoEndpoint',
+      'jwksUri',
+    ]) {
+      if (finalValues[key] === '') delete finalValues[key];
     }
     return onFinish(finalValues);
   };
