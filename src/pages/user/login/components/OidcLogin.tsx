@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { oidcAuth } from '@/services/rustdesk-console/auth';
 import { getDeviceInfo } from '../utils';
 import { useStyles } from '../styles';
-import OidcIcon, { OIDC_LABELS } from '@/components/OidcIcon';
+import OidcIcon from '@/components/OidcIcon';
 
 interface OidcLoginProps {
   options: API.OidcLoginInfo[];
@@ -72,7 +72,6 @@ const OidcLogin: React.FC<OidcLoginProps> = ({ options, loading }) => {
         })}
       </Divider>
       {options.map((item) => {
-        const label = OIDC_LABELS[item.name.toLowerCase()] || item.name;
         return (
           <Button
             key={item.name}
@@ -87,7 +86,7 @@ const OidcLogin: React.FC<OidcLoginProps> = ({ options, loading }) => {
                 id: 'pages.login.oidc.continueWith',
                 defaultMessage: 'Continue with {provider}',
               },
-              { provider: label },
+              { provider: item.name },
             )}
           </Button>
         );

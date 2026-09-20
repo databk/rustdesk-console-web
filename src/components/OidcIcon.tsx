@@ -13,17 +13,6 @@ export const BUILTIN_ICONS = [
   'microsoft',
 ];
 
-export const OIDC_LABELS: Record<string, string> = {
-  github: 'GitHub',
-  gitlab: 'GitLab',
-  google: 'Google',
-  apple: 'Apple',
-  okta: 'Okta',
-  facebook: 'Facebook',
-  auth0: 'Auth0',
-  microsoft: 'Microsoft',
-};
-
 interface OidcIconProps {
   name: string;
   icon?: string;

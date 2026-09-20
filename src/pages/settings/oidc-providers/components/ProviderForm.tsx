@@ -13,7 +13,7 @@ import {
 } from 'antd';
 import { DeleteOutlined, UploadOutlined } from '@ant-design/icons';
 import React, { useEffect, useState } from 'react';
-import OidcIcon, { BUILTIN_ICONS, OIDC_LABELS } from '@/components/OidcIcon';
+import OidcIcon, { BUILTIN_ICONS } from '@/components/OidcIcon';
 
 interface ProviderFormProps {
   mode: 'create' | 'edit';
@@ -36,13 +36,13 @@ const BUILTIN_PROVIDER_PRESETS: Record<
   }
 > = {
   google: {
-    name: 'google',
+    name: 'Google',
     type: 'oidc',
     issuer: 'https://accounts.google.com',
     scope: 'openid email profile',
   },
   github: {
-    name: 'github',
+    name: 'GitHub',
     type: 'oauth2',
     issuer: 'https://github.com',
     scope: 'read:user user:email',
@@ -51,7 +51,7 @@ const BUILTIN_PROVIDER_PRESETS: Record<
     userinfoEndpoint: 'https://api.github.com/user',
   },
   gitlab: {
-    name: 'gitlab',
+    name: 'GitLab',
     type: 'oauth2',
     issuer: 'https://gitlab.com',
     scope: 'read_user',
@@ -60,13 +60,13 @@ const BUILTIN_PROVIDER_PRESETS: Record<
     userinfoEndpoint: 'https://gitlab.com/api/v4/user',
   },
   apple: {
-    name: 'apple',
+    name: 'Apple',
     type: 'oidc',
     issuer: 'https://appleid.apple.com',
     scope: 'name email',
   },
   facebook: {
-    name: 'facebook',
+    name: 'Facebook',
     type: 'oauth2',
     issuer: 'https://graph.facebook.com',
     scope: 'email public_profile',
@@ -75,18 +75,18 @@ const BUILTIN_PROVIDER_PRESETS: Record<
     userinfoEndpoint: 'https://graph.facebook.com/me',
   },
   okta: {
-    name: 'okta',
+    name: 'Okta',
     type: 'oidc',
     scope: 'openid email profile',
   },
 
   auth0: {
-    name: 'auth0',
+    name: 'Auth0',
     type: 'oidc',
     scope: 'openid email profile',
   },
   microsoft: {
-    name: 'microsoft',
+    name: 'Microsoft',
     type: 'oidc',
     issuer: 'https://login.microsoftonline.com/common',
     scope: 'openid email profile',
@@ -236,7 +236,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
               <Select.Option key={name} value={name}>
                 <Space>
                   <OidcIcon name={name} width={16} height={16} />
-                  {OIDC_LABELS[name] || name}
+                  {BUILTIN_PROVIDER_PRESETS[name]?.name || name}
                 </Space>
               </Select.Option>
             ))}
