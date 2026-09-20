@@ -18,7 +18,6 @@ export const BUILTIN_ICONS = [
   'apple',
   'okta',
   'facebook',
-  'azure',
   'auth0',
   'microsoft',
 ];
@@ -30,7 +29,6 @@ export const OIDC_LABELS: Record<string, string> = {
   apple: 'Apple',
   okta: 'Okta',
   facebook: 'Facebook',
-  azure: 'Microsoft',
   auth0: 'Auth0',
   microsoft: 'Microsoft',
 };

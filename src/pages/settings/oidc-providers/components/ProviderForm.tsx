@@ -79,11 +79,7 @@ const BUILTIN_PROVIDER_PRESETS: Record<
     type: 'oidc',
     scope: 'openid email profile',
   },
-  azure: {
-    name: 'azure',
-    type: 'oidc',
-    scope: 'openid email profile',
-  },
+
   auth0: {
     name: 'auth0',
     type: 'oidc',
@@ -111,6 +107,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
   const [iconPreview, setIconPreview] = useState<string | undefined>(undefined);
   const [providerName, setProviderName] = useState<string>('');
   const [isBuiltin, setIsBuiltin] = useState(false);
+  const [selectedPreset, setSelectedPreset] = useState<string>('');
 
   useEffect(() => {
     if (isEdit && open && currentRecord) {
@@ -134,6 +131,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
       setIconPreview(undefined);
       setProviderName('');
       setIsBuiltin(false);
+      setSelectedPreset('');
     }
   }, [isEdit, open, currentRecord, form]);
 
@@ -151,8 +149,10 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
       });
       setProviderName(config.name);
       setIsBuiltin(true);
+      setSelectedPreset(preset);
     } else {
       setIsBuiltin(false);
+      setSelectedPreset('');
     }
   };
 
@@ -280,7 +280,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
           </Select>
         </Form.Item>
       )}
-      {!isBuiltin && (
+      {(!isBuiltin || selectedPreset === 'microsoft') && (
         <Form.Item
           name="issuer"
           label={
