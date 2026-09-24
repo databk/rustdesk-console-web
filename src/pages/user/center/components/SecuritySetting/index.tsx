@@ -29,9 +29,9 @@ const SecuritySetting: React.FC = () => {
   const intl = useIntl();
   const { initialState, refresh } = useModel('@@initialState');
   const { currentUser } = initialState || {};
-  const is2FAEnabled = currentUser?.tfa_enabled === true;
+  const is2FAEnabled = currentUser?.info?.has_totp === true;
   const isThirdPartyUser = !!currentUser?.third_auth_type;
-  const hasPassword = currentUser?.has_password !== false;
+  const hasPassword = currentUser?.info?.has_password !== false;
 
   const [setupModalOpen, setSetupModalOpen] = useState(false);
   const [setupLoading, setSetupLoading] = useState(false);
