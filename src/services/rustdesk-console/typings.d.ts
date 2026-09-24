@@ -491,6 +491,7 @@ declare namespace API {
     deviceId?: string;
     deviceUuid?: string;
     connId?: string | number;
+    sessionId?: string;
     ip?: string;
     action?: string;
     peerId?: string;
@@ -501,6 +502,10 @@ declare namespace API {
     requestedAt?: string;
     establishedAt?: string;
     closedAt?: string;
+    nonce?: string;
+    connAuditRef?: string;
+    primaryAuth?: number;
+    twoFactor?: number;
     can_disconnect: boolean;
     [key: string]: any;
   };
@@ -517,6 +522,7 @@ declare namespace API {
     deviceId?: string;
     deviceUuid?: string;
     peerId?: string;
+    connId?: string;
     type?: number;
     path?: string;
     isFile?: boolean;
@@ -525,6 +531,7 @@ declare namespace API {
     fileCount?: number;
     files?: Array<[string, number]>;
     createdAt?: string;
+    nonce?: string;
     [key: string]: any;
   };
 
@@ -537,6 +544,9 @@ declare namespace API {
     infoIp?: string;
     infoName?: string;
     createdAt?: string;
+    connId?: string;
+    nonce?: string;
+    connAuditRef?: string;
     [key: string]: any;
   };
 

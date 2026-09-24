@@ -27,6 +27,14 @@ const ALARM_TYPE_MAP: Record<number, { msgId: string; color: string }> = {
     msgId: 'pages.audits.alarmType.terminalOsLoginConcurrency',
     color: 'volcano',
   },
+  9: {
+    msgId: 'pages.audits.alarmType.sessionScopeViolation',
+    color: 'magenta',
+  },
+  10: {
+    msgId: 'pages.audits.alarmType.idWhitelist',
+    color: 'red',
+  },
 };
 
 const getAlarmTypeMsgId = (typ?: number): string => {

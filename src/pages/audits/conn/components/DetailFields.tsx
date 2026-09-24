@@ -3,6 +3,20 @@ import { formatDateTime, renderDuration, renderLocalField } from '../utils';
 import { getConnTypeMsgId } from '../connType';
 import type { DetailField } from '../types';
 
+const PRIMARY_AUTH_MSG_IDS: Record<number, string> = {
+  0: 'pages.audits.primaryAuth.none',
+  1: 'pages.audits.primaryAuth.click',
+  2: 'pages.audits.primaryAuth.temporaryPassword',
+  3: 'pages.audits.primaryAuth.permanentPassword',
+  4: 'pages.audits.primaryAuth.switchSides',
+};
+
+const TWO_FACTOR_MSG_IDS: Record<number, string> = {
+  0: 'pages.audits.twoFactor.none',
+  1: 'pages.audits.twoFactor.totp',
+  2: 'pages.audits.twoFactor.trustedDevice',
+};
+
 export const useDetailFields = (): DetailField[] => {
   const intl = useIntl();
 
@@ -28,6 +42,30 @@ export const useDetailFields = (): DetailField[] => {
         defaultMessage: 'Local',
       }),
       render: renderLocalField,
+    },
+    {
+      label: intl.formatMessage({
+        id: 'pages.audits.primaryAuth',
+        defaultMessage: 'Primary Auth',
+      }),
+      render: (r: API.ConnectionAuditItem) => {
+        if (r.primaryAuth === undefined || r.primaryAuth === null) return '-';
+        const msgId = PRIMARY_AUTH_MSG_IDS[r.primaryAuth];
+        return msgId
+          ? intl.formatMessage({ id: msgId })
+          : String(r.primaryAuth);
+      },
+    },
+    {
+      label: intl.formatMessage({
+        id: 'pages.audits.twoFactor',
+        defaultMessage: 'Two-Factor Auth',
+      }),
+      render: (r: API.ConnectionAuditItem) => {
+        if (r.twoFactor === undefined || r.twoFactor === null) return '-';
+        const msgId = TWO_FACTOR_MSG_IDS[r.twoFactor];
+        return msgId ? intl.formatMessage({ id: msgId }) : String(r.twoFactor);
+      },
     },
     {
       label: intl.formatMessage({
