@@ -257,6 +257,7 @@ jobs:
         run: npm run build
         env:
           NODE_ENV: production
+          REACT_APP_HISTORY_TYPE: hash
           REACT_APP_PUBLIC_PATH: /${{ github.event.repository.name }}/
 
       - name: Deploy to GitHub Pages

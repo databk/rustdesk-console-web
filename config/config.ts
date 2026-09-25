@@ -5,7 +5,11 @@ import proxy from './proxy';
 import routes from './routes';
 import { version } from '../package.json';
 
-const { REACT_APP_ENV = 'dev', REACT_APP_PUBLIC_PATH = '/' } = process.env;
+const {
+  REACT_APP_ENV = 'dev',
+  REACT_APP_HISTORY_TYPE = 'browser',
+  REACT_APP_PUBLIC_PATH = '/',
+} = process.env;
 
 const PUBLIC_PATH = REACT_APP_PUBLIC_PATH.endsWith('/')
   ? REACT_APP_PUBLIC_PATH
@@ -16,7 +20,11 @@ export default defineConfig({
   codeSplitting: {
     jsStrategy: 'granularChunks',
   },
+  base: PUBLIC_PATH,
   publicPath: PUBLIC_PATH,
+  history: {
+    type: REACT_APP_HISTORY_TYPE as 'browser' | 'hash',
+  },
   routes,
   ignoreMomentLocale: true,
   proxy: proxy[REACT_APP_ENV as keyof typeof proxy],
@@ -24,7 +32,7 @@ export default defineConfig({
   model: {},
   initialState: {},
   title: 'RustDesk Console',
-  favicons: ['/logo.svg'],
+  favicons: [join(PUBLIC_PATH, 'logo.svg')],
   layout: {
     locale: true,
     ...defaultSettings,

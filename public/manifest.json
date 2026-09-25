@@ -3,8 +3,8 @@
   "short_name": "RustDesk",
   "description": "Web frontend for RustDesk Console",
   "lang": "en-US",
-  "start_url": "/",
-  "scope": "/",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "orientation": "any",
   "theme_color": "#1890ff",
@@ -12,13 +12,13 @@
   "categories": ["productivity", "utilities"],
   "icons": [
     {
-      "src": "/logo.svg",
+      "src": "logo.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any"
     },
     {
-      "src": "/logo.svg",
+      "src": "logo.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "maskable"
