@@ -5,9 +5,11 @@ import proxy from './proxy';
 import routes from './routes';
 import { version } from '../package.json';
 
-const { REACT_APP_ENV = 'dev' } = process.env;
+const { REACT_APP_ENV = 'dev', REACT_APP_PUBLIC_PATH = '/' } = process.env;
 
-const PUBLIC_PATH: string = '/';
+const PUBLIC_PATH = REACT_APP_PUBLIC_PATH.endsWith('/')
+  ? REACT_APP_PUBLIC_PATH
+  : `${REACT_APP_PUBLIC_PATH}/`;
 
 export default defineConfig({
   hash: true,
