@@ -16,6 +16,7 @@ import {
   Form,
   Input,
   InputNumber,
+  Masonry,
   Select,
   Space,
   Spin,
@@ -94,9 +95,321 @@ const GeneralSettings: React.FC = () => {
     }
   };
 
+  const watermarkCard = (
+    <Card
+      title={
+        <Space>
+          <HighlightOutlined />
+          <FormattedMessage
+            id="pages.settings.generalSection.watermark"
+            defaultMessage="Username Watermark"
+          />
+        </Space>
+      }
+    >
+      <Form.Item
+        name="watermarkEnabled"
+        label={
+          <FormattedMessage
+            id="pages.settings.generalSection.watermark"
+            defaultMessage="Username Watermark"
+          />
+        }
+        valuePropName="checked"
+        extra={
+          <FormattedMessage
+            id="pages.settings.generalSection.watermarkExtra"
+            defaultMessage="Overlay the current username on each page for accountability."
+          />
+        }
+      >
+        <Switch />
+      </Form.Item>
+    </Card>
+  );
+
+  const languageCard = (
+    <Card
+      title={
+        <Space>
+          <GlobalOutlined />
+          <FormattedMessage
+            id="pages.settings.generalSection.language"
+            defaultMessage="Default Language"
+          />
+        </Space>
+      }
+    >
+      <Form.Item
+        name="defaultLanguage"
+        label={
+          <FormattedMessage
+            id="pages.settings.generalSection.language"
+            defaultMessage="Default Language"
+          />
+        }
+        extra={
+          <FormattedMessage
+            id="pages.settings.generalSection.languageExtra"
+            defaultMessage="Default UI language for new visitors. Signed-in users keep their own preference."
+          />
+        }
+      >
+        <Select
+          options={LANGUAGE_OPTIONS}
+          placeholder={intl.formatMessage({
+            id: 'pages.settings.generalSection.languagePlaceholder',
+            defaultMessage: 'Select default language',
+          })}
+        />
+      </Form.Item>
+    </Card>
+  );
+
+  const siteCard = (
+    <Card
+      title={
+        <Space>
+          <LinkOutlined />
+          <FormattedMessage
+            id="pages.settings.generalSection.site"
+            defaultMessage="Site"
+          />
+        </Space>
+      }
+    >
+      <Form.Item
+        name={['site', 'frontendUrl']}
+        label={
+          <FormattedMessage
+            id="pages.settings.generalSection.frontendUrl"
+            defaultMessage="Frontend URL"
+          />
+        }
+        rules={[
+          {
+            type: 'url',
+            message: intl.formatMessage({
+              id: 'pages.settings.generalSection.urlInvalid',
+              defaultMessage: 'Please enter a valid URL',
+            }),
+          },
+        ]}
+      >
+        <Input
+          placeholder={intl.formatMessage({
+            id: 'pages.settings.generalSection.frontendUrlPlaceholder',
+            defaultMessage: 'https://console.example.com',
+          })}
+        />
+      </Form.Item>
+      <Form.Item
+        name={['site', 'backendUrl']}
+        label={
+          <FormattedMessage
+            id="pages.settings.generalSection.backendUrl"
+            defaultMessage="Backend URL"
+          />
+        }
+        extra={
+          <FormattedMessage
+            id="pages.settings.generalSection.backendUrlExtra"
+            defaultMessage="Leave blank to use the same origin as the frontend."
+          />
+        }
+        rules={[
+          {
+            type: 'url',
+            message: intl.formatMessage({
+              id: 'pages.settings.generalSection.urlInvalid',
+              defaultMessage: 'Please enter a valid URL',
+            }),
+          },
+        ]}
+      >
+        <Input
+          placeholder={intl.formatMessage({
+            id: 'pages.settings.generalSection.backendUrlPlaceholder',
+            defaultMessage: 'https://api.example.com',
+          })}
+        />
+      </Form.Item>
+    </Card>
+  );
+
+  const webauthnCard = (
+    <Card
+      title={
+        <Space>
+          <SafetyOutlined />
+          <FormattedMessage
+            id="pages.settings.generalSection.webauthn"
+            defaultMessage="WebAuthn / Passkeys"
+          />
+        </Space>
+      }
+    >
+      {!passkeySupported && (
+        <Alert
+          type="warning"
+          showIcon
+          style={{ marginBottom: 16 }}
+          message={
+            <FormattedMessage
+              id="pages.settings.generalSection.webauthnUnsupported"
+              defaultMessage="This browser does not support WebAuthn. Passkey login will be unavailable for users on unsupported clients."
+            />
+          }
+        />
+      )}
+      <Form.Item
+        name={['webauthn', 'enabled']}
+        label={
+          <FormattedMessage
+            id="pages.settings.generalSection.webauthnEnabled"
+            defaultMessage="Enable WebAuthn"
+          />
+        }
+        valuePropName="checked"
+        extra={
+          <FormattedMessage
+            id="pages.settings.generalSection.webauthnEnabledExtra"
+            defaultMessage="Allow users to register and sign in with passkeys."
+          />
+        }
+      >
+        <Switch />
+      </Form.Item>
+      <Form.Item
+        name={['webauthn', 'rpName']}
+        label={
+          <FormattedMessage
+            id="pages.settings.generalSection.rpName"
+            defaultMessage="Relying Party Name"
+          />
+        }
+        extra={
+          <FormattedMessage
+            id="pages.settings.generalSection.rpNameExtra"
+            defaultMessage="Human-friendly name shown in the passkey prompt."
+          />
+        }
+      >
+        <Input
+          disabled={!webauthnEnabled}
+          placeholder={intl.formatMessage({
+            id: 'pages.settings.generalSection.rpNamePlaceholder',
+            defaultMessage: 'RustDesk Console',
+          })}
+        />
+      </Form.Item>
+    </Card>
+  );
+
+  const securityCard = (
+    <Card
+      title={
+        <Space>
+          <FieldTimeOutlined />
+          <FormattedMessage
+            id="pages.settings.generalSection.security"
+            defaultMessage="Security & Maintenance"
+          />
+        </Space>
+      }
+    >
+      <Form.Item
+        name="jwtExpiryDays"
+        label={
+          <FormattedMessage
+            id="pages.settings.generalSection.jwtExpiryDays"
+            defaultMessage="JWT Token Expiry (Days)"
+          />
+        }
+        extra={
+          <FormattedMessage
+            id="pages.settings.generalSection.jwtExpiryDaysExtra"
+            defaultMessage="Number of days before signed-in user tokens expire. Must be at least 1."
+          />
+        }
+        rules={[
+          {
+            required: true,
+            message: intl.formatMessage({
+              id: 'pages.settings.generalSection.jwtExpiryDaysRequired',
+              defaultMessage: 'Please enter a positive integer',
+            }),
+          },
+          {
+            validator: (_: unknown, value: number) =>
+              value >= 1
+                ? Promise.resolve()
+                : Promise.reject(
+                    new Error(
+                      intl.formatMessage({
+                        id: 'pages.settings.generalSection.jwtExpiryDaysRequired',
+                        defaultMessage: 'Please enter a positive integer',
+                      }),
+                    ),
+                  ),
+          },
+        ]}
+      >
+        <InputNumber min={1} precision={0} style={{ width: '100%' }} />
+      </Form.Item>
+      <Form.Item
+        name="auditRetentionDays"
+        label={
+          <FormattedMessage
+            id="pages.settings.generalSection.auditRetentionDays"
+            defaultMessage="Audit Log Retention (Days)"
+          />
+        }
+        extra={
+          <FormattedMessage
+            id="pages.settings.generalSection.auditRetentionDaysExtra"
+            defaultMessage="Number of days to keep audit logs before automatic cleanup. Set to 0 to disable auto-cleanup."
+          />
+        }
+        rules={[
+          {
+            required: true,
+            message: intl.formatMessage({
+              id: 'pages.settings.generalSection.auditRetentionDaysRequired',
+              defaultMessage: 'Please enter a non-negative integer',
+            }),
+          },
+          {
+            validator: (_: unknown, value: number) =>
+              value >= 0
+                ? Promise.resolve()
+                : Promise.reject(
+                    new Error(
+                      intl.formatMessage({
+                        id: 'pages.settings.generalSection.auditRetentionDaysRequired',
+                        defaultMessage: 'Please enter a non-negative integer',
+                      }),
+                    ),
+                  ),
+          },
+        ]}
+      >
+        <InputNumber min={0} precision={0} style={{ width: '100%' }} />
+      </Form.Item>
+    </Card>
+  );
+
+  const masonryItems = [
+    { key: 'watermark', data: 'watermark', children: watermarkCard },
+    { key: 'language', data: 'language', children: languageCard },
+    { key: 'site', data: 'site', children: siteCard },
+    { key: 'webauthn', data: 'webauthn', children: webauthnCard },
+    { key: 'security', data: 'security', children: securityCard },
+  ];
+
   return (
     <PageContainer title={false}>
-      <div style={{ maxWidth: 720 }}>
+      <div style={{ maxWidth: 960 }}>
         <Title level={4} style={{ marginTop: 0, marginBottom: 24 }}>
           <FormattedMessage
             id="pages.settings.general"
@@ -112,311 +425,11 @@ const GeneralSettings: React.FC = () => {
             onFinish={handleSave}
             requiredMark={false}
           >
-            <Space direction="vertical" size="large" style={{ width: '100%' }}>
-              <Card
-                title={
-                  <Space>
-                    <HighlightOutlined />
-                    <FormattedMessage
-                      id="pages.settings.generalSection.watermark"
-                      defaultMessage="Username Watermark"
-                    />
-                  </Space>
-                }
-              >
-                <Form.Item
-                  name="watermarkEnabled"
-                  label={
-                    <FormattedMessage
-                      id="pages.settings.generalSection.watermark"
-                      defaultMessage="Username Watermark"
-                    />
-                  }
-                  valuePropName="checked"
-                  extra={
-                    <FormattedMessage
-                      id="pages.settings.generalSection.watermarkExtra"
-                      defaultMessage="Overlay the current username on each page for accountability."
-                    />
-                  }
-                >
-                  <Switch />
-                </Form.Item>
-              </Card>
-
-              <Card
-                title={
-                  <Space>
-                    <GlobalOutlined />
-                    <FormattedMessage
-                      id="pages.settings.generalSection.language"
-                      defaultMessage="Default Language"
-                    />
-                  </Space>
-                }
-              >
-                <Form.Item
-                  name="defaultLanguage"
-                  label={
-                    <FormattedMessage
-                      id="pages.settings.generalSection.language"
-                      defaultMessage="Default Language"
-                    />
-                  }
-                  extra={
-                    <FormattedMessage
-                      id="pages.settings.generalSection.languageExtra"
-                      defaultMessage="Default UI language for new visitors. Signed-in users keep their own preference."
-                    />
-                  }
-                >
-                  <Select
-                    options={LANGUAGE_OPTIONS}
-                    placeholder={intl.formatMessage({
-                      id: 'pages.settings.generalSection.languagePlaceholder',
-                      defaultMessage: 'Select default language',
-                    })}
-                  />
-                </Form.Item>
-              </Card>
-
-              <Card
-                title={
-                  <Space>
-                    <LinkOutlined />
-                    <FormattedMessage
-                      id="pages.settings.generalSection.site"
-                      defaultMessage="Site"
-                    />
-                  </Space>
-                }
-              >
-                <Form.Item
-                  name={['site', 'frontendUrl']}
-                  label={
-                    <FormattedMessage
-                      id="pages.settings.generalSection.frontendUrl"
-                      defaultMessage="Frontend URL"
-                    />
-                  }
-                  rules={[
-                    {
-                      type: 'url',
-                      message: intl.formatMessage({
-                        id: 'pages.settings.generalSection.urlInvalid',
-                        defaultMessage: 'Please enter a valid URL',
-                      }),
-                    },
-                  ]}
-                >
-                  <Input
-                    placeholder={intl.formatMessage({
-                      id: 'pages.settings.generalSection.frontendUrlPlaceholder',
-                      defaultMessage: 'https://console.example.com',
-                    })}
-                  />
-                </Form.Item>
-                <Form.Item
-                  name={['site', 'backendUrl']}
-                  label={
-                    <FormattedMessage
-                      id="pages.settings.generalSection.backendUrl"
-                      defaultMessage="Backend URL"
-                    />
-                  }
-                  extra={
-                    <FormattedMessage
-                      id="pages.settings.generalSection.backendUrlExtra"
-                      defaultMessage="Leave blank to use the same origin as the frontend."
-                    />
-                  }
-                  rules={[
-                    {
-                      type: 'url',
-                      message: intl.formatMessage({
-                        id: 'pages.settings.generalSection.urlInvalid',
-                        defaultMessage: 'Please enter a valid URL',
-                      }),
-                    },
-                  ]}
-                >
-                  <Input
-                    placeholder={intl.formatMessage({
-                      id: 'pages.settings.generalSection.backendUrlPlaceholder',
-                      defaultMessage: 'https://api.example.com',
-                    })}
-                  />
-                </Form.Item>
-              </Card>
-
-              <Card
-                title={
-                  <Space>
-                    <SafetyOutlined />
-                    <FormattedMessage
-                      id="pages.settings.generalSection.webauthn"
-                      defaultMessage="WebAuthn / Passkeys"
-                    />
-                  </Space>
-                }
-              >
-                {!passkeySupported && (
-                  <Alert
-                    type="warning"
-                    showIcon
-                    style={{ marginBottom: 16 }}
-                    message={
-                      <FormattedMessage
-                        id="pages.settings.generalSection.webauthnUnsupported"
-                        defaultMessage="This browser does not support WebAuthn. Passkey login will be unavailable for users on unsupported clients."
-                      />
-                    }
-                  />
-                )}
-                <Form.Item
-                  name={['webauthn', 'enabled']}
-                  label={
-                    <FormattedMessage
-                      id="pages.settings.generalSection.webauthnEnabled"
-                      defaultMessage="Enable WebAuthn"
-                    />
-                  }
-                  valuePropName="checked"
-                  extra={
-                    <FormattedMessage
-                      id="pages.settings.generalSection.webauthnEnabledExtra"
-                      defaultMessage="Allow users to register and sign in with passkeys."
-                    />
-                  }
-                >
-                  <Switch />
-                </Form.Item>
-                <Form.Item
-                  name={['webauthn', 'rpName']}
-                  label={
-                    <FormattedMessage
-                      id="pages.settings.generalSection.rpName"
-                      defaultMessage="Relying Party Name"
-                    />
-                  }
-                  extra={
-                    <FormattedMessage
-                      id="pages.settings.generalSection.rpNameExtra"
-                      defaultMessage="Human-friendly name shown in the passkey prompt."
-                    />
-                  }
-                >
-                  <Input
-                    disabled={!webauthnEnabled}
-                    placeholder={intl.formatMessage({
-                      id: 'pages.settings.generalSection.rpNamePlaceholder',
-                      defaultMessage: 'RustDesk Console',
-                    })}
-                  />
-                </Form.Item>
-              </Card>
-
-              <Card
-                title={
-                  <Space>
-                    <FieldTimeOutlined />
-                    <FormattedMessage
-                      id="pages.settings.generalSection.security"
-                      defaultMessage="Security & Maintenance"
-                    />
-                  </Space>
-                }
-              >
-                <Form.Item
-                  name="jwtExpiryDays"
-                  label={
-                    <FormattedMessage
-                      id="pages.settings.generalSection.jwtExpiryDays"
-                      defaultMessage="JWT Token Expiry (Days)"
-                    />
-                  }
-                  extra={
-                    <FormattedMessage
-                      id="pages.settings.generalSection.jwtExpiryDaysExtra"
-                      defaultMessage="Number of days before signed-in user tokens expire. Must be at least 1."
-                    />
-                  }
-                  rules={[
-                    {
-                      required: true,
-                      message: intl.formatMessage({
-                        id: 'pages.settings.generalSection.jwtExpiryDaysRequired',
-                        defaultMessage: 'Please enter a positive integer',
-                      }),
-                    },
-                    {
-                      validator: (_: unknown, value: number) =>
-                        value >= 1
-                          ? Promise.resolve()
-                          : Promise.reject(
-                              new Error(
-                                intl.formatMessage({
-                                  id: 'pages.settings.generalSection.jwtExpiryDaysRequired',
-                                  defaultMessage:
-                                    'Please enter a positive integer',
-                                }),
-                              ),
-                            ),
-                    },
-                  ]}
-                >
-                  <InputNumber
-                    min={1}
-                    precision={0}
-                    style={{ width: '100%' }}
-                  />
-                </Form.Item>
-                <Form.Item
-                  name="auditRetentionDays"
-                  label={
-                    <FormattedMessage
-                      id="pages.settings.generalSection.auditRetentionDays"
-                      defaultMessage="Audit Log Retention (Days)"
-                    />
-                  }
-                  extra={
-                    <FormattedMessage
-                      id="pages.settings.generalSection.auditRetentionDaysExtra"
-                      defaultMessage="Number of days to keep audit logs before automatic cleanup. Set to 0 to disable auto-cleanup."
-                    />
-                  }
-                  rules={[
-                    {
-                      required: true,
-                      message: intl.formatMessage({
-                        id: 'pages.settings.generalSection.auditRetentionDaysRequired',
-                        defaultMessage: 'Please enter a non-negative integer',
-                      }),
-                    },
-                    {
-                      validator: (_: unknown, value: number) =>
-                        value >= 0
-                          ? Promise.resolve()
-                          : Promise.reject(
-                              new Error(
-                                intl.formatMessage({
-                                  id: 'pages.settings.generalSection.auditRetentionDaysRequired',
-                                  defaultMessage:
-                                    'Please enter a non-negative integer',
-                                }),
-                              ),
-                            ),
-                    },
-                  ]}
-                >
-                  <InputNumber
-                    min={0}
-                    precision={0}
-                    style={{ width: '100%' }}
-                  />
-                </Form.Item>
-              </Card>
-            </Space>
+            <Masonry
+              columns={{ xs: 1, sm: 1, md: 2, lg: 2, xl: 2, xxl: 2 }}
+              gutter={24}
+              items={masonryItems}
+            />
 
             <Form.Item style={{ marginTop: 28, marginBottom: 0 }}>
               <Button
