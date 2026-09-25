@@ -1,16 +1,37 @@
 import type { ProColumns } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
-import { Badge, Tooltip } from 'antd';
+import { Badge, Dropdown, Tooltip } from 'antd';
+import type { MenuProps } from 'antd';
 import {
+  ApiOutlined,
+  CameraOutlined,
   CheckCircleOutlined,
   CloseCircleOutlined,
+  CodeOutlined,
+  DesktopOutlined,
+  FolderOutlined,
+  GlobalOutlined,
   InfoCircleOutlined,
+  SafetyCertificateOutlined,
   WindowsFilled,
   AndroidFilled,
   AppleFilled,
   QqCircleFilled,
 } from '@ant-design/icons';
 import React from 'react';
+
+const buildConnectUrl = (command: string, id: string): string => {
+  return `rustdesk://${command}/${id}`;
+};
+
+const openCustomProtocol = (url: string): void => {
+  const link = window.document.createElement('a');
+  link.href = url;
+  link.style.display = 'none';
+  window.document.body.appendChild(link);
+  link.click();
+  window.document.body.removeChild(link);
+};
 
 /**
  * Get offline duration text
@@ -83,6 +104,76 @@ export const getDeviceColumns = (options?: {
   const intl = useIntl();
   const { hideAction = false } = options || {};
 
+  const connectMenuItems: MenuProps['items'] = [
+    {
+      key: 'connect',
+      icon: <DesktopOutlined />,
+      label: (
+        <FormattedMessage
+          id="pages.devices.connectRemoteDesktop"
+          defaultMessage="Remote Desktop"
+        />
+      ),
+    },
+    {
+      key: 'file-transfer',
+      icon: <FolderOutlined />,
+      label: (
+        <FormattedMessage
+          id="pages.devices.connectFileTransfer"
+          defaultMessage="File Transfer"
+        />
+      ),
+    },
+    {
+      key: 'view-camera',
+      icon: <CameraOutlined />,
+      label: (
+        <FormattedMessage
+          id="pages.devices.connectViewCamera"
+          defaultMessage="View Camera"
+        />
+      ),
+    },
+    {
+      key: 'terminal',
+      icon: <CodeOutlined />,
+      label: (
+        <FormattedMessage
+          id="pages.devices.connectTerminal"
+          defaultMessage="Terminal"
+        />
+      ),
+    },
+    {
+      key: 'terminal-admin',
+      icon: <SafetyCertificateOutlined />,
+      label: (
+        <FormattedMessage
+          id="pages.devices.connectTerminalAdmin"
+          defaultMessage="Terminal (Admin)"
+        />
+      ),
+    },
+    {
+      key: 'port-forward',
+      icon: <ApiOutlined />,
+      label: (
+        <FormattedMessage
+          id="pages.devices.connectPortForward"
+          defaultMessage="Port Forward"
+        />
+      ),
+    },
+    {
+      key: 'rdp',
+      icon: <GlobalOutlined />,
+      label: (
+        <FormattedMessage id="pages.devices.connectRdp" defaultMessage="RDP" />
+      ),
+    },
+  ];
+
   const baseColumns: ProColumns<API.DeviceItem>[] = [
     {
       title: <FormattedMessage id="pages.common.id" defaultMessage="ID" />,
@@ -135,7 +226,25 @@ export const getDeviceColumns = (options?: {
               </Tooltip>
             )}
             {osIcon && <>&nbsp;&nbsp;</>}
-            <a href={`rustdesk://${record.id}`}>{record.id}</a>
+            <Dropdown
+              menu={{
+                items: connectMenuItems,
+                onClick: ({ key }) => {
+                  openCustomProtocol(buildConnectUrl(key, record.id));
+                },
+              }}
+              trigger={['click']}
+            >
+              <a
+                onClick={(e) => e.preventDefault()}
+                title={intl.formatMessage({
+                  id: 'pages.devices.connect',
+                  defaultMessage: 'Connect',
+                })}
+              >
+                {record.id}
+              </a>
+            </Dropdown>
           </span>
         );
       },
