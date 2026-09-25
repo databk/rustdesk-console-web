@@ -176,9 +176,15 @@ const Dashboard: React.FC<DashboardProps> = ({
     });
 
     const dateSet = new Set<string>();
-    trends?.connectionTrend?.forEach((item) => dateSet.add(item.date));
-    trends?.userActiveTrend?.forEach((item) => dateSet.add(item.date));
-    trends?.alarmTrend?.forEach((item) => dateSet.add(item.date));
+    trends?.connectionTrend?.forEach((item) => {
+      dateSet.add(item.date);
+    });
+    trends?.userActiveTrend?.forEach((item) => {
+      dateSet.add(item.date);
+    });
+    trends?.alarmTrend?.forEach((item) => {
+      dateSet.add(item.date);
+    });
 
     const sortedDates = Array.from(dateSet).sort();
 
