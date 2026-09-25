@@ -409,44 +409,42 @@ const GeneralSettings: React.FC = () => {
 
   return (
     <PageContainer title={false}>
-      <div style={{ maxWidth: 960 }}>
-        <Title level={4} style={{ marginTop: 0, marginBottom: 24 }}>
-          <FormattedMessage
-            id="pages.settings.general"
-            defaultMessage="General Settings"
+      <Title level={4} style={{ marginTop: 0, marginBottom: 24 }}>
+        <FormattedMessage
+          id="pages.settings.general"
+          defaultMessage="General Settings"
+        />
+      </Title>
+      <Spin spinning={loading}>
+        <Form
+          form={form}
+          layout="vertical"
+          disabled={loading}
+          initialValues={DEFAULT_GENERAL_SETTINGS}
+          onFinish={handleSave}
+          requiredMark={false}
+        >
+          <Masonry
+            columns={{ xs: 1, sm: 1, md: 2, lg: 2, xl: 2, xxl: 2 }}
+            gutter={24}
+            items={masonryItems}
           />
-        </Title>
-        <Spin spinning={loading}>
-          <Form
-            form={form}
-            layout="vertical"
-            disabled={loading}
-            initialValues={DEFAULT_GENERAL_SETTINGS}
-            onFinish={handleSave}
-            requiredMark={false}
-          >
-            <Masonry
-              columns={{ xs: 1, sm: 1, md: 2, lg: 2, xl: 2, xxl: 2 }}
-              gutter={24}
-              items={masonryItems}
-            />
 
-            <Form.Item style={{ marginTop: 28, marginBottom: 0 }}>
-              <Button
-                type="primary"
-                htmlType="submit"
-                icon={<SaveOutlined />}
-                loading={saving}
-              >
-                <FormattedMessage
-                  id="pages.settings.save"
-                  defaultMessage="Save Settings"
-                />
-              </Button>
-            </Form.Item>
-          </Form>
-        </Spin>
-      </div>
+          <Form.Item style={{ marginTop: 28, marginBottom: 0 }}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              icon={<SaveOutlined />}
+              loading={saving}
+            >
+              <FormattedMessage
+                id="pages.settings.save"
+                defaultMessage="Save Settings"
+              />
+            </Button>
+          </Form.Item>
+        </Form>
+      </Spin>
     </PageContainer>
   );
 };
