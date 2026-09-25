@@ -18,3 +18,4 @@ declare module 'react-fittext';
 declare const REACT_APP_ENV: 'test' | 'dev' | 'pre' | false;
 
 declare const FRONTEND_VERSION: string;
+declare const APP_PUBLIC_PATH: string;

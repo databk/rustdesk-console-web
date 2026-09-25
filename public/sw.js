@@ -1,6 +1,9 @@
 /* RustDesk Console Service Worker */
 const CACHE_VERSION = 'rustdesk-console-v1';
-const PRECACHE_URLS = ['/', '/logo.svg', '/manifest.json'];
+const APP_SCOPE = self.registration.scope;
+const APP_PATH = new URL(APP_SCOPE).pathname;
+const appUrl = (path = '') => new URL(path, APP_SCOPE).pathname;
+const PRECACHE_URLS = [appUrl(), appUrl('logo.svg'), appUrl('manifest.json')];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -47,13 +50,15 @@ self.addEventListener('fetch', (event) => {
           caches.open(CACHE_VERSION).then((cache) => cache.put(request, copy));
           return response;
         })
-        .catch(() => caches.match(request).then((cached) => cached || caches.match('/'))),
+        .catch(() =>
+          caches.match(request).then((cached) => cached || caches.match(appUrl())),
+        ),
     );
     return;
   }
 
   const isStaticAsset =
-    url.pathname.startsWith('/static/') ||
+    url.pathname.startsWith(`${APP_PATH}static/`) ||
     /\.(?:js|css|svg|png|jpg|jpeg|gif|webp|ico|woff2?|ttf|eot)$/.test(url.pathname);
 
   if (isStaticAsset) {

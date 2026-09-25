@@ -83,7 +83,7 @@ if (pwa) {
   if ('serviceWorker' in navigator && (isHttps || isLocalhost)) {
     window.addEventListener('load', () => {
       navigator.serviceWorker
-        .register('/sw.js', { scope: '/' })
+        .register(`${APP_PUBLIC_PATH}sw.js`, { scope: APP_PUBLIC_PATH })
         .then((registration) => {
           registration.addEventListener('updatefound', () => {
             const newWorker = registration.installing;

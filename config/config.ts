@@ -77,6 +77,7 @@ export default defineConfig({
   esbuildMinifyIIFE: true,
   requestRecord: {},
   define: {
+    APP_PUBLIC_PATH: PUBLIC_PATH,
     'process.env.CI': process.env.CI,
     FRONTEND_VERSION: version,
   },
