@@ -13,7 +13,6 @@ const Dashboard: React.FC = () => {
   const [trends, setTrends] = useState<API.DashboardTrends>();
   const [trendRange, setTrendRange] = useState<'7d' | '30d' | '90d'>('7d');
   const trendRequestGeneration = useRef(0);
-  const isInitialMount = useRef(true);
 
   useEffect(() => {
     fetchDashboardData();
@@ -22,10 +21,6 @@ const Dashboard: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
-      return;
-    }
     fetchTrendData();
   }, [trendRange]);
 
