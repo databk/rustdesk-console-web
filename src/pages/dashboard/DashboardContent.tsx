@@ -462,7 +462,12 @@ const Dashboard: React.FC<DashboardProps> = ({
       </Col>
       <Col xs={24} lg={18} style={{ display: 'flex' }}>
         <Card
-          style={{ ...cardStyle, display: 'flex', flexDirection: 'column' }}
+          style={{
+            ...cardStyle,
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+          }}
           bodyStyle={{ flex: 1, display: 'flex', flexDirection: 'column' }}
           title={
             <Flex justify="space-between" align="center">
