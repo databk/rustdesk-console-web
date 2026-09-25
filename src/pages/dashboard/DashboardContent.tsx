@@ -504,7 +504,7 @@ const Dashboard: React.FC<DashboardProps> = ({
           }
         >
           {combinedTrendData.length > 0 ? (
-            <div style={{ flex: 1, minHeight: 400 }}>
+            <div style={{ flex: 1 }}>
               <Line
                 data={combinedTrendData}
                 xField="date"
@@ -517,11 +517,7 @@ const Dashboard: React.FC<DashboardProps> = ({
               />
             </div>
           ) : (
-            <Flex
-              justify="center"
-              align="center"
-              style={{ flex: 1, minHeight: 400 }}
-            >
+            <Flex justify="center" align="center" style={{ flex: 1 }}>
               <Empty
                 description={
                   <FormattedMessage
