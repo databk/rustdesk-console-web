@@ -1,6 +1,6 @@
 import { PageContainer } from '@ant-design/pro-components';
 import { Spin } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   getDashboard,
   getDashboardTrends,
@@ -12,32 +12,22 @@ const Dashboard: React.FC = () => {
   const [data, setData] = useState<API.DashboardData>();
   const [trends, setTrends] = useState<API.DashboardTrends>();
   const [trendRange, setTrendRange] = useState<'7d' | '30d' | '90d'>('7d');
+  const trendRequestGeneration = useRef(0);
+  const isInitialMount = useRef(true);
 
   useEffect(() => {
-    fetchAllData();
+    fetchDashboardData();
     const dataInterval = setInterval(fetchDashboardData, 30000);
     return () => clearInterval(dataInterval);
   }, []);
 
   useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
     fetchTrendData();
   }, [trendRange]);
-
-  const fetchAllData = async () => {
-    setLoading(true);
-    try {
-      const [dashboardData, trendData] = await Promise.all([
-        getDashboard(),
-        getDashboardTrends({ range: trendRange }),
-      ]);
-      setData(dashboardData);
-      setTrends(trendData);
-    } catch (error) {
-      console.error('Failed to fetch dashboard data:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const fetchDashboardData = async () => {
     try {
@@ -45,13 +35,18 @@ const Dashboard: React.FC = () => {
       setData(dashboardData);
     } catch (error) {
       console.error('Failed to fetch dashboard data:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const fetchTrendData = async () => {
+    const generation = ++trendRequestGeneration.current;
     try {
       const trendData = await getDashboardTrends({ range: trendRange });
-      setTrends(trendData);
+      if (generation === trendRequestGeneration.current) {
+        setTrends(trendData);
+      }
     } catch (error) {
       console.error('Failed to fetch trend data:', error);
     }

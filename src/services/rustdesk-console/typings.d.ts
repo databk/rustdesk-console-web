@@ -860,8 +860,7 @@ declare namespace API {
     };
     counts: {
       addressBooks: number;
-      userGroups: number;
-      deviceGroups: number;
+      groups: number;
       roles: number;
       strategies: number;
     };

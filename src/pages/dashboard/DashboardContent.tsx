@@ -163,11 +163,11 @@ const Dashboard: React.FC<DashboardProps> = ({
   const combinedTrendData = useMemo(() => {
     const result: Array<{ date: string; value: number; type: string }> = [];
     const connLabel = intl.formatMessage({
-      id: 'pages.dashboard.connectionCount',
+      id: 'pages.dashboard.connectionTrend',
       defaultMessage: 'Connections',
     });
     const userLabel = intl.formatMessage({
-      id: 'pages.dashboard.newUsers',
+      id: 'pages.dashboard.newUsersTrend',
       defaultMessage: 'New Users',
     });
     const alarmLabel = intl.formatMessage({
@@ -372,11 +372,11 @@ const Dashboard: React.FC<DashboardProps> = ({
                   icon={<TeamOutlined style={{ color: '#52c41a' }} />}
                   label={
                     <FormattedMessage
-                      id="pages.dashboard.userGroups"
-                      defaultMessage="User Groups"
+                      id="pages.dashboard.groups"
+                      defaultMessage="Groups"
                     />
                   }
-                  value={data?.counts.userGroups || 0}
+                  value={data?.counts.groups || 0}
                 />
               </Col>
               <Col span={12}>
