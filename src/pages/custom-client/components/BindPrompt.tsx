@@ -33,7 +33,7 @@ const BindPrompt: React.FC<BindPromptProps> = ({ loginLoading, onLogin }) => {
         })}
         extra={
           <Space
-            direction="vertical"
+            orientation="vertical"
             size="large"
             style={{ alignItems: 'center' }}
           >
@@ -41,7 +41,7 @@ const BindPrompt: React.FC<BindPromptProps> = ({ loginLoading, onLogin }) => {
               type="info"
               showIcon
               style={{ maxWidth: 560, textAlign: 'left' }}
-              message={intl.formatMessage({
+              title={intl.formatMessage({
                 id: 'pages.nexus.bindWhyLogin',
                 defaultMessage:
                   'GitHub authentication helps us verify that you are a real user, preventing automated abuse of build resources. We only request your public username - no access to your repositories, personal data, or any other permissions is needed.',

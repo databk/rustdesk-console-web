@@ -178,7 +178,7 @@ const UserGroupList: React.FC = () => {
         !access.canUserGroupsEdit &&
         !access.canUserGroupsDelete,
       render: (_, record) => (
-        <Space size={0} split={<Divider type="vertical" />}>
+        <Space size={0} separator={<Divider orientation="vertical" />}>
           {access.canUserGroupsMembership && (
             <Button
               type="link"

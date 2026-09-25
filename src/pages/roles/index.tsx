@@ -407,7 +407,7 @@ const RoleList: React.FC = () => {
       width: 190,
       fixed: 'right',
       render: (_, record) => (
-        <Space size={0} split={<Divider type="vertical" />}>
+        <Space size={0} separator={<Divider orientation="vertical" />}>
           {isBuiltInRoleRow(record) ? (
             <Button
               key="view-built-in"
@@ -511,7 +511,7 @@ const RoleList: React.FC = () => {
         type="info"
         showIcon
         style={{ marginBottom: 16 }}
-        message={intl.formatMessage({
+        title={intl.formatMessage({
           id: 'pages.roles.superAdminInfo',
           defaultMessage:
             'Super-administrator access is protected separately and cannot be granted through a role.',
@@ -685,7 +685,7 @@ const RoleList: React.FC = () => {
           disabled:
             !isOwner || detailLoading || catalogLoading || catalog.length === 0,
         }}
-        destroyOnClose
+        destroyOnHidden
         width={680}
       >
         {detailLoading || catalogLoading ? (

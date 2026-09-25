@@ -356,7 +356,7 @@ const ConnectionAudit: React.FC = () => {
           placement="right"
           onClose={() => setDrawerOpen(false)}
           open={drawerOpen}
-          width={400}
+          size={400}
         >
           {currentRow &&
             detailFields.map((field) => (
@@ -383,7 +383,7 @@ const ConnectionAudit: React.FC = () => {
           open={editModalVisible}
           width={400}
           initialValues={currentRow}
-          modalProps={{ destroyOnClose: true }}
+          modalProps={{ destroyOnHidden: true }}
           onOpenChange={setEditModalVisible}
           onFinish={async (value: Pick<API.ConnectionAuditItem, 'note'>) => {
             if (!currentRow) return false;

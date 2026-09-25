@@ -132,7 +132,7 @@ const DeviceGroupList: React.FC = () => {
       valueType: 'option',
       width: 180,
       render: (_, record) => (
-        <Space size={0} split={<Divider type="vertical" />}>
+        <Space size={0} separator={<Divider orientation="vertical" />}>
           <Button
             key="edit"
             type="link"
@@ -163,7 +163,7 @@ const DeviceGroupList: React.FC = () => {
               defaultMessage: 'No',
             })}
           >
-            <Button type="link" size="small" danger>
+            <Button variant="link" size="small" danger>
               <FormattedMessage
                 id="pages.common.delete"
                 defaultMessage="Delete"

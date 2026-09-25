@@ -109,7 +109,7 @@ export const useUserColumns = (
           </Tooltip>
         ) : null
       ) : (
-        <Space size={0} split={<Divider type="vertical" />}>
+        <Space size={0} separator={<Divider orientation="vertical" />}>
           {record.is_protected && (
             <Tooltip
               title={intl.formatMessage({

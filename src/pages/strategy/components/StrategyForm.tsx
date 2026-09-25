@@ -85,7 +85,7 @@ const StrategyForm: React.FC<StrategyFormProps> = ({
       onFinish={handleFinish}
       form={form}
       layout="vertical"
-      modalProps={{ destroyOnClose: true }}
+      modalProps={{ destroyOnHidden: true }}
       submitter={
         isView
           ? {

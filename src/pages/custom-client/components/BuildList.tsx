@@ -226,7 +226,10 @@ const BuildList: React.FC<BuildListProps> = ({
         const files: string[] = record.files ? JSON.parse(record.files) : [];
 
         return (
-          <Space size={0} split={<span style={{ color: '#d9d9d9' }}>|</span>}>
+          <Space
+            size={0}
+            separator={<span style={{ color: '#d9d9d9' }}>|</span>}
+          >
             {record.status === 'failed' && (
               <Button
                 type="link"

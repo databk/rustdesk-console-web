@@ -67,7 +67,7 @@ const PasskeySection: React.FC<PasskeySectionProps> = ({
           </Space>
         }
       >
-        <Space direction="vertical" style={{ width: '100%' }} size="middle">
+        <Space orientation="vertical" style={{ width: '100%' }} size="middle">
           {passkeySupported && (
             <Button
               type="primary"

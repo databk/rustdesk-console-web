@@ -368,7 +368,7 @@ const ShareAccessModal: React.FC<ShareAccessModalProps> = ({
     >
       {mode === 'manage' && (
         <Space
-          direction="vertical"
+          orientation="vertical"
           size="middle"
           style={{ width: '100%', marginBottom: 16 }}
         >

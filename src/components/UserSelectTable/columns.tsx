@@ -51,7 +51,7 @@ export const getUserColumns = (): ProColumns<API.UserItem>[] => {
       width: 180,
       ellipsis: true,
       render: (_: unknown, record: API.UserItem) => (
-        <Space direction="vertical" size={0}>
+        <Space orientation="vertical" size={0}>
           <Space>
             <span style={{ fontWeight: 500 }}>
               {record.display_name || record.name}

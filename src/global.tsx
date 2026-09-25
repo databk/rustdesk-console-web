@@ -69,11 +69,11 @@ if (pwa) {
       </Button>
     );
     notification.open({
-      message: getIntl().formatMessage({ id: 'app.pwa.serviceworker.updated' }),
+      title: getIntl().formatMessage({ id: 'app.pwa.serviceworker.updated' }),
       description: getIntl().formatMessage({
         id: 'app.pwa.serviceworker.updated.hint',
       }),
-      btn,
+      actions: btn,
       key,
       onClose: async () => null,
     });

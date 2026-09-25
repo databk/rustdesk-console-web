@@ -79,7 +79,7 @@ const StrategyColumns = (
         !handlers.canDelete &&
         !handlers.canAssign,
       render: (_, record) => (
-        <Space size={0} split={<Divider type="vertical" />}>
+        <Space size={0} separator={<Divider orientation="vertical" />}>
           {handlers.canView && (
             <Button
               type="link"
@@ -132,7 +132,12 @@ const StrategyColumns = (
                 defaultMessage: 'No',
               })}
             >
-              <Button type="link" size="small" danger icon={<DeleteOutlined />}>
+              <Button
+                variant="link"
+                size="small"
+                danger
+                icon={<DeleteOutlined />}
+              >
                 <FormattedMessage
                   id="pages.common.delete"
                   defaultMessage="Delete"

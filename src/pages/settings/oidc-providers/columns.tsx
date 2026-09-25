@@ -134,7 +134,7 @@ const OidcProviderColumns = (
       width: 240,
       fixed: 'right',
       render: (_, record) => (
-        <Space size={0} split={<Divider type="vertical" />}>
+        <Space size={0} separator={<Divider orientation="vertical" />}>
           <Button
             type="link"
             size="small"
@@ -170,7 +170,12 @@ const OidcProviderColumns = (
               defaultMessage: 'No',
             })}
           >
-            <Button type="link" size="small" danger icon={<DeleteOutlined />}>
+            <Button
+              variant="link"
+              size="small"
+              danger
+              icon={<DeleteOutlined />}
+            >
               <FormattedMessage
                 id="pages.common.delete"
                 defaultMessage="Delete"

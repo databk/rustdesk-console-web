@@ -38,10 +38,8 @@ export const usePeerColumns = (
                 styles={{
                   root: {
                     maxWidth: 'none',
+                    whiteSpace: 'nowrap',
                   },
-                }}
-                overlayStyle={{
-                  whiteSpace: 'nowrap',
                 }}
               >
                 <span>{osIcon}</span>
@@ -140,7 +138,7 @@ export const usePeerColumns = (
       width: 160,
       fixed: 'right',
       render: (_: unknown, record: API.PeerItem) => (
-        <Space size={0} split={<Divider type="vertical" />}>
+        <Space size={0} separator={<Divider orientation="vertical" />}>
           <Button
             key="edit"
             type="link"
@@ -167,7 +165,7 @@ export const usePeerColumns = (
               defaultMessage: 'No',
             })}
           >
-            <Button type="link" size="small" danger>
+            <Button variant="link" size="small" danger>
               <FormattedMessage
                 id="pages.common.delete"
                 defaultMessage="Delete"

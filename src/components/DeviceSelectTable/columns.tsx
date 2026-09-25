@@ -216,10 +216,8 @@ export const getDeviceColumns = (options?: {
                 styles={{
                   root: {
                     maxWidth: 'none',
+                    whiteSpace: 'nowrap',
                   },
-                }}
-                overlayStyle={{
-                  whiteSpace: 'nowrap',
                 }}
               >
                 <span>{osIcon}</span>

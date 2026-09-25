@@ -219,7 +219,7 @@ const ConfigOptionControl: React.FC<{
               defaultMessage: 'Reset to default',
             })}
           >
-            <Button size="small" type="text" onClick={handleReset}>
+            <Button size="small" variant="text" onClick={handleReset}>
               ↺
             </Button>
           </Tooltip>

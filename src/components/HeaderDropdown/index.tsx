@@ -32,7 +32,7 @@ const HeaderDropdown: React.FC<HeaderDropdownProps> = ({
   const { styles } = useStyles();
   return (
     <Dropdown
-      overlayClassName={classNames(styles.dropdown, cls)}
+      classNames={{ root: classNames(styles.dropdown, cls) }}
       {...restProps}
     />
   );

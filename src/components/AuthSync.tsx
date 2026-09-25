@@ -82,7 +82,7 @@ const AuthSync: React.FC = () => {
     <Alert
       banner
       type="warning"
-      message={intl.formatMessage({
+      title={intl.formatMessage({
         id: 'pages.login.permissionsLoadFailed',
         defaultMessage:
           'Permissions could not be loaded. Opened the personal address book; refresh to retry.',

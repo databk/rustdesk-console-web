@@ -137,7 +137,7 @@ const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
         width={480}
       >
         {setupData && (
-          <Space direction="vertical" style={{ width: '100%' }} size="middle">
+          <Space orientation="vertical" style={{ width: '100%' }} size="middle">
             <div style={{ textAlign: 'center' }}>
               <QRCodeSVG value={setupData.otpauth_url} size={200} />
             </div>

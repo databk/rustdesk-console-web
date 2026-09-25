@@ -30,7 +30,7 @@ const TestResultModal: React.FC<TestResultModalProps> = ({
         <>
           <Alert
             type={result.success ? 'success' : 'error'}
-            message={result.message}
+            title={result.message}
             showIcon
             style={{ marginBottom: 16 }}
           />

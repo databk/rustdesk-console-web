@@ -256,7 +256,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
       onFinish={handleFinish}
       form={form}
       layout="vertical"
-      modalProps={{ destroyOnClose: true }}
+      modalProps={{ destroyOnHidden: true }}
       width={560}
     >
       {!isEdit && (

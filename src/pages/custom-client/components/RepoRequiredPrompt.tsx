@@ -36,7 +36,7 @@ const RepoRequiredPrompt: React.FC<RepoRequiredPromptProps> = ({
         })}
         extra={
           <Space
-            direction="vertical"
+            orientation="vertical"
             size="large"
             style={{ alignItems: 'center' }}
           >
@@ -44,7 +44,7 @@ const RepoRequiredPrompt: React.FC<RepoRequiredPromptProps> = ({
               type="info"
               showIcon
               style={{ maxWidth: 560, textAlign: 'left' }}
-              message={intl.formatMessage({
+              title={intl.formatMessage({
                 id: 'pages.nexus.repoWhyInteract',
                 defaultMessage:
                   "I'm a high school student developing this project in my spare time. Your Star, Fork, or Watch means a lot to me - it not only keeps me motivated, but also helps with my college applications. This is the only thing I ask for in return. Thank you so much for your support!",

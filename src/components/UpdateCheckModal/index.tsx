@@ -93,7 +93,7 @@ const UpdateCard: React.FC<{
           )}
         </div>
         {data.has_update ? (
-          <Space direction="vertical" size={8} style={{ width: '100%' }}>
+          <Space orientation="vertical" size={8} style={{ width: '100%' }}>
             {data.published_at && (
               <Text type="secondary" style={{ fontSize: 12 }}>
                 {dayjs(data.published_at).format('YYYY-MM-DD')}
@@ -205,11 +205,11 @@ const UpdateCheckModal: React.FC<{
     >
       <Spin spinning={loading}>
         {result ? (
-          <Space direction="vertical" size={12} style={{ width: '100%' }}>
+          <Space orientation="vertical" size={12} style={{ width: '100%' }}>
             <Alert
               type={hasAnyUpdate ? 'info' : 'success'}
               showIcon
-              message={
+              title={
                 hasAnyUpdate
                   ? intl.formatMessage(
                       { id: 'app.updateCheck.newVersionAvailable' },

@@ -105,7 +105,7 @@ const CreateBuildModal: React.FC<CreateBuildModalProps> = ({
       onOk={() => form.submit()}
       confirmLoading={loading}
       width={800}
-      destroyOnClose
+      destroyOnHidden
     >
       <Form
         form={form}

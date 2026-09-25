@@ -100,7 +100,7 @@ const ConsoleAudit: React.FC = () => {
       valueType: 'option',
       width: 80,
       render: (_, record) => [
-        <Button key="detail" type="link" onClick={() => setSelected(record)}>
+        <Button key="detail" variant="link" onClick={() => setSelected(record)}>
           <FormattedMessage id="pages.audits.detail" defaultMessage="Detail" />
         </Button>,
       ],
@@ -169,7 +169,7 @@ const ConsoleAudit: React.FC = () => {
         title={
           <FormattedMessage id="pages.audits.detail" defaultMessage="Detail" />
         }
-        width={640}
+        size={640}
         open={Boolean(selected)}
         onClose={() => setSelected(undefined)}
       >

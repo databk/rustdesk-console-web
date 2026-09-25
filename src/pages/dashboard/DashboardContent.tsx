@@ -73,7 +73,7 @@ const OverviewCard: React.FC<{
             title={title}
             value={total}
             prefix={icon}
-            valueStyle={{ fontSize: 20 }}
+            styles={{ content: { fontSize: 20 } }}
           />
           <div style={{ marginTop: 4 }}>
             <Space size={8}>
@@ -105,7 +105,7 @@ const OverviewCard: React.FC<{
             percent={ringPercent}
             size={64}
             strokeColor={ringData[0].color}
-            trailColor={ringData[1]?.color || '#f0f0f0'}
+            railColor={ringData[1]?.color || '#f0f0f0'}
             format={() => (
               <span style={{ fontSize: 14, fontWeight: 600 }}>{total}</span>
             )}
@@ -466,7 +466,7 @@ const Dashboard: React.FC<DashboardProps> = ({
                 />
               }
             >
-              <Space direction="vertical" style={{ width: '100%' }} size={12}>
+              <Space orientation="vertical" style={{ width: '100%' }} size={12}>
                 <SystemStatusItem
                   label={
                     <FormattedMessage
@@ -523,11 +523,13 @@ const Dashboard: React.FC<DashboardProps> = ({
             display: 'flex',
             flexDirection: 'column',
           }}
-          bodyStyle={{
-            flex: 1,
-            display: 'flex',
-            flexDirection: 'column',
-            minHeight: 0,
+          styles={{
+            body: {
+              flex: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              minHeight: 0,
+            },
           }}
           title={
             <Flex justify="space-between" align="center">

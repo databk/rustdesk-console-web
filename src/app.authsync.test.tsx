@@ -60,7 +60,6 @@ jest.mock('antd', () => {
 jest.mock('@ant-design/pro-components', () => ({
   SettingDrawer: () => null,
 }));
-jest.mock('@ant-design/v5-patch-for-react-19', () => ({}));
 
 import { currentUser } from '@/services/rustdesk-console/auth';
 import { getMyPermissions } from '@/services/rustdesk-console/permission';

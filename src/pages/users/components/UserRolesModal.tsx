@@ -433,14 +433,14 @@ const UserRolesModal: React.FC<UserRolesModalProps> = ({
         id: 'pages.common.save',
         defaultMessage: 'Save',
       })}
-      destroyOnClose
+      destroyOnHidden
       width={760}
     >
       {loadFailed ? (
         <Alert
           type="error"
           showIcon
-          message={intl.formatMessage({
+          title={intl.formatMessage({
             id: 'pages.users.rolesLoadFailed',
             defaultMessage: 'Failed to load user roles',
           })}
@@ -450,12 +450,12 @@ const UserRolesModal: React.FC<UserRolesModalProps> = ({
           <Spin />
         </div>
       ) : (
-        <Space direction="vertical" size="large" style={{ width: '100%' }}>
+        <Space orientation="vertical" size="large" style={{ width: '100%' }}>
           <Flex vertical gap="small" style={{ width: '100%' }}>
             <Alert
               type="info"
               showIcon
-              message={
+              title={
                 <FormattedMessage
                   id="pages.users.rolesScopeInfo"
                   defaultMessage="Global grants override narrower device-group grants."
@@ -530,7 +530,7 @@ const UserRolesModal: React.FC<UserRolesModalProps> = ({
                   }
                 >
                   <Space
-                    direction="vertical"
+                    orientation="vertical"
                     size="middle"
                     style={{ width: '100%' }}
                   >

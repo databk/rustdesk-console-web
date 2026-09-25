@@ -544,7 +544,7 @@ const AssignModal: React.FC<AssignModalProps> = ({
       open={open}
       onOpenChange={onOpenChange}
       submitter={false}
-      modalProps={{ destroyOnClose: true }}
+      modalProps={{ destroyOnHidden: true }}
       width={560}
     >
       <div style={{ marginBottom: 16 }}>

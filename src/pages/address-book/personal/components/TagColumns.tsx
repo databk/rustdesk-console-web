@@ -80,7 +80,7 @@ export const useTagColumns = (options: TagColumnsOptions) => {
       key: 'action',
       width: 180,
       render: (_: unknown, record: API.TagItem) => (
-        <Space size={0} split={<Divider type="vertical" />}>
+        <Space size={0} separator={<Divider orientation="vertical" />}>
           <Button
             type="link"
             size="small"
@@ -136,7 +136,7 @@ export const useTagColumns = (options: TagColumnsOptions) => {
               defaultMessage: 'No',
             })}
           >
-            <Button type="link" size="small" danger>
+            <Button variant="link" size="small" danger>
               <FormattedMessage
                 id="pages.common.delete"
                 defaultMessage="Delete"

@@ -76,7 +76,12 @@ export const getActionColumn = (
               defaultMessage: 'No',
             })}
           >
-            <Button type="link" size="small" danger icon={<DeleteOutlined />}>
+            <Button
+              variant="link"
+              size="small"
+              danger
+              icon={<DeleteOutlined />}
+            >
               <FormattedMessage
                 id="pages.devices.remove"
                 defaultMessage="Remove"
@@ -88,7 +93,7 @@ export const getActionColumn = (
 
       // Normal device list (not in device group context)
       return (
-        <Space size={0} split={<Divider type="vertical" />}>
+        <Space size={0} separator={<Divider orientation="vertical" />}>
           {canEdit && (
             <Button
               key="edit"
@@ -147,7 +152,12 @@ export const getActionColumn = (
                 defaultMessage: 'No',
               })}
             >
-              <Button type="link" size="small" danger icon={<DeleteOutlined />}>
+              <Button
+                variant="link"
+                size="small"
+                danger
+                icon={<DeleteOutlined />}
+              >
                 <FormattedMessage
                   id="pages.common.delete"
                   defaultMessage="Delete"

@@ -9,7 +9,11 @@ const NoFoundPage: React.FC = () => (
       title="404"
       subTitle={useIntl().formatMessage({ id: 'pages.404.subTitle' })}
       extra={
-        <Button type="primary" onClick={() => history.push('/')}>
+        <Button
+          color="primary"
+          variant="solid"
+          onClick={() => history.push('/')}
+        >
           {useIntl().formatMessage({ id: 'pages.404.buttonText' })}
         </Button>
       }

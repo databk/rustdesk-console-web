@@ -36,7 +36,7 @@ const AddPeerModal: React.FC<AddPeerModalProps> = ({
     >
       {error && (
         <Alert
-          message={error}
+          title={error}
           type="error"
           showIcon
           style={{ marginBottom: 16 }}

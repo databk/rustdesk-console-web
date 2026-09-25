@@ -254,7 +254,7 @@ const GeneralSettings: React.FC = () => {
           type="warning"
           showIcon
           style={{ marginBottom: 16 }}
-          message={
+          title={
             <FormattedMessage
               id="pages.settings.generalSection.webauthnUnsupported"
               defaultMessage="This browser does not support WebAuthn. Passkey login will be unavailable for users on unsupported clients."

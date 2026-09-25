@@ -237,7 +237,7 @@ const FileAudit: React.FC = () => {
           ip: record.clientIp,
         };
         return (
-          <Button type="link" onClick={() => onShowDrawer(localInfo)}>
+          <Button variant="link" onClick={() => onShowDrawer(localInfo)}>
             {text}
           </Button>
         );
