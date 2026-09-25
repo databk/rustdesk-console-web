@@ -122,6 +122,7 @@ const ConsoleAudit: React.FC = () => {
         }}
         actionRef={actionRef}
         rowKey="guid"
+        dateFormatter={false}
         request={async (params) => {
           const timeRange = (
             params as typeof params & {
