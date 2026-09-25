@@ -863,21 +863,6 @@ declare namespace API {
       uploadCount: number;
       downloadCount: number;
     };
-    activeConnections: Array<{
-      id: string;
-      userName: string;
-      deviceName: string;
-      startTime: string;
-      duration: number;
-    }>;
-    recentEvents: Array<{
-      type: 'connection' | 'file' | 'alarm';
-      action: string;
-      user: string;
-      target: string;
-      timestamp: string;
-      status: 'success' | 'failed' | 'warning';
-    }>;
     systemStatus: {
       cpu: number | null;
       memory: number | null;
@@ -895,12 +880,9 @@ declare namespace API {
     userActiveTrend?: Array<{
       date: string;
       newUsers: number;
-      activeUsers: number;
     }>;
     alarmTrend?: Array<{
       date: string;
-      critical: number;
-      warning: number;
       info: number;
     }>;
   };

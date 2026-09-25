@@ -7,7 +7,7 @@ import {
   CheckCircleOutlined,
   CloseCircleOutlined,
 } from '@ant-design/icons';
-import { Area, Column } from '@ant-design/plots';
+import { Line } from '@ant-design/plots';
 import { FormattedMessage, useIntl } from '@umijs/max';
 import {
   Card,
@@ -20,13 +20,8 @@ import {
   Select,
   Space,
   Statistic,
-  Table,
-  Tabs,
-  Tag,
-  Tooltip,
   Typography,
 } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
 import React, { type CSSProperties, useMemo, useState } from 'react';
 
 const { Text } = Typography;
@@ -59,6 +54,27 @@ const formatUptime = (seconds: number) => {
   const hours = Math.floor((seconds % 86400) / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
   return `${days}d ${hours}h ${minutes}m`;
+};
+
+const SystemStatusItem: React.FC<{
+  label: string;
+  value: number | null;
+}> = ({ label, value }) => {
+  const color = getProgressColor(value);
+  return (
+    <div>
+      <Flex justify="space-between" align="center" style={{ marginBottom: 4 }}>
+        <Text style={{ fontSize: 13 }}>{label}</Text>
+        <Text style={{ fontSize: 13, color }}>{formatPercentage(value)}</Text>
+      </Flex>
+      <Progress
+        percent={value ?? 0}
+        showInfo={false}
+        strokeColor={color}
+        size={['100%', 6]}
+      />
+    </div>
+  );
 };
 
 const Dashboard: React.FC<DashboardProps> = ({
@@ -94,161 +110,29 @@ const Dashboard: React.FC<DashboardProps> = ({
     ]);
   }, [trends?.connectionTrend, intl]);
 
-  const userActiveChartData = useMemo(() => {
+  const userNewChartData = useMemo(() => {
     if (!trends?.userActiveTrend) return [];
-    return trends.userActiveTrend.flatMap((item) => [
-      {
-        date: item.date,
-        value: item.newUsers,
-        type: intl.formatMessage({
-          id: 'pages.dashboard.newUsers',
-          defaultMessage: 'New Users',
-        }),
-      },
-      {
-        date: item.date,
-        value: item.activeUsers,
-        type: intl.formatMessage({
-          id: 'pages.dashboard.activeUsers',
-          defaultMessage: 'Active Users',
-        }),
-      },
-    ]);
+    return trends.userActiveTrend.map((item) => ({
+      date: item.date,
+      value: item.newUsers,
+      type: intl.formatMessage({
+        id: 'pages.dashboard.newUsers',
+        defaultMessage: 'New Users',
+      }),
+    }));
   }, [trends?.userActiveTrend, intl]);
 
   const alarmChartData = useMemo(() => {
     if (!trends?.alarmTrend) return [];
-    return trends.alarmTrend.flatMap((item) => [
-      { date: item.date, value: item.critical, type: 'Critical' },
-      { date: item.date, value: item.warning, type: 'Warning' },
-      { date: item.date, value: item.info, type: 'Info' },
-    ]);
-  }, [trends?.alarmTrend]);
-
-  const connectionColumns: ColumnsType<
-    API.DashboardData['activeConnections'][0]
-  > = [
-    {
-      title: (
-        <FormattedMessage id="pages.dashboard.user" defaultMessage="User" />
-      ),
-      dataIndex: 'userName',
-      key: 'userName',
-      ellipsis: true,
-    },
-    {
-      title: (
-        <FormattedMessage id="pages.dashboard.device" defaultMessage="Device" />
-      ),
-      dataIndex: 'deviceName',
-      key: 'deviceName',
-      ellipsis: true,
-    },
-    {
-      title: (
-        <FormattedMessage
-          id="pages.dashboard.duration"
-          defaultMessage="Duration"
-        />
-      ),
-      dataIndex: 'duration',
-      key: 'duration',
-      width: 80,
-      render: (duration: number) => `${duration} min`,
-    },
-    {
-      title: (
-        <FormattedMessage
-          id="pages.dashboard.startTime"
-          defaultMessage="Start Time"
-        />
-      ),
-      dataIndex: 'startTime',
-      key: 'startTime',
-      width: 160,
-      render: (time: string) => new Date(time).toLocaleString(),
-    },
-  ];
-
-  const eventColumns: ColumnsType<API.DashboardData['recentEvents'][0]> = [
-    {
-      title: (
-        <FormattedMessage
-          id="pages.dashboard.eventType"
-          defaultMessage="Type"
-        />
-      ),
-      dataIndex: 'type',
-      key: 'type',
-      width: 90,
-      render: (type: string) => (
-        <Tag
-          color={
-            type === 'connection'
-              ? 'blue'
-              : type === 'file'
-                ? 'green'
-                : 'orange'
-          }
-        >
-          {type}
-        </Tag>
-      ),
-    },
-    {
-      title: (
-        <FormattedMessage id="pages.dashboard.action" defaultMessage="Action" />
-      ),
-      dataIndex: 'action',
-      key: 'action',
-    },
-    {
-      title: (
-        <FormattedMessage id="pages.dashboard.user" defaultMessage="User" />
-      ),
-      dataIndex: 'user',
-      key: 'user',
-      ellipsis: true,
-    },
-    {
-      title: (
-        <FormattedMessage id="pages.dashboard.target" defaultMessage="Target" />
-      ),
-      dataIndex: 'target',
-      key: 'target',
-      ellipsis: true,
-    },
-    {
-      title: (
-        <FormattedMessage id="pages.dashboard.status" defaultMessage="Status" />
-      ),
-      dataIndex: 'status',
-      key: 'status',
-      width: 80,
-      render: (status: string) => (
-        <Tag
-          color={
-            status === 'success'
-              ? 'success'
-              : status === 'failed'
-                ? 'error'
-                : 'warning'
-          }
-        >
-          {status}
-        </Tag>
-      ),
-    },
-    {
-      title: (
-        <FormattedMessage id="pages.dashboard.time" defaultMessage="Time" />
-      ),
-      dataIndex: 'timestamp',
-      key: 'timestamp',
-      width: 160,
-      render: (time: string) => new Date(time).toLocaleString(),
-    },
-  ];
+    return trends.alarmTrend.map((item) => ({
+      date: item.date,
+      value: item.info,
+      type: intl.formatMessage({
+        id: 'pages.dashboard.alarmTrend',
+        defaultMessage: 'Alarms',
+      }),
+    }));
+  }, [trends?.alarmTrend, intl]);
 
   const noDataPlaceholder = (
     <Empty
@@ -262,53 +146,31 @@ const Dashboard: React.FC<DashboardProps> = ({
     />
   );
 
-  const trendChart = (() => {
-    if (trendMetric === 'connection') {
-      return connectionChartData.length > 0 ? (
-        <Area
-          data={connectionChartData}
-          xField="date"
-          yField="value"
-          colorField="type"
-          height={300}
-          legend={{ position: 'top-right' }}
-          axis={{ y: { title: false }, x: { title: false } }}
-        />
-      ) : (
-        noDataPlaceholder
-      );
-    }
-    if (trendMetric === 'user') {
-      return userActiveChartData.length > 0 ? (
-        <Column
-          data={userActiveChartData}
-          xField="date"
-          yField="value"
-          colorField="type"
-          group
-          height={300}
-          legend={{ position: 'top-right' }}
-          axis={{ y: { title: false }, x: { title: false } }}
-        />
-      ) : (
-        noDataPlaceholder
-      );
-    }
-    return alarmChartData.length > 0 ? (
-      <Column
-        data={alarmChartData}
+  const renderLineChart = (
+    chartData: Array<{ date: string; value: number; type: string }>,
+  ) => {
+    if (chartData.length === 0) return noDataPlaceholder;
+    return (
+      <Line
+        data={chartData}
         xField="date"
         yField="value"
         colorField="type"
-        group
         height={300}
-        color={['#f5222d', '#faad14', '#1890ff']}
         legend={{ position: 'top-right' }}
         axis={{ y: { title: false }, x: { title: false } }}
       />
-    ) : (
-      noDataPlaceholder
     );
+  };
+
+  const trendChart = (() => {
+    if (trendMetric === 'connection') {
+      return renderLineChart(connectionChartData);
+    }
+    if (trendMetric === 'user') {
+      return renderLineChart(userNewChartData);
+    }
+    return renderLineChart(alarmChartData);
   })();
 
   const cpu = data?.systemStatus?.cpu ?? null;
@@ -563,75 +425,33 @@ const Dashboard: React.FC<DashboardProps> = ({
           }
         >
           <Space direction="vertical" style={{ width: '100%' }} size={16}>
-            <div>
-              <Flex
-                justify="space-between"
-                align="center"
-                style={{ marginBottom: 4 }}
-              >
-                <Text style={{ fontSize: 13 }}>
-                  <FormattedMessage
-                    id="pages.dashboard.cpu"
-                    defaultMessage="CPU"
-                  />
-                </Text>
-                <Text style={{ fontSize: 13, color: getProgressColor(cpu) }}>
-                  {formatPercentage(cpu)}
-                </Text>
-              </Flex>
-              <Progress
-                percent={cpu ?? 0}
-                showInfo={false}
-                strokeColor={getProgressColor(cpu)}
-                size={['100%', 6]}
-              />
-            </div>
-            <div>
-              <Flex
-                justify="space-between"
-                align="center"
-                style={{ marginBottom: 4 }}
-              >
-                <Text style={{ fontSize: 13 }}>
-                  <FormattedMessage
-                    id="pages.dashboard.memory"
-                    defaultMessage="Memory"
-                  />
-                </Text>
-                <Text style={{ fontSize: 13, color: getProgressColor(memory) }}>
-                  {formatPercentage(memory)}
-                </Text>
-              </Flex>
-              <Progress
-                percent={memory ?? 0}
-                showInfo={false}
-                strokeColor={getProgressColor(memory)}
-                size={['100%', 6]}
-              />
-            </div>
-            <div>
-              <Flex
-                justify="space-between"
-                align="center"
-                style={{ marginBottom: 4 }}
-              >
-                <Text style={{ fontSize: 13 }}>
-                  <FormattedMessage
-                    id="pages.dashboard.disk"
-                    defaultMessage="Disk"
-                  />
-                </Text>
-                <Text style={{ fontSize: 13, color: getProgressColor(disk) }}>
-                  {formatPercentage(disk)}
-                </Text>
-              </Flex>
-              <Progress
-                percent={disk ?? 0}
-                showInfo={false}
-                strokeColor={getProgressColor(disk)}
-                size={['100%', 6]}
-              />
-            </div>
+            <SystemStatusItem
+              label={
+                <FormattedMessage
+                  id="pages.dashboard.cpu"
+                  defaultMessage="CPU"
+                />
+              }
+              value={cpu}
+            />
+            <SystemStatusItem
+              label={
+                <FormattedMessage
+                  id="pages.dashboard.memory"
+                  defaultMessage="Memory"
+                />
+              }
+              value={memory}
+            />
+            <SystemStatusItem
+              label={
+                <FormattedMessage
+                  id="pages.dashboard.disk"
+                  defaultMessage="Disk"
+                />
+              }
+              value={disk}
+            />
             <div
               style={{
                 textAlign: 'center',
@@ -697,57 +517,6 @@ const Dashboard: React.FC<DashboardProps> = ({
             </Card>
           </Col>
         </Row>
-      </Col>
-
-      {/* Section 4: Active Connections + Recent Events */}
-      <Col xs={24} lg={12}>
-        <Card
-          style={cardStyle}
-          title={
-            <Space>
-              <ApiOutlined style={{ color: '#722ed1' }} />
-              <FormattedMessage
-                id="pages.dashboard.activeConnections"
-                defaultMessage="Active Connections"
-              />
-              <Tag color="purple">{data?.activeConnections.length || 0}</Tag>
-            </Space>
-          }
-        >
-          <Table
-            dataSource={data?.activeConnections || []}
-            columns={connectionColumns}
-            rowKey="id"
-            pagination={false}
-            size="small"
-            scroll={{ y: 280 }}
-          />
-        </Card>
-      </Col>
-      <Col xs={24} lg={12}>
-        <Card
-          style={cardStyle}
-          title={
-            <Space>
-              <AlertOutlined style={{ color: '#faad14' }} />
-              <FormattedMessage
-                id="pages.dashboard.recentEvents"
-                defaultMessage="Recent Events"
-              />
-            </Space>
-          }
-        >
-          <Table
-            dataSource={data?.recentEvents || []}
-            columns={eventColumns}
-            rowKey={(record) =>
-              `${record.timestamp}-${record.type}-${record.action}`
-            }
-            pagination={false}
-            size="small"
-            scroll={{ y: 280 }}
-          />
-        </Card>
       </Col>
     </Row>
   );
