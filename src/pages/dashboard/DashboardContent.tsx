@@ -208,7 +208,7 @@ const Dashboard: React.FC<DashboardProps> = ({
   const uptime = data?.systemStatus?.uptime ?? null;
 
   return (
-    <Row gutter={[16, 16]}>
+    <Row gutter={[16, 16]} align="stretch">
       {/* Section 1: 4 Overview Cards with Ring Charts */}
       <Col span={24}>
         <Row gutter={[16, 16]}>
@@ -336,8 +336,8 @@ const Dashboard: React.FC<DashboardProps> = ({
       </Col>
 
       {/* Section 2: Left (Counts + System Status) | Right (Trend Chart) */}
-      <Col xs={24} lg={6}>
-        <Row gutter={[16, 16]}>
+      <Col xs={24} lg={6} style={{ display: 'flex' }}>
+        <Row gutter={[16, 16]} style={{ width: '100%' }}>
           <Col span={24}>
             <Card
               style={cardStyle}
@@ -460,9 +460,9 @@ const Dashboard: React.FC<DashboardProps> = ({
           </Col>
         </Row>
       </Col>
-      <Col xs={24} lg={18}>
+      <Col xs={24} lg={18} style={{ display: 'flex' }}>
         <Card
-          style={cardStyle}
+          style={{ ...cardStyle, display: 'flex', flexDirection: 'column' }}
           bodyStyle={{ flex: 1, display: 'flex', flexDirection: 'column' }}
           title={
             <Flex justify="space-between" align="center">
@@ -511,7 +511,7 @@ const Dashboard: React.FC<DashboardProps> = ({
                 yField="value"
                 colorField="type"
                 autoFit
-                smooth
+                shapeField="smooth"
                 legend={{ position: 'top-right' }}
                 axis={{ y: { title: false }, x: { title: false } }}
               />
