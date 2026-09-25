@@ -164,12 +164,29 @@ const Dashboard: React.FC<DashboardProps> = ({
     number | undefined
   >(undefined);
 
+  const chartContainerRef = useRef<HTMLDivElement>(null);
+  const [chartSize, setChartSize] = useState({ width: 0, height: 0 });
+
   useEffect(() => {
     const element = leftSectionRef.current;
     if (!element) return;
     const updateHeight = () => setLeftSectionHeight(element.offsetHeight);
     updateHeight();
     const observer = new ResizeObserver(updateHeight);
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const element = chartContainerRef.current;
+    if (!element) return;
+    const updateSize = () =>
+      setChartSize({
+        width: element.clientWidth,
+        height: element.clientHeight,
+      });
+    updateSize();
+    const observer = new ResizeObserver(updateSize);
     observer.observe(element);
     return () => observer.disconnect();
   }, []);
@@ -552,17 +569,20 @@ const Dashboard: React.FC<DashboardProps> = ({
           }
         >
           {combinedTrendData.length > 0 ? (
-            <div style={{ flex: 1, minHeight: 0 }}>
-              <Line
-                data={combinedTrendData}
-                xField="date"
-                yField="value"
-                colorField="type"
-                autoFit
-                shapeField="smooth"
-                legend={{ position: 'top-right' }}
-                axis={{ y: { title: false }, x: { title: false } }}
-              />
+            <div ref={chartContainerRef} style={{ flex: 1, minHeight: 0 }}>
+              {chartSize.height > 0 && (
+                <Line
+                  data={combinedTrendData}
+                  width={chartSize.width}
+                  height={chartSize.height}
+                  xField="date"
+                  yField="value"
+                  colorField="type"
+                  shapeField="smooth"
+                  legend={{ position: 'top-right' }}
+                  axis={{ y: { title: false }, x: { title: false } }}
+                />
+              )}
             </div>
           ) : (
             <Flex
