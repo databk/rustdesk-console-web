@@ -1,6 +1,6 @@
 import type { ProColumns } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
-import { Badge, Dropdown, Tooltip } from 'antd';
+import { Badge, Button, Dropdown, Tooltip } from 'antd';
 import type { MenuProps } from 'antd';
 import {
   ApiOutlined,
@@ -235,15 +235,16 @@ export const getDeviceColumns = (options?: {
               }}
               trigger={['click']}
             >
-              <a
-                onClick={(e) => e.preventDefault()}
+              <Button
+                type="link"
+                style={{ padding: 0, height: 'auto', lineHeight: 'inherit' }}
                 title={intl.formatMessage({
                   id: 'pages.devices.connect',
                   defaultMessage: 'Connect',
                 })}
               >
                 {record.id}
-              </a>
+              </Button>
             </Dropdown>
           </span>
         );
