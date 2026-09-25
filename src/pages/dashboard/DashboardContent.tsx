@@ -22,7 +22,13 @@ import {
   Statistic,
   Typography,
 } from 'antd';
-import React, { type CSSProperties, useMemo } from 'react';
+import React, {
+  type CSSProperties,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 const { Text } = Typography;
 
@@ -153,6 +159,21 @@ const Dashboard: React.FC<DashboardProps> = ({
 }) => {
   const intl = useIntl();
 
+  const leftSectionRef = useRef<HTMLDivElement>(null);
+  const [leftSectionHeight, setLeftSectionHeight] = useState<
+    number | undefined
+  >(undefined);
+
+  useEffect(() => {
+    const element = leftSectionRef.current;
+    if (!element) return;
+    const updateHeight = () => setLeftSectionHeight(element.offsetHeight);
+    updateHeight();
+    const observer = new ResizeObserver(updateHeight);
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+
   const formatUptime = useMemo(() => {
     const dayLabel = intl.formatMessage({
       id: 'pages.dashboard.day',
@@ -228,7 +249,7 @@ const Dashboard: React.FC<DashboardProps> = ({
   const uptime = data?.systemStatus?.uptime ?? null;
 
   return (
-    <Row gutter={[16, 16]} align="stretch">
+    <Row gutter={[16, 16]}>
       {/* Section 1: 4 Overview Cards with Ring Charts */}
       <Col span={24}>
         <Row gutter={[16, 16]}>
@@ -356,135 +377,141 @@ const Dashboard: React.FC<DashboardProps> = ({
       </Col>
 
       {/* Section 2: Left (Counts + System Status) | Right (Trend Chart) */}
-      <Col xs={24} lg={6} style={{ display: 'flex' }}>
-        <Flex vertical gap={16} style={{ width: '100%' }}>
-          <Card
-            style={{ width: '100%', height: '100%' }}
-            size="small"
-            title={
-              <FormattedMessage
-                id="pages.dashboard.resourceCounts"
-                defaultMessage="Resource Counts"
-              />
-            }
-          >
-            <Row gutter={[16, 16]}>
-              <Col span={12}>
-                <CountItem
-                  icon={<ContactsOutlined style={{ color: '#1890ff' }} />}
+      <Col xs={24} lg={6}>
+        <div ref={leftSectionRef}>
+          <Flex vertical gap={16}>
+            <Card
+              size="small"
+              title={
+                <FormattedMessage
+                  id="pages.dashboard.resourceCounts"
+                  defaultMessage="Resource Counts"
+                />
+              }
+            >
+              <Row gutter={[16, 16]}>
+                <Col span={12}>
+                  <CountItem
+                    icon={<ContactsOutlined style={{ color: '#1890ff' }} />}
+                    label={
+                      <FormattedMessage
+                        id="pages.dashboard.addressBooks"
+                        defaultMessage="Address Books"
+                      />
+                    }
+                    value={data?.counts.addressBooks || 0}
+                  />
+                </Col>
+                <Col span={12}>
+                  <CountItem
+                    icon={<TeamOutlined style={{ color: '#52c41a' }} />}
+                    label={
+                      <FormattedMessage
+                        id="pages.dashboard.groups"
+                        defaultMessage="Groups"
+                      />
+                    }
+                    value={data?.counts.groups || 0}
+                  />
+                </Col>
+                <Col span={12}>
+                  <CountItem
+                    icon={<SafetyOutlined style={{ color: '#722ed1' }} />}
+                    label={
+                      <FormattedMessage
+                        id="pages.dashboard.roles"
+                        defaultMessage="Roles"
+                      />
+                    }
+                    value={data?.counts.roles || 0}
+                  />
+                </Col>
+                <Col span={12}>
+                  <CountItem
+                    icon={<SolutionOutlined style={{ color: '#13c2c2' }} />}
+                    label={
+                      <FormattedMessage
+                        id="pages.dashboard.strategies"
+                        defaultMessage="Strategies"
+                      />
+                    }
+                    value={data?.counts.strategies || 0}
+                  />
+                </Col>
+              </Row>
+            </Card>
+            <Card
+              size="small"
+              title={
+                <FormattedMessage
+                  id="pages.dashboard.systemStatus"
+                  defaultMessage="System Status"
+                />
+              }
+            >
+              <Space direction="vertical" style={{ width: '100%' }} size={12}>
+                <SystemStatusItem
                   label={
                     <FormattedMessage
-                      id="pages.dashboard.addressBooks"
-                      defaultMessage="Address Books"
+                      id="pages.dashboard.cpu"
+                      defaultMessage="CPU"
                     />
                   }
-                  value={data?.counts.addressBooks || 0}
+                  value={cpu}
                 />
-              </Col>
-              <Col span={12}>
-                <CountItem
-                  icon={<TeamOutlined style={{ color: '#52c41a' }} />}
+                <SystemStatusItem
                   label={
                     <FormattedMessage
-                      id="pages.dashboard.groups"
-                      defaultMessage="Groups"
+                      id="pages.dashboard.memory"
+                      defaultMessage="Memory"
                     />
                   }
-                  value={data?.counts.groups || 0}
+                  value={memory}
                 />
-              </Col>
-              <Col span={12}>
-                <CountItem
-                  icon={<SafetyOutlined style={{ color: '#722ed1' }} />}
+                <SystemStatusItem
                   label={
                     <FormattedMessage
-                      id="pages.dashboard.roles"
-                      defaultMessage="Roles"
+                      id="pages.dashboard.disk"
+                      defaultMessage="Disk"
                     />
                   }
-                  value={data?.counts.roles || 0}
+                  value={disk}
                 />
-              </Col>
-              <Col span={12}>
-                <CountItem
-                  icon={<SolutionOutlined style={{ color: '#13c2c2' }} />}
-                  label={
+                <div
+                  style={{
+                    textAlign: 'center',
+                    paddingTop: 8,
+                    borderTop: '1px solid #f0f0f0',
+                  }}
+                >
+                  <Text type="secondary" style={{ fontSize: 12 }}>
                     <FormattedMessage
-                      id="pages.dashboard.strategies"
-                      defaultMessage="Strategies"
+                      id="pages.dashboard.uptime"
+                      defaultMessage="Uptime"
                     />
-                  }
-                  value={data?.counts.strategies || 0}
-                />
-              </Col>
-            </Row>
-          </Card>
-          <Card
-            style={{ width: '100%', height: '100%' }}
-            size="small"
-            title={
-              <FormattedMessage
-                id="pages.dashboard.systemStatus"
-                defaultMessage="System Status"
-              />
-            }
-          >
-            <Space direction="vertical" style={{ width: '100%' }} size={12}>
-              <SystemStatusItem
-                label={
-                  <FormattedMessage
-                    id="pages.dashboard.cpu"
-                    defaultMessage="CPU"
-                  />
-                }
-                value={cpu}
-              />
-              <SystemStatusItem
-                label={
-                  <FormattedMessage
-                    id="pages.dashboard.memory"
-                    defaultMessage="Memory"
-                  />
-                }
-                value={memory}
-              />
-              <SystemStatusItem
-                label={
-                  <FormattedMessage
-                    id="pages.dashboard.disk"
-                    defaultMessage="Disk"
-                  />
-                }
-                value={disk}
-              />
-              <div
-                style={{
-                  textAlign: 'center',
-                  paddingTop: 8,
-                  borderTop: '1px solid #f0f0f0',
-                }}
-              >
-                <Text type="secondary" style={{ fontSize: 12 }}>
-                  <FormattedMessage
-                    id="pages.dashboard.uptime"
-                    defaultMessage="Uptime"
-                  />
-                  : {uptime === null ? '--' : formatUptime(uptime)}
-                </Text>
-              </div>
-            </Space>
-          </Card>
-        </Flex>
+                    : {uptime === null ? '--' : formatUptime(uptime)}
+                  </Text>
+                </div>
+              </Space>
+            </Card>
+          </Flex>
+        </div>
       </Col>
       <Col xs={24} lg={18} style={{ display: 'flex' }}>
         <Card
           style={{
-            ...cardStyle,
+            height:
+              leftSectionHeight !== undefined ? leftSectionHeight : '100%',
             width: '100%',
             display: 'flex',
             flexDirection: 'column',
           }}
-          bodyStyle={{ flex: 1, display: 'flex', flexDirection: 'column' }}
+          bodyStyle={{
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            minHeight: 0,
+          }}
           title={
             <Flex justify="space-between" align="center">
               <FormattedMessage
@@ -525,7 +552,7 @@ const Dashboard: React.FC<DashboardProps> = ({
           }
         >
           {combinedTrendData.length > 0 ? (
-            <div style={{ flex: 1 }}>
+            <div style={{ flex: 1, minHeight: 0 }}>
               <Line
                 data={combinedTrendData}
                 xField="date"
@@ -538,7 +565,11 @@ const Dashboard: React.FC<DashboardProps> = ({
               />
             </div>
           ) : (
-            <Flex justify="center" align="center" style={{ flex: 1 }}>
+            <Flex
+              justify="center"
+              align="center"
+              style={{ flex: 1, minHeight: 0 }}
+            >
               <Empty
                 description={
                   <FormattedMessage
