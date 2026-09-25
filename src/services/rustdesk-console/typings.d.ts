@@ -859,9 +859,9 @@ declare namespace API {
     };
     files: {
       transferredToday: number;
-      totalSize: string;
-      uploadCount: number;
-      downloadCount: number;
+      totalSizeToday: string;
+      uploadToday: number;
+      downloadToday: number;
     };
     systemStatus: {
       cpu: number | null;

@@ -4,8 +4,8 @@ import {
   ApiOutlined,
   AlertOutlined,
   FileOutlined,
-  CheckCircleOutlined,
-  CloseCircleOutlined,
+  CloudUploadOutlined,
+  CloudDownloadOutlined,
 } from '@ant-design/icons';
 import { Line } from '@ant-design/plots';
 import { FormattedMessage, useIntl } from '@umijs/max';
@@ -16,13 +16,12 @@ import {
   Flex,
   Progress,
   Row,
-  Segmented,
   Select,
   Space,
   Statistic,
   Typography,
 } from 'antd';
-import React, { type CSSProperties, useMemo, useState } from 'react';
+import React, { type CSSProperties, useMemo } from 'react';
 
 const { Text } = Typography;
 
@@ -57,7 +56,7 @@ const formatUptime = (seconds: number) => {
 };
 
 const SystemStatusItem: React.FC<{
-  label: string;
+  label: React.ReactNode;
   value: number | null;
 }> = ({ label, value }) => {
   const color = getProgressColor(value);
@@ -84,94 +83,48 @@ const Dashboard: React.FC<DashboardProps> = ({
   onTrendRangeChange,
 }) => {
   const intl = useIntl();
-  const [trendMetric, setTrendMetric] = useState<
-    'connection' | 'user' | 'alarm'
-  >('connection');
 
-  const connectionChartData = useMemo(() => {
-    if (!trends?.connectionTrend) return [];
-    return trends.connectionTrend.flatMap((item) => [
-      {
-        date: item.date,
-        value: item.count,
-        type: intl.formatMessage({
-          id: 'pages.dashboard.connectionCount',
-          defaultMessage: 'Count',
-        }),
-      },
-      {
-        date: item.date,
-        value: item.avgDuration,
-        type: intl.formatMessage({
-          id: 'pages.dashboard.avgDuration',
-          defaultMessage: 'Avg Duration',
-        }),
-      },
-    ]);
-  }, [trends?.connectionTrend, intl]);
+  const combinedTrendData = useMemo(() => {
+    const result: Array<{ date: string; value: number; type: string }> = [];
+    const connLabel = intl.formatMessage({
+      id: 'pages.dashboard.connectionCount',
+      defaultMessage: 'Connections',
+    });
+    const userLabel = intl.formatMessage({
+      id: 'pages.dashboard.newUsers',
+      defaultMessage: 'New Users',
+    });
+    const alarmLabel = intl.formatMessage({
+      id: 'pages.dashboard.alarmTrend',
+      defaultMessage: 'Alarms',
+    });
 
-  const userNewChartData = useMemo(() => {
-    if (!trends?.userActiveTrend) return [];
-    return trends.userActiveTrend.map((item) => ({
-      date: item.date,
-      value: item.newUsers,
-      type: intl.formatMessage({
-        id: 'pages.dashboard.newUsers',
-        defaultMessage: 'New Users',
-      }),
-    }));
-  }, [trends?.userActiveTrend, intl]);
+    const dateSet = new Set<string>();
+    trends?.connectionTrend?.forEach((item) => dateSet.add(item.date));
+    trends?.userActiveTrend?.forEach((item) => dateSet.add(item.date));
+    trends?.alarmTrend?.forEach((item) => dateSet.add(item.date));
 
-  const alarmChartData = useMemo(() => {
-    if (!trends?.alarmTrend) return [];
-    return trends.alarmTrend.map((item) => ({
-      date: item.date,
-      value: item.info,
-      type: intl.formatMessage({
-        id: 'pages.dashboard.alarmTrend',
-        defaultMessage: 'Alarms',
-      }),
-    }));
-  }, [trends?.alarmTrend, intl]);
+    const sortedDates = Array.from(dateSet).sort();
 
-  const noDataPlaceholder = (
-    <Empty
-      style={{ padding: '60px 0' }}
-      description={
-        <FormattedMessage
-          id="pages.dashboard.noData"
-          defaultMessage="No data"
-        />
+    for (const date of sortedDates) {
+      const connItem = trends?.connectionTrend?.find((t) => t.date === date);
+      if (connItem) {
+        result.push({ date, value: connItem.count, type: connLabel });
       }
-    />
-  );
 
-  const renderLineChart = (
-    chartData: Array<{ date: string; value: number; type: string }>,
-  ) => {
-    if (chartData.length === 0) return noDataPlaceholder;
-    return (
-      <Line
-        data={chartData}
-        xField="date"
-        yField="value"
-        colorField="type"
-        height={300}
-        legend={{ position: 'top-right' }}
-        axis={{ y: { title: false }, x: { title: false } }}
-      />
-    );
-  };
+      const userItem = trends?.userActiveTrend?.find((t) => t.date === date);
+      if (userItem) {
+        result.push({ date, value: userItem.newUsers, type: userLabel });
+      }
 
-  const trendChart = (() => {
-    if (trendMetric === 'connection') {
-      return renderLineChart(connectionChartData);
+      const alarmItem = trends?.alarmTrend?.find((t) => t.date === date);
+      if (alarmItem) {
+        result.push({ date, value: alarmItem.info, type: alarmLabel });
+      }
     }
-    if (trendMetric === 'user') {
-      return renderLineChart(userNewChartData);
-    }
-    return renderLineChart(alarmChartData);
-  })();
+
+    return result;
+  }, [trends, intl]);
 
   const cpu = data?.systemStatus?.cpu ?? null;
   const memory = data?.systemStatus?.memory ?? null;
@@ -328,55 +281,133 @@ const Dashboard: React.FC<DashboardProps> = ({
         </Row>
       </Col>
 
-      {/* Section 2: Trend Charts + System Status */}
+      {/* Section 2: Left (File Transfer + System Status) | Right (Trend Chart) */}
+      <Col xs={24} lg={7}>
+        <Row gutter={[16, 16]}>
+          <Col span={24}>
+            <Card
+              style={cardStyle}
+              title={
+                <Space>
+                  <FileOutlined style={{ color: '#13c2c2' }} />
+                  <FormattedMessage
+                    id="pages.dashboard.fileTransfer"
+                    defaultMessage="File Transfer"
+                  />
+                </Space>
+              }
+              size="small"
+            >
+              <Row gutter={16}>
+                <Col span={12}>
+                  <Statistic
+                    title={
+                      <FormattedMessage
+                        id="pages.dashboard.uploadCount"
+                        defaultMessage="Upload"
+                      />
+                    }
+                    value={data?.files.uploadToday || 0}
+                    valueStyle={{ fontSize: 18 }}
+                    prefix={
+                      <CloudUploadOutlined style={{ color: '#1890ff' }} />
+                    }
+                  />
+                </Col>
+                <Col span={12}>
+                  <Statistic
+                    title={
+                      <FormattedMessage
+                        id="pages.dashboard.downloadCount"
+                        defaultMessage="Download"
+                      />
+                    }
+                    value={data?.files.downloadToday || 0}
+                    valueStyle={{ fontSize: 18 }}
+                    prefix={
+                      <CloudDownloadOutlined style={{ color: '#52c41a' }} />
+                    }
+                  />
+                </Col>
+              </Row>
+              <div style={{ marginTop: 8 }}>
+                <Text type="secondary" style={{ fontSize: 12 }}>
+                  <FormattedMessage
+                    id="pages.dashboard.totalSize"
+                    defaultMessage="Total Size"
+                  />
+                  : {data?.files.totalSizeToday || '0 B'}
+                </Text>
+              </div>
+            </Card>
+          </Col>
+          <Col span={24}>
+            <Card
+              style={cardStyle}
+              title={
+                <FormattedMessage
+                  id="pages.dashboard.systemStatus"
+                  defaultMessage="System Status"
+                />
+              }
+              size="small"
+            >
+              <Space direction="vertical" style={{ width: '100%' }} size={12}>
+                <SystemStatusItem
+                  label={
+                    <FormattedMessage
+                      id="pages.dashboard.cpu"
+                      defaultMessage="CPU"
+                    />
+                  }
+                  value={cpu}
+                />
+                <SystemStatusItem
+                  label={
+                    <FormattedMessage
+                      id="pages.dashboard.memory"
+                      defaultMessage="Memory"
+                    />
+                  }
+                  value={memory}
+                />
+                <SystemStatusItem
+                  label={
+                    <FormattedMessage
+                      id="pages.dashboard.disk"
+                      defaultMessage="Disk"
+                    />
+                  }
+                  value={disk}
+                />
+                <div
+                  style={{
+                    textAlign: 'center',
+                    paddingTop: 8,
+                    borderTop: '1px solid #f0f0f0',
+                  }}
+                >
+                  <Text type="secondary" style={{ fontSize: 12 }}>
+                    <FormattedMessage
+                      id="pages.dashboard.uptime"
+                      defaultMessage="Uptime"
+                    />
+                    : {uptime === null ? '--' : formatUptime(uptime)}
+                  </Text>
+                </div>
+              </Space>
+            </Card>
+          </Col>
+        </Row>
+      </Col>
       <Col xs={24} lg={17}>
         <Card
           style={cardStyle}
           title={
             <Flex justify="space-between" align="center">
-              <Segmented
-                value={trendMetric}
-                onChange={(val) =>
-                  setTrendMetric(val as 'connection' | 'user' | 'alarm')
-                }
-                options={[
-                  {
-                    value: 'connection',
-                    label: (
-                      <Space size={4}>
-                        <ApiOutlined />
-                        <FormattedMessage
-                          id="pages.dashboard.connectionTrend"
-                          defaultMessage="Connections"
-                        />
-                      </Space>
-                    ),
-                  },
-                  {
-                    value: 'user',
-                    label: (
-                      <Space size={4}>
-                        <UserOutlined />
-                        <FormattedMessage
-                          id="pages.dashboard.userActiveTrend"
-                          defaultMessage="Users"
-                        />
-                      </Space>
-                    ),
-                  },
-                  {
-                    value: 'alarm',
-                    label: (
-                      <Space size={4}>
-                        <AlertOutlined />
-                        <FormattedMessage
-                          id="pages.dashboard.alarmTrend"
-                          defaultMessage="Alarms"
-                        />
-                      </Space>
-                    ),
-                  },
-                ]}
+              <FormattedMessage
+                id="pages.dashboard.trendData"
+                defaultMessage="Trend Data"
               />
               <Select
                 value={trendRange}
@@ -411,112 +442,28 @@ const Dashboard: React.FC<DashboardProps> = ({
             </Flex>
           }
         >
-          {trendChart}
+          {combinedTrendData.length > 0 ? (
+            <Line
+              data={combinedTrendData}
+              xField="date"
+              yField="value"
+              colorField="type"
+              height={400}
+              legend={{ position: 'top-right' }}
+              axis={{ y: { title: false }, x: { title: false } }}
+            />
+          ) : (
+            <Empty
+              style={{ padding: '100px 0' }}
+              description={
+                <FormattedMessage
+                  id="pages.dashboard.noData"
+                  defaultMessage="No data"
+                />
+              }
+            />
+          )}
         </Card>
-      </Col>
-      <Col xs={24} lg={7}>
-        <Card
-          style={cardStyle}
-          title={
-            <FormattedMessage
-              id="pages.dashboard.systemStatus"
-              defaultMessage="System Status"
-            />
-          }
-        >
-          <Space direction="vertical" style={{ width: '100%' }} size={16}>
-            <SystemStatusItem
-              label={
-                <FormattedMessage
-                  id="pages.dashboard.cpu"
-                  defaultMessage="CPU"
-                />
-              }
-              value={cpu}
-            />
-            <SystemStatusItem
-              label={
-                <FormattedMessage
-                  id="pages.dashboard.memory"
-                  defaultMessage="Memory"
-                />
-              }
-              value={memory}
-            />
-            <SystemStatusItem
-              label={
-                <FormattedMessage
-                  id="pages.dashboard.disk"
-                  defaultMessage="Disk"
-                />
-              }
-              value={disk}
-            />
-            <div
-              style={{
-                textAlign: 'center',
-                paddingTop: 8,
-                borderTop: '1px solid #f0f0f0',
-              }}
-            >
-              <Text type="secondary" style={{ fontSize: 12 }}>
-                <FormattedMessage
-                  id="pages.dashboard.uptime"
-                  defaultMessage="Uptime"
-                />
-                : {uptime === null ? '--' : formatUptime(uptime)}
-              </Text>
-            </div>
-          </Space>
-        </Card>
-      </Col>
-
-      {/* Section 3: File Transfer Summary */}
-      <Col span={24}>
-        <Row gutter={[16, 16]}>
-          <Col xs={24} sm={8}>
-            <Card style={cardStyle} variant="borderless">
-              <Statistic
-                title={
-                  <FormattedMessage
-                    id="pages.dashboard.uploadCount"
-                    defaultMessage="Upload Count"
-                  />
-                }
-                value={data?.files.uploadCount || 0}
-                prefix={<CheckCircleOutlined style={{ color: '#1890ff' }} />}
-              />
-            </Card>
-          </Col>
-          <Col xs={24} sm={8}>
-            <Card style={cardStyle} variant="borderless">
-              <Statistic
-                title={
-                  <FormattedMessage
-                    id="pages.dashboard.downloadCount"
-                    defaultMessage="Download Count"
-                  />
-                }
-                value={data?.files.downloadCount || 0}
-                prefix={<CloseCircleOutlined style={{ color: '#52c41a' }} />}
-              />
-            </Card>
-          </Col>
-          <Col xs={24} sm={8}>
-            <Card style={cardStyle} variant="borderless">
-              <Statistic
-                title={
-                  <FormattedMessage
-                    id="pages.dashboard.totalSize"
-                    defaultMessage="Total Size"
-                  />
-                }
-                value={data?.files.totalSize || '0 B'}
-                prefix={<FileOutlined style={{ color: '#13c2c2' }} />}
-              />
-            </Card>
-          </Col>
-        </Row>
       </Col>
     </Row>
   );
