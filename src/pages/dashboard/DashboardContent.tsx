@@ -68,7 +68,6 @@ const OverviewCard: React.FC<{
 
   return (
     <Card style={cardStyle} variant="borderless">
-      G{' '}
       <Flex align="center" gap={16}>
         <div style={{ flex: 1, minWidth: 0 }}>
           <Statistic
