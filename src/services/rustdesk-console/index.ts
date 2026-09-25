@@ -84,12 +84,7 @@ export {
   updateConnectionAudit,
   disconnectConnection,
 } from './audit';
-export {
-  getDashboardOverview,
-  getDashboardStatistics,
-  getDashboardTrends,
-  getDashboardRealtime,
-} from './dashboard';
+export { getDashboard, getDashboardTrends } from './dashboard';
 export { getSMTPConfig, updateSMTPConfig, testSMTPConfig } from './smtp';
 export { getLdapConfig, updateLdapConfig, testLdapConfig } from './ldap';
 export {
