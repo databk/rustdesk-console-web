@@ -49,13 +49,6 @@ const getProgressColor = (value: number | null) =>
 const formatPercentage = (value: number | null) =>
   value === null ? '--' : `${value}%`;
 
-const formatUptime = (seconds: number) => {
-  const days = Math.floor(seconds / 86400);
-  const hours = Math.floor((seconds % 86400) / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-  return `${days}d ${hours}h ${minutes}m`;
-};
-
 const OverviewCard: React.FC<{
   title: React.ReactNode;
   total: number;
@@ -160,6 +153,27 @@ const Dashboard: React.FC<DashboardProps> = ({
 }) => {
   const intl = useIntl();
 
+  const formatUptime = useMemo(() => {
+    const dayLabel = intl.formatMessage({
+      id: 'pages.dashboard.day',
+      defaultMessage: 'd',
+    });
+    const hourLabel = intl.formatMessage({
+      id: 'pages.dashboard.hour',
+      defaultMessage: 'h',
+    });
+    const minLabel = intl.formatMessage({
+      id: 'pages.dashboard.min',
+      defaultMessage: 'm',
+    });
+    return (seconds: number) => {
+      const days = Math.floor(seconds / 86400);
+      const hours = Math.floor((seconds % 86400) / 3600);
+      const minutes = Math.floor((seconds % 3600) / 60);
+      return `${days}${dayLabel} ${hours}${hourLabel} ${minutes}${minLabel}`;
+    };
+  }, [intl]);
+
   const combinedTrendData = useMemo(() => {
     const result: Array<{ date: string; value: number; type: string }> = [];
     const connLabel = intl.formatMessage({
@@ -179,7 +193,7 @@ const Dashboard: React.FC<DashboardProps> = ({
     trends?.connectionTrend?.forEach((item) => {
       dateSet.add(item.date);
     });
-    trends?.userActiveTrend?.forEach((item) => {
+    trends?.newUserTrend?.forEach((item) => {
       dateSet.add(item.date);
     });
     trends?.alarmTrend?.forEach((item) => {
@@ -194,14 +208,14 @@ const Dashboard: React.FC<DashboardProps> = ({
         result.push({ date, value: connItem.count, type: connLabel });
       }
 
-      const userItem = trends?.userActiveTrend?.find((t) => t.date === date);
+      const userItem = trends?.newUserTrend?.find((t) => t.date === date);
       if (userItem) {
         result.push({ date, value: userItem.newUsers, type: userLabel });
       }
 
       const alarmItem = trends?.alarmTrend?.find((t) => t.date === date);
       if (alarmItem) {
-        result.push({ date, value: alarmItem.info, type: alarmLabel });
+        result.push({ date, value: alarmItem.count, type: alarmLabel });
       }
     }
 
@@ -312,7 +326,7 @@ const Dashboard: React.FC<DashboardProps> = ({
             <OverviewCard
               title={
                 <FormattedMessage
-                  id="pages.dashboard.fileTransfer"
+                  id="pages.dashboard.todayTransfers"
                   defaultMessage="Today Transfers"
                 />
               }

@@ -841,7 +841,6 @@ declare namespace API {
       total: number;
       admin: number;
       normal: number;
-      newToday: number;
     };
     devices: {
       total: number;
@@ -877,13 +876,13 @@ declare namespace API {
       date: string;
       count: number;
     }>;
-    userActiveTrend?: Array<{
+    newUserTrend?: Array<{
       date: string;
       newUsers: number;
     }>;
     alarmTrend?: Array<{
       date: string;
-      info: number;
+      count: number;
     }>;
   };
 
