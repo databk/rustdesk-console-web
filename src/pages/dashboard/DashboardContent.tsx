@@ -177,20 +177,6 @@ const Dashboard: React.FC<DashboardProps> = ({
     return () => observer.disconnect();
   }, []);
 
-  useEffect(() => {
-    const element = chartContainerRef.current;
-    if (!element) return;
-    const updateSize = () =>
-      setChartSize({
-        width: element.clientWidth,
-        height: element.clientHeight,
-      });
-    updateSize();
-    const observer = new ResizeObserver(updateSize);
-    observer.observe(element);
-    return () => observer.disconnect();
-  }, []);
-
   const formatUptime = useMemo(() => {
     const dayLabel = intl.formatMessage({
       id: 'pages.dashboard.day',
@@ -259,6 +245,20 @@ const Dashboard: React.FC<DashboardProps> = ({
 
     return result;
   }, [trends, intl]);
+
+  useEffect(() => {
+    const element = chartContainerRef.current;
+    if (!element) return;
+    const updateSize = () =>
+      setChartSize({
+        width: element.clientWidth,
+        height: element.clientHeight,
+      });
+    updateSize();
+    const observer = new ResizeObserver(updateSize);
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [combinedTrendData]);
 
   const cpu = data?.systemStatus?.cpu ?? null;
   const memory = data?.systemStatus?.memory ?? null;
