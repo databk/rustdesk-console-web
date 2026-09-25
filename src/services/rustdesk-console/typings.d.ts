@@ -559,6 +559,9 @@ declare namespace API {
     target_guid?: string | null;
     result?: string | number | boolean | null;
     reason?: string | null;
+    before_state?: unknown;
+    after_state?: unknown;
+    request_id?: string | null;
     created_at?: string | null;
   };
 

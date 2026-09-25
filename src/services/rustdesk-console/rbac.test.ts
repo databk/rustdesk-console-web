@@ -338,6 +338,11 @@ test('passes the console audit operator filter and uses the new row contract', a
     current: 2,
     pageSize: 10,
     operator: 'admin',
+    action: 'role.update',
+    target_type: 'role',
+    result: 'allowed',
+    start_time: '2026-01-01T00:00:00.000Z',
+    end_time: '2026-01-31T23:59:59.999Z',
   });
 
   expect(requestMock).toHaveBeenCalledWith('/api/audits/console', {
@@ -346,6 +351,11 @@ test('passes the console audit operator filter and uses the new row contract', a
       current: 2,
       pageSize: 10,
       operator: 'admin',
+      action: 'role.update',
+      target_type: 'role',
+      result: 'allowed',
+      start_time: '2026-01-01T00:00:00.000Z',
+      end_time: '2026-01-31T23:59:59.999Z',
     },
   });
 });

@@ -156,7 +156,6 @@ export default [
         path: '/audits/console',
         access: 'canAuditView',
         component: './audits/console',
-        hideInMenu: true,
       },
     ],
   },

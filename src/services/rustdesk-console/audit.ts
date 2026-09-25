@@ -77,7 +77,11 @@ export async function getConsoleAudits(
     current?: number;
     pageSize?: number;
     operator?: string;
-    created_at?: string;
+    action?: string;
+    target_type?: string;
+    result?: 'allowed' | 'denied';
+    start_time?: string;
+    end_time?: string;
   },
   options?: { [key: string]: any },
 ) {

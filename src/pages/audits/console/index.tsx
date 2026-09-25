@@ -1,12 +1,14 @@
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
+import { Button, Drawer, Typography } from 'antd';
 import { FormattedMessage, useIntl } from '@umijs/max';
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { getConsoleAudits } from '@/services/rustdesk-console/audit';
 
 const ConsoleAudit: React.FC = () => {
   const intl = useIntl();
   const actionRef = useRef<ActionType>(null);
+  const [selected, setSelected] = useState<API.ConsoleAuditItem>();
 
   const columns: ProColumns<API.ConsoleAuditItem>[] = [
     {
@@ -66,6 +68,10 @@ const ConsoleAudit: React.FC = () => {
       ),
       dataIndex: 'result',
       width: 120,
+      valueEnum: {
+        allowed: { text: 'Allowed', status: 'Success' },
+        denied: { text: 'Denied', status: 'Error' },
+      },
     },
     {
       title: (
@@ -79,6 +85,25 @@ const ConsoleAudit: React.FC = () => {
       dataIndex: 'created_at',
       valueType: 'dateTime',
       width: 180,
+      search: false,
+    },
+    {
+      title: <FormattedMessage id="pages.audits.time" defaultMessage="Time" />,
+      dataIndex: 'time_range',
+      valueType: 'dateRange',
+      hideInTable: true,
+    },
+    {
+      title: (
+        <FormattedMessage id="pages.audits.detail" defaultMessage="Detail" />
+      ),
+      valueType: 'option',
+      width: 80,
+      render: (_, record) => [
+        <Button key="detail" type="link" onClick={() => setSelected(record)}>
+          <FormattedMessage id="pages.audits.detail" defaultMessage="Detail" />
+        </Button>,
+      ],
     },
   ];
 
@@ -98,11 +123,20 @@ const ConsoleAudit: React.FC = () => {
         actionRef={actionRef}
         rowKey="guid"
         request={async (params) => {
+          const timeRange = (
+            params as typeof params & {
+              time_range?: { toISOString(): string }[];
+            }
+          ).time_range;
           const result = await getConsoleAudits({
             current: params.current || 1,
             pageSize: params.pageSize || 20,
             operator: params.operator,
-            created_at: params.created_at,
+            action: params.action,
+            target_type: params.target_type,
+            result: params.result,
+            start_time: timeRange?.[0]?.toISOString(),
+            end_time: timeRange?.[1]?.toISOString(),
           });
           return {
             data: result.data || [],
@@ -128,8 +162,36 @@ const ConsoleAudit: React.FC = () => {
           fullScreen: false,
           reload: true,
         }}
-        scroll={{ x: 1100 }}
+        scroll={{ x: 1200 }}
       />
+      <Drawer
+        title={
+          <FormattedMessage id="pages.audits.detail" defaultMessage="Detail" />
+        }
+        width={640}
+        open={Boolean(selected)}
+        onClose={() => setSelected(undefined)}
+      >
+        {selected && (
+          <>
+            <Typography.Paragraph>
+              <strong>Action:</strong> {selected.action || '-'}
+            </Typography.Paragraph>
+            <Typography.Paragraph>
+              <strong>Target:</strong> {selected.target_type || '-'} /{' '}
+              {selected.target_guid || '-'}
+            </Typography.Paragraph>
+            <Typography.Paragraph>
+              <strong>Before state</strong>
+              <pre>{JSON.stringify(selected.before_state, null, 2) || '-'}</pre>
+            </Typography.Paragraph>
+            <Typography.Paragraph>
+              <strong>After state</strong>
+              <pre>{JSON.stringify(selected.after_state, null, 2) || '-'}</pre>
+            </Typography.Paragraph>
+          </>
+        )}
+      </Drawer>
     </PageContainer>
   );
 };
