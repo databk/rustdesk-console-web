@@ -463,6 +463,7 @@ const Dashboard: React.FC<DashboardProps> = ({
       <Col xs={24} lg={18}>
         <Card
           style={cardStyle}
+          bodyStyle={{ flex: 1, display: 'flex', flexDirection: 'column' }}
           title={
             <Flex justify="space-between" align="center">
               <FormattedMessage
@@ -503,26 +504,33 @@ const Dashboard: React.FC<DashboardProps> = ({
           }
         >
           {combinedTrendData.length > 0 ? (
-            <Line
-              data={combinedTrendData}
-              xField="date"
-              yField="value"
-              colorField="type"
-              height={400}
-              smooth
-              legend={{ position: 'top-right' }}
-              axis={{ y: { title: false }, x: { title: false } }}
-            />
+            <div style={{ flex: 1, minHeight: 400 }}>
+              <Line
+                data={combinedTrendData}
+                xField="date"
+                yField="value"
+                colorField="type"
+                autoFit
+                smooth
+                legend={{ position: 'top-right' }}
+                axis={{ y: { title: false }, x: { title: false } }}
+              />
+            </div>
           ) : (
-            <Empty
-              style={{ padding: '100px 0' }}
-              description={
-                <FormattedMessage
-                  id="pages.dashboard.noData"
-                  defaultMessage="No data"
-                />
-              }
-            />
+            <Flex
+              justify="center"
+              align="center"
+              style={{ flex: 1, minHeight: 400 }}
+            >
+              <Empty
+                description={
+                  <FormattedMessage
+                    id="pages.dashboard.noData"
+                    defaultMessage="No data"
+                  />
+                }
+              />
+            </Flex>
           )}
         </Card>
       </Col>
