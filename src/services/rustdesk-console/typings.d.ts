@@ -839,29 +839,31 @@ declare namespace API {
   type DashboardData = {
     users: {
       total: number;
-      active: number;
+      admin: number;
+      normal: number;
       newToday: number;
     };
     devices: {
       total: number;
       online: number;
       offline: number;
-      groups: number;
     };
     connections: {
       today: number;
-      successRate: number;
-      avgDuration: number;
-    };
-    alarms: {
-      total: number;
-      today: number;
+      successCount: number;
+      failureCount: number;
     };
     files: {
       transferredToday: number;
-      totalSizeToday: string;
       uploadToday: number;
       downloadToday: number;
+    };
+    counts: {
+      addressBooks: number;
+      userGroups: number;
+      deviceGroups: number;
+      roles: number;
+      strategies: number;
     };
     systemStatus: {
       cpu: number | null;
@@ -875,7 +877,6 @@ declare namespace API {
     connectionTrend?: Array<{
       date: string;
       count: number;
-      avgDuration: number;
     }>;
     userActiveTrend?: Array<{
       date: string;

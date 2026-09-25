@@ -2,10 +2,11 @@ import {
   UserOutlined,
   DesktopOutlined,
   ApiOutlined,
-  AlertOutlined,
   FileOutlined,
-  CloudUploadOutlined,
-  CloudDownloadOutlined,
+  ContactsOutlined,
+  TeamOutlined,
+  SafetyOutlined,
+  SolutionOutlined,
 } from '@ant-design/icons';
 import { Line } from '@ant-design/plots';
 import { FormattedMessage, useIntl } from '@umijs/max';
@@ -54,6 +55,81 @@ const formatUptime = (seconds: number) => {
   const minutes = Math.floor((seconds % 3600) / 60);
   return `${days}d ${hours}h ${minutes}m`;
 };
+
+const OverviewCard: React.FC<{
+  title: React.ReactNode;
+  total: number;
+  icon: React.ReactNode;
+  ringData: { label: string; value: number; color: string }[];
+}> = ({ title, total, icon, ringData }) => {
+  const ringTotal = ringData.reduce((sum, item) => sum + item.value, 0);
+  const ringPercent =
+    ringTotal > 0 ? Math.round((ringData[0].value / ringTotal) * 100) : 0;
+
+  return (
+    <Card style={cardStyle} variant="borderless">
+      <Flex align="center" gap={16}>
+        <div style={{ flex: '0 0 auto' }}>
+          <Progress
+            type="circle"
+            percent={ringPercent}
+            size={64}
+            strokeColor={ringData[0].color}
+            trailColor={ringData[1]?.color || '#f0f0f0'}
+            format={() => (
+              <span style={{ fontSize: 14, fontWeight: 600 }}>{total}</span>
+            )}
+          />
+        </div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <Statistic
+            title={title}
+            value={total}
+            prefix={icon}
+            valueStyle={{ fontSize: 20 }}
+          />
+          <div style={{ marginTop: 4 }}>
+            <Space size={8}>
+              {ringData.map((item) => (
+                <Text
+                  key={item.label}
+                  type="secondary"
+                  style={{ fontSize: 11 }}
+                >
+                  <span
+                    style={{
+                      display: 'inline-block',
+                      width: 8,
+                      height: 8,
+                      borderRadius: '50%',
+                      backgroundColor: item.color,
+                      marginRight: 4,
+                    }}
+                  />
+                  {item.label}: {item.value}
+                </Text>
+              ))}
+            </Space>
+          </div>
+        </div>
+      </Flex>
+    </Card>
+  );
+};
+
+const CountItem: React.FC<{
+  icon: React.ReactNode;
+  label: React.ReactNode;
+  value: number;
+}> = ({ icon, label, value }) => (
+  <Flex vertical align="center" gap={4}>
+    {icon}
+    <Text style={{ fontSize: 12 }} type="secondary">
+      {label}
+    </Text>
+    <Text style={{ fontSize: 18, fontWeight: 600 }}>{value}</Text>
+  </Flex>
+);
 
 const SystemStatusItem: React.FC<{
   label: React.ReactNode;
@@ -133,224 +209,208 @@ const Dashboard: React.FC<DashboardProps> = ({
 
   return (
     <Row gutter={[16, 16]}>
-      {/* Section 1: Overview Metric Cards */}
+      {/* Section 1: 4 Overview Cards with Ring Charts */}
       <Col span={24}>
         <Row gutter={[16, 16]}>
           <Col xs={24} sm={12} lg={6}>
-            <Card style={cardStyle} variant="borderless">
-              <Statistic
-                title={
-                  <FormattedMessage
-                    id="pages.dashboard.totalUsers"
-                    defaultMessage="Total Users"
-                  />
-                }
-                value={data?.users.total || 0}
-                prefix={<UserOutlined style={{ color: '#1890ff' }} />}
-              />
-              <div style={{ marginTop: 8 }}>
-                <Space size={16}>
-                  <Text type="secondary" style={{ fontSize: 12 }}>
-                    <FormattedMessage
-                      id="pages.dashboard.activeUsers"
-                      defaultMessage="Active"
-                    />
-                    : {data?.users.active || 0}
-                  </Text>
-                  <Text type="secondary" style={{ fontSize: 12 }}>
-                    <FormattedMessage
-                      id="pages.dashboard.newUsers"
-                      defaultMessage="New Today"
-                    />
-                    : {data?.users.newToday || 0}
-                  </Text>
-                </Space>
-              </div>
-            </Card>
+            <OverviewCard
+              title={
+                <FormattedMessage
+                  id="pages.dashboard.totalUsers"
+                  defaultMessage="Total Users"
+                />
+              }
+              total={data?.users.total || 0}
+              icon={<UserOutlined style={{ color: '#1890ff' }} />}
+              ringData={[
+                {
+                  label: intl.formatMessage({
+                    id: 'pages.dashboard.adminUsers',
+                    defaultMessage: 'Admin',
+                  }),
+                  value: data?.users.admin || 0,
+                  color: '#1890ff',
+                },
+                {
+                  label: intl.formatMessage({
+                    id: 'pages.dashboard.normalUsers',
+                    defaultMessage: 'Normal',
+                  }),
+                  value: data?.users.normal || 0,
+                  color: '#91d5ff',
+                },
+              ]}
+            />
           </Col>
           <Col xs={24} sm={12} lg={6}>
-            <Card style={cardStyle} variant="borderless">
-              <Statistic
-                title={
-                  <FormattedMessage
-                    id="pages.dashboard.totalDevices"
-                    defaultMessage="Total Devices"
-                  />
-                }
-                value={data?.devices.total || 0}
-                prefix={<DesktopOutlined style={{ color: '#52c41a' }} />}
-              />
-              <div style={{ marginTop: 8 }}>
-                <Space size={16}>
-                  <Text type="secondary" style={{ fontSize: 12 }}>
-                    <FormattedMessage
-                      id="pages.dashboard.onlineDevices"
-                      defaultMessage="Online"
-                    />
-                    :{' '}
-                    <Text style={{ color: '#52c41a', fontSize: 12 }}>
-                      {data?.devices.online || 0}
-                    </Text>
-                  </Text>
-                  <Text type="secondary" style={{ fontSize: 12 }}>
-                    <FormattedMessage
-                      id="pages.dashboard.offlineDevices"
-                      defaultMessage="Offline"
-                    />
-                    : {data?.devices.offline || 0}
-                  </Text>
-                </Space>
-              </div>
-            </Card>
+            <OverviewCard
+              title={
+                <FormattedMessage
+                  id="pages.dashboard.totalDevices"
+                  defaultMessage="Total Devices"
+                />
+              }
+              total={data?.devices.total || 0}
+              icon={<DesktopOutlined style={{ color: '#52c41a' }} />}
+              ringData={[
+                {
+                  label: intl.formatMessage({
+                    id: 'pages.dashboard.onlineDevices',
+                    defaultMessage: 'Online',
+                  }),
+                  value: data?.devices.online || 0,
+                  color: '#52c41a',
+                },
+                {
+                  label: intl.formatMessage({
+                    id: 'pages.dashboard.offlineDevices',
+                    defaultMessage: 'Offline',
+                  }),
+                  value: data?.devices.offline || 0,
+                  color: '#d9f7be',
+                },
+              ]}
+            />
           </Col>
           <Col xs={24} sm={12} lg={6}>
-            <Card style={cardStyle} variant="borderless">
-              <Statistic
-                title={
-                  <FormattedMessage
-                    id="pages.dashboard.todayConnections"
-                    defaultMessage="Today Connections"
-                  />
-                }
-                value={data?.connections.today || 0}
-                prefix={<ApiOutlined style={{ color: '#722ed1' }} />}
-              />
-              <div style={{ marginTop: 8 }}>
-                <Space size={16}>
-                  <Text type="secondary" style={{ fontSize: 12 }}>
-                    <FormattedMessage
-                      id="pages.dashboard.successRate"
-                      defaultMessage="Success Rate"
-                    />
-                    :{' '}
-                    <Text
-                      style={{
-                        color:
-                          (data?.connections.successRate || 0) >= 80
-                            ? '#52c41a'
-                            : '#faad14',
-                        fontSize: 12,
-                      }}
-                    >
-                      {data?.connections.successRate || 0}%
-                    </Text>
-                  </Text>
-                  <Text type="secondary" style={{ fontSize: 12 }}>
-                    <FormattedMessage
-                      id="pages.dashboard.avgDuration"
-                      defaultMessage="Avg"
-                    />
-                    : {data?.connections.avgDuration || 0} min
-                  </Text>
-                </Space>
-              </div>
-            </Card>
+            <OverviewCard
+              title={
+                <FormattedMessage
+                  id="pages.dashboard.todayConnections"
+                  defaultMessage="Today Connections"
+                />
+              }
+              total={data?.connections.today || 0}
+              icon={<ApiOutlined style={{ color: '#722ed1' }} />}
+              ringData={[
+                {
+                  label: intl.formatMessage({
+                    id: 'pages.dashboard.successCount',
+                    defaultMessage: 'Success',
+                  }),
+                  value: data?.connections.successCount || 0,
+                  color: '#722ed1',
+                },
+                {
+                  label: intl.formatMessage({
+                    id: 'pages.dashboard.failureCount',
+                    defaultMessage: 'Failed',
+                  }),
+                  value: data?.connections.failureCount || 0,
+                  color: '#efdbff',
+                },
+              ]}
+            />
           </Col>
           <Col xs={24} sm={12} lg={6}>
-            <Card style={cardStyle} variant="borderless">
-              <Statistic
-                title={
-                  <FormattedMessage
-                    id="pages.dashboard.totalAlarms"
-                    defaultMessage="Total Alarms"
-                  />
-                }
-                value={data?.alarms.total || 0}
-                prefix={<AlertOutlined style={{ color: '#faad14' }} />}
-              />
-              <div style={{ marginTop: 8 }}>
-                <Space size={16}>
-                  <Text type="secondary" style={{ fontSize: 12 }}>
-                    <FormattedMessage
-                      id="pages.dashboard.todayAlarms"
-                      defaultMessage="Today"
-                    />
-                    : {data?.alarms.today || 0}
-                  </Text>
-                  <Text type="secondary" style={{ fontSize: 12 }}>
-                    <FormattedMessage
-                      id="pages.dashboard.fileTransfer"
-                      defaultMessage="Files Today"
-                    />
-                    : {data?.files.transferredToday || 0}
-                  </Text>
-                </Space>
-              </div>
-            </Card>
+            <OverviewCard
+              title={
+                <FormattedMessage
+                  id="pages.dashboard.fileTransfer"
+                  defaultMessage="Today Transfers"
+                />
+              }
+              total={data?.files.transferredToday || 0}
+              icon={<FileOutlined style={{ color: '#13c2c2' }} />}
+              ringData={[
+                {
+                  label: intl.formatMessage({
+                    id: 'pages.dashboard.uploadCount',
+                    defaultMessage: 'Upload',
+                  }),
+                  value: data?.files.uploadToday || 0,
+                  color: '#13c2c2',
+                },
+                {
+                  label: intl.formatMessage({
+                    id: 'pages.dashboard.downloadCount',
+                    defaultMessage: 'Download',
+                  }),
+                  value: data?.files.downloadToday || 0,
+                  color: '#cff6f6',
+                },
+              ]}
+            />
           </Col>
         </Row>
       </Col>
 
-      {/* Section 2: Left (File Transfer + System Status) | Right (Trend Chart) */}
-      <Col xs={24} lg={7}>
+      {/* Section 2: Left (Counts + System Status) | Right (Trend Chart) */}
+      <Col xs={24} lg={6}>
         <Row gutter={[16, 16]}>
           <Col span={24}>
             <Card
               style={cardStyle}
-              title={
-                <Space>
-                  <FileOutlined style={{ color: '#13c2c2' }} />
-                  <FormattedMessage
-                    id="pages.dashboard.fileTransfer"
-                    defaultMessage="File Transfer"
-                  />
-                </Space>
-              }
               size="small"
+              title={
+                <FormattedMessage
+                  id="pages.dashboard.resourceCounts"
+                  defaultMessage="Resource Counts"
+                />
+              }
             >
-              <Row gutter={16}>
+              <Row gutter={[16, 16]}>
                 <Col span={12}>
-                  <Statistic
-                    title={
+                  <CountItem
+                    icon={<ContactsOutlined style={{ color: '#1890ff' }} />}
+                    label={
                       <FormattedMessage
-                        id="pages.dashboard.uploadCount"
-                        defaultMessage="Upload"
+                        id="pages.dashboard.addressBooks"
+                        defaultMessage="Address Books"
                       />
                     }
-                    value={data?.files.uploadToday || 0}
-                    valueStyle={{ fontSize: 18 }}
-                    prefix={
-                      <CloudUploadOutlined style={{ color: '#1890ff' }} />
-                    }
+                    value={data?.counts.addressBooks || 0}
                   />
                 </Col>
                 <Col span={12}>
-                  <Statistic
-                    title={
+                  <CountItem
+                    icon={<TeamOutlined style={{ color: '#52c41a' }} />}
+                    label={
                       <FormattedMessage
-                        id="pages.dashboard.downloadCount"
-                        defaultMessage="Download"
+                        id="pages.dashboard.userGroups"
+                        defaultMessage="User Groups"
                       />
                     }
-                    value={data?.files.downloadToday || 0}
-                    valueStyle={{ fontSize: 18 }}
-                    prefix={
-                      <CloudDownloadOutlined style={{ color: '#52c41a' }} />
+                    value={data?.counts.userGroups || 0}
+                  />
+                </Col>
+                <Col span={12}>
+                  <CountItem
+                    icon={<SafetyOutlined style={{ color: '#722ed1' }} />}
+                    label={
+                      <FormattedMessage
+                        id="pages.dashboard.roles"
+                        defaultMessage="Roles"
+                      />
                     }
+                    value={data?.counts.roles || 0}
+                  />
+                </Col>
+                <Col span={12}>
+                  <CountItem
+                    icon={<SolutionOutlined style={{ color: '#faad14' }} />}
+                    label={
+                      <FormattedMessage
+                        id="pages.dashboard.strategies"
+                        defaultMessage="Strategies"
+                      />
+                    }
+                    value={data?.counts.strategies || 0}
                   />
                 </Col>
               </Row>
-              <div style={{ marginTop: 8 }}>
-                <Text type="secondary" style={{ fontSize: 12 }}>
-                  <FormattedMessage
-                    id="pages.dashboard.totalSize"
-                    defaultMessage="Total Size"
-                  />
-                  : {data?.files.totalSizeToday || '0 B'}
-                </Text>
-              </div>
             </Card>
           </Col>
           <Col span={24}>
             <Card
               style={cardStyle}
+              size="small"
               title={
                 <FormattedMessage
                   id="pages.dashboard.systemStatus"
                   defaultMessage="System Status"
                 />
               }
-              size="small"
             >
               <Space direction="vertical" style={{ width: '100%' }} size={12}>
                 <SystemStatusItem
@@ -400,7 +460,7 @@ const Dashboard: React.FC<DashboardProps> = ({
           </Col>
         </Row>
       </Col>
-      <Col xs={24} lg={17}>
+      <Col xs={24} lg={18}>
         <Card
           style={cardStyle}
           title={
@@ -449,6 +509,7 @@ const Dashboard: React.FC<DashboardProps> = ({
               yField="value"
               colorField="type"
               height={400}
+              smooth
               legend={{ position: 'top-right' }}
               axis={{ y: { title: false }, x: { title: false } }}
             />
