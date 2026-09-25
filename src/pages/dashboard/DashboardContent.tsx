@@ -345,7 +345,7 @@ const Dashboard: React.FC<DashboardProps> = ({
       <Col xs={24} lg={6} style={{ display: 'flex' }}>
         <Flex vertical gap={16} style={{ width: '100%' }}>
           <Card
-            style={{ width: '100%',height: '100%' }}
+            style={{ width: '100%', height: '100%' }}
             size="small"
             title={
               <FormattedMessage
@@ -406,7 +406,7 @@ const Dashboard: React.FC<DashboardProps> = ({
             </Row>
           </Card>
           <Card
-            style={{ width: '100%',height: '100%' }}
+            style={{ width: '100%', height: '100%' }}
             size="small"
             title={
               <FormattedMessage
