@@ -68,19 +68,8 @@ const OverviewCard: React.FC<{
 
   return (
     <Card style={cardStyle} variant="borderless">
+      G{' '}
       <Flex align="center" gap={16}>
-        <div style={{ flex: '0 0 auto' }}>
-          <Progress
-            type="circle"
-            percent={ringPercent}
-            size={64}
-            strokeColor={ringData[0].color}
-            trailColor={ringData[1]?.color || '#f0f0f0'}
-            format={() => (
-              <span style={{ fontSize: 14, fontWeight: 600 }}>{total}</span>
-            )}
-          />
-        </div>
         <div style={{ flex: 1, minWidth: 0 }}>
           <Statistic
             title={title}
@@ -111,6 +100,18 @@ const OverviewCard: React.FC<{
               ))}
             </Space>
           </div>
+        </div>
+        <div style={{ flex: '0 0 auto' }}>
+          <Progress
+            type="circle"
+            percent={ringPercent}
+            size={64}
+            strokeColor={ringData[0].color}
+            trailColor={ringData[1]?.color || '#f0f0f0'}
+            format={() => (
+              <span style={{ fontSize: 14, fontWeight: 600 }}>{total}</span>
+            )}
+          />
         </div>
       </Flex>
     </Card>
@@ -388,7 +389,7 @@ const Dashboard: React.FC<DashboardProps> = ({
                 </Col>
                 <Col span={12}>
                   <CountItem
-                    icon={<SolutionOutlined style={{ color: '#faad14' }} />}
+                    icon={<SolutionOutlined style={{ color: '#13c2c2' }} />}
                     label={
                       <FormattedMessage
                         id="pages.dashboard.strategies"
