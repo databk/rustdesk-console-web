@@ -43,6 +43,30 @@ interface DashboardProps {
 
 const cardStyle: CSSProperties = { height: '100%' };
 
+const measureCanvas =
+  typeof document !== 'undefined' ? document.createElement('canvas') : null;
+const measureCtx = measureCanvas?.getContext('2d') ?? null;
+const FONT_STACK =
+  '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
+
+const measureTextWidth = (text: string, fontSize: number) => {
+  if (!measureCtx) return text.length * fontSize * 0.6;
+  measureCtx.font = `${fontSize}px ${FONT_STACK}`;
+  return measureCtx.measureText(text).width;
+};
+
+const fitFontSize = (
+  text: string,
+  availWidth: number,
+  min: number,
+  max: number,
+) => {
+  if (availWidth <= 0 || !text) return min;
+  const widthAtMax = measureTextWidth(text, max);
+  if (widthAtMax <= availWidth) return max;
+  return Math.max(min, max * (availWidth / widthAtMax));
+};
+
 const getProgressColor = (value: number | null) =>
   value === null
     ? '#d9d9d9'
@@ -56,7 +80,7 @@ const formatPercentage = (value: number | null) =>
   value === null ? '--' : `${value}%`;
 
 const OverviewCard: React.FC<{
-  title: React.ReactNode;
+  title: string;
   total: number;
   icon: React.ReactNode;
   ringData: { label: string; value: number; color: string }[];
@@ -79,10 +103,14 @@ const OverviewCard: React.FC<{
     return () => observer.disconnect();
   }, []);
 
-  const titleFontSize = Math.max(16, Math.min(24, containerWidth * 0.075));
-  const labelFontSize = Math.max(12, Math.min(15, containerWidth * 0.052));
-  const ringSize = Math.max(72, Math.min(120, containerWidth * 0.34));
-  const ringNumberFontSize = Math.max(20, Math.min(34, containerWidth * 0.1));
+  const ringSize = 64;
+  const ringNumberFontSize = 20;
+  const leftWidth = containerWidth - 48 - ringSize - 16;
+  const labelText = ringData
+    .map((item) => `${item.label}: ${item.value}`)
+    .join('  ');
+  const titleFontSize = fitFontSize(title, leftWidth - 26, 14, 18);
+  const labelFontSize = fitFontSize(labelText, leftWidth, 11, 13);
 
   return (
     <div ref={containerRef} style={{ height: '100%' }}>
@@ -90,14 +118,37 @@ const OverviewCard: React.FC<{
         <Flex align="center" gap={16}>
           <div style={{ flex: 1, minWidth: 0 }}>
             <Flex align="center" gap={8}>
-              <span style={{ fontSize: titleFontSize, display: 'inline-flex' }}>
+              <span
+                style={{
+                  fontSize: titleFontSize,
+                  display: 'inline-flex',
+                  flexShrink: 0,
+                }}
+              >
                 {icon}
               </span>
-              <Text style={{ fontSize: titleFontSize, fontWeight: 500 }}>
-                {title}
-              </Text>
+              <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
+                <Text
+                  style={{
+                    fontSize: titleFontSize,
+                    fontWeight: 500,
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    display: 'block',
+                  }}
+                >
+                  {title}
+                </Text>
+              </div>
             </Flex>
-            <div style={{ marginTop: 4 }}>
+            <div
+              style={{
+                marginTop: 4,
+                overflow: 'hidden',
+                whiteSpace: 'nowrap',
+              }}
+            >
               <Space size={8}>
                 {ringData.map((item) => (
                   <Text key={item.label} style={{ fontSize: labelFontSize }}>
@@ -297,12 +348,10 @@ const Dashboard: React.FC<DashboardProps> = ({
         <Row gutter={[16, 16]}>
           <Col xs={24} sm={12} lg={6}>
             <OverviewCard
-              title={
-                <FormattedMessage
-                  id="pages.dashboard.totalUsers"
-                  defaultMessage="Total Users"
-                />
-              }
+              title={intl.formatMessage({
+                id: 'pages.dashboard.totalUsers',
+                defaultMessage: 'Total Users',
+              })}
               total={data?.users.total || 0}
               icon={<UserOutlined style={{ color: '#1890ff' }} />}
               ringData={[
@@ -327,12 +376,10 @@ const Dashboard: React.FC<DashboardProps> = ({
           </Col>
           <Col xs={24} sm={12} lg={6}>
             <OverviewCard
-              title={
-                <FormattedMessage
-                  id="pages.dashboard.totalDevices"
-                  defaultMessage="Total Devices"
-                />
-              }
+              title={intl.formatMessage({
+                id: 'pages.dashboard.totalDevices',
+                defaultMessage: 'Total Devices',
+              })}
               total={data?.devices.total || 0}
               icon={<DesktopOutlined style={{ color: '#52c41a' }} />}
               ringData={[
@@ -357,12 +404,10 @@ const Dashboard: React.FC<DashboardProps> = ({
           </Col>
           <Col xs={24} sm={12} lg={6}>
             <OverviewCard
-              title={
-                <FormattedMessage
-                  id="pages.dashboard.todayConnections"
-                  defaultMessage="Today Connections"
-                />
-              }
+              title={intl.formatMessage({
+                id: 'pages.dashboard.todayConnections',
+                defaultMessage: 'Today Connections',
+              })}
               total={data?.connections.today || 0}
               icon={<ApiOutlined style={{ color: '#722ed1' }} />}
               ringData={[
@@ -387,12 +432,10 @@ const Dashboard: React.FC<DashboardProps> = ({
           </Col>
           <Col xs={24} sm={12} lg={6}>
             <OverviewCard
-              title={
-                <FormattedMessage
-                  id="pages.dashboard.todayTransfers"
-                  defaultMessage="Today Transfers"
-                />
-              }
+              title={intl.formatMessage({
+                id: 'pages.dashboard.todayTransfers',
+                defaultMessage: 'Today Transfers',
+              })}
               total={data?.files.transferredToday || 0}
               icon={<FileOutlined style={{ color: '#13c2c2' }} />}
               ringData={[
