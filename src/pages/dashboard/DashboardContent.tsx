@@ -64,48 +64,78 @@ const OverviewCard: React.FC<{
   const ringPercent =
     ringTotal > 0 ? Math.round((ringData[0].value / ringTotal) * 100) : 0;
 
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [containerWidth, setContainerWidth] = useState(0);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const update = () => setContainerWidth(el.offsetWidth);
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const titleFontSize = Math.max(15, Math.min(22, containerWidth * 0.07));
+  const labelFontSize = Math.max(11, Math.min(14, containerWidth * 0.05));
+  const ringSize = Math.max(64, Math.min(104, containerWidth * 0.3));
+  const ringNumberFontSize = Math.max(17, Math.min(26, containerWidth * 0.075));
+
   return (
-    <Card style={cardStyle} variant="borderless">
-      <Flex align="center" gap={16}>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <Flex align="center" gap={8}>
-            {icon}
-            <Text style={{ fontSize: 15, fontWeight: 500 }}>{title}</Text>
-          </Flex>
-          <div style={{ marginTop: 4 }}>
-            <Space size={8}>
-              {ringData.map((item) => (
-                <Text key={item.label} style={{ fontSize: 11 }}>
-                  <span
-                    style={{
-                      display: 'inline-block',
-                      width: 8,
-                      height: 8,
-                      borderRadius: '50%',
-                      backgroundColor: item.color,
-                      marginRight: 4,
-                    }}
-                  />
-                  {item.label}: {item.value}
-                </Text>
-              ))}
-            </Space>
+    <div ref={containerRef} style={{ height: '100%' }}>
+      <Card style={cardStyle} variant="borderless">
+        <Flex align="center" gap={16}>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <Flex align="center" gap={8}>
+              {icon}
+              <Text style={{ fontSize: titleFontSize, fontWeight: 500 }}>
+                {title}
+              </Text>
+            </Flex>
+            <div style={{ marginTop: 4 }}>
+              <Space size={8}>
+                {ringData.map((item) => (
+                  <Text key={item.label} style={{ fontSize: labelFontSize }}>
+                    <span
+                      style={{
+                        display: 'inline-block',
+                        width: 8,
+                        height: 8,
+                        borderRadius: '50%',
+                        backgroundColor: item.color,
+                        marginRight: 4,
+                      }}
+                    />
+                    {item.label}: {item.value}
+                  </Text>
+                ))}
+              </Space>
+            </div>
           </div>
-        </div>
-        <div style={{ flex: '0 0 auto' }}>
-          <Progress
-            type="circle"
-            percent={ringPercent}
-            size={72}
-            strokeColor={ringData[0].color}
-            railColor={ringData[1]?.color || '#f0f0f0'}
-            format={() => (
-              <span style={{ fontSize: 18, fontWeight: 600 }}>{total}</span>
-            )}
-          />
-        </div>
-      </Flex>
-    </Card>
+          <div style={{ flex: '0 0 auto' }}>
+            <Progress
+              type="circle"
+              percent={ringPercent}
+              size={ringSize}
+              strokeColor={ringData[0].color}
+              railColor={ringData[1]?.color || '#f0f0f0'}
+              format={() => (
+                <span
+                  style={{
+                    fontSize: ringNumberFontSize,
+                    fontWeight: 600,
+                    color: 'inherit',
+                  }}
+                >
+                  {total}
+                </span>
+              )}
+            />
+          </div>
+        </Flex>
+      </Card>
+    </div>
   );
 };
 
