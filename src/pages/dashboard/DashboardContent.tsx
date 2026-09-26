@@ -20,6 +20,7 @@ import {
   Select,
   Space,
   Typography,
+  theme,
 } from 'antd';
 import React, {
   type CSSProperties,
@@ -60,6 +61,7 @@ const OverviewCard: React.FC<{
   icon: React.ReactNode;
   ringData: { label: string; value: number; color: string }[];
 }> = ({ title, total, icon, ringData }) => {
+  const { token } = theme.useToken();
   const ringTotal = ringData.reduce((sum, item) => sum + item.value, 0);
   const ringPercent =
     ringTotal > 0 ? Math.round((ringData[0].value / ringTotal) * 100) : 0;
@@ -77,10 +79,10 @@ const OverviewCard: React.FC<{
     return () => observer.disconnect();
   }, []);
 
-  const titleFontSize = Math.max(15, Math.min(22, containerWidth * 0.07));
-  const labelFontSize = Math.max(11, Math.min(14, containerWidth * 0.05));
-  const ringSize = Math.max(64, Math.min(104, containerWidth * 0.3));
-  const ringNumberFontSize = Math.max(17, Math.min(26, containerWidth * 0.075));
+  const titleFontSize = Math.max(16, Math.min(24, containerWidth * 0.075));
+  const labelFontSize = Math.max(12, Math.min(15, containerWidth * 0.052));
+  const ringSize = Math.max(72, Math.min(120, containerWidth * 0.34));
+  const ringNumberFontSize = Math.max(20, Math.min(34, containerWidth * 0.1));
 
   return (
     <div ref={containerRef} style={{ height: '100%' }}>
@@ -88,7 +90,9 @@ const OverviewCard: React.FC<{
         <Flex align="center" gap={16}>
           <div style={{ flex: 1, minWidth: 0 }}>
             <Flex align="center" gap={8}>
-              {icon}
+              <span style={{ fontSize: titleFontSize, display: 'inline-flex' }}>
+                {icon}
+              </span>
               <Text style={{ fontSize: titleFontSize, fontWeight: 500 }}>
                 {title}
               </Text>
@@ -125,7 +129,7 @@ const OverviewCard: React.FC<{
                   style={{
                     fontSize: ringNumberFontSize,
                     fontWeight: 600,
-                    color: 'inherit',
+                    color: token.colorText,
                   }}
                 >
                   {total}
