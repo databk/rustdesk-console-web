@@ -345,14 +345,6 @@ export default {
   'pages.roles.basicFunction': 'Basic feature',
   'pages.roles.permissionPresets': 'Permission presets',
   'pages.roles.preset.custom': 'Custom',
-  'pages.roles.preset.readOnly': 'Global read-only',
-  'pages.roles.preset.deviceOperator': 'Device operator',
-  'pages.roles.preset.userAdministrator': 'User administrator',
-  'pages.roles.preset.sharedAddressBookAdministrator':
-    'Shared address book administrator',
-  'pages.roles.preset.strategyMaintainer': 'Strategy maintainer',
-  'pages.roles.preset.deviceStrategyAssigner': 'Device strategy assigner',
-  'pages.roles.preset.systemAdministrator': 'System administrator',
   'pages.roles.protectedAccount': 'Protected accounts',
   'pages.roles.protectedAccountInfo':
     'Only the super administrator can manage protected accounts.',
@@ -364,56 +356,13 @@ export default {
     'Personal address book basic functionality only.',
   'pages.roles.systemIdentity.superAdminSummary':
     'Full effective authority for the unique system owner.',
-  'pages.roles.systemIdentity.systemCapabilities':
-    'Role definition, system settings, device-group structure and identity administration',
   'pages.roles.disableProtectionConfirm': 'Disable protection for this role?',
   'pages.roles.disableProtectionAffected':
     '{count} members will become manageable by delegated administrators.',
-  'pages.roles.resource.users': 'Users',
-  'pages.roles.resource.user_groups': 'User groups',
-  'pages.roles.resource.devices': 'Devices',
-  'pages.roles.resource.address_books': 'Address books',
-  'pages.roles.resource.strategies': 'Strategies',
-  'pages.roles.resource.audit': 'Audit',
   'pages.roles.resource.roles': 'Roles',
   'pages.roles.resource.system': 'System capabilities',
-  'pages.roles.resource.other': 'Other',
   'pages.roles.unknownResource': 'Unknown resource',
   'pages.roles.unknownPermission': 'Unknown permission',
-  'pages.roles.permission.users.view': 'View users',
-  'pages.roles.permission.users.create': 'Create users',
-  'pages.roles.permission.users.edit': 'Edit users',
-  'pages.roles.permission.users.status': 'Change user status',
-  'pages.roles.permission.users.delete': 'Delete users',
-  'pages.roles.permission.users.security': 'Manage user security',
-  'pages.roles.permission.users.force_logout': 'Force user logout',
-  'pages.roles.permission.user_groups.view': 'View user groups',
-  'pages.roles.permission.user_groups.create': 'Create user groups',
-  'pages.roles.permission.user_groups.edit': 'Edit user groups',
-  'pages.roles.permission.user_groups.delete': 'Delete user groups',
-  'pages.roles.permission.user_groups.membership':
-    'Manage user group membership',
-  'pages.roles.permission.devices.view': 'View devices',
-  'pages.roles.permission.devices.edit': 'Edit device details',
-  'pages.roles.permission.devices.status': 'Change device status',
-  'pages.roles.permission.devices.delete': 'Delete devices',
-  'pages.roles.permission.devices.disconnect': 'Disconnect devices',
-  'pages.roles.permission.address_books.view':
-    'View shared address book settings',
-  'pages.roles.permission.address_books.edit': 'Edit shared address books',
-  'pages.roles.permission.address_books.share':
-    'Create and manage shared address books',
-  'pages.roles.permission.strategies.view': 'View strategies',
-  'pages.roles.permission.strategies.create': 'Create strategies',
-  'pages.roles.permission.strategies.edit': 'Edit strategies',
-  'pages.roles.permission.strategies.delete': 'Delete strategies',
-  'pages.roles.permission.strategies.assign': 'Assign strategies',
-  'pages.roles.permission.audit.view': 'View audit logs',
-  'pages.roles.permission.roles.view': 'View roles',
-  'pages.roles.permission.roles.assign': 'Assign roles',
-  'pages.roles.permission.roles.create': 'Create roles',
-  'pages.roles.permission.roles.edit': 'Edit roles',
-  'pages.roles.permission.roles.delete': 'Delete roles',
   'pages.roles.create': 'Create Role',
   'pages.roles.view': 'View Role',
   'pages.roles.edit': 'Edit Role',
@@ -510,192 +459,8 @@ export default {
   'pages.strategies.unassignConfirm': 'Unassign this target?',
   'pages.strategies.fetchDetailFailed': 'Failed to fetch strategy details',
   'pages.strategies.updatedAt': 'Updated At',
-  'pages.strategies.category.connection': 'Connection & Access',
-  'pages.strategies.category.security': 'Security & Auth',
-  'pages.strategies.category.display': 'Display & UI',
-  'pages.strategies.category.av': 'Audio/Video & Codec',
-  'pages.strategies.category.file': 'File & Clipboard',
-  'pages.strategies.category.advanced': 'Advanced',
-  'pages.strategies.category.floating': 'Floating Window',
-  'pages.strategies.category.privacy': 'Privacy & Recording',
   'pages.strategies.values.yes': 'Yes',
   'pages.strategies.values.no': 'No',
-  'pages.strategies.option.access-mode.label': 'Access Mode',
-  'pages.strategies.option.enable-keyboard.label': 'Enable Keyboard and Mouse',
-  'pages.strategies.option.enable-clipboard.label': 'Enable Clipboard',
-  'pages.strategies.option.enable-file-transfer.label': 'Enable File Transfer',
-  'pages.strategies.option.enable-camera.label': 'Enable Camera',
-  'pages.strategies.option.enable-terminal.label': 'Enable Terminal',
-  'pages.strategies.option.enable-remote-printer.label':
-    'Enable Remote Printer',
-  'pages.strategies.option.enable-tunnel.label': 'Enable Tunnel',
-  'pages.strategies.option.enable-remote-restart.label':
-    'Enable Remote Restart',
-  'pages.strategies.option.enable-block-input.label': 'Block Input',
-  'pages.strategies.option.allow-auto-disconnect.label':
-    'Allow Auto Disconnect',
-  'pages.strategies.option.auto-disconnect-timeout.label':
-    'Auto Disconnect Timeout',
-  'pages.strategies.option.allow-only-conn-window-open.label':
-    'Only Allow Connection Window Open',
-  'pages.strategies.option.view-only.label': 'View Only',
-  'pages.strategies.option.terminal-persistent.label': 'Persistent Terminal',
-  'pages.strategies.option.allow-ask-for-note.label': 'Ask for Connection Note',
-  'pages.strategies.option.allow-remote-config-modification.label':
-    'Allow Remote Configuration Modification',
-  'pages.strategies.option.whitelist.label': 'IP Whitelist',
-  'pages.strategies.option.approve-mode.label': 'Approval Mode',
-  'pages.strategies.option.verification-method.label': 'Verification Method',
-  'pages.strategies.option.temporary-password-length.label':
-    'Temporary Password Length',
-  'pages.strategies.option.lock-after-session-end.label':
-    'Lock After Session End',
-  'pages.strategies.option.allow-remote-cm-modification.label':
-    'Allow Remote Client Modification',
-  'pages.strategies.option.enable-trusted-devices.label':
-    'Enable Trusted Devices',
-  'pages.strategies.option.allow-numeric-one-time-password.label':
-    'Allow Numeric One-Time Password',
-  'pages.strategies.option.allow-insecure-tls-fallback.label':
-    'Allow Insecure TLS Fallback',
-  'pages.strategies.option.theme.label': 'Theme',
-  'pages.strategies.option.lang.label': 'Language',
-  'pages.strategies.option.enable-confirm-closing-tabs.label':
-    'Confirm Closing Tabs',
-  'pages.strategies.option.allow-remove-wallpaper.label':
-    'Allow Remove Wallpaper',
-  'pages.strategies.option.enable-open-new-connections-in-tabs.label':
-    'Open New Connections in Tabs',
-  'pages.strategies.option.peer-card-ui-type.label': 'Peer Card UI Type',
-  'pages.strategies.option.peer-sorting.label': 'Peer Sorting',
-  'pages.strategies.option.show-monitors-toolbar.label':
-    'Show Monitors Toolbar',
-  'pages.strategies.option.collapse-toolbar.label': 'Collapse Toolbar',
-  'pages.strategies.option.show-remote-cursor.label': 'Show Remote Cursor',
-  'pages.strategies.option.follow-remote-cursor.label': 'Follow Remote Cursor',
-  'pages.strategies.option.follow-remote-window.label': 'Follow Remote Window',
-  'pages.strategies.option.zoom-cursor.label': 'Zoom Cursor',
-  'pages.strategies.option.show-quality-monitor.label': 'Show Quality Monitor',
-  'pages.strategies.option.reverse-mouse-wheel.label': 'Reverse Mouse Wheel',
-  'pages.strategies.option.swap-left-right-mouse.label':
-    'Swap Left and Right Mouse Buttons',
-  'pages.strategies.option.displays-as-individual-windows.label':
-    'Displays as Individual Windows',
-  'pages.strategies.option.use-all-my-displays-for-the-remote-session.label':
-    'Use All Displays for Remote Session',
-  'pages.strategies.option.view-style.label': 'View Style',
-  'pages.strategies.option.scroll-style.label': 'Scroll Style',
-  'pages.strategies.option.edge-scroll-edge-thickness.label':
-    'Edge Scroll Thickness',
-  'pages.strategies.option.trackpad-speed.label': 'Trackpad Speed',
-  'pages.strategies.option.disable-group-panel.label': 'Disable Group Panel',
-  'pages.strategies.option.keep-screen-on.label': 'Keep Screen On',
-  'pages.strategies.option.disable-discovery-panel.label':
-    'Disable Discovery Panel',
-  'pages.strategies.option.touch-mode.label': 'Touch Mode',
-  'pages.strategies.option.show-virtual-mouse.label': 'Show Virtual Mouse',
-  'pages.strategies.option.show-virtual-joystick.label':
-    'Show Virtual Joystick',
-  'pages.strategies.option.enable-audio.label': 'Enable Audio',
-  'pages.strategies.option.allow-always-software-render.label':
-    'Always Use Software Rendering',
-  'pages.strategies.option.enable-hwcodec.label': 'Enable Hardware Codec',
-  'pages.strategies.option.use-texture-render.label': 'Use Texture Rendering',
-  'pages.strategies.option.disable-audio.label': 'Disable Audio',
-  'pages.strategies.option.i444.label': 'I444 Color Format',
-  'pages.strategies.option.image-quality.label': 'Image Quality',
-  'pages.strategies.option.custom-image-quality.label': 'Custom Image Quality',
-  'pages.strategies.option.custom-fps.label': 'Custom FPS',
-  'pages.strategies.option.enable-directx-capture.label':
-    'Enable DirectX Capture',
-  'pages.strategies.option.enable-android-software-encoding-half-scale.label':
-    'Half-Scale Android Software Encoding',
-  'pages.strategies.option.allow-d3d-render.label': 'Allow D3D Rendering',
-  'pages.strategies.option.enable-file-copy-paste.label':
-    'Enable File Copy and Paste',
-  'pages.strategies.option.disable-clipboard.label': 'Disable Clipboard',
-  'pages.strategies.option.sync-init-clipboard.label': 'Sync Initial Clipboard',
-  'pages.strategies.option.enable-lan-discovery.label': 'Enable LAN Discovery',
-  'pages.strategies.option.direct-server.label': 'Direct Server',
-  'pages.strategies.option.allow-auto-update.label': 'Allow Automatic Updates',
-  'pages.strategies.option.enable-abr.label': 'Enable Adaptive Bitrate',
-  'pages.strategies.option.allow-linux-headless.label':
-    'Allow Linux Headless Mode',
-  'pages.strategies.option.sync-ab-with-recent-sessions.label':
-    'Sync Address Book with Recent Sessions',
-  'pages.strategies.option.sync-ab-tags.label': 'Sync Address Book Tags',
-  'pages.strategies.option.filter-ab-by-intersection.label':
-    'Filter Address Book by Intersection',
-  'pages.strategies.option.enable-udp-punch.label': 'Enable UDP Hole Punching',
-  'pages.strategies.option.enable-ipv6-punch.label':
-    'Enable IPv6 Hole Punching',
-  'pages.strategies.option.pre-elevate-service.label': 'Pre-Elevate Service',
-  'pages.strategies.option.keep-awake-during-incoming-sessions.label':
-    'Keep Awake During Incoming Sessions',
-  'pages.strategies.option.keep-awake-during-outgoing-sessions.label':
-    'Keep Awake During Outgoing Sessions',
-  'pages.strategies.option.disable-udp.label': 'Disable UDP',
-  'pages.strategies.option.allow-websocket.label': 'Allow WebSocket',
-  'pages.strategies.option.disable-floating-window.label':
-    'Disable Floating Window',
-  'pages.strategies.option.floating-window-size.label': 'Floating Window Size',
-  'pages.strategies.option.floating-window-untouchable.label':
-    'Floating Window Untouchable',
-  'pages.strategies.option.floating-window-transparency.label':
-    'Floating Window Transparency',
-  'pages.strategies.option.enable-record-session.label':
-    'Enable Session Recording',
-  'pages.strategies.option.allow-auto-record-incoming.label':
-    'Allow Automatic Recording for Incoming Sessions',
-  'pages.strategies.option.allow-auto-record-outgoing.label':
-    'Allow Automatic Recording for Outgoing Sessions',
-  'pages.strategies.option.privacy-mode.label': 'Privacy Mode',
-  'pages.strategies.option.auto-disconnect-timeout.description':
-    'Timeout in minutes',
-  'pages.strategies.option.lang.description': 'Language code',
-  'pages.strategies.option.enable-ipv6-punch.description':
-    'Self-hosted: N, others: Y',
-  'pages.strategies.option.use-texture-render.description':
-    'Platform dependent',
-  'pages.strategies.option.whitelist.description': 'Comma-separated IP list',
-  'pages.strategies.option.image-quality.value.best': 'Best',
-  'pages.strategies.option.image-quality.value.balanced': 'Balanced',
-  'pages.strategies.option.image-quality.value.low': 'Low',
-  'pages.strategies.option.image-quality.value.custom': 'Custom',
-  'pages.strategies.option.access-mode.value.custom': 'Custom',
-  'pages.strategies.option.access-mode.value.full': 'Full Access',
-  'pages.strategies.option.access-mode.value.view': 'View Only',
-  'pages.strategies.option.theme.value.dark': 'Dark',
-  'pages.strategies.option.theme.value.light': 'Light',
-  'pages.strategies.option.theme.value.system': 'System',
-  'pages.strategies.option.peer-card-ui-type.value.0': 'Card Style 0',
-  'pages.strategies.option.peer-card-ui-type.value.1': 'Card Style 1',
-  'pages.strategies.option.peer-card-ui-type.value.2': 'Card Style 2',
-  'pages.strategies.option.peer-sorting.value.remote-id': 'Remote ID',
-  'pages.strategies.option.peer-sorting.value.remote-host': 'Remote Host',
-  'pages.strategies.option.peer-sorting.value.username': 'Username',
-  'pages.strategies.option.view-style.value.original': 'Original',
-  'pages.strategies.option.view-style.value.adaptive': 'Adaptive',
-  'pages.strategies.option.scroll-style.value.scrollauto': 'Auto',
-  'pages.strategies.option.scroll-style.value.scrollbar': 'Scrollbar',
-  'pages.strategies.option.scroll-style.value.scrolledge': 'Edge Scrolling',
-  'pages.strategies.option.keep-screen-on.value.never': 'Never',
-  'pages.strategies.option.keep-screen-on.value.during-controlled':
-    'During Controlled Session',
-  'pages.strategies.option.keep-screen-on.value.service-on': 'Service On',
-  'pages.strategies.option.approve-mode.value.password': 'Password',
-  'pages.strategies.option.approve-mode.value.click': 'Click',
-  'pages.strategies.option.approve-mode.value.password-click':
-    'Password and Click',
-  'pages.strategies.option.verification-method.value.use-temporary-password':
-    'Temporary Password',
-  'pages.strategies.option.verification-method.value.use-permanent-password':
-    'Permanent Password',
-  'pages.strategies.option.verification-method.value.use-both-passwords':
-    'Both Passwords',
-  'pages.strategies.option.temporary-password-length.value.6': '6 digits',
-  'pages.strategies.option.temporary-password-length.value.8': '8 digits',
-  'pages.strategies.option.temporary-password-length.value.10': '10 digits',
   'pages.users.inviteSuccess': 'Invitation sent',
   'pages.users.inviteFailed': 'Failed to send invitation',
   'pages.users.active': 'Active',
@@ -727,33 +492,16 @@ export default {
   'pages.users.protectedAccountInfo':
     'Protected accounts can only be managed by the super administrator.',
   'pages.users.systemCapabilities': 'System capabilities',
-  'pages.users.systemCapability.roles.create': 'Create role definitions',
-  'pages.users.systemCapability.roles.edit': 'Edit role definitions',
-  'pages.users.systemCapability.roles.delete': 'Delete role definitions',
   'pages.users.systemCapability.settings.manage': 'Manage system settings',
   'pages.users.systemCapability.device_groups.manage':
     'Manage device-group structure',
   'pages.users.systemCapability.identity_sources.manage':
     'Manage identity sources',
-  'pages.users.roleEligibility.assign_not_allowed':
-    'You cannot assign this role',
-  'pages.users.roleEligibility.remove_not_allowed':
-    'You cannot remove this role',
-  'pages.users.roleEligibility.protected_role':
-    'Protected roles can only be assigned or removed by the super administrator',
   'pages.users.roleEligibility.protected_target':
     'The target account is protected',
   'pages.users.roleEligibility.super_admin_target':
     'Ordinary roles cannot be assigned to the super administrator',
   'pages.users.roleEligibility.self_target': 'You cannot change your own roles',
-  'pages.users.roleEligibility.missing_caller_scope':
-    'Your permission scope is insufficient',
-  'pages.users.roleEligibility.scope_exceeds_caller':
-    'The role scope exceeds your permissions',
-  'pages.users.roleEligibility.missing_permission':
-    'You lack a permission required by this role',
-  'pages.users.roleEligibility.role_grants_roles_assign':
-    'Roles that grant role assignment can only be managed by the super administrator',
   'pages.users.effectiveScope': 'Effective scope',
   'pages.users.strategy': 'Strategy',
   'pages.users.invite': 'Invite User',

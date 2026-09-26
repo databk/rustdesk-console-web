@@ -364,15 +364,6 @@ export default {
   'pages.roles.basicFunction': 'Funcionalidade básica',
   'pages.roles.permissionPresets': 'Predefinições de permissões',
   'pages.roles.preset.custom': 'Personalizado',
-  'pages.roles.preset.readOnly': 'Somente leitura global',
-  'pages.roles.preset.deviceOperator': 'Operador de dispositivos',
-  'pages.roles.preset.userAdministrator': 'Administrador de usuários',
-  'pages.roles.preset.sharedAddressBookAdministrator':
-    'Administrador de catálogos compartilhados',
-  'pages.roles.preset.strategyMaintainer': 'Responsável por estratégias',
-  'pages.roles.preset.deviceStrategyAssigner':
-    'Atribuidor de estratégias a dispositivos',
-  'pages.roles.preset.systemAdministrator': 'Administrador do sistema',
   'pages.roles.protectedAccount': 'Contas protegidas',
   'pages.roles.protectedAccountInfo':
     'Somente o superadministrador pode gerenciar contas protegidas.',
@@ -384,57 +375,13 @@ export default {
     'Somente a funcionalidade básica da agenda pessoal.',
   'pages.roles.systemIdentity.superAdminSummary':
     'Autoridade efetiva completa do único proprietário do sistema.',
-  'pages.roles.systemIdentity.systemCapabilities':
-    'Definição de funções, configurações do sistema, estrutura de grupos de dispositivos e administração de identidades',
   'pages.roles.disableProtectionConfirm': 'Desativar a proteção desta função?',
   'pages.roles.disableProtectionAffected':
     '{count} membros poderão ser gerenciados por administradores delegados.',
-  'pages.roles.resource.users': 'Usuários',
-  'pages.roles.resource.user_groups': 'Grupos de usuários',
-  'pages.roles.resource.devices': 'Dispositivos',
-  'pages.roles.resource.address_books': 'Catálogos de endereços',
-  'pages.roles.resource.strategies': 'Estratégias',
-  'pages.roles.resource.audit': 'Auditoria',
   'pages.roles.resource.roles': 'Funções',
   'pages.roles.resource.system': 'Recursos do sistema',
-  'pages.roles.resource.other': 'Outros',
   'pages.roles.unknownResource': 'Recurso desconhecido',
   'pages.roles.unknownPermission': 'Permissão desconhecida',
-  'pages.roles.permission.users.view': 'Visualizar usuários',
-  'pages.roles.permission.users.create': 'Criar usuários',
-  'pages.roles.permission.users.edit': 'Editar usuários',
-  'pages.roles.permission.users.status': 'Alterar status do usuário',
-  'pages.roles.permission.users.delete': 'Excluir usuários',
-  'pages.roles.permission.users.security': 'Gerenciar segurança do usuário',
-  'pages.roles.permission.users.force_logout': 'Encerrar sessões de usuários',
-  'pages.roles.permission.user_groups.view': 'Visualizar grupos de usuários',
-  'pages.roles.permission.user_groups.create': 'Criar grupos de usuários',
-  'pages.roles.permission.user_groups.edit': 'Editar grupos de usuários',
-  'pages.roles.permission.user_groups.delete': 'Excluir grupos de usuários',
-  'pages.roles.permission.user_groups.membership':
-    'Gerenciar membros dos grupos de usuários',
-  'pages.roles.permission.devices.view': 'Visualizar dispositivos',
-  'pages.roles.permission.devices.edit': 'Editar detalhes dos dispositivos',
-  'pages.roles.permission.devices.status': 'Alterar status dos dispositivos',
-  'pages.roles.permission.devices.delete': 'Excluir dispositivos',
-  'pages.roles.permission.devices.disconnect': 'Desconectar dispositivos',
-  'pages.roles.permission.address_books.view':
-    'Visualizar configurações de catálogos de endereços compartilhados',
-  'pages.roles.permission.address_books.edit':
-    'Editar catálogos de endereços compartilhados',
-  'pages.roles.permission.address_books.share':
-    'Criar e gerenciar catálogos de endereços compartilhados',
-  'pages.roles.permission.strategies.view': 'Visualizar estratégias',
-  'pages.roles.permission.strategies.create': 'Criar estratégias',
-  'pages.roles.permission.strategies.edit': 'Editar estratégias',
-  'pages.roles.permission.strategies.delete': 'Excluir estratégias',
-  'pages.roles.permission.strategies.assign': 'Atribuir estratégias',
-  'pages.roles.permission.audit.view': 'Visualizar logs de auditoria',
-  'pages.roles.permission.roles.view': 'Visualizar funções',
-  'pages.roles.permission.roles.assign': 'Atribuir funções',
-  'pages.roles.permission.roles.create': 'Criar funções',
-  'pages.roles.permission.roles.edit': 'Editar funções',
-  'pages.roles.permission.roles.delete': 'Excluir funções',
   'pages.roles.create': 'Criar Função',
   'pages.roles.view': 'Ver função',
   'pages.roles.edit': 'Editar Função',
@@ -535,208 +482,8 @@ export default {
   'pages.strategies.unassignConfirm': 'Remover atribuição deste destino?',
   'pages.strategies.fetchDetailFailed': 'Falha ao obter detalhes da estratégia',
   'pages.strategies.updatedAt': 'Atualizado em',
-  'pages.strategies.category.connection': 'Conexão e Acesso',
-  'pages.strategies.category.security': 'Segurança e Autenticação',
-  'pages.strategies.category.display': 'Tela e Interface',
-  'pages.strategies.category.av': 'Áudio, Vídeo e Codec',
-  'pages.strategies.category.file': 'Arquivos e Área de Transferência',
-  'pages.strategies.category.advanced': 'Avançado',
-  'pages.strategies.category.floating': 'Janela Flutuante',
-  'pages.strategies.category.privacy': 'Privacidade e Gravação',
   'pages.strategies.values.yes': 'Sim',
   'pages.strategies.values.no': 'Não',
-  'pages.strategies.option.access-mode.label': 'Modo de Acesso',
-  'pages.strategies.option.enable-keyboard.label': 'Ativar Teclado e Mouse',
-  'pages.strategies.option.enable-clipboard.label':
-    'Ativar Área de Transferência',
-  'pages.strategies.option.enable-file-transfer.label':
-    'Ativar Transferência de Arquivos',
-  'pages.strategies.option.enable-camera.label': 'Ativar Câmera',
-  'pages.strategies.option.enable-terminal.label': 'Ativar Terminal',
-  'pages.strategies.option.enable-remote-printer.label':
-    'Ativar Impressora Remota',
-  'pages.strategies.option.enable-tunnel.label': 'Ativar Túnel',
-  'pages.strategies.option.enable-remote-restart.label':
-    'Ativar Reinicialização Remota',
-  'pages.strategies.option.enable-block-input.label': 'Bloquear Entrada',
-  'pages.strategies.option.allow-auto-disconnect.label':
-    'Permitir Desconexão Automática',
-  'pages.strategies.option.auto-disconnect-timeout.label':
-    'Tempo para Desconexão Automática',
-  'pages.strategies.option.allow-only-conn-window-open.label':
-    'Permitir Apenas a Janela de Conexão Aberta',
-  'pages.strategies.option.view-only.label': 'Somente Visualização',
-  'pages.strategies.option.terminal-persistent.label': 'Terminal Persistente',
-  'pages.strategies.option.allow-ask-for-note.label':
-    'Solicitar Observação da Conexão',
-  'pages.strategies.option.allow-remote-config-modification.label':
-    'Permitir Modificação Remota da Configuração',
-  'pages.strategies.option.whitelist.label': 'Lista de IPs Permitidos',
-  'pages.strategies.option.approve-mode.label': 'Modo de Aprovação',
-  'pages.strategies.option.verification-method.label': 'Método de Verificação',
-  'pages.strategies.option.temporary-password-length.label':
-    'Tamanho da Senha Temporária',
-  'pages.strategies.option.lock-after-session-end.label':
-    'Bloquear Após o Fim da Sessão',
-  'pages.strategies.option.allow-remote-cm-modification.label':
-    'Permitir Modificação Remota do Cliente',
-  'pages.strategies.option.enable-trusted-devices.label':
-    'Ativar Dispositivos Confiáveis',
-  'pages.strategies.option.allow-numeric-one-time-password.label':
-    'Permitir Senha Numérica de Uso Único',
-  'pages.strategies.option.allow-insecure-tls-fallback.label':
-    'Permitir Fallback TLS Inseguro',
-  'pages.strategies.option.theme.label': 'Tema',
-  'pages.strategies.option.lang.label': 'Idioma',
-  'pages.strategies.option.enable-confirm-closing-tabs.label':
-    'Confirmar Fechamento de Abas',
-  'pages.strategies.option.allow-remove-wallpaper.label':
-    'Permitir Remover Papel de Parede',
-  'pages.strategies.option.enable-open-new-connections-in-tabs.label':
-    'Abrir Novas Conexões em Abas',
-  'pages.strategies.option.peer-card-ui-type.label':
-    'Tipo de Cartão do Dispositivo',
-  'pages.strategies.option.peer-sorting.label': 'Ordenação de Dispositivos',
-  'pages.strategies.option.show-monitors-toolbar.label':
-    'Mostrar Barra de Monitores',
-  'pages.strategies.option.collapse-toolbar.label':
-    'Recolher Barra de Ferramentas',
-  'pages.strategies.option.show-remote-cursor.label': 'Mostrar Cursor Remoto',
-  'pages.strategies.option.follow-remote-cursor.label': 'Seguir Cursor Remoto',
-  'pages.strategies.option.follow-remote-window.label': 'Seguir Janela Remota',
-  'pages.strategies.option.zoom-cursor.label': 'Ampliar Cursor',
-  'pages.strategies.option.show-quality-monitor.label':
-    'Mostrar Monitor de Qualidade',
-  'pages.strategies.option.reverse-mouse-wheel.label': 'Inverter Roda do Mouse',
-  'pages.strategies.option.swap-left-right-mouse.label':
-    'Trocar Botões Esquerdo e Direito',
-  'pages.strategies.option.displays-as-individual-windows.label':
-    'Exibir Monitores como Janelas Individuais',
-  'pages.strategies.option.use-all-my-displays-for-the-remote-session.label':
-    'Usar Todos os Monitores na Sessão Remota',
-  'pages.strategies.option.view-style.label': 'Estilo de Visualização',
-  'pages.strategies.option.scroll-style.label': 'Estilo de Rolagem',
-  'pages.strategies.option.edge-scroll-edge-thickness.label':
-    'Espessura da Rolagem de Borda',
-  'pages.strategies.option.trackpad-speed.label': 'Velocidade do Trackpad',
-  'pages.strategies.option.disable-group-panel.label':
-    'Desativar Painel de Grupos',
-  'pages.strategies.option.keep-screen-on.label': 'Manter Tela Ligada',
-  'pages.strategies.option.disable-discovery-panel.label':
-    'Desativar Painel de Descoberta',
-  'pages.strategies.option.touch-mode.label': 'Modo de Toque',
-  'pages.strategies.option.show-virtual-mouse.label': 'Mostrar Mouse Virtual',
-  'pages.strategies.option.show-virtual-joystick.label':
-    'Mostrar Joystick Virtual',
-  'pages.strategies.option.enable-audio.label': 'Ativar Áudio',
-  'pages.strategies.option.allow-always-software-render.label':
-    'Usar Sempre Renderização por Software',
-  'pages.strategies.option.enable-hwcodec.label': 'Ativar Codec de Hardware',
-  'pages.strategies.option.use-texture-render.label':
-    'Usar Renderização por Textura',
-  'pages.strategies.option.disable-audio.label': 'Desativar Áudio',
-  'pages.strategies.option.i444.label': 'Formato de Cor I444',
-  'pages.strategies.option.image-quality.label': 'Qualidade da Imagem',
-  'pages.strategies.option.custom-image-quality.label':
-    'Qualidade de Imagem Personalizada',
-  'pages.strategies.option.custom-fps.label': 'FPS Personalizado',
-  'pages.strategies.option.enable-directx-capture.label':
-    'Ativar Captura DirectX',
-  'pages.strategies.option.enable-android-software-encoding-half-scale.label':
-    'Ativar Codificação de Software Android em Meia Escala',
-  'pages.strategies.option.allow-d3d-render.label': 'Permitir Renderização D3D',
-  'pages.strategies.option.enable-file-copy-paste.label':
-    'Ativar Cópia e Colagem de Arquivos',
-  'pages.strategies.option.disable-clipboard.label':
-    'Desativar Área de Transferência',
-  'pages.strategies.option.sync-init-clipboard.label':
-    'Sincronizar Área de Transferência Inicial',
-  'pages.strategies.option.enable-lan-discovery.label':
-    'Ativar Descoberta na LAN',
-  'pages.strategies.option.direct-server.label': 'Servidor Direto',
-  'pages.strategies.option.allow-auto-update.label':
-    'Permitir Atualizações Automáticas',
-  'pages.strategies.option.enable-abr.label': 'Ativar Bitrate Adaptativo',
-  'pages.strategies.option.allow-linux-headless.label':
-    'Permitir Modo Headless no Linux',
-  'pages.strategies.option.sync-ab-with-recent-sessions.label':
-    'Sincronizar Catálogo de Endereços com Sessões Recentes',
-  'pages.strategies.option.sync-ab-tags.label':
-    'Sincronizar Tags do Catálogo de Endereços',
-  'pages.strategies.option.filter-ab-by-intersection.label':
-    'Filtrar Catálogo de Endereços por Interseção',
-  'pages.strategies.option.enable-udp-punch.label': 'Ativar UDP Hole Punching',
-  'pages.strategies.option.enable-ipv6-punch.label':
-    'Ativar IPv6 Hole Punching',
-  'pages.strategies.option.pre-elevate-service.label': 'Pré-Elevar Serviço',
-  'pages.strategies.option.keep-awake-during-incoming-sessions.label':
-    'Manter Ativo Durante Sessões de Entrada',
-  'pages.strategies.option.keep-awake-during-outgoing-sessions.label':
-    'Manter Ativo Durante Sessões de Saída',
-  'pages.strategies.option.disable-udp.label': 'Desativar UDP',
-  'pages.strategies.option.allow-websocket.label': 'Permitir WebSocket',
-  'pages.strategies.option.disable-floating-window.label':
-    'Desativar Janela Flutuante',
-  'pages.strategies.option.floating-window-size.label':
-    'Tamanho da Janela Flutuante',
-  'pages.strategies.option.floating-window-untouchable.label':
-    'Janela Flutuante Intocável',
-  'pages.strategies.option.floating-window-transparency.label':
-    'Transparência da Janela Flutuante',
-  'pages.strategies.option.enable-record-session.label':
-    'Ativar Gravação de Sessão',
-  'pages.strategies.option.allow-auto-record-incoming.label':
-    'Permitir Gravação Automática de Sessões de Entrada',
-  'pages.strategies.option.allow-auto-record-outgoing.label':
-    'Permitir Gravação Automática de Sessões de Saída',
-  'pages.strategies.option.privacy-mode.label': 'Modo de Privacidade',
-  'pages.strategies.option.auto-disconnect-timeout.description':
-    'Tempo limite em minutos',
-  'pages.strategies.option.lang.description': 'Código do idioma',
-  'pages.strategies.option.enable-ipv6-punch.description':
-    'Auto-hospedado: Não, outros: Sim',
-  'pages.strategies.option.use-texture-render.description':
-    'Depende da plataforma',
-  'pages.strategies.option.whitelist.description':
-    'Lista de IPs separada por vírgulas',
-  'pages.strategies.option.image-quality.value.best': 'Melhor',
-  'pages.strategies.option.image-quality.value.balanced': 'Balanceado',
-  'pages.strategies.option.image-quality.value.low': 'Baixa',
-  'pages.strategies.option.image-quality.value.custom': 'Personalizado',
-  'pages.strategies.option.access-mode.value.custom': 'Personalizado',
-  'pages.strategies.option.access-mode.value.full': 'Acesso Total',
-  'pages.strategies.option.access-mode.value.view': 'Somente Visualização',
-  'pages.strategies.option.theme.value.dark': 'Escuro',
-  'pages.strategies.option.theme.value.light': 'Claro',
-  'pages.strategies.option.theme.value.system': 'Sistema',
-  'pages.strategies.option.peer-card-ui-type.value.0': 'Estilo de Cartão 0',
-  'pages.strategies.option.peer-card-ui-type.value.1': 'Estilo de Cartão 1',
-  'pages.strategies.option.peer-card-ui-type.value.2': 'Estilo de Cartão 2',
-  'pages.strategies.option.peer-sorting.value.remote-id': 'ID Remoto',
-  'pages.strategies.option.peer-sorting.value.remote-host': 'Host Remoto',
-  'pages.strategies.option.peer-sorting.value.username': 'Nome de Usuário',
-  'pages.strategies.option.view-style.value.original': 'Original',
-  'pages.strategies.option.view-style.value.adaptive': 'Adaptável',
-  'pages.strategies.option.scroll-style.value.scrollauto': 'Automático',
-  'pages.strategies.option.scroll-style.value.scrollbar': 'Barra de Rolagem',
-  'pages.strategies.option.scroll-style.value.scrolledge':
-    'Rolagem pelas Bordas',
-  'pages.strategies.option.keep-screen-on.value.never': 'Nunca',
-  'pages.strategies.option.keep-screen-on.value.during-controlled':
-    'Durante a Sessão Controlada',
-  'pages.strategies.option.keep-screen-on.value.service-on': 'Serviço Ativo',
-  'pages.strategies.option.approve-mode.value.password': 'Senha',
-  'pages.strategies.option.approve-mode.value.click': 'Clique',
-  'pages.strategies.option.approve-mode.value.password-click': 'Senha e Clique',
-  'pages.strategies.option.verification-method.value.use-temporary-password':
-    'Senha Temporária',
-  'pages.strategies.option.verification-method.value.use-permanent-password':
-    'Senha Permanente',
-  'pages.strategies.option.verification-method.value.use-both-passwords':
-    'Ambas as Senhas',
-  'pages.strategies.option.temporary-password-length.value.6': '6 dígitos',
-  'pages.strategies.option.temporary-password-length.value.8': '8 dígitos',
-  'pages.strategies.option.temporary-password-length.value.10': '10 dígitos',
   'pages.users.inviteSuccess': 'Convite enviado',
   'pages.users.inviteFailed': 'Falha ao enviar convite',
   'pages.users.active': 'Ativo',
@@ -769,35 +516,18 @@ export default {
   'pages.users.protectedAccountInfo':
     'Contas protegidas só podem ser gerenciadas pelo superadministrador.',
   'pages.users.systemCapabilities': 'Capacidades do sistema',
-  'pages.users.systemCapability.roles.create': 'Criar definições de função',
-  'pages.users.systemCapability.roles.edit': 'Editar definições de função',
-  'pages.users.systemCapability.roles.delete': 'Excluir definições de função',
   'pages.users.systemCapability.settings.manage':
     'Gerenciar configurações do sistema',
   'pages.users.systemCapability.device_groups.manage':
     'Gerenciar estrutura de grupos de dispositivos',
   'pages.users.systemCapability.identity_sources.manage':
     'Gerenciar fontes de identidade',
-  'pages.users.roleEligibility.assign_not_allowed':
-    'Você não pode atribuir esta função',
-  'pages.users.roleEligibility.remove_not_allowed':
-    'Você não pode remover esta função',
-  'pages.users.roleEligibility.protected_role':
-    'Funções protegidas só podem ser atribuídas ou removidas pelo superadministrador',
   'pages.users.roleEligibility.protected_target':
     'A conta de destino está protegida',
   'pages.users.roleEligibility.super_admin_target':
     'Funções comuns não podem ser atribuídas ao superadministrador',
   'pages.users.roleEligibility.self_target':
     'Você não pode alterar suas próprias funções',
-  'pages.users.roleEligibility.missing_caller_scope':
-    'O escopo de permissão é insuficiente',
-  'pages.users.roleEligibility.scope_exceeds_caller':
-    'O escopo da função excede suas permissões',
-  'pages.users.roleEligibility.missing_permission':
-    'Falta uma permissão exigida por esta função',
-  'pages.users.roleEligibility.role_grants_roles_assign':
-    'Funções que concedem atribuição de funções só podem ser gerenciadas pelo superadministrador',
   'pages.users.effectiveScope': 'Escopo efetivo',
   'pages.users.strategy': 'Estratégia',
   'pages.users.invite': 'Convidar Usuário',
