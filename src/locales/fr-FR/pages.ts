@@ -433,14 +433,6 @@ export default {
   'pages.strategies.fetchDetailFailed':
     'Échec de la récupération des détails de la stratégie',
   'pages.strategies.updatedAt': 'Mis à jour le',
-  'pages.strategies.category.connection': 'Connexion & Accès',
-  'pages.strategies.category.security': 'Sécurité & Authentification',
-  'pages.strategies.category.display': 'Affichage & Interface',
-  'pages.strategies.category.av': 'Audio/Vidéo & Codec',
-  'pages.strategies.category.file': 'Fichiers & Presse-papiers',
-  'pages.strategies.category.advanced': 'Avancé',
-  'pages.strategies.category.floating': 'Fenêtre flottante',
-  'pages.strategies.category.privacy': 'Confidentialité & Enregistrement',
   'pages.users.inviteSuccess': 'Invitation envoyée',
   'pages.users.inviteFailed': "Échec de l'envoi de l'invitation",
   'pages.users.active': 'Actif',
@@ -932,45 +924,6 @@ export default {
   'pages.roles.disableProtectionConfirm':
     'Désactiver la protection pour ce rôle ?',
   'pages.roles.ownerOnly': 'Super administrateur uniquement',
-  'pages.roles.permission.address_books.edit':
-    "Modifier les carnets d'adresses partagés",
-  'pages.roles.permission.address_books.share':
-    "Créer et gérer les carnets d'adresses partagés",
-  'pages.roles.permission.address_books.view':
-    "Voir les paramètres des carnets d'adresses partagés",
-  'pages.roles.permission.audit.view': "Voir les journaux d'audit",
-  'pages.roles.permission.devices.delete': 'Supprimer des appareils',
-  'pages.roles.permission.devices.disconnect': 'Déconnecter des appareils',
-  'pages.roles.permission.devices.edit': 'Modifier les détails des appareils',
-  'pages.roles.permission.devices.status': 'Changer le statut des appareils',
-  'pages.roles.permission.devices.view': 'Voir les appareils',
-  'pages.roles.permission.roles.assign': 'Attribuer des rôles',
-  'pages.roles.permission.roles.create': 'Créer des rôles',
-  'pages.roles.permission.roles.delete': 'Supprimer des rôles',
-  'pages.roles.permission.roles.edit': 'Modifier des rôles',
-  'pages.roles.permission.roles.view': 'Voir les rôles',
-  'pages.roles.permission.strategies.assign': 'Attribuer des stratégies',
-  'pages.roles.permission.strategies.create': 'Créer des stratégies',
-  'pages.roles.permission.strategies.delete': 'Supprimer des stratégies',
-  'pages.roles.permission.strategies.edit': 'Modifier des stratégies',
-  'pages.roles.permission.strategies.view': 'Voir les stratégies',
-  'pages.roles.permission.user_groups.create':
-    "Créer des groupes d'utilisateurs",
-  'pages.roles.permission.user_groups.delete':
-    "Supprimer des groupes d'utilisateurs",
-  'pages.roles.permission.user_groups.edit':
-    "Modifier des groupes d'utilisateurs",
-  'pages.roles.permission.user_groups.membership':
-    "Gérer l'appartenance aux groupes d'utilisateurs",
-  'pages.roles.permission.user_groups.view': "Voir les groupes d'utilisateurs",
-  'pages.roles.permission.users.create': 'Créer des utilisateurs',
-  'pages.roles.permission.users.delete': 'Supprimer des utilisateurs',
-  'pages.roles.permission.users.edit': 'Modifier des utilisateurs',
-  'pages.roles.permission.users.force_logout':
-    "Forcer la déconnexion d'un utilisateur",
-  'pages.roles.permission.users.security': 'Gérer la sécurité des utilisateurs',
-  'pages.roles.permission.users.status': 'Changer le statut des utilisateurs',
-  'pages.roles.permission.users.view': 'Voir les utilisateurs',
   'pages.roles.permissionPresets': "Préréglages d'autorisations",
   'pages.roles.permissionScopeInfo':
     "Les actions sur les appareils peuvent être attribuées globalement ou à des groupes d'appareils sélectionnés lorsqu'un utilisateur reçoit ce rôle.",
@@ -978,27 +931,11 @@ export default {
     'Échec du chargement du catalogue des autorisations',
   'pages.roles.personalAddressBook': "Carnet d'adresses personnel",
   'pages.roles.preset.custom': 'Personnalisé',
-  'pages.roles.preset.deviceOperator': "Opérateur d'appareil",
-  'pages.roles.preset.deviceStrategyAssigner':
-    "Attribueur de stratégie d'appareil",
-  'pages.roles.preset.readOnly': 'Lecture seule globale',
-  'pages.roles.preset.sharedAddressBookAdministrator':
-    "Administrateur de carnets d'adresses partagés",
-  'pages.roles.preset.strategyMaintainer': 'Gestionnaire de stratégies',
-  'pages.roles.preset.systemAdministrator': 'Administrateur système',
-  'pages.roles.preset.userAdministrator': "Administrateur d'utilisateurs",
   'pages.roles.protectedAccount': 'Comptes protégés',
   'pages.roles.protectedAccountInfo':
     'Seul le super administrateur peut gérer les comptes protégés.',
-  'pages.roles.resource.address_books': "Carnets d'adresses",
-  'pages.roles.resource.audit': 'Audit',
-  'pages.roles.resource.devices': 'Appareils',
-  'pages.roles.resource.other': 'Autre',
   'pages.roles.resource.roles': 'Rôles',
-  'pages.roles.resource.strategies': 'Stratégies',
   'pages.roles.resource.system': 'Capacités système',
-  'pages.roles.resource.user_groups': "Groupes d'utilisateurs",
-  'pages.roles.resource.users': 'Utilisateurs',
   'pages.roles.superAdminInfo':
     "L'accès super administrateur est protégé séparément et ne peut être accordé via un rôle.",
   'pages.roles.systemIdentity.builtIn': 'Intégré',
@@ -1008,8 +945,6 @@ export default {
   'pages.roles.systemIdentity.superAdmin': 'Super administrateur',
   'pages.roles.systemIdentity.superAdminSummary':
     'Autorité effective complète pour le propriétaire unique du système.',
-  'pages.roles.systemIdentity.systemCapabilities':
-    "Définition des rôles, paramètres système, structure des groupes d'appareils et administration des identités",
   'pages.roles.unknownPermission': 'Autorisation inconnue',
   'pages.roles.unknownResource': 'Ressource inconnue',
   'pages.roles.view': 'Voir le rôle',
@@ -1237,21 +1172,7 @@ export default {
     'Les comptes protégés ne peuvent être gérés que par le super administrateur.',
   'pages.users.removeRole': 'Retirer le rôle',
   'pages.users.roleAssignmentTitle': 'Rôle {number}',
-  'pages.users.roleEligibility.assign_not_allowed':
-    'Vous ne pouvez pas attribuer ce rôle',
-  'pages.users.roleEligibility.missing_caller_scope':
-    "Votre portée d'autorisation est insuffisante",
-  'pages.users.roleEligibility.missing_permission':
-    'Il vous manque une autorisation requise par ce rôle',
-  'pages.users.roleEligibility.protected_role':
-    'Les rôles protégés ne peuvent être attribués ou retirés que par le super administrateur',
   'pages.users.roleEligibility.protected_target': 'Le compte cible est protégé',
-  'pages.users.roleEligibility.remove_not_allowed':
-    'Vous ne pouvez pas retirer ce rôle',
-  'pages.users.roleEligibility.role_grants_roles_assign':
-    "Les rôles qui accordent l'attribution de rôles ne peuvent être gérés que par le super administrateur",
-  'pages.users.roleEligibility.scope_exceeds_caller':
-    'La portée du rôle dépasse vos autorisations',
   'pages.users.roleEligibility.self_target':
     'Vous ne pouvez pas modifier vos propres rôles',
   'pages.users.roleEligibility.super_admin_target':
@@ -1275,11 +1196,6 @@ export default {
     "Gérer la structure des groupes d'appareils",
   'pages.users.systemCapability.identity_sources.manage':
     "Gérer les sources d'identité",
-  'pages.users.systemCapability.roles.create': 'Créer des définitions de rôles',
-  'pages.users.systemCapability.roles.delete':
-    'Supprimer des définitions de rôles',
-  'pages.users.systemCapability.roles.edit':
-    'Modifier des définitions de rôles',
   'pages.users.systemCapability.settings.manage':
     'Gérer les paramètres système',
   'pages.users.unsupportedDeviceGroupScope':

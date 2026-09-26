@@ -357,15 +357,6 @@ export default {
   'pages.roles.basicFunction': 'Базовая функция',
   'pages.roles.permissionPresets': 'Предустановки прав',
   'pages.roles.preset.custom': 'Пользовательский',
-  'pages.roles.preset.readOnly': 'Глобальный просмотр',
-  'pages.roles.preset.deviceOperator': 'Оператор устройств',
-  'pages.roles.preset.userAdministrator': 'Администратор пользователей',
-  'pages.roles.preset.sharedAddressBookAdministrator':
-    'Администратор общих адресных книг',
-  'pages.roles.preset.strategyMaintainer': 'Редактор стратегий',
-  'pages.roles.preset.deviceStrategyAssigner':
-    'Назначение стратегий устройствам',
-  'pages.roles.preset.systemAdministrator': 'Системный администратор',
   'pages.roles.protectedAccount': 'Защищённые аккаунты',
   'pages.roles.protectedAccountInfo':
     'Управлять защищёнными аккаунтами может только суперадминистратор.',
@@ -377,60 +368,13 @@ export default {
     'Только базовые функции личной адресной книги.',
   'pages.roles.systemIdentity.superAdminSummary':
     'Полные эффективные полномочия единственного владельца системы.',
-  'pages.roles.systemIdentity.systemCapabilities':
-    'Определение ролей, системные настройки, структура групп устройств и управление идентификацией',
   'pages.roles.disableProtectionConfirm': 'Отключить защиту этой роли?',
   'pages.roles.disableProtectionAffected':
     'Участники: {count}; ими смогут управлять делегированные администраторы.',
-  'pages.roles.resource.users': 'Пользователи',
-  'pages.roles.resource.user_groups': 'Группы пользователей',
-  'pages.roles.resource.devices': 'Устройства',
-  'pages.roles.resource.address_books': 'Адресные книги',
-  'pages.roles.resource.strategies': 'Стратегии',
-  'pages.roles.resource.audit': 'Аудит',
   'pages.roles.resource.roles': 'Роли',
   'pages.roles.resource.system': 'Системные возможности',
-  'pages.roles.resource.other': 'Другое',
   'pages.roles.unknownResource': 'Неизвестный ресурс',
   'pages.roles.unknownPermission': 'Неизвестное право',
-  'pages.roles.permission.users.view': 'Просмотр пользователей',
-  'pages.roles.permission.users.create': 'Создание пользователей',
-  'pages.roles.permission.users.edit': 'Редактирование пользователей',
-  'pages.roles.permission.users.status': 'Изменение статуса пользователей',
-  'pages.roles.permission.users.delete': 'Удаление пользователей',
-  'pages.roles.permission.users.security':
-    'Управление безопасностью пользователей',
-  'pages.roles.permission.users.force_logout':
-    'Принудительное завершение сеансов пользователей',
-  'pages.roles.permission.user_groups.view': 'Просмотр групп пользователей',
-  'pages.roles.permission.user_groups.create': 'Создание групп пользователей',
-  'pages.roles.permission.user_groups.edit':
-    'Редактирование групп пользователей',
-  'pages.roles.permission.user_groups.delete': 'Удаление групп пользователей',
-  'pages.roles.permission.user_groups.membership':
-    'Управление составом групп пользователей',
-  'pages.roles.permission.devices.view': 'Просмотр устройств',
-  'pages.roles.permission.devices.edit':
-    'Редактирование сведений об устройствах',
-  'pages.roles.permission.devices.status': 'Изменение статуса устройств',
-  'pages.roles.permission.devices.delete': 'Удаление устройств',
-  'pages.roles.permission.devices.disconnect': 'Отключение устройств',
-  'pages.roles.permission.address_books.view':
-    'Просмотр настроек общих адресных книг',
-  'pages.roles.permission.address_books.edit': 'Изменение общих адресных книг',
-  'pages.roles.permission.address_books.share':
-    'Создание и управление общими адресными книгами',
-  'pages.roles.permission.strategies.view': 'Просмотр стратегий',
-  'pages.roles.permission.strategies.create': 'Создание стратегий',
-  'pages.roles.permission.strategies.edit': 'Редактирование стратегий',
-  'pages.roles.permission.strategies.delete': 'Удаление стратегий',
-  'pages.roles.permission.strategies.assign': 'Назначение стратегий',
-  'pages.roles.permission.audit.view': 'Просмотр журналов аудита',
-  'pages.roles.permission.roles.view': 'Просмотр ролей',
-  'pages.roles.permission.roles.assign': 'Назначение ролей',
-  'pages.roles.permission.roles.create': 'Создание ролей',
-  'pages.roles.permission.roles.edit': 'Редактирование ролей',
-  'pages.roles.permission.roles.delete': 'Удаление ролей',
   'pages.roles.create': 'Создать роль',
   'pages.roles.view': 'Просмотр роли',
   'pages.roles.edit': 'Редактировать роль',
@@ -532,14 +476,6 @@ export default {
   'pages.strategies.unassignConfirm': 'Отменить назначение для этого объекта?',
   'pages.strategies.fetchDetailFailed': 'Не удалось загрузить детали стратегии',
   'pages.strategies.updatedAt': 'Дата обновления',
-  'pages.strategies.category.connection': 'Подключение и доступ',
-  'pages.strategies.category.security': 'Безопасность и аутентификация',
-  'pages.strategies.category.display': 'Отображение и интерфейс',
-  'pages.strategies.category.av': 'Аудио/Видео и кодеки',
-  'pages.strategies.category.file': 'Файлы и буфер обмена',
-  'pages.strategies.category.advanced': 'Расширенные',
-  'pages.strategies.category.floating': 'Плавающее окно',
-  'pages.strategies.category.privacy': 'Конфиденциальность и запись',
   'pages.strategies.values.yes': 'Да',
   'pages.strategies.values.no': 'Нет',
   'pages.strategies.option.access-mode.label': 'Режим доступа',
@@ -767,33 +703,16 @@ export default {
   'pages.users.protectedAccountInfo':
     'Управлять защищёнными аккаунтами может только суперадминистратор.',
   'pages.users.systemCapabilities': 'Системные возможности',
-  'pages.users.systemCapability.roles.create': 'Создание определений ролей',
-  'pages.users.systemCapability.roles.edit': 'Изменение определений ролей',
-  'pages.users.systemCapability.roles.delete': 'Удаление определений ролей',
   'pages.users.systemCapability.settings.manage':
     'Управление системными настройками',
   'pages.users.systemCapability.device_groups.manage':
     'Управление структурой групп устройств',
   'pages.users.systemCapability.identity_sources.manage':
     'Управление источниками удостоверений',
-  'pages.users.roleEligibility.assign_not_allowed':
-    'Вы не можете назначить эту роль',
-  'pages.users.roleEligibility.remove_not_allowed':
-    'Вы не можете удалить эту роль',
-  'pages.users.roleEligibility.protected_role':
-    'Защищённые роли может назначать или удалять только суперадминистратор',
   'pages.users.roleEligibility.protected_target': 'Целевой аккаунт защищён',
   'pages.users.roleEligibility.super_admin_target':
     'Обычные роли нельзя назначать суперадминистратору',
   'pages.users.roleEligibility.self_target': 'Нельзя изменять собственные роли',
-  'pages.users.roleEligibility.missing_caller_scope':
-    'Недостаточный охват разрешений',
-  'pages.users.roleEligibility.scope_exceeds_caller':
-    'Охват роли превышает ваши разрешения',
-  'pages.users.roleEligibility.missing_permission':
-    'У вас нет разрешения, необходимого для этой роли',
-  'pages.users.roleEligibility.role_grants_roles_assign':
-    'Роли, предоставляющие назначение ролей, может изменять только суперадминистратор',
   'pages.users.effectiveScope': 'Фактическая область действия',
   'pages.users.strategy': 'Стратегия',
   'pages.users.invite': 'Пригласить пользователя',
