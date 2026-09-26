@@ -19,7 +19,6 @@ import {
   Row,
   Select,
   Space,
-  Statistic,
   Typography,
 } from 'antd';
 import React, {
@@ -69,20 +68,14 @@ const OverviewCard: React.FC<{
     <Card style={cardStyle} variant="borderless">
       <Flex align="center" gap={16}>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <Statistic
-            title={title}
-            value={total}
-            prefix={icon}
-            styles={{ content: { fontSize: 20 } }}
-          />
+          <Flex align="center" gap={8}>
+            {icon}
+            <Text style={{ fontSize: 15, fontWeight: 500 }}>{title}</Text>
+          </Flex>
           <div style={{ marginTop: 4 }}>
             <Space size={8}>
               {ringData.map((item) => (
-                <Text
-                  key={item.label}
-                  type="secondary"
-                  style={{ fontSize: 11 }}
-                >
+                <Text key={item.label} style={{ fontSize: 11 }}>
                   <span
                     style={{
                       display: 'inline-block',
@@ -103,11 +96,11 @@ const OverviewCard: React.FC<{
           <Progress
             type="circle"
             percent={ringPercent}
-            size={64}
+            size={72}
             strokeColor={ringData[0].color}
             railColor={ringData[1]?.color || '#f0f0f0'}
             format={() => (
-              <span style={{ fontSize: 14, fontWeight: 600 }}>{total}</span>
+              <span style={{ fontSize: 18, fontWeight: 600 }}>{total}</span>
             )}
           />
         </div>
@@ -123,9 +116,7 @@ const CountItem: React.FC<{
 }> = ({ icon, label, value }) => (
   <Flex vertical align="center" gap={4}>
     {icon}
-    <Text style={{ fontSize: 12 }} type="secondary">
-      {label}
-    </Text>
+    <Text style={{ fontSize: 12 }}>{label}</Text>
     <Text style={{ fontSize: 18, fontWeight: 600 }}>{value}</Text>
   </Flex>
 );
