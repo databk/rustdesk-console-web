@@ -103,8 +103,8 @@ const OverviewCard: React.FC<{
     return () => observer.disconnect();
   }, []);
 
-  const ringSize = 64;
-  const ringNumberFontSize = 20;
+  const ringSize = 80;
+  const ringNumberFontSize = fitFontSize(String(total), ringSize - 16, 14, 28);
   const leftWidth = containerWidth - 48 - ringSize - 16;
   const labelText = ringData
     .map((item) => `${item.label}: ${item.value}`)
