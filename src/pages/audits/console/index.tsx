@@ -69,8 +69,20 @@ const ConsoleAudit: React.FC = () => {
       dataIndex: 'result',
       width: 120,
       valueEnum: {
-        allowed: { text: 'Allowed', status: 'Success' },
-        denied: { text: 'Denied', status: 'Error' },
+        allowed: {
+          text: intl.formatMessage({
+            id: 'pages.audits.result.allowed',
+            defaultMessage: 'Allowed',
+          }),
+          status: 'Success',
+        },
+        denied: {
+          text: intl.formatMessage({
+            id: 'pages.audits.result.denied',
+            defaultMessage: 'Denied',
+          }),
+          status: 'Error',
+        },
       },
     },
     {
@@ -176,18 +188,41 @@ const ConsoleAudit: React.FC = () => {
         {selected && (
           <>
             <Typography.Paragraph>
-              <strong>Action:</strong> {selected.action || '-'}
+              <strong>
+                {intl.formatMessage({
+                  id: 'pages.audits.action',
+                  defaultMessage: 'Action',
+                })}
+                :
+              </strong>{' '}
+              {selected.action || '-'}
             </Typography.Paragraph>
             <Typography.Paragraph>
-              <strong>Target:</strong> {selected.target_type || '-'} /{' '}
-              {selected.target_guid || '-'}
+              <strong>
+                {intl.formatMessage({
+                  id: 'pages.audits.target',
+                  defaultMessage: 'Target',
+                })}
+                :
+              </strong>{' '}
+              {selected.target_type || '-'} / {selected.target_guid || '-'}
             </Typography.Paragraph>
             <Typography.Paragraph>
-              <strong>Before state</strong>
+              <strong>
+                {intl.formatMessage({
+                  id: 'pages.audits.beforeState',
+                  defaultMessage: 'Before state',
+                })}
+              </strong>
               <pre>{JSON.stringify(selected.before_state, null, 2) || '-'}</pre>
             </Typography.Paragraph>
             <Typography.Paragraph>
-              <strong>After state</strong>
+              <strong>
+                {intl.formatMessage({
+                  id: 'pages.audits.afterState',
+                  defaultMessage: 'After state',
+                })}
+              </strong>
               <pre>{JSON.stringify(selected.after_state, null, 2) || '-'}</pre>
             </Typography.Paragraph>
           </>

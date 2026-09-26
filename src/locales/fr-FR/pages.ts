@@ -914,6 +914,11 @@ export default {
   'pages.audits.targetId': 'ID cible',
   'pages.audits.targetType': 'Type de cible',
   'pages.audits.unknownUser': 'Utilisateur inconnu',
+  'pages.audits.result.allowed': 'Autorisé',
+  'pages.audits.result.denied': 'Refusé',
+  'pages.audits.target': 'Cible',
+  'pages.audits.beforeState': 'État antérieur',
+  'pages.audits.afterState': 'État postérieur',
   'pages.common.back': 'Retour',
   'pages.common.close': 'Fermer',
   'pages.login.permissionsLoadFailed':
