@@ -215,7 +215,6 @@ const UserList: React.FC<UserListProps> = ({
           canEditProfile: access.canUsersEdit,
           canEditStatus: access.canUsersStatus,
           canEditGroup: access.canUserGroupsMembership,
-          canEditAdmin: access.isSuperAdmin,
         }),
       );
       msgApi.success(
@@ -438,7 +437,6 @@ const UserList: React.FC<UserListProps> = ({
       ...(access.canUserGroupsMembership
         ? { user_group_guid: record.user_group_guid }
         : {}),
-      ...(access.isSuperAdmin ? { is_admin: record.is_admin } : {}),
     });
     setEditModalVisible(true);
   };
@@ -560,7 +558,6 @@ const UserList: React.FC<UserListProps> = ({
         canEditProfile={access.canUsersEdit}
         canEditStatus={access.canUsersStatus}
         canEditGroup={access.canUserGroupsMembership}
-        canEditAdmin={access.isSuperAdmin}
         userGroups={userGroups}
         userGroupsLoading={userGroupsLoading}
         form={editForm}

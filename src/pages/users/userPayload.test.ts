@@ -45,7 +45,6 @@ test('update includes only fields owned by the current capabilities', () => {
     note: 'note',
     status: 0,
     user_group_guid: 'group-guid',
-    is_admin: true,
   };
 
   expect(
@@ -53,7 +52,6 @@ test('update includes only fields owned by the current capabilities', () => {
       canEditProfile: false,
       canEditStatus: true,
       canEditGroup: false,
-      canEditAdmin: false,
     }),
   ).toEqual({ status: 0 });
   expect(
@@ -61,7 +59,6 @@ test('update includes only fields owned by the current capabilities', () => {
       canEditProfile: true,
       canEditStatus: false,
       canEditGroup: true,
-      canEditAdmin: false,
     }),
   ).toEqual({
     name: 'alice',

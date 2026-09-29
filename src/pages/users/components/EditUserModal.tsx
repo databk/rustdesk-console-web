@@ -1,5 +1,5 @@
 import { FormattedMessage, useIntl } from '@umijs/max';
-import { Form, Input, Modal, Select, Switch } from 'antd';
+import { Form, Input, Modal, Select } from 'antd';
 import type { FormInstance } from 'antd';
 import React from 'react';
 
@@ -8,7 +8,6 @@ interface EditUserModalProps {
   canEditProfile: boolean;
   canEditStatus: boolean;
   canEditGroup: boolean;
-  canEditAdmin: boolean;
   userGroups: API.UserGroupItem[];
   userGroupsLoading: boolean;
   form: FormInstance<API.UpdateUserParams>;
@@ -21,7 +20,6 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
   canEditProfile,
   canEditStatus,
   canEditGroup,
-  canEditAdmin,
   userGroups,
   userGroupsLoading,
   form,
@@ -164,20 +162,6 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
                 value: group.guid,
               }))}
             />
-          </Form.Item>
-        )}
-        {canEditAdmin && (
-          <Form.Item
-            name="is_admin"
-            label={
-              <FormattedMessage
-                id="pages.users.isAdmin"
-                defaultMessage="Admin"
-              />
-            }
-            valuePropName="checked"
-          >
-            <Switch />
           </Form.Item>
         )}
       </Form>

@@ -2,7 +2,6 @@ type UserEditCapabilities = {
   canEditProfile: boolean;
   canEditStatus: boolean;
   canEditGroup: boolean;
-  canEditAdmin: boolean;
 };
 
 export function buildCreateUserPayload(
@@ -41,7 +40,6 @@ export function buildUpdateUserPayload(
   if (capabilities.canEditGroup) {
     payload.user_group_guid = values.user_group_guid;
   }
-  if (capabilities.canEditAdmin) payload.is_admin = values.is_admin;
 
   return payload;
 }
