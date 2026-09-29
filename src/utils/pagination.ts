@@ -20,10 +20,11 @@ export async function loadAllPages<T>(
   let total = 0;
   do {
     const page = await loadPage(current);
-    items.push(...page.data);
+    const data = page.data ?? [];
+    items.push(...data);
     total = page.total;
     current += 1;
-    if (page.data.length === 0) break;
+    if (data.length === 0) break;
   } while (items.length < total);
   return items;
 }
