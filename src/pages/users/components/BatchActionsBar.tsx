@@ -18,6 +18,7 @@ interface BatchActionsBarProps {
   batchStatusUpdating: boolean;
   batchForceLoggingOut: boolean;
   selectedRowCount: number;
+  hasSystemOwnerSelection: boolean;
   hasUnmanageableSelection: boolean;
   canUsersStatus: boolean;
   canUsersForceLogout: boolean;
@@ -38,6 +39,7 @@ const BatchActionsBar: React.FC<BatchActionsBarProps> = ({
   batchStatusUpdating,
   batchForceLoggingOut,
   selectedRowCount,
+  hasSystemOwnerSelection,
   hasUnmanageableSelection,
   canUsersStatus,
   canUsersForceLogout,
@@ -56,6 +58,14 @@ const BatchActionsBar: React.FC<BatchActionsBarProps> = ({
           'Protected accounts can only be managed by the super administrator.',
       })
     : undefined;
+  const statusSelectionDisabled =
+    selectionDisabled || hasSystemOwnerSelection;
+  const statusSelectionTooltip = hasSystemOwnerSelection
+    ? intl.formatMessage({
+        id: 'pages.users.systemOwnerStatusBlocked',
+        defaultMessage: 'The system owner cannot be enabled or disabled.',
+      })
+    : selectionTooltip;
 
   if (mode === 'move') {
     return (
@@ -120,13 +130,13 @@ const BatchActionsBar: React.FC<BatchActionsBarProps> = ({
             defaultMessage: 'No',
           })}
         >
-          <Tooltip title={selectionTooltip}>
+          <Tooltip title={statusSelectionTooltip}>
             <span>
               <Button
                 type="link"
                 icon={<PlusCircleOutlined />}
                 loading={batchStatusUpdating}
-                disabled={selectionDisabled}
+                disabled={statusSelectionDisabled}
                 style={{ padding: 0 }}
               >
                 <FormattedMessage
@@ -156,13 +166,13 @@ const BatchActionsBar: React.FC<BatchActionsBarProps> = ({
             defaultMessage: 'No',
           })}
         >
-          <Tooltip title={selectionTooltip}>
+          <Tooltip title={statusSelectionTooltip}>
             <span>
               <Button
                 type="link"
                 icon={<MinusCircleOutlined />}
                 loading={batchStatusUpdating}
-                disabled={selectionDisabled}
+                disabled={statusSelectionDisabled}
                 style={{ padding: 0 }}
               >
                 <FormattedMessage

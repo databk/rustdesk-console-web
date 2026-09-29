@@ -771,6 +771,10 @@ export default {
   'pages.users.protectedAccount': 'Защищённый аккаунт',
   'pages.users.protectedAccountInfo':
     'Управлять защищёнными аккаунтами может только суперадминистратор.',
+  'pages.users.systemOwnerStatusBlocked':
+    'Владельца системы нельзя активировать или отключить.',
+  'pages.users.systemOwnerMutationBlocked':
+    'Владельца системы нельзя отключить или удалить.',
   'pages.users.systemCapabilities': 'Системные возможности',
   'pages.users.systemCapability.roles.create': 'Создание определений ролей',
   'pages.users.systemCapability.roles.edit': 'Изменение определений ролей',

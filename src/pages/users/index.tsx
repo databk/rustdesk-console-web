@@ -213,7 +213,8 @@ const UserList: React.FC<UserListProps> = ({
         editingUser.guid,
         buildUpdateUserPayload(values, {
           canEditProfile: access.canUsersEdit,
-          canEditStatus: access.canUsersStatus,
+          canEditStatus:
+            access.canUsersStatus && editingUser.is_admin !== true,
           canEditGroup: access.canUserGroupsMembership,
         }),
       );
@@ -302,7 +303,12 @@ const UserList: React.FC<UserListProps> = ({
   };
 
   const handleBatchEnable = async () => {
-    if (selectedRows.length === 0 || selectionBlocked) return;
+    if (
+      selectedRows.length === 0 ||
+      selectionBlocked ||
+      selectedRows.some((row) => row.is_admin)
+    )
+      return;
     setBatchStatusUpdating(true);
     try {
       const userGuids = selectedRows.map((row) => row.guid);
@@ -348,7 +354,12 @@ const UserList: React.FC<UserListProps> = ({
   };
 
   const handleBatchDisable = async () => {
-    if (selectedRows.length === 0 || selectionBlocked) return;
+    if (
+      selectedRows.length === 0 ||
+      selectionBlocked ||
+      selectedRows.some((row) => row.is_admin)
+    )
+      return;
     setBatchStatusUpdating(true);
     try {
       const userGuids = selectedRows.map((row) => row.guid);
@@ -433,7 +444,9 @@ const UserList: React.FC<UserListProps> = ({
             note: record.note,
           }
         : {}),
-      ...(access.canUsersStatus ? { status: record.status } : {}),
+      ...(access.canUsersStatus && !record.is_admin
+        ? { status: record.status }
+        : {}),
       ...(access.canUserGroupsMembership
         ? { user_group_guid: record.user_group_guid }
         : {}),
@@ -556,7 +569,9 @@ const UserList: React.FC<UserListProps> = ({
       <EditUserModal
         visible={editModalVisible}
         canEditProfile={access.canUsersEdit}
-        canEditStatus={access.canUsersStatus}
+        canEditStatus={
+          access.canUsersStatus && editingUser?.is_admin !== true
+        }
         canEditGroup={access.canUserGroupsMembership}
         userGroups={userGroups}
         userGroupsLoading={userGroupsLoading}

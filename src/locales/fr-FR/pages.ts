@@ -1240,6 +1240,10 @@ export default {
   'pages.users.protectedAccount': 'Compte protégé',
   'pages.users.protectedAccountInfo':
     'Les comptes protégés ne peuvent être gérés que par le super administrateur.',
+  'pages.users.systemOwnerStatusBlocked':
+    'Le propriétaire du système ne peut pas être activé ou désactivé.',
+  'pages.users.systemOwnerMutationBlocked':
+    'Le propriétaire du système ne peut pas être désactivé ni supprimé.',
   'pages.users.removeRole': 'Retirer le rôle',
   'pages.users.roleAssignmentTitle': 'Rôle {number}',
   'pages.users.roleEligibility.assign_not_allowed':

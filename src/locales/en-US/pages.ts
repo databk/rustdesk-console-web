@@ -731,6 +731,10 @@ export default {
   'pages.users.protectedAccount': 'Protected account',
   'pages.users.protectedAccountInfo':
     'Protected accounts can only be managed by the super administrator.',
+  'pages.users.systemOwnerStatusBlocked':
+    'The system owner cannot be enabled or disabled.',
+  'pages.users.systemOwnerMutationBlocked':
+    'The system owner cannot be disabled or deleted.',
   'pages.users.systemCapabilities': 'System capabilities',
   'pages.users.systemCapability.roles.create': 'Create role definitions',
   'pages.users.systemCapability.roles.edit': 'Edit role definitions',
