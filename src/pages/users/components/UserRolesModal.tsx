@@ -32,6 +32,7 @@ import {
   replaceUserRoles,
 } from '@/services/rustdesk-console/userRole';
 import { getRequestErrorMessage } from '@/utils/requestError';
+import { loadAllPages } from '@/utils/pagination';
 import {
   type AssignmentScopeType,
   type AssignmentValidationError,
@@ -55,17 +56,9 @@ interface UserRolesModalProps {
 }
 
 const loadAllRoles = async () => {
-  const roles: API.RoleItem[] = [];
-  let current = 1;
-  let total = 0;
-  do {
-    const page = await getRoleList({ current, pageSize: 100 });
-    roles.push(...page.data);
-    total = page.total;
-    current += 1;
-    if (page.data.length === 0) break;
-  } while (roles.length < total);
-  return roles;
+  return loadAllPages<API.RoleItem>((current) =>
+    getRoleList({ current, pageSize: 100 }),
+  );
 };
 
 const UserRolesModal: React.FC<UserRolesModalProps> = ({

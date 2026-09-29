@@ -1,9 +1,7 @@
 import { request } from '@umijs/max';
 
 export async function getConnectionAudits(
-  params: {
-    current?: number;
-    pageSize?: number;
+  params: API.PageParams & {
     deviceId?: string;
     type?: number;
     startTime?: string;
@@ -19,9 +17,7 @@ export async function getConnectionAudits(
 }
 
 export async function getActiveConnections(
-  params: {
-    current?: number;
-    pageSize?: number;
+  params: API.PageParams & {
     deviceId?: string;
   },
   options?: { [key: string]: any },
@@ -37,9 +33,7 @@ export async function getActiveConnections(
 }
 
 export async function getFileAudits(
-  params: {
-    current?: number;
-    pageSize?: number;
+  params: API.PageParams & {
     peerId?: string;
     type?: number;
     startTime?: string;
@@ -55,9 +49,7 @@ export async function getFileAudits(
 }
 
 export async function getAlarmAudits(
-  params: {
-    current?: number;
-    pageSize?: number;
+  params: API.PageParams & {
     deviceId?: string;
     type?: number;
     startTime?: string;
@@ -73,9 +65,7 @@ export async function getAlarmAudits(
 }
 
 export async function getConsoleAudits(
-  params: {
-    current?: number;
-    pageSize?: number;
+  params: API.PageParams & {
     operator?: string;
     action?: string;
     target_type?: string;

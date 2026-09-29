@@ -1,20 +1,15 @@
 import { request } from '@umijs/max';
+import { loadAllPages } from '@/utils/pagination';
 
 export async function getUserGroupList(
-  params?: {
-    current?: number;
-    pageSize?: number;
+  params?: API.PageParams & {
     search?: string;
   },
   options?: { [key: string]: any },
 ) {
   return request<API.PaginatedResult<API.UserGroupItem>>('/api/user-groups', {
     method: 'GET',
-    params: {
-      current: params?.current || 1,
-      pageSize: params?.pageSize || 20,
-      search: params?.search,
-    },
+    params,
     ...(options || {}),
   });
 }
@@ -33,9 +28,7 @@ export async function deleteUserGroup(guid: string) {
 
 export async function getUserGroupUsers(
   guid: string,
-  params?: {
-    current?: number;
-    pageSize?: number;
+  params?: API.PageParams & {
     search?: string;
   },
 ) {
@@ -56,12 +49,7 @@ export async function moveUsersToGroup(guid: string, userGuids: string[]) {
 }
 
 export async function getAllUserGroups() {
-  const first = await getUserGroupList({ current: 1, pageSize: 100 });
-  const groups = [...first.data];
-  for (let current = 2; groups.length < first.total; current += 1) {
-    const page = await getUserGroupList({ current, pageSize: 100 });
-    if (!page.data.length) break;
-    groups.push(...page.data);
-  }
-  return groups;
+  return loadAllPages<API.UserGroupItem>((current) =>
+    getUserGroupList({ current, pageSize: 100 }),
+  );
 }

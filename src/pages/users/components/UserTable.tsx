@@ -5,6 +5,7 @@ import { FormattedMessage } from '@umijs/max';
 import { Button } from 'antd';
 import React from 'react';
 import { getAdminUserList } from '@/services/rustdesk-console/user';
+import { DEFAULT_PAGINATION, toTableResult } from '@/utils/pagination';
 import BatchActionsBar from './BatchActionsBar';
 
 interface UserTableProps {
@@ -149,11 +150,7 @@ const UserTable: React.FC<UserTableProps> = ({
           user_group_name: params.user_group_name,
           user_group_guid: userGroupGuid,
         });
-        return {
-          data: result.data,
-          total: result.total,
-          success: true,
-        };
+        return toTableResult(result);
       }}
       columns={
         userGroupGuid && canUserGroupsMembership
@@ -165,11 +162,7 @@ const UserTable: React.FC<UserTableProps> = ({
         defaultCollapsed: true,
         optionRender: (_searchConfig, _formProps, dom) => [...dom.reverse()],
       }}
-      pagination={{
-        defaultPageSize: 20,
-        showSizeChanger: true,
-        showQuickJumper: true,
-      }}
+      pagination={DEFAULT_PAGINATION}
       scroll={{ x: 'max-content' }}
       toolBarRender={() =>
         userGroupGuid && canUserGroupsMembership

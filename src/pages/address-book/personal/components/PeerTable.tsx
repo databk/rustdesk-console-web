@@ -5,6 +5,7 @@ import { Button } from 'antd';
 import { PlusOutlined, SelectOutlined } from '@ant-design/icons';
 import React from 'react';
 import { getPeers } from '@/services/rustdesk-console/addressBook';
+import { DEFAULT_PAGINATION, toTableResult } from '@/utils/pagination';
 
 interface PeerTableProps {
   abGuid: string | undefined;
@@ -54,11 +55,7 @@ const PeerTable: React.FC<PeerTableProps> = ({
           tags: selectedTags.length > 0 ? selectedTags : undefined,
           tagMode: selectedTags.length > 1 ? tagMode : undefined,
         });
-        return {
-          data: result.data || [],
-          total: result.total || 0,
-          success: true,
-        };
+        return toTableResult(result);
       }}
       columns={
         canWrite
@@ -70,11 +67,7 @@ const PeerTable: React.FC<PeerTableProps> = ({
         defaultCollapsed: false,
         optionRender: (_searchConfig, _formProps, dom) => [dom[1], dom[0]],
       }}
-      pagination={{
-        defaultPageSize: 20,
-        showSizeChanger: true,
-        showQuickJumper: true,
-      }}
+      pagination={DEFAULT_PAGINATION}
       scroll={{ x: 1100 }}
       toolBarRender={() =>
         canWrite

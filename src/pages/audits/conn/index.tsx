@@ -28,6 +28,7 @@ import type { ConnectionAuditSearchParams } from './types';
 import { useConnColumns } from './components/ConnColumns';
 import { useDetailFields } from './components/DetailFields';
 import { useCsvExport } from './components/useCsvExport';
+import { DEFAULT_PAGINATION, toTableResult } from '@/utils/pagination';
 import {
   canDisconnectActiveConnection,
   canDisconnectAuditRecord,
@@ -243,18 +244,10 @@ const ConnectionAudit: React.FC = () => {
               pageSize: params.pageSize,
               deviceId: params.deviceId,
             });
-            return {
-              data: result.data,
-              total: result.total,
-              success: true,
-            };
+            return toTableResult(result);
           }}
           columns={restrictedColumns}
-          pagination={{
-            defaultPageSize: 20,
-            showSizeChanger: true,
-            showQuickJumper: true,
-          }}
+          pagination={DEFAULT_PAGINATION}
           options={{
             density: true,
             fullScreen: false,
@@ -299,11 +292,7 @@ const ConnectionAudit: React.FC = () => {
               requestParams.endTime = dayjs(params.createdAt[1]).toISOString();
             }
             const result = await getConnectionAudits(requestParams);
-            return {
-              data: result.data,
-              total: result.total,
-              success: true,
-            };
+            return toTableResult(result);
           }}
           columns={columns}
           beforeSearchSubmit={(params) => {
@@ -330,11 +319,7 @@ const ConnectionAudit: React.FC = () => {
               </Button>
             </Tooltip>,
           ]}
-          pagination={{
-            defaultPageSize: 20,
-            showSizeChanger: true,
-            showQuickJumper: true,
-          }}
+          pagination={DEFAULT_PAGINATION}
           scroll={{ x: '100%' }}
           options={{
             density: true,

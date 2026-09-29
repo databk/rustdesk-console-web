@@ -14,6 +14,7 @@ import {
   filterManageableSelection,
   isCurrentRequest,
 } from './userGroupMemberSelection';
+import { DEFAULT_PAGINATION, toTableResult } from '@/utils/pagination';
 
 interface UserGroupMembersModalProps {
   open: boolean;
@@ -209,11 +210,7 @@ const UserGroupMembersModal: React.FC<UserGroupMembersModalProps> = ({
         for (const row of result.data) {
           memberRowsCacheRef.current.set(row.guid, row);
         }
-        return {
-          data: result.data,
-          total: result.total,
-          success: true,
-        };
+        return toTableResult(result);
       }}
       columns={columns.map((column) =>
         column.dataIndex === 'email' ? { ...column, search: false } : column,
@@ -236,7 +233,7 @@ const UserGroupMembersModal: React.FC<UserGroupMembersModalProps> = ({
       }}
       tableAlertRender={false}
       search={{ filterType: 'light' }}
-      pagination={{ defaultPageSize: 10, showSizeChanger: true }}
+      pagination={{ ...DEFAULT_PAGINATION, defaultPageSize: 10 }}
       options={{ density: false, setting: false, reload: true }}
       toolBarRender={() => [
         <Select
@@ -309,11 +306,7 @@ const UserGroupMembersModal: React.FC<UserGroupMembersModalProps> = ({
         for (const row of result.data) {
           userRowsCacheRef.current.set(row.guid, row);
         }
-        return {
-          data: result.data,
-          total: result.total,
-          success: true,
-        };
+        return toTableResult(result);
       }}
       columns={columns}
       rowSelection={{
@@ -336,7 +329,7 @@ const UserGroupMembersModal: React.FC<UserGroupMembersModalProps> = ({
       }}
       tableAlertRender={false}
       search={{ filterType: 'light' }}
-      pagination={{ defaultPageSize: 10, showSizeChanger: true }}
+      pagination={{ ...DEFAULT_PAGINATION, defaultPageSize: 10 }}
       options={{ density: false, setting: false, reload: true }}
       toolBarRender={() => [
         <Tooltip

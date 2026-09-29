@@ -1,7 +1,7 @@
 import { request } from '@umijs/max';
 
 export async function getDeviceGroupList(
-  params: { current: number; pageSize: number; name?: string },
+  params: API.PageParams & { name?: string },
   options?: { [key: string]: any },
 ) {
   return request<API.PaginatedResult<API.DeviceGroupItem>>('/api/device-groups', {
@@ -12,7 +12,7 @@ export async function getDeviceGroupList(
 }
 
 export async function getStrategyTargetDeviceGroupList(
-  params: { current: number; pageSize: number; name?: string },
+  params: API.PageParams & { name?: string },
   options?: { [key: string]: any },
 ) {
   return request<API.PaginatedResult<API.DeviceGroupItem>>(

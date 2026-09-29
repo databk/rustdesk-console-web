@@ -16,6 +16,7 @@ import StrategyColumns from './columns';
 import AssignModal from './components/AssignModal';
 import StrategyForm from './components/StrategyForm';
 import { getStrategyListMode } from './strategyAccess';
+import { DEFAULT_PAGINATION, toTableResult } from '@/utils/pagination';
 
 const StrategyList: React.FC = () => {
   const intl = useIntl();
@@ -167,18 +168,10 @@ const StrategyList: React.FC = () => {
             pageSize: params.pageSize,
             name: params.name,
           });
-          return {
-            data: result.data,
-            total: result.total,
-            success: true,
-          };
+          return toTableResult(result);
         }}
         columns={columns}
-        pagination={{
-          defaultPageSize: 20,
-          showSizeChanger: true,
-          showQuickJumper: true,
-        }}
+        pagination={DEFAULT_PAGINATION}
         scroll={{ x: 1000 }}
         toolBarRender={() =>
           access.canStrategiesCreate

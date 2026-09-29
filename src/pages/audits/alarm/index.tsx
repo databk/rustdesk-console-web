@@ -7,6 +7,7 @@ import dayjs from 'dayjs';
 import React, { useRef, useState } from 'react';
 import { getAlarmAudits } from '@/services/rustdesk-console/audit';
 import { renderNameIp } from '@/utils/audit';
+import { DEFAULT_PAGINATION, toTableResult } from '@/utils/pagination';
 
 const ALARM_TYPE_MAP: Record<number, { msgId: string; color: string }> = {
   0: { msgId: 'pages.audits.alarmType.ipWhitelist', color: 'red' },
@@ -334,11 +335,7 @@ const AlarmAudit: React.FC = () => {
             requestParams.endTime = dayjs(params.createdAt[1]).toISOString();
           }
           const result = await getAlarmAudits(requestParams);
-          return {
-            data: result.data || [],
-            total: result.total || 0,
-            success: true,
-          };
+          return toTableResult(result);
         }}
         columns={columns}
         beforeSearchSubmit={(params) => {
@@ -365,11 +362,7 @@ const AlarmAudit: React.FC = () => {
             </Button>
           </Tooltip>,
         ]}
-        pagination={{
-          defaultPageSize: 20,
-          showSizeChanger: true,
-          showQuickJumper: true,
-        }}
+        pagination={DEFAULT_PAGINATION}
         scroll={{ x: 1000 }}
         options={{
           density: true,

@@ -1,5 +1,6 @@
 import type { RequestOptions } from '@@/plugin-request/request';
 import { request } from '@umijs/max';
+import { loadAllPages } from '@/utils/pagination';
 
 type ActionResponse = string | Record<string, unknown> | null | undefined;
 
@@ -32,11 +33,11 @@ export async function getPersonalAddressBook() {
   return request<{ guid: string }>('/api/ab/personal', { method: 'GET' });
 }
 
-export async function getCustomAddressBooks(params?: {
-  pageSize?: number;
-  current?: number;
-  name?: string;
-}) {
+export async function getCustomAddressBooks(
+  params?: API.PageParams & {
+    name?: string;
+  },
+) {
   return request<API.PaginatedResult<API.AddressBookProfile>>(
     '/api/ab/custom/profiles',
     { method: 'GET', params },
@@ -44,14 +45,9 @@ export async function getCustomAddressBooks(params?: {
 }
 
 export async function getAllCustomAddressBooks() {
-  const first = await getCustomAddressBooks({ current: 1, pageSize: 100 });
-  const profiles = [...first.data];
-  for (let current = 2; profiles.length < first.total; current += 1) {
-    const page = await getCustomAddressBooks({ current, pageSize: 100 });
-    if (!page.data.length) break;
-    profiles.push(...page.data);
-  }
-  return profiles;
+  return loadAllPages<API.AddressBookProfile>((current) =>
+    getCustomAddressBooks({ current, pageSize: 100 }),
+  );
 }
 
 export async function addCustomAddressBook(
@@ -80,7 +76,7 @@ export async function deleteCustomAddressBooks(guids: string[]) {
 }
 
 export async function getSharedAddressBooks(
-  params?: { pageSize?: number; current?: number; search?: string },
+  params?: API.PageParams & { search?: string },
   options?: { [key: string]: any },
 ) {
   return request<API.PaginatedResult<API.SharedAddressBook>>('/api/ab/shared/profiles', {
@@ -95,7 +91,7 @@ export async function addSharedAddressBook(data: API.AddSharedAddressBookParams)
 }
 
 export async function getWebSharedAddressBooks(
-  params?: { pageSize?: number; current?: number; name?: string },
+  params?: API.PageParams & { name?: string },
   options?: { [key: string]: any },
 ) {
   return request<API.PaginatedResult<API.SharedAddressBook>>(
@@ -124,9 +120,7 @@ export async function deleteSharedAddressBooks(data: string[]) {
 }
 
 export async function getPeers(
-  params: {
-    current?: number;
-    pageSize?: number;
+  params: API.PageParams & {
     ab?: string;
     id?: string;
     alias?: string;
@@ -188,11 +182,9 @@ export async function deleteTag(guid: string, data: string[]) {
   return actionRequest(`/api/ab/tag/${guid}`, { method: 'DELETE', data });
 }
 
-export async function getRules(params: {
-  ab: string;
-  current?: number;
-  pageSize?: number;
-}) {
+export async function getRules(
+  params: API.PageParams & { ab: string },
+) {
   return request<API.PaginatedResult<API.RuleItem>>('/api/ab/rules', {
     method: 'GET',
     params,
@@ -200,14 +192,9 @@ export async function getRules(params: {
 }
 
 export async function getAllRules(ab: string) {
-  const first = await getRules({ ab, current: 1, pageSize: 100 });
-  const rules = [...first.data];
-  for (let current = 2; rules.length < first.total; current += 1) {
-    const page = await getRules({ ab, current, pageSize: 100 });
-    if (!page.data.length) break;
-    rules.push(...page.data);
-  }
-  return rules;
+  return loadAllPages<API.RuleItem>((current) =>
+    getRules({ ab, current, pageSize: 100 }),
+  );
 }
 
 export async function getAddressBookShareCandidates(guid: string) {

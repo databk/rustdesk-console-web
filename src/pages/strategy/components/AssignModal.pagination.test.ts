@@ -1,5 +1,5 @@
 import { expect, jest, test } from '@jest/globals';
-import { loadAllCandidatePages } from './pagination';
+import { loadAllPages } from '@/utils/pagination';
 
 test('loads every candidate page without truncating after the first page', async () => {
   const loadPage = jest
@@ -7,7 +7,7 @@ test('loads every candidate page without truncating after the first page', async
     .mockResolvedValueOnce({ data: ['first', 'second'], total: 3 })
     .mockResolvedValueOnce({ data: ['third'], total: 3 });
 
-  await expect(loadAllCandidatePages(loadPage)).resolves.toEqual([
+  await expect(loadAllPages(loadPage)).resolves.toEqual([
     'first',
     'second',
     'third',

@@ -31,7 +31,7 @@ import {
   getAssignableStrategyTargetTypes,
   type StrategyAssignmentTargetType,
 } from '../strategyAccess';
-import { loadAllCandidatePages } from './pagination';
+import { loadAllPages } from '@/utils/pagination';
 
 type TargetType = StrategyAssignmentTargetType;
 
@@ -217,7 +217,7 @@ const AssignModal: React.FC<AssignModalProps> = ({
       try {
         switch (targetType) {
           case 'device': {
-            const result = await loadAllCandidatePages((current) =>
+            const result = await loadAllPages((current) =>
               getStrategyTargetCandidates({
                 target_type: 'device',
                 current,
@@ -229,7 +229,7 @@ const AssignModal: React.FC<AssignModalProps> = ({
             break;
           }
           case 'user': {
-            const result = await loadAllCandidatePages((current) =>
+            const result = await loadAllPages((current) =>
               getStrategyTargetCandidates({
                 target_type: 'user',
                 current,
@@ -241,7 +241,7 @@ const AssignModal: React.FC<AssignModalProps> = ({
             break;
           }
           case 'device_group': {
-            const result = await loadAllCandidatePages((current) =>
+            const result = await loadAllPages((current) =>
               getStrategyTargetDeviceGroupList({
                 current,
                 pageSize: TARGET_PAGE_SIZE,

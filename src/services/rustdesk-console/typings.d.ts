@@ -291,9 +291,7 @@ declare namespace API {
     failedCount: number;
   };
 
-  type AdminUserListParams = {
-    current: number;
-    pageSize: number;
+  type AdminUserListParams = API.PageParams & {
     status?: number;
     name?: string;
     email?: string;
@@ -763,16 +761,12 @@ declare namespace API {
     is_protected?: boolean;
   };
 
-  type StrategyTargetCandidateParams = {
+  type StrategyTargetCandidateParams = API.PageParams & {
     target_type: 'device' | 'user';
-    current: number;
-    pageSize: number;
   };
 
-  type StrategyAssignmentParams = {
+  type StrategyAssignmentParams = API.PageParams & {
     target_type: 'device' | 'user' | 'device_group';
-    current: number;
-    pageSize: number;
   };
 
   type UserGroupItem = {

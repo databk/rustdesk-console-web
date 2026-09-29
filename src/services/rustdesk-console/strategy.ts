@@ -1,28 +1,20 @@
 import { request } from '@umijs/max';
 
 export async function getStrategyList(
-  params?: {
-    current?: number;
-    pageSize?: number;
+  params?: API.PageParams & {
     name?: string;
   },
   options?: { [key: string]: any },
 ) {
   return request<API.PaginatedResult<API.StrategyItem>>('/api/strategies', {
     method: 'GET',
-    params: {
-      current: params?.current || 1,
-      pageSize: params?.pageSize || 20,
-      name: params?.name,
-    },
+    params,
     ...(options || {}),
   });
 }
 
 export async function getStrategyCandidates(
-  params?: {
-    current?: number;
-    pageSize?: number;
+  params?: API.PageParams & {
     name?: string;
   },
   options?: { [key: string]: any },
@@ -31,11 +23,7 @@ export async function getStrategyCandidates(
     '/api/strategies/candidates',
     {
       method: 'GET',
-      params: {
-        current: params?.current || 1,
-        pageSize: params?.pageSize || 20,
-        name: params?.name,
-      },
+      params,
       ...(options || {}),
     },
   );
@@ -95,11 +83,7 @@ export async function getStrategyAssignments(
     | API.StrategyAssignmentDeviceGroupItem
   >>(`/api/strategies/${guid}/assignments`, {
     method: 'GET',
-    params: {
-      target_type: params.target_type,
-      current: params.current,
-      pageSize: params.pageSize,
-    },
+    params,
   });
 }
 

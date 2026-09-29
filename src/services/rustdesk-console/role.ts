@@ -1,9 +1,7 @@
 import { request } from '@umijs/max';
 
 export async function getRoleList(
-  params?: {
-    current?: number;
-    pageSize?: number;
+  params?: API.PageParams & {
     name?: string;
     note?: string;
   },
@@ -11,12 +9,7 @@ export async function getRoleList(
 ) {
   return request<API.PaginatedResult<API.RoleItem>>('/api/roles', {
     method: 'GET',
-    params: {
-      current: params?.current || 1,
-      pageSize: params?.pageSize || 20,
-      name: params?.name,
-      note: params?.note,
-    },
+    params,
     ...(options || {}),
   });
 }

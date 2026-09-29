@@ -19,6 +19,7 @@ import { getDeviceColumns } from '@/components/DeviceSelectTable/columns';
 import { getActionColumn } from './columns';
 import EditDeviceModal from './components/EditDeviceModal';
 import ImportDevicesModal from './components/ImportDevicesModal';
+import { DEFAULT_PAGINATION, toTableResult } from '@/utils/pagination';
 
 export interface DeviceListProps {
   deviceGroupGuid?: string;
@@ -456,13 +457,9 @@ const DeviceList: React.FC<DeviceListProps> = ({
             device_group_name: params.device_group_name_search,
             device_group_guid: deviceGroupGuid,
           });
-          const data = result.data || [];
-          setHasDisabledDevice(data.some((d) => d.status === 0));
-          return {
-            data,
-            total: result.total || 0,
-            success: true,
-          };
+          const tableResult = toTableResult(result);
+          setHasDisabledDevice(tableResult.data.some((d) => d.status === 0));
+          return tableResult;
         }}
         columns={columns}
         search={{
@@ -470,11 +467,7 @@ const DeviceList: React.FC<DeviceListProps> = ({
           defaultCollapsed: true,
           optionRender: (_searchConfig, _formProps, dom) => [...dom.reverse()],
         }}
-        pagination={{
-          defaultPageSize: 20,
-          showSizeChanger: true,
-          showQuickJumper: true,
-        }}
+        pagination={DEFAULT_PAGINATION}
         scroll={{ x: '100%' }}
         toolBarRender={() =>
           deviceGroupGuid && access.isSuperAdmin

@@ -25,6 +25,7 @@ import {
   updateUserGroup,
 } from '@/services/rustdesk-console/userGroup';
 import UserGroupMembersModal from './components/UserGroupMembersModal';
+import { DEFAULT_PAGINATION, toTableResult } from '@/utils/pagination';
 
 const UserGroupList: React.FC = () => {
   const intl = useIntl();
@@ -275,18 +276,10 @@ const UserGroupList: React.FC = () => {
             pageSize: params.pageSize,
             search: params.name,
           });
-          return {
-            data: result.data,
-            total: result.total,
-            success: true,
-          };
+          return toTableResult(result);
         }}
         columns={columns}
-        pagination={{
-          defaultPageSize: 20,
-          showSizeChanger: true,
-          showQuickJumper: true,
-        }}
+        pagination={DEFAULT_PAGINATION}
         scroll={{ x: 800 }}
         toolBarRender={() =>
           access.canUserGroupsCreate

@@ -18,6 +18,7 @@ import {
   getDeviceGroupList,
   updateDeviceGroup,
 } from '@/services/rustdesk-console/deviceGroup';
+import { DEFAULT_PAGINATION, toTableResult } from '@/utils/pagination';
 
 const DeviceGroupList: React.FC = () => {
   const intl = useIntl();
@@ -196,11 +197,7 @@ const DeviceGroupList: React.FC = () => {
             pageSize: params.pageSize || 20,
             name: params.name,
           });
-          return {
-            data: result.data || [],
-            total: result.total || 0,
-            success: true,
-          };
+          return toTableResult(result);
         }}
         columns={columns}
         search={{
@@ -208,11 +205,7 @@ const DeviceGroupList: React.FC = () => {
           defaultCollapsed: true,
           optionRender: (_searchConfig, _formProps, dom) => [...dom.reverse()],
         }}
-        pagination={{
-          defaultPageSize: 20,
-          showSizeChanger: true,
-          showQuickJumper: true,
-        }}
+        pagination={DEFAULT_PAGINATION}
         toolBarRender={() => [
           <Button
             key="create"

@@ -2,6 +2,7 @@ import type { ActionType } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
 import React, { useRef } from 'react';
 import { getAdminUserList } from '@/services/rustdesk-console/user';
+import { DEFAULT_PAGINATION, toTableResult } from '@/utils/pagination';
 import { getUserColumns } from './columns';
 
 interface UserSelectTableProps {
@@ -30,10 +31,7 @@ const UserSelectTable: React.FC<UserSelectTableProps> = ({
         labelWidth: 'auto',
         defaultCollapsed: defaultSearchCollapsed,
       }}
-      pagination={{
-        defaultPageSize: pageSize,
-        showSizeChanger: true,
-      }}
+      pagination={{ ...DEFAULT_PAGINATION, defaultPageSize: pageSize }}
       request={async (params) => {
         const result = await getAdminUserList({
           current: params.current || 1,
@@ -50,11 +48,7 @@ const UserSelectTable: React.FC<UserSelectTableProps> = ({
           strategy_name: params.strategy_name,
           user_group_name: params.user_group_name,
         });
-        return {
-          data: result.data || [],
-          total: result.total || 0,
-          success: true,
-        };
+        return toTableResult(result);
       }}
       columns={columns}
       rowSelection={{

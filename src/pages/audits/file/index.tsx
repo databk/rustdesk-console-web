@@ -13,6 +13,7 @@ import type { ProColumns, ActionType } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
 import { getFileAudits } from '@/services/rustdesk-console/audit';
 import { renderNameIp } from '@/utils/audit';
+import { DEFAULT_PAGINATION, toTableResult } from '@/utils/pagination';
 import {
   ArrowLeftOutlined,
   ArrowRightOutlined,
@@ -436,11 +437,7 @@ const FileAudit: React.FC = () => {
           }
 
           const result = await getFileAudits(requestParams);
-          return {
-            data: result.data || [],
-            total: result.total || 0,
-            success: true,
-          };
+          return toTableResult(result);
         }}
         columns={columns}
         beforeSearchSubmit={(params) => {
@@ -463,11 +460,7 @@ const FileAudit: React.FC = () => {
             </Button>
           </Tooltip>,
         ]}
-        pagination={{
-          defaultPageSize: 20,
-          showSizeChanger: true,
-          showQuickJumper: true,
-        }}
+        pagination={DEFAULT_PAGINATION}
       />
       <Drawer
         title={

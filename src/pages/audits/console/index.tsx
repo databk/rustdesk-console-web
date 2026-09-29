@@ -4,6 +4,7 @@ import { Button, Drawer, Typography } from 'antd';
 import { FormattedMessage, useIntl } from '@umijs/max';
 import React, { useRef, useState } from 'react';
 import { getConsoleAudits } from '@/services/rustdesk-console/audit';
+import { DEFAULT_PAGINATION, toTableResult } from '@/utils/pagination';
 
 const ConsoleAudit: React.FC = () => {
   const intl = useIntl();
@@ -151,22 +152,14 @@ const ConsoleAudit: React.FC = () => {
             start_time: timeRange?.[0]?.toISOString(),
             end_time: timeRange?.[1]?.toISOString(),
           });
-          return {
-            data: result.data || [],
-            total: result.total || 0,
-            success: true,
-          };
+          return toTableResult(result);
         }}
         columns={columns}
         search={{
           defaultCollapsed: false,
           labelWidth: 'auto',
         }}
-        pagination={{
-          defaultPageSize: 20,
-          showSizeChanger: true,
-          showQuickJumper: true,
-        }}
+        pagination={DEFAULT_PAGINATION}
         options={{
           density: true,
           setting: {

@@ -25,6 +25,7 @@ import {
   updateSharedAddressBook,
 } from '@/services/rustdesk-console/addressBook';
 import ShareAccessModal from './components/ShareAccessModal';
+import { DEFAULT_PAGINATION, toTableResult } from '@/utils/pagination';
 
 const SharedAddressBook: React.FC = () => {
   const intl = useIntl();
@@ -257,11 +258,7 @@ const SharedAddressBook: React.FC = () => {
           if (!Array.isArray(result.data) || typeof result.total !== 'number') {
             throw new Error('Invalid shared address book response');
           }
-          return {
-            data: result.data,
-            total: result.total,
-            success: true,
-          };
+          return toTableResult(result);
         }}
         columns={columns}
         rowSelection={
@@ -275,11 +272,7 @@ const SharedAddressBook: React.FC = () => {
               }
             : undefined
         }
-        pagination={{
-          defaultPageSize: 20,
-          showSizeChanger: true,
-          showQuickJumper: true,
-        }}
+        pagination={DEFAULT_PAGINATION}
         toolBarRender={() =>
           access.canAddressBooksShare || access.canAddressBooksEdit
             ? [
