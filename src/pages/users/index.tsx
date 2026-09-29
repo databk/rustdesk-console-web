@@ -213,8 +213,7 @@ const UserList: React.FC<UserListProps> = ({
         editingUser.guid,
         buildUpdateUserPayload(values, {
           canEditProfile: access.canUsersEdit,
-          canEditStatus:
-            access.canUsersStatus && editingUser.is_admin !== true,
+          canEditStatus: access.canUsersStatus && editingUser.is_admin !== true,
           canEditGroup: access.canUserGroupsMembership,
         }),
       );
@@ -569,9 +568,7 @@ const UserList: React.FC<UserListProps> = ({
       <EditUserModal
         visible={editModalVisible}
         canEditProfile={access.canUsersEdit}
-        canEditStatus={
-          access.canUsersStatus && editingUser?.is_admin !== true
-        }
+        canEditStatus={access.canUsersStatus && editingUser?.is_admin !== true}
         canEditGroup={access.canUserGroupsMembership}
         userGroups={userGroups}
         userGroupsLoading={userGroupsLoading}

@@ -58,8 +58,7 @@ const BatchActionsBar: React.FC<BatchActionsBarProps> = ({
           'Protected accounts can only be managed by the super administrator.',
       })
     : undefined;
-  const statusSelectionDisabled =
-    selectionDisabled || hasSystemOwnerSelection;
+  const statusSelectionDisabled = selectionDisabled || hasSystemOwnerSelection;
   const statusSelectionTooltip = hasSystemOwnerSelection
     ? intl.formatMessage({
         id: 'pages.users.systemOwnerStatusBlocked',
