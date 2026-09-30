@@ -10,7 +10,7 @@ import {
   Typography,
   theme,
 } from 'antd';
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   DesktopOutlined,
   FolderOpenOutlined,
@@ -19,7 +19,6 @@ import {
   SoundOutlined,
   ExpandOutlined,
   CompressOutlined,
-  CloseOutlined,
   ArrowRightOutlined,
   SafetyCertificateOutlined,
   DisconnectOutlined,
@@ -51,6 +50,7 @@ import {
 import { FilePanel, type FilePanelHandle, type FilePanelStatus } from './files';
 import { ImageClipboard } from './images';
 import { DevicePicker } from './devices';
+import { SessionSidebar, type SidebarMode, type ToolName } from './sidebar';
 
 export default function WebClientPage() {
   const intl = useIntl();
@@ -59,7 +59,16 @@ export default function WebClientPage() {
     intl.formatMessage({ id: `webClient.${key}`, defaultMessage: fallback });
   const location = useLocation();
   const { configuration, loading, unavailable, reload } = useModel('webClient');
-  const [tool, setTool] = useState<'files' | 'clipboard' | 'input' | 'audio'>();
+  const [tool, setTool] = useState<ToolName>();
+  const [sidebarMode, setSidebarMode] = useState<SidebarMode>('overlay');
+  const [narrow, setNarrow] = useState(
+    () => typeof window !== 'undefined' && window.innerWidth <= 760,
+  );
+  const [noticesOpen, setNoticesOpen] = useState(false);
+  const lastTool = useRef<ToolName>('clipboard');
+  const toolLauncher = useRef<HTMLButtonElement>(null);
+  const noticesElement = useRef<HTMLDivElement>(null);
+  const wasToolOpen = useRef(false);
   const [fullscreen, setFullscreen] = useState(false);
   const [fileStatus, setFileStatus] = useState<FilePanelStatus>({
     state: 'idle',
@@ -67,9 +76,6 @@ export default function WebClientPage() {
     error: '',
     busy: false,
   });
-  const toolButtons = useRef<Partial<Record<string, HTMLButtonElement | null>>>(
-    {},
-  );
   const [id, setId] = useState(
     () => new URLSearchParams(location.search).get('id') || '',
   );
@@ -114,8 +120,6 @@ export default function WebClientPage() {
   const files = useRef<FilePanelHandle>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
   const surface = useRef<HTMLDivElement>(null);
-  const workspaceElement = useRef<HTMLDivElement>(null);
-  const toolbarElement = useRef<HTMLDivElement>(null);
   const pointer = useRef<HTMLDivElement>(null);
   const worker = useRef<Worker | undefined>(undefined);
   const generation = useRef(0);
@@ -162,6 +166,7 @@ export default function WebClientPage() {
     releaseModifiers();
     setSoftText('');
     setTool(undefined);
+    setNoticesOpen(false);
     setSoftKeyboard(false);
     input.current?.release();
     ++generation.current;
@@ -611,38 +616,53 @@ export default function WebClientPage() {
       window.removeEventListener('blur', releaseModifiers);
     };
   }, []);
-  useLayoutEffect(() => {
-    const workspace = workspaceElement.current;
-    const root = surface.current;
-    if (!workspace || !root) return;
+  useEffect(() => {
     const resize = () => {
-      if (document.fullscreenElement === root) {
-        workspace.style.removeProperty('height');
-        return;
-      }
-      // 使用文档坐标，不跟随滚动增高，否则会把下方设备区不断推远。
-      const top = workspace.getBoundingClientRect().top + window.scrollY;
-      const height = window.visualViewport?.height || window.innerHeight;
-      const tools =
-        toolbarElement.current?.getBoundingClientRect().height || 56;
-      const available = Math.max(80, height - Math.max(0, top) - tools - 16);
-      workspace.style.height = Math.floor(available) + 'px';
+      const compact = window.innerWidth <= 760;
+      setNarrow(compact);
+      if (compact) setSidebarMode('overlay');
+      cancelPaste();
+      input.current?.release();
+      releaseModifiers();
+      setViewport({ scale: 1, x: 0, y: 0 });
+      touch.current?.setViewport({ scale: 1, x: 0, y: 0 });
     };
-    resize();
-    const observer =
-      typeof ResizeObserver === 'undefined'
-        ? undefined
-        : new ResizeObserver(resize);
-    observer?.observe(root);
-    if (toolbarElement.current) observer?.observe(toolbarElement.current);
     window.addEventListener('resize', resize);
-    window.visualViewport?.addEventListener('resize', resize);
+    return () => window.removeEventListener('resize', resize);
+  }, []);
+  useEffect(() => {
+    if (!activeSession) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
     return () => {
-      observer?.disconnect();
-      window.removeEventListener('resize', resize);
-      window.visualViewport?.removeEventListener('resize', resize);
+      document.body.style.overflow = previous;
     };
-  }, [loading, configuration?.enabled, activeSession, fullscreen]);
+  }, [activeSession]);
+  useEffect(() => {
+    if (tool) wasToolOpen.current = true;
+    else if (wasToolOpen.current) {
+      toolLauncher.current?.focus({ preventScroll: true });
+      wasToolOpen.current = false;
+    }
+  }, [tool]);
+
+  useEffect(() => {
+    if (!noticesOpen) return;
+    const dismiss = (event: PointerEvent) => {
+      const target = event.target;
+      if (
+        target instanceof Element &&
+        !noticesElement.current?.contains(target) &&
+        !target.closest('[aria-controls="web-client-notices"]')
+      )
+        setNoticesOpen(false);
+    };
+    document.addEventListener('pointerdown', dismiss);
+    return () => document.removeEventListener('pointerdown', dismiss);
+  }, [noticesOpen]);
+  useEffect(() => {
+    if (error && activeSession) setNoticesOpen(true);
+  }, [error, activeSession]);
 
   const connect = (targetId = id) => {
     if (!configuration?.enabled || !ready) return;
@@ -656,7 +676,9 @@ export default function WebClientPage() {
       touch.current?.setViewport({ scale: 1, x: 0, y: 0 });
       setSoftText('');
       setState('connecting');
-      surface.current?.scrollIntoView?.({ block: 'start', behavior: 'auto' });
+      setTool(undefined);
+      setSidebarMode('overlay');
+      setNoticesOpen(false);
       setKxVersion(undefined);
       setError('');
       setPassword('');
@@ -694,17 +716,31 @@ export default function WebClientPage() {
   };
 
   const chooseTool = (next: typeof tool) => {
+    if (!!tool !== !!next) {
+      input.current?.release();
+      cancelPaste();
+      setNoticesOpen(false);
+      if (sidebarMode === 'docked') {
+        setViewport({ scale: 1, x: 0, y: 0 });
+        touch.current?.setViewport({ scale: 1, x: 0, y: 0 });
+      }
+    }
     if (tool === 'input' && next !== 'input') {
       input.current?.release();
       releaseModifiers();
       setSoftKeyboard(false);
     }
+    if (next) lastTool.current = next;
     setTool(next);
   };
-  const closeTool = () => {
-    const previous = tool;
-    chooseTool(undefined);
-    if (previous) toolButtons.current[previous]?.focus();
+  const closeTool = () => chooseTool(undefined);
+  const changeSidebarMode = (next: SidebarMode) => {
+    input.current?.release();
+    releaseModifiers();
+    cancelPaste();
+    setViewport({ scale: 1, x: 0, y: 0 });
+    touch.current?.setViewport({ scale: 1, x: 0, y: 0 });
+    setSidebarMode(narrow ? 'overlay' : next);
   };
   useEffect(() => {
     const update = () =>
@@ -733,6 +769,9 @@ export default function WebClientPage() {
       key: 'files' as const,
       icon: <FolderOpenOutlined />,
       label: text('files', 'File transfer'),
+      activity: fileStatus.busy
+        ? text('fileInProgress', 'Transfer in progress')
+        : undefined,
     },
     {
       key: 'input' as const,
@@ -743,9 +782,49 @@ export default function WebClientPage() {
       key: 'audio' as const,
       icon: <SoundOutlined />,
       label: text('toolAudio', 'Audio'),
+      activity: audioEnabled
+        ? text('audioPlaying', 'Audio is playing')
+        : undefined,
     },
   ];
   const authenticating = ['authenticating', 'awaitingApproval'].includes(state);
+  const legacyNotice = kxVersion === 0 || (connected && fileStatus.legacy);
+  const hasNotices =
+    !!error ||
+    legacyNotice ||
+    (connected &&
+      (!permissions.keyboard || !!fileStatus.error || !!pasteStatus));
+  const noticeControl = hasNotices ? (
+    <button
+      type="button"
+      className={styles.noticeButton}
+      data-error={!!error || !!fileStatus.error || pasteStatus === 'failed'}
+      data-info={
+        !error &&
+        !fileStatus.error &&
+        permissions.keyboard &&
+        !legacyNotice &&
+        (pasteStatus === 'sent' || pasteStatus === 'sending')
+      }
+      aria-label={text('sessionAlerts', 'Session notices')}
+      aria-expanded={noticesOpen}
+      aria-controls="web-client-notices"
+      onClick={() => setNoticesOpen(!noticesOpen)}
+    >
+      <SafetyCertificateOutlined />
+      {error || fileStatus.error || pasteStatus === 'failed'
+        ? text('errorBadge', 'Operation failed')
+        : !permissions.keyboard
+        ? text('viewOnlyBadge', 'View only')
+        : legacyNotice
+        ? text('legacyBadge', 'Legacy protocol')
+        : pasteStatus === 'sent'
+        ? text('pasteSentBadge', 'Clipboard sent')
+        : pasteStatus === 'sending'
+        ? text('pasteSendingBadge', 'Sending clipboard')
+        : text('noticeBadge', 'Session notice')}
+    </button>
+  ) : null;
   return (
     <PageContainer title={false}>
       {loading ? (
@@ -781,24 +860,22 @@ export default function WebClientPage() {
               '--wc-soft': token.colorFillQuaternary,
               '--wc-accent': token.colorPrimary,
               '--wc-accent-bg': token.colorPrimaryBg,
+              '--wc-warning-text': token.colorWarningText,
+              '--wc-warning-bg': token.colorWarningBg,
+              '--wc-warning-border': token.colorWarningBorder,
             } as React.CSSProperties
           }
           aria-label={text('title', 'Web Client')}
           data-session-state={state}
+          data-active-session={activeSession}
         >
-          <header className={styles.header}>
+          <header className={styles.header} hidden={activeSession}>
             <div className={styles.brand}>
               <span className={styles.brandIcon}>
                 <DesktopOutlined />
               </span>
               <div>
                 <h1>{text('title', 'Web Client')}</h1>
-                <p>
-                  {text(
-                    'workspaceSubtitle',
-                    'Connect to a device in your browser.',
-                  )}
-                </p>
               </div>
             </div>
             <span
@@ -812,9 +889,11 @@ export default function WebClientPage() {
             </span>
           </header>
           <div
-            ref={workspaceElement}
+            data-workspace
+            hidden={!activeSession}
             className={styles.workspace}
             data-tools-open={!!tool}
+            data-sidebar-mode={narrow ? 'overlay' : sidebarMode}
             data-active-session={activeSession}
           >
             <div
@@ -921,421 +1000,460 @@ export default function WebClientPage() {
                 </div>
               )}
             </div>
-            <aside
-              className={styles.toolsPanel}
-              hidden={!tool}
-              aria-label={text('tools', 'Session tools')}
+            <SessionSidebar
+              tool={tool}
+              mode={narrow ? 'overlay' : sidebarMode}
+              narrow={narrow}
+              disabled={!connected}
+              target={id}
+              items={toolItems}
+              onSelect={chooseTool}
+              onModeChange={changeSidebarMode}
+              onClose={closeTool}
+              text={text}
+              noticeControl={tool ? noticeControl : null}
+              displayControl={
+                connected &&
+                displays.length > 1 && (
+                  <label className={styles.monitor}>
+                    {text('display', 'Monitor')}
+                    <select
+                      className={styles.select}
+                      aria-label={text('display', 'Monitor')}
+                      value={selectedDisplay}
+                      onChange={(event) => {
+                        input.current?.release();
+                        releaseModifiers();
+                        setDisplayReady(false);
+                        clearDisplay();
+                        post({
+                          type: 'select-display',
+                          index: Number(event.target.value),
+                        });
+                      }}
+                    >
+                      {displays.map((item, index) => (
+                        <option
+                          key={
+                            item.name ||
+                            [item.x, item.y, item.width, item.height].join(':')
+                          }
+                          value={index}
+                        >
+                          {index + 1}:{' '}
+                          {item.name || `${item.width} × ${item.height}`}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                )
+              }
+              footer={
+                <>
+                  <Button
+                    icon={
+                      fullscreen ? <CompressOutlined /> : <ExpandOutlined />
+                    }
+                    disabled={!activeSession && !fullscreen}
+                    onClick={toggleFullscreen}
+                  >
+                    {text(
+                      fullscreen ? 'exitFullscreen' : 'fullscreen',
+                      fullscreen ? 'Exit fullscreen' : 'Fullscreen',
+                    )}
+                  </Button>
+                  <Button
+                    danger
+                    icon={<DisconnectOutlined />}
+                    onClick={disconnect}
+                    disabled={!activeSession}
+                  >
+                    {text('disconnect', 'Disconnect')}
+                  </Button>
+                </>
+              }
             >
-              <div className={styles.panelHeader}>
-                <strong>
-                  {toolItems.find((item) => item.key === tool)?.label}
-                </strong>
-                <Button
-                  type="text"
-                  icon={<CloseOutlined />}
-                  aria-label={text('closeTools', 'Close tools')}
-                  onClick={closeTool}
+              <div
+                id="web-client-tool-files"
+                role="tabpanel"
+                aria-labelledby="web-client-tab-files"
+                hidden={tool !== 'files'}
+              >
+                <FilePanel
+                  key={'files-' + generation.current}
+                  ref={files}
+                  enabled={connected}
+                  post={post}
+                  text={text}
+                  onStatusChange={setFileStatus}
                 />
               </div>
-              <div className={styles.panelBody}>
-                <div id="web-client-tool-files" hidden={tool !== 'files'}>
-                  <FilePanel
-                    key={'files-' + generation.current}
-                    ref={files}
-                    enabled={connected}
-                    post={post}
-                    text={text}
-                    onStatusChange={setFileStatus}
-                  />
-                </div>
-                <div
-                  id="web-client-tool-clipboard"
-                  hidden={tool !== 'clipboard'}
-                >
-                  <Card
-                    size="small"
-                    title={text('clipboard', 'Text clipboard')}
-                  >
-                    <Space direction="vertical" style={{ width: '100%' }}>
-                      {!permissions.clipboard && (
-                        <Alert
-                          type="warning"
-                          message={text(
-                            'clipboardDenied',
-                            'Clipboard is disabled by the remote device.',
-                          )}
-                        />
-                      )}
-                      <Input.TextArea
-                        aria-label={text('localText', 'Local text')}
-                        placeholder={text('localText', 'Paste local text here')}
-                        value={localText}
-                        onChange={(event) => setLocalText(event.target.value)}
-                        maxLength={MAX_TEXT_BYTES}
-                        autoSize={{ minRows: 2, maxRows: 6 }}
-                      />
-                      <Space wrap>
-                        <Button
-                          disabled={!connected || !permissions.clipboard}
-                          onClick={() =>
-                            post({
-                              type: 'clipboard',
-                              text: localText,
-                            })
-                          }
-                        >
-                          {text('sendClipboard', 'Send to remote clipboard')}
-                        </Button>
-                        <Button
-                          disabled={
-                            !connected || !permissions.keyboard || !localText
-                          }
-                          onClick={() =>
-                            post({
-                              type: 'text',
-                              text: localText,
-                            })
-                          }
-                        >
-                          {text('sendText', 'Send text as input')}
-                        </Button>
-                      </Space>
-                      <Input.TextArea
-                        aria-label={text('remoteText', 'Remote clipboard text')}
-                        placeholder={text(
-                          'remoteText',
-                          'Remote clipboard text',
+              <div
+                id="web-client-tool-clipboard"
+                role="tabpanel"
+                aria-labelledby="web-client-tab-clipboard"
+                hidden={tool !== 'clipboard'}
+              >
+                <Card size="small" title={text('clipboard', 'Text clipboard')}>
+                  <Space direction="vertical" style={{ width: '100%' }}>
+                    {!permissions.clipboard && (
+                      <Alert
+                        type="warning"
+                        message={text(
+                          'clipboardDenied',
+                          'Clipboard is disabled by the remote device.',
                         )}
-                        value={remoteText}
-                        readOnly
-                        autoSize={{ minRows: 2, maxRows: 6 }}
                       />
+                    )}
+                    <Input.TextArea
+                      aria-label={text('localText', 'Local text')}
+                      placeholder={text('localText', 'Paste local text here')}
+                      value={localText}
+                      onChange={(event) => setLocalText(event.target.value)}
+                      maxLength={MAX_TEXT_BYTES}
+                      autoSize={{ minRows: 2, maxRows: 6 }}
+                    />
+                    <Space wrap>
                       <Button
                         disabled={!connected || !permissions.clipboard}
-                        onClick={() => void copyRemote()}
-                      >
-                        {text('copyRemote', 'Copy remote text')}
-                      </Button>
-                      {clipboardFallback && (
-                        <Typography.Text>
-                          {text(
-                            'clipboardFallback',
-                            'Clipboard access was denied. Select and copy the remote text in the box manually.',
-                          )}
-                        </Typography.Text>
-                      )}
-                    </Space>
-                  </Card>
-                  <ImageClipboard
-                    key={'images-' + generation.current}
-                    enabled={connected && permissions.clipboard}
-                    remote={remoteImage}
-                    post={post}
-                    text={text}
-                    fail={() => setError('clipboard')}
-                  />
-                </div>
-                <div id="web-client-tool-input" hidden={tool !== 'input'}>
-                  <p className={styles.panelHint}>
-                    {text(
-                      'keyboardNotice',
-                      'Click the desktop to control it. Browser/system shortcuts may be reserved. Use Send text for IME/Unicode input. Losing focus releases held keys while input permission is available.',
-                    )}
-                  </p>
-                  <div className={styles.inputControls}>
-                    <label>
-                      {text('touchMode', 'Touch mode')}{' '}
-                      <select
-                        className={styles.select}
-                        aria-label={text('touchMode', 'Touch mode')}
-                        value={touchMode}
-                        onChange={(event) => {
-                          input.current?.release();
-                          setTouchMode(event.target.value as TouchMode);
-                        }}
-                      >
-                        <option value="pointer">
-                          {text('touchPointer', 'Point / drag')}
-                        </option>
-                        <option value="scroll">
-                          {text('touchScroll', 'Scroll')}
-                        </option>
-                        <option value="zoom">
-                          {text('touchZoom', 'Pan zoomed view')}
-                        </option>
-                      </select>
-                    </label>
-                    <Button
-                      onClick={() => {
-                        setViewport({ scale: 1, x: 0, y: 0 });
-                        touch.current?.setViewport({ scale: 1, x: 0, y: 0 });
-                        setTouchMode('pointer');
-                      }}
-                    >
-                      {text('zoomReset', 'Reset zoom')}
-                    </Button>
-                    <Button
-                      disabled={!permissions.keyboard || !displayReady}
-                      onClick={() => {
-                        releaseModifiers();
-                        setSoftKeyboard(!softKeyboard);
-                      }}
-                    >
-                      {text('softKeyboard', 'Keyboard')}
-                    </Button>
-                    {[
-                      hbb.ControlKey.Control,
-                      hbb.ControlKey.Alt,
-                      hbb.ControlKey.Shift,
-                    ].map((controlKey) => (
-                      <Button
-                        key={controlKey}
-                        aria-pressed={heldModifiers.includes(controlKey)}
-                        disabled={!permissions.keyboard || !displayReady}
-                        onClick={() => {
-                          const down =
-                            !modifierRef.current.includes(controlKey);
-                          modifierRef.current = down
-                            ? [...modifierRef.current, controlKey]
-                            : modifierRef.current.filter(
-                                (key) => key !== controlKey,
-                              );
-                          setHeldModifiers([...modifierRef.current]);
-                          post({
-                            type: 'input',
-                            input: { keyEvent: { controlKey, down } },
-                          });
-                        }}
-                      >
-                        {hbb.ControlKey[controlKey]}
-                      </Button>
-                    ))}
-                    {[
-                      hbb.ControlKey.Tab,
-                      hbb.ControlKey.Return,
-                      hbb.ControlKey.Escape,
-                      hbb.ControlKey.Backspace,
-                    ].map((controlKey) => (
-                      <Button
-                        key={controlKey}
-                        disabled={!permissions.keyboard || !displayReady}
                         onClick={() =>
                           post({
-                            type: 'input',
-                            input: {
-                              keyEvent: {
-                                controlKey,
-                                press: true,
-                                modifiers: modifierRef.current,
-                              },
-                            },
+                            type: 'clipboard',
+                            text: localText,
                           })
                         }
                       >
-                        {hbb.ControlKey[controlKey]}
+                        {text('sendClipboard', 'Send to remote clipboard')}
                       </Button>
-                    ))}
-                    {softKeyboard && (
-                      <Space wrap className={styles.keyboardText}>
-                        <Input
-                          aria-label={text('softText', 'Keyboard text')}
-                          value={softText}
-                          maxLength={MAX_TEXT_BYTES}
-                          onChange={(event) => setSoftText(event.target.value)}
-                        />
-                        <Button
-                          disabled={
-                            !permissions.keyboard || !displayReady || !softText
-                          }
-                          onClick={() => {
-                            post({ type: 'text', text: softText });
-                            setSoftText('');
-                          }}
-                        >
-                          {text('sendText', 'Send text')}
-                        </Button>
-                      </Space>
+                      <Button
+                        disabled={
+                          !connected || !permissions.keyboard || !localText
+                        }
+                        onClick={() =>
+                          post({
+                            type: 'text',
+                            text: localText,
+                          })
+                        }
+                      >
+                        {text('sendText', 'Send text as input')}
+                      </Button>
+                    </Space>
+                    <Input.TextArea
+                      aria-label={text('remoteText', 'Remote clipboard text')}
+                      placeholder={text('remoteText', 'Remote clipboard text')}
+                      value={remoteText}
+                      readOnly
+                      autoSize={{ minRows: 2, maxRows: 6 }}
+                    />
+                    <Button
+                      disabled={!connected || !permissions.clipboard}
+                      onClick={() => void copyRemote()}
+                    >
+                      {text('copyRemote', 'Copy remote text')}
+                    </Button>
+                    {clipboardFallback && (
+                      <Typography.Text>
+                        {text(
+                          'clipboardFallback',
+                          'Clipboard access was denied. Select and copy the remote text in the box manually.',
+                        )}
+                      </Typography.Text>
                     )}
-                  </div>
-                  <p className={styles.panelHint}>
+                  </Space>
+                </Card>
+                <ImageClipboard
+                  key={'images-' + generation.current}
+                  enabled={connected && permissions.clipboard}
+                  remote={remoteImage}
+                  post={post}
+                  text={text}
+                  fail={() => setError('clipboard')}
+                />
+              </div>
+              <div
+                id="web-client-tool-input"
+                role="tabpanel"
+                aria-labelledby="web-client-tab-input"
+                hidden={tool !== 'input'}
+              >
+                <p className={styles.panelHint}>
+                  {text(
+                    'keyboardNotice',
+                    'Click the desktop to control it. Browser/system shortcuts may be reserved. Use Send text for IME/Unicode input. Losing focus releases held keys while input permission is available.',
+                  )}
+                </p>
+                <div className={styles.inputControls}>
+                  <label>
+                    {text('touchMode', 'Touch mode')}{' '}
+                    <select
+                      className={styles.select}
+                      aria-label={text('touchMode', 'Touch mode')}
+                      value={touchMode}
+                      onChange={(event) => {
+                        input.current?.release();
+                        setTouchMode(event.target.value as TouchMode);
+                      }}
+                    >
+                      <option value="pointer">
+                        {text('touchPointer', 'Point / drag')}
+                      </option>
+                      <option value="scroll">
+                        {text('touchScroll', 'Scroll')}
+                      </option>
+                      <option value="zoom">
+                        {text('touchZoom', 'Pan zoomed view')}
+                      </option>
+                    </select>
+                  </label>
+                  <Button
+                    onClick={() => {
+                      setViewport({ scale: 1, x: 0, y: 0 });
+                      touch.current?.setViewport({ scale: 1, x: 0, y: 0 });
+                      setTouchMode('pointer');
+                    }}
+                  >
+                    {text('zoomReset', 'Reset zoom')}
+                  </Button>
+                  <Button
+                    disabled={!permissions.keyboard || !displayReady}
+                    onClick={() => {
+                      releaseModifiers();
+                      setSoftKeyboard(!softKeyboard);
+                    }}
+                  >
+                    {text('softKeyboard', 'Keyboard')}
+                  </Button>
+                  {[
+                    hbb.ControlKey.Control,
+                    hbb.ControlKey.Alt,
+                    hbb.ControlKey.Shift,
+                  ].map((controlKey) => (
+                    <Button
+                      key={controlKey}
+                      aria-pressed={heldModifiers.includes(controlKey)}
+                      disabled={!permissions.keyboard || !displayReady}
+                      onClick={() => {
+                        const down = !modifierRef.current.includes(controlKey);
+                        modifierRef.current = down
+                          ? [...modifierRef.current, controlKey]
+                          : modifierRef.current.filter(
+                              (key) => key !== controlKey,
+                            );
+                        setHeldModifiers([...modifierRef.current]);
+                        post({
+                          type: 'input',
+                          input: { keyEvent: { controlKey, down } },
+                        });
+                      }}
+                    >
+                      {hbb.ControlKey[controlKey]}
+                    </Button>
+                  ))}
+                  {[
+                    hbb.ControlKey.Tab,
+                    hbb.ControlKey.Return,
+                    hbb.ControlKey.Escape,
+                    hbb.ControlKey.Backspace,
+                  ].map((controlKey) => (
+                    <Button
+                      key={controlKey}
+                      disabled={!permissions.keyboard || !displayReady}
+                      onClick={() =>
+                        post({
+                          type: 'input',
+                          input: {
+                            keyEvent: {
+                              controlKey,
+                              press: true,
+                              modifiers: modifierRef.current,
+                            },
+                          },
+                        })
+                      }
+                    >
+                      {hbb.ControlKey[controlKey]}
+                    </Button>
+                  ))}
+                  {softKeyboard && (
+                    <Space wrap className={styles.keyboardText}>
+                      <Input
+                        aria-label={text('softText', 'Keyboard text')}
+                        value={softText}
+                        maxLength={MAX_TEXT_BYTES}
+                        onChange={(event) => setSoftText(event.target.value)}
+                      />
+                      <Button
+                        disabled={
+                          !permissions.keyboard || !displayReady || !softText
+                        }
+                        onClick={() => {
+                          post({ type: 'text', text: softText });
+                          setSoftText('');
+                        }}
+                      >
+                        {text('sendText', 'Send text')}
+                      </Button>
+                    </Space>
+                  )}
+                </div>
+                <p className={styles.panelHint}>
+                  {text(
+                    'touchNotice',
+                    'Touch to click, move to drag, hold for right click. Pinch with two fingers to zoom locally; use Scroll mode for the remote wheel. Send keyboard text after IME composition.',
+                  )}
+                </p>
+              </div>
+              <div
+                id="web-client-tool-audio"
+                role="tabpanel"
+                aria-labelledby="web-client-tab-audio"
+                hidden={tool !== 'audio'}
+              >
+                <div className={styles.audioHero}>
+                  <SoundOutlined />
+                  <strong>{text('toolAudio', 'Audio')}</strong>
+                  <p>
                     {text(
-                      'touchNotice',
-                      'Touch to click, move to drag, hold for right click. Pinch with two fingers to zoom locally; use Scroll mode for the remote wheel. Send keyboard text after IME composition.',
+                      'audioHint',
+                      'Start playback when you want to hear the remote device. Playback stops when the session ends.',
                     )}
                   </p>
                 </div>
-                <div id="web-client-tool-audio" hidden={tool !== 'audio'}>
-                  <div className={styles.audioHero}>
-                    <SoundOutlined />
-                    <strong>{text('toolAudio', 'Audio')}</strong>
-                    <p>
-                      {text(
-                        'audioHint',
-                        'Start playback when you want to hear the remote device. Playback stops when the session ends.',
-                      )}
-                    </p>
-                  </div>
-                  {!permissions.audio && (
-                    <Alert
-                      type="warning"
-                      showIcon
-                      message={text(
-                        'audioDenied',
-                        'Audio is disabled by the remote device.',
-                      )}
-                    />
-                  )}
-                  <div className={styles.audioControls}>
-                    {!audioSupported && (
-                      <span>
-                        {text(
-                          'audioUnavailable',
-                          'Opus audio decoding is unavailable in this browser.',
-                        )}
-                      </span>
+                {!permissions.audio && (
+                  <Alert
+                    type="warning"
+                    showIcon
+                    message={text(
+                      'audioDenied',
+                      'Audio is disabled by the remote device.',
                     )}
-                    <Button
-                      disabled={!audioSupported || !permissions.audio}
-                      onClick={() => void toggleAudio()}
-                    >
+                  />
+                )}
+                <div className={styles.audioControls}>
+                  {!audioSupported && (
+                    <span>
                       {text(
-                        audioEnabled ? 'audioStop' : 'audioStart',
-                        audioEnabled ? 'Stop audio' : 'Play audio',
+                        'audioUnavailable',
+                        'Opus audio decoding is unavailable in this browser.',
                       )}
-                    </Button>
-                    <Button
-                      disabled={!audioEnabled}
-                      onClick={() => {
-                        setMuted(!muted);
-                        player.current?.volume(!muted ? 0 : volume);
-                      }}
-                    >
-                      {text(
-                        muted ? 'unmute' : 'mute',
-                        muted ? 'Unmute' : 'Mute',
-                      )}
-                    </Button>
-                    <input
-                      type="range"
-                      aria-label={text('volume', 'Volume')}
-                      min="0"
-                      max="1"
-                      step="0.05"
-                      value={volume}
-                      onChange={(event) => {
-                        const value = Number(event.target.value);
-                        setVolume(value);
-                        player.current?.volume(muted ? 0 : value);
-                      }}
-                    />
-                  </div>
-                </div>
-              </div>
-            </aside>
-          </div>
-          <div className={styles.toolbar} ref={toolbarElement}>
-            <nav
-              className={styles.toolNav}
-              aria-label={text('tools', 'Session tools')}
-            >
-              {toolItems.map((item) => (
-                <button
-                  key={item.key}
-                  type="button"
-                  ref={(element) => {
-                    toolButtons.current[item.key] = element;
-                  }}
-                  className={styles.toolButton}
-                  aria-label={item.label}
-                  disabled={!connected}
-                  aria-expanded={tool === item.key}
-                  aria-controls={'web-client-tool-' + item.key}
-                  data-active={tool === item.key}
-                  onClick={() =>
-                    chooseTool(tool === item.key ? undefined : item.key)
-                  }
-                >
-                  {item.icon}
-                  <span>{item.label}</span>
-                  {item.key === 'files' && fileStatus.busy && (
-                    <span
-                      className={styles.activityDot}
-                      role="img"
-                      aria-label={text(
-                        'fileInProgress',
-                        'Transfer in progress',
-                      )}
-                    />
+                    </span>
                   )}
-                  {item.key === 'audio' && audioEnabled && (
-                    <span
-                      className={styles.activityDot}
-                      role="img"
-                      aria-label={text('audioPlaying', 'Audio is playing')}
-                    />
-                  )}
-                </button>
-              ))}
-            </nav>
-            <div className={styles.viewTools}>
-              <Button
-                danger={activeSession}
-                icon={<DisconnectOutlined />}
-                onClick={disconnect}
-                disabled={!activeSession}
-              >
-                {text('disconnect', 'Disconnect')}
-              </Button>
-
-              {connected && displays.length > 1 && (
-                <label className={styles.monitor}>
-                  {text('display', 'Monitor')}
-                  <select
-                    className={styles.select}
-                    aria-label={text('display', 'Monitor')}
-                    value={selectedDisplay}
-                    onChange={(event) => {
-                      input.current?.release();
-                      releaseModifiers();
-                      setDisplayReady(false);
-                      clearDisplay();
-                      post({
-                        type: 'select-display',
-                        index: Number(event.target.value),
-                      });
+                  <Button
+                    disabled={!audioSupported || !permissions.audio}
+                    onClick={() => void toggleAudio()}
+                  >
+                    {text(
+                      audioEnabled ? 'audioStop' : 'audioStart',
+                      audioEnabled ? 'Stop audio' : 'Play audio',
+                    )}
+                  </Button>
+                  <Button
+                    disabled={!audioEnabled}
+                    onClick={() => {
+                      setMuted(!muted);
+                      player.current?.volume(!muted ? 0 : volume);
                     }}
                   >
-                    {displays.map((item, index) => (
-                      <option
-                        key={
-                          item.name ||
-                          [item.x, item.y, item.width, item.height].join(':')
-                        }
-                        value={index}
-                      >
-                        {index + 1}:{' '}
-                        {item.name || `${item.width} × ${item.height}`}
-                      </option>
-                    ))}
-                  </select>
-                </label>
+                    {text(muted ? 'unmute' : 'mute', muted ? 'Unmute' : 'Mute')}
+                  </Button>
+                  <input
+                    type="range"
+                    aria-label={text('volume', 'Volume')}
+                    min="0"
+                    max="1"
+                    step="0.05"
+                    value={volume}
+                    onChange={(event) => {
+                      const value = Number(event.target.value);
+                      setVolume(value);
+                      player.current?.volume(muted ? 0 : value);
+                    }}
+                  />
+                </div>
+              </div>
+            </SessionSidebar>
+          </div>
+          <div
+            className={styles.sessionHandle}
+            hidden={!activeSession && !fullscreen}
+          >
+            <button
+              ref={toolLauncher}
+              type="button"
+              className={styles.launcher}
+              hidden={!activeSession || !!tool}
+              aria-label={text('openTools', 'Open tools')}
+              aria-expanded={!!tool}
+              aria-controls="web-client-sidebar"
+              onClick={() => chooseTool(lastTool.current)}
+            >
+              <ControlOutlined />
+              <span>{text('toolsShort', 'Tools')}</span>
+              {fileStatus.busy && (
+                <span
+                  className={styles.activityDot}
+                  role="img"
+                  aria-label={text('fileInProgress', 'Transfer in progress')}
+                />
               )}
-
-              <Button
-                type="text"
-                icon={fullscreen ? <CompressOutlined /> : <ExpandOutlined />}
-                disabled={!connected && !fullscreen}
+            </button>
+            <div
+              className={styles.quickActions}
+              hidden={!!tool && activeSession}
+            >
+              <button
+                type="button"
                 onClick={toggleFullscreen}
-              >
-                {text(
+                aria-label={text(
                   fullscreen ? 'exitFullscreen' : 'fullscreen',
                   fullscreen ? 'Exit fullscreen' : 'Fullscreen',
                 )}
-              </Button>
+                title={text(
+                  fullscreen ? 'exitFullscreen' : 'fullscreen',
+                  fullscreen ? 'Exit fullscreen' : 'Fullscreen',
+                )}
+              >
+                {fullscreen ? <CompressOutlined /> : <ExpandOutlined />}
+              </button>
+              <button
+                type="button"
+                hidden={!activeSession}
+                onClick={disconnect}
+                className={styles.quickDisconnect}
+                aria-label={text('disconnect', 'Disconnect')}
+                title={text('disconnect', 'Disconnect')}
+              >
+                <DisconnectOutlined />
+              </button>
             </div>
           </div>
-          <div className={styles.notices} aria-live="polite">
-            {connected && (
+          {activeSession && (
+            <div className={styles.sessionHud}>
+              <span className={styles.sessionIdentity}>
+                <DesktopOutlined />
+                <span title={id}>{id}</span>
+                <span className={styles.statusDot} data-connected={connected} />
+              </span>
+              {!tool && noticeControl}
+            </div>
+          )}
+          <div
+            className={styles.notices}
+            id="web-client-notices"
+            ref={noticesElement}
+            data-session={activeSession}
+            data-tools-open={!!tool}
+            hidden={activeSession && !noticesOpen}
+            aria-live="polite"
+            onKeyDown={(event) => {
+              if (event.key === 'Escape') {
+                event.stopPropagation();
+                setNoticesOpen(false);
+              }
+            }}
+          >
+            {connected && !!pasteStatus && (
               <div className={styles.pasteHint} role="status">
                 <CopyOutlined />
                 <span>
@@ -1389,7 +1507,7 @@ export default function WebClientPage() {
                 )}
               />
             )}
-            {connected && tool !== 'files' && fileStatus.legacy && (
+            {connected && kxVersion !== 0 && fileStatus.legacy && (
               <Alert
                 type="warning"
                 showIcon
@@ -1399,7 +1517,7 @@ export default function WebClientPage() {
                 )}
               />
             )}
-            {connected && tool !== 'files' && fileStatus.error && (
+            {connected && fileStatus.error && (
               <Alert
                 type="error"
                 showIcon
@@ -1415,22 +1533,15 @@ export default function WebClientPage() {
               />
             )}
           </div>
+
           <section
             className={styles.deviceSelection}
             data-device-selection
             hidden={activeSession}
             aria-label={text('selectDevice', 'Choose a device')}
           >
-            <div className={styles.selectionHeading}>
-              <h2>{text('selectDevice', 'Choose a device')}</h2>
-              <p>
-                {text(
-                  'selectionHint',
-                  'Enter a device ID, or choose a device from the list below.',
-                )}
-              </p>
-            </div>
-            <div className={styles.connectionBar}>
+            <div className={styles.connectionCard}>
+              <h2>{text('connectDevice', 'Connect to a device')}</h2>
               <div className={styles.connectionField}>
                 <label htmlFor="web-client-target">
                   {text('id', 'Remote ID')}
@@ -1448,37 +1559,25 @@ export default function WebClientPage() {
               </div>
               <Button
                 type="primary"
+                block
                 icon={<ArrowRightOutlined />}
                 onClick={() => connect()}
-                disabled={!ready || activeSession}
+                disabled={!ready || activeSession || !id.trim()}
               >
                 {text('connect', 'Connect')}
               </Button>
-              <span className={styles.connectionHint}>
+              <p className={styles.connectionHint}>
                 <SafetyCertificateOutlined />
-                {text('nativeAuth', 'Verified by the remote device')}
-              </span>
+                {text(
+                  'connectionApproval',
+                  'The remote device must approve the connection, or you can use its password.',
+                )}
+              </p>
             </div>
             {!activeSession && (
-              <DevicePicker query={id} disabled={!ready} onConnect={connect} />
+              <DevicePicker disabled={!ready} onConnect={connect} />
             )}
           </section>
-          <footer className={styles.footer}>
-            <span>
-              <SafetyCertificateOutlined />
-              {text(
-                connected ? 'sessionHint' : 'notice',
-                connected
-                  ? 'Click the desktop to control it. Open a tool only when you need it.'
-                  : 'Connects through the configured server. Native password or local approval is required. Extensions depend on remote permissions and browser support.',
-              )}
-            </span>
-            {connected && display && (
-              <span className={styles.resolution}>
-                {display.width} × {display.height}
-              </span>
-            )}
-          </footer>
         </section>
       )}
     </PageContainer>

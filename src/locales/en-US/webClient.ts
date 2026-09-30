@@ -9,9 +9,9 @@ export default {
   'webClient.devicesSearch': 'Search device ID',
   'webClient.devicesOnlineOnly': 'Online only',
   'webClient.devicesFailed':
-    'Could not load devices. Refresh to retry, or enter an ID above.',
+    'Could not load devices. Refresh to retry, or connect using an ID.',
   'webClient.devicesEmpty':
-    'No matching devices are available to this account. You can still enter an ID above.',
+    'No matching devices are available to this account. You can still connect using an ID.',
   'webClient.deviceOnline': 'Online',
   'webClient.deviceOffline': 'Offline',
   'webClient.deviceCount': 'devices',
@@ -171,4 +171,20 @@ export default {
     'Audio is unavailable or exceeded its buffer limit. Check Opus support and enable audio again.',
   'webClient.error.files':
     'File operation failed, was denied, or exceeded a size limit. Retry the file session. Cancelling the save dialog stops the download.',
+  'webClient.connectDevice': 'Connect to a device',
+  'webClient.connectionApproval':
+    'Use the device password, or wait for approval on the remote device.',
+  'webClient.openTools': 'Open tools',
+  'webClient.toolsShort': 'Tools',
+  'webClient.sidebarPosition': 'Sidebar position',
+  'webClient.sidebarOverlay': 'Overlay',
+  'webClient.sidebarDocked': 'Dock right',
+  'webClient.sidebarNarrow': 'Docking needs a wider window.',
+  'webClient.sessionAlerts': 'Session notices',
+  'webClient.legacyBadge': 'Legacy protocol',
+  'webClient.noticeBadge': 'Session notice',
+  'webClient.errorBadge': 'Operation failed',
+  'webClient.viewOnlyBadge': 'View only',
+  'webClient.pasteSentBadge': 'Clipboard sent',
+  'webClient.pasteSendingBadge': 'Sending clipboard',
 };

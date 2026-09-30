@@ -1,6 +1,12 @@
-import { DesktopOutlined, ReloadOutlined } from '@ant-design/icons';
+import {
+  ArrowRightOutlined,
+  DesktopOutlined,
+  LeftOutlined,
+  ReloadOutlined,
+  RightOutlined,
+} from '@ant-design/icons';
 import { useIntl, useModel } from '@umijs/max';
-import { Alert, Button, Spin } from 'antd';
+import { Alert, Button, Spin, Switch } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { getDeviceList } from '@/services/rustdesk-console/device';
 import styles from './index.less';
@@ -10,10 +16,8 @@ const PAGE_SIZE = 6;
 export function DevicePicker({
   disabled,
   onConnect,
-  query,
 }: {
   disabled: boolean;
-  query: string;
   onConnect: (id: string) => void;
 }) {
   const intl = useIntl();
@@ -22,7 +26,6 @@ export function DevicePicker({
   const { initialState } = useModel('@@initialState');
   const owner = initialState?.currentUser;
   const [filter, setFilter] = useState({
-    id: query.trim(),
     online: false,
     page: 1,
     revision: 0,
@@ -35,16 +38,6 @@ export function DevicePicker({
     failed?: boolean;
   }>();
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setFilter((previous) =>
-        previous.id === query.trim()
-          ? previous
-          : { ...previous, id: query.trim(), page: 1 },
-      );
-    }, 250);
-    return () => clearTimeout(timer);
-  }, [query]);
-  useEffect(() => {
     if (!owner) return;
     const controller = new AbortController();
     void getDeviceList(
@@ -52,7 +45,6 @@ export function DevicePicker({
         current: filter.page,
         pageSize: PAGE_SIZE,
         status: '1',
-        ...(filter.id ? { id: filter.id } : {}),
         ...(filter.online ? { is_online: '1' } : {}),
       },
       { signal: controller.signal, skipErrorHandler: true },
@@ -69,11 +61,7 @@ export function DevicePicker({
   }, [owner, filter]);
   // 同一渲染即遮蔽旧账号或旧筛选结果，不能等 effect 清理后才隐藏。
   const current =
-    result?.owner === owner &&
-    result?.filter === filter &&
-    filter.id === query.trim()
-      ? result
-      : undefined;
+    result?.owner === owner && result?.filter === filter ? result : undefined;
   const loading = !!owner && !current;
   const pages = Math.max(1, Math.ceil((current?.total || 0) / PAGE_SIZE));
   return (
@@ -82,36 +70,38 @@ export function DevicePicker({
       aria-label={text('devicesTitle', 'Accessible devices')}
     >
       <div className={styles.devicesHeading}>
-        <div>
+        <div className={styles.devicesTitle}>
           <h2>{text('devicesTitle', 'Accessible devices')}</h2>
-          <p>
-            {text(
-              'devicesHint',
-              'Choose a device available to your account. Remote approval or password is still required.',
-            )}
-          </p>
+          {current && (
+            <span className={styles.deviceCount}>{current.total}</span>
+          )}
         </div>
-        <Button
-          type="text"
-          icon={<ReloadOutlined />}
-          disabled={loading}
-          aria-label={text('devicesRefresh', 'Refresh devices')}
-          onClick={() =>
-            setFilter({ ...filter, revision: filter.revision + 1 })
-          }
-        />
-      </div>
-      <div className={styles.deviceFilters}>
-        <label className={styles.onlineFilter}>
-          <input
-            type="checkbox"
-            checked={filter.online}
-            onChange={(event) =>
-              setFilter({ ...filter, online: event.target.checked, page: 1 })
+        <div className={styles.deviceActions}>
+          <label
+            className={styles.onlineFilter}
+            htmlFor="web-client-online-only"
+          >
+            <span>{text('devicesOnlineOnly', 'Online only')}</span>
+            <Switch
+              id="web-client-online-only"
+              size="small"
+              aria-label={text('devicesOnlineOnly', 'Online only')}
+              checked={filter.online}
+              onChange={(online) =>
+                setFilter((previous) => ({ ...previous, online, page: 1 }))
+              }
+            />
+          </label>
+          <Button
+            type="text"
+            icon={<ReloadOutlined />}
+            disabled={loading}
+            aria-label={text('devicesRefresh', 'Refresh devices')}
+            onClick={() =>
+              setFilter({ ...filter, revision: filter.revision + 1 })
             }
           />
-          {text('devicesOnlineOnly', 'Online only')}
-        </label>
+        </div>
       </div>
       {loading ? (
         <div className={styles.deviceEmpty} role="status">
@@ -123,14 +113,14 @@ export function DevicePicker({
           showIcon
           message={text(
             'devicesFailed',
-            'Could not load devices. Refresh to retry, or enter an ID above.',
+            'Could not load devices. Refresh to retry, or connect using an ID.',
           )}
         />
       ) : !current?.data.length ? (
         <p className={styles.deviceEmpty}>
           {text(
             'devicesEmpty',
-            'No matching devices are available to this account. You can still enter an ID above.',
+            'No devices are available. You can still connect using an ID.',
           )}
         </p>
       ) : (
@@ -141,6 +131,7 @@ export function DevicePicker({
               key={device.guid || device.id}
               disabled={disabled}
               className={styles.deviceCard}
+              data-online={!!device.is_online}
               onClick={() => onConnect(device.id)}
               aria-label={
                 text('connect', 'Connect') +
@@ -155,12 +146,20 @@ export function DevicePicker({
                 <DesktopOutlined />
               </span>
               <span className={styles.deviceIdentity}>
-                <strong>{device.info?.device_name || device.id}</strong>
-                <span>
-                  {device.id}
-                  {device.info?.os ? ' · ' + device.info.os : ''}
-                </span>
+                <strong title={device.info?.device_name || device.id}>
+                  {device.info?.device_name || device.id}
+                </strong>
+                {device.info?.device_name &&
+                  device.info.device_name !== device.id && (
+                    <span className={styles.deviceId}>{device.id}</span>
+                  )}
+                {device.info?.os && (
+                  <span className={styles.deviceSystem} title={device.info.os}>
+                    {device.info.os}
+                  </span>
+                )}
               </span>
+              <ArrowRightOutlined className={styles.deviceArrow} aria-hidden />
               <span
                 className={styles.devicePresence}
                 data-online={!!device.is_online}
@@ -177,22 +176,26 @@ export function DevicePicker({
       )}
       {!loading && !!current?.total && (
         <div className={styles.devicePagination}>
-          <Button
-            disabled={filter.page <= 1}
-            onClick={() => setFilter({ ...filter, page: filter.page - 1 })}
-          >
-            {text('previous', 'Previous')}
-          </Button>
           <span>
-            {filter.page} / {pages} · {current.total}{' '}
-            {text('deviceCount', 'devices')}
+            {current.total} {text('deviceCount', 'devices')}
           </span>
-          <Button
-            disabled={filter.page >= pages}
-            onClick={() => setFilter({ ...filter, page: filter.page + 1 })}
-          >
-            {text('next', 'Next')}
-          </Button>
+          <div className={styles.pageButtons}>
+            <Button
+              aria-label={text('previous', 'Previous')}
+              icon={<LeftOutlined />}
+              disabled={filter.page <= 1}
+              onClick={() => setFilter({ ...filter, page: filter.page - 1 })}
+            />
+            <span>
+              {filter.page} / {pages}
+            </span>
+            <Button
+              aria-label={text('next', 'Next')}
+              icon={<RightOutlined />}
+              disabled={filter.page >= pages}
+              onClick={() => setFilter({ ...filter, page: filter.page + 1 })}
+            />
+          </div>
         </div>
       )}
     </section>

@@ -71,14 +71,31 @@ jest.mock('antd', () => {
     Space: Box,
     Tag: Box,
     Spin: Box,
+    Switch: ({
+      checked,
+      onChange,
+      size: _size,
+      ...props
+    }: {
+      checked: boolean;
+      onChange: (checked: boolean) => void;
+      size?: string;
+    }) =>
+      React.createElement('button', {
+        ...props,
+        role: 'switch',
+        'aria-checked': checked,
+        onClick: () => onChange(!checked),
+      }),
     Typography: { Paragraph: Box, Text: Box },
     Button: ({
       children,
       type: _type,
       danger: _danger,
       icon: _icon,
+      block: _block,
       ...props
-    }: ButtonProps & { danger?: boolean; icon?: unknown }) =>
+    }: ButtonProps & { danger?: boolean; icon?: unknown; block?: boolean }) =>
       React.createElement('button', props, children),
     Alert: ({ message }: { message: string }) =>
       React.createElement('div', null, message),
@@ -155,6 +172,11 @@ async function start() {
   });
   return view;
 }
+function openTool(name: string) {
+  const launcher = screen.queryByRole('button', { name: 'Open tools' });
+  if (launcher) fireEvent.click(launcher);
+  fireEvent.click(screen.getByRole('tab', { name }));
+}
 function value(label: string) {
   return (screen.getByLabelText(label) as HTMLInputElement).value;
 }
@@ -222,7 +244,7 @@ test('截图粘贴优先使用 PNG；断开后丢弃尚未读完的图片', asyn
     ([m]) => m.type === 'paste',
   ).length;
   fireEvent.paste(desktop, { clipboardData });
-  fireEvent.click(screen.getByText('Disconnect'));
+  fireEvent.click(screen.getByRole('button', { name: 'Disconnect' }));
   await act(async () => finish(bytes.buffer));
   expect(
     worker.postMessage.mock.calls.filter(([m]) => m.type === 'paste'),
@@ -271,7 +293,7 @@ test('disconnect immediately discards queued old clipboard and frames, including
   await start();
   const previous = worker.generation;
   worker.emit({ type: 'clipboard', text: 'old secret', generation: previous });
-  fireEvent.click(screen.getByText('Disconnect'));
+  fireEvent.click(screen.getByRole('button', { name: 'Disconnect' }));
   expect(value('Remote clipboard text')).toBe('');
   const closed = jest.fn();
   worker.emit({
@@ -417,7 +439,7 @@ test('input revocation explains held-key recovery and blocks text until permissi
   surface.requestFullscreen = jest
     .fn<() => Promise<void>>()
     .mockResolvedValue();
-  fireEvent.click(screen.getByText('Fullscreen'));
+  fireEvent.click(screen.getByRole('button', { name: 'Fullscreen' }));
   expect(surface.requestFullscreen).toHaveBeenCalledTimes(1);
   expect(
     surface.contains(
@@ -488,7 +510,7 @@ test('disconnect and reconnect suppress old legacy notices and KX 1 has no legac
   const previous = worker.generation;
   worker.emit({ type: 'security', kxVersion: 0, generation: previous });
   expect(screen.getByText(legacyNotice)).toBeDefined();
-  fireEvent.click(screen.getByText('Disconnect'));
+  fireEvent.click(screen.getByRole('button', { name: 'Disconnect' }));
   expect(screen.queryByText(legacyNotice)).toBeNull();
   fireEvent.click(screen.getByText('Connect'));
   worker.emit({ type: 'security', kxVersion: 0, generation: previous });
@@ -529,7 +551,7 @@ test.each(['configuration', 'crash', 'failed'] as const)(
 
 test('文件会话单独认证并拒绝断开后的目录事件', async () => {
   await start();
-  fireEvent.click(screen.getByRole('button', { name: 'File transfer' }));
+  openTool('File transfer');
   fireEvent.click(screen.getByText('Connect files'));
   const fileGeneration =
     worker.postMessage.mock.calls.at(-1)?.[0].fileGeneration;
@@ -594,6 +616,7 @@ test('软键盘显式发送组合文本，并携带当前显示代次', async ()
     displayGeneration: 0,
     generation: worker.generation,
   });
+  openTool('Input controls');
   fireEvent.click(screen.getByText('Keyboard'));
   fireEvent.change(screen.getByLabelText('Keyboard text'), {
     target: { value: '中文输入' },
@@ -632,7 +655,7 @@ test('独立审查：取消旧下载后其迟到写入失败不能取消新下�
   });
   try {
     await start();
-    fireEvent.click(screen.getByRole('button', { name: 'File transfer' }));
+    openTool('File transfer');
     fireEvent.click(screen.getByText('Connect files'));
     const generation = worker.generation;
     const fileGeneration =
@@ -721,7 +744,7 @@ test('独立审查：页面隐藏时释放软键盘修饰键', async () => {
     displayGeneration: 0,
     generation: worker.generation,
   });
-  fireEvent.click(screen.getByRole('button', { name: 'Input controls' }));
+  openTool('Input controls');
   fireEvent.click(screen.getByRole('button', { name: 'Shift' }));
   const down = worker.postMessage.mock.calls.at(-1)?.[0];
   expect(down).toMatchObject({
@@ -780,6 +803,7 @@ test('独立审查：旧音频启动失败不能关闭后来启动的播放器',
       audioDecoder: true,
       generation: 0,
     });
+    openTool('Audio');
     fireEvent.click(screen.getByText('Play audio'));
     fireEvent.click(screen.getByText('Play audio'));
     await waitFor(() => expect(screen.getByText('Stop audio')).toBeTruthy());
@@ -801,7 +825,7 @@ test('工具面板按需展开，切换和关闭时保留文件会话与画布',
     'Remote desktop. Focus to send keyboard and mouse input.',
   );
   expect(screen.queryByRole('button', { name: 'Connect files' })).toBeNull();
-  fireEvent.click(screen.getByRole('button', { name: 'File transfer' }));
+  openTool('File transfer');
   fireEvent.click(screen.getByRole('button', { name: 'Connect files' }));
   const fileGeneration =
     worker.postMessage.mock.calls.at(-1)?.[0].fileGeneration;
@@ -818,7 +842,7 @@ test('工具面板按需展开，切换和关闭时保留文件会话与画布',
     fileGeneration,
   });
   const count = worker.postMessage.mock.calls.length;
-  fireEvent.click(screen.getByRole('button', { name: 'Clipboard' }));
+  openTool('Clipboard');
   expect(screen.queryByRole('button', { name: 'Disconnect files' })).toBeNull();
   worker.emit({
     type: 'files-event',
@@ -826,7 +850,7 @@ test('工具面板按需展开，切换和关闭时保留文件会话与画布',
     generation: worker.generation,
     fileGeneration,
   });
-  fireEvent.click(screen.getByRole('button', { name: 'File transfer' }));
+  openTool('File transfer');
   expect(value('Remote directory')).toBe('C:/后台更新');
   expect(worker.postMessage.mock.calls.slice(count)).toEqual([]);
   expect(
@@ -837,9 +861,11 @@ test('工具面板按需展开，切换和关闭时保留文件会话与画布',
   fireEvent.click(screen.getByRole('button', { name: 'Close tools' }));
   expect(screen.queryByRole('button', { name: 'Disconnect files' })).toBeNull();
   expect(document.activeElement).toBe(
-    screen.getByRole('button', { name: 'File transfer' }),
+    screen.getByRole('button', { name: 'Open tools' }),
   );
-  expect(worker.postMessage.mock.calls.slice(count)).toEqual([]);
+  expect(worker.postMessage.mock.calls.slice(count)).toEqual([
+    [expect.objectContaining({ type: 'cancel-paste' })],
+  ]);
 });
 
 test('收起输入工具释放修饰键，隐藏区域不暴露可操作按钮', async () => {
@@ -855,7 +881,7 @@ test('收起输入工具释放修饰键，隐藏区域不暴露可操作按钮',
     displayGeneration: 0,
     generation: worker.generation,
   });
-  fireEvent.click(screen.getByRole('button', { name: 'Input controls' }));
+  openTool('Input controls');
   fireEvent.click(screen.getByRole('button', { name: 'Control' }));
   const count = worker.postMessage.mock.calls.length;
   fireEvent.click(screen.getByRole('button', { name: 'Close tools' }));
@@ -866,7 +892,7 @@ test('收起输入工具释放修饰键，隐藏区域不暴露可操作按钮',
     }),
   ]);
   expect(screen.queryByRole('button', { name: 'Control' })).toBeNull();
-  fireEvent.click(screen.getByRole('button', { name: 'Input controls' }));
+  openTool('Input controls');
   expect(
     screen
       .getByRole('button', { name: 'Control' })
@@ -876,7 +902,7 @@ test('收起输入工具释放修饰键，隐藏区域不暴露可操作按钮',
 
 test('文件面板隐藏时仍显示旧协议提醒和文件错误', async () => {
   await start();
-  fireEvent.click(screen.getByRole('button', { name: 'File transfer' }));
+  openTool('File transfer');
   fireEvent.click(screen.getByRole('button', { name: 'Connect files' }));
   const fileGeneration =
     worker.postMessage.mock.calls.at(-1)?.[0].fileGeneration;
@@ -887,6 +913,10 @@ test('文件面板隐藏时仍显示旧协议提醒和文件错误', async () =>
     fileGeneration,
   });
   fireEvent.click(screen.getByRole('button', { name: 'Close tools' }));
+  expect(
+    screen.getByRole('button', { name: 'Session notices' }).closest('[hidden]'),
+  ).toBeNull();
+  fireEvent.click(screen.getByRole('button', { name: 'Session notices' }));
   const visibleNotices = screen
     .getAllByText(legacyNotice)
     .filter((element) => !element.closest('[hidden]'));
@@ -913,32 +943,35 @@ test('全屏容器包括连接栏、工具面板与断开按钮', async () => {
   Object.assign(surface, { requestFullscreen });
   fireEvent.click(screen.getByRole('button', { name: 'Fullscreen' }));
   expect(requestFullscreen).toHaveBeenCalledTimes(1);
-  fireEvent.click(screen.getByRole('button', { name: 'File transfer' }));
+  openTool('File transfer');
   expect(
     surface.contains(screen.getByRole('button', { name: 'Close tools' })),
   ).toBe(true);
-  expect(surface.contains(screen.getByText('Disconnect'))).toBe(true);
+  expect(
+    surface.contains(screen.getByRole('button', { name: 'Disconnect' })),
+  ).toBe(true);
 });
 
-test('画面排在工具和统一设备选择区之前，同一 ID 输入同时作为设备筛选条件', () => {
+test('未连接只显示两列设备选择，输入与设备列表独立', () => {
   render(React.createElement(WebClientPage));
-  const desktop = screen.getByLabelText(
-    'Remote desktop. Focus to send keyboard and mouse input.',
-  );
-  const tools = screen.getByRole('navigation', { name: 'Session tools' });
   const selection = document.querySelector('[data-device-selection]');
-  if (!selection) throw new Error('Missing device selection');
+  expect(selection?.hasAttribute('hidden')).toBe(false);
+  expect(
+    document.querySelector('[data-workspace]')?.hasAttribute('hidden'),
+  ).toBe(true);
   expect(selection?.contains(screen.getByLabelText('Remote ID'))).toBe(true);
-  expect(selection?.contains(screen.getByLabelText('Accessible devices'))).toBe(
-    true,
-  );
   expect(
-    desktop.compareDocumentPosition(tools) & Node.DOCUMENT_POSITION_FOLLOWING,
-  ).toBeTruthy();
+    selection?.contains(
+      screen.getByRole('region', { name: 'Accessible devices' }),
+    ),
+  ).toBe(true);
+  fireEvent.change(screen.getByLabelText('Remote ID'), {
+    target: { value: '987654321' },
+  });
   expect(
-    tools.compareDocumentPosition(selection) & Node.DOCUMENT_POSITION_FOLLOWING,
+    screen.getByRole('region', { name: 'Accessible devices' }),
   ).toBeTruthy();
-  expect(screen.queryByLabelText('Search device ID')).toBeNull();
+  expect(screen.queryByRole('button', { name: 'Open tools' })).toBeNull();
 });
 
 test('全屏中的会话断开后仍可通过按钮退出全屏', async () => {
@@ -978,49 +1011,109 @@ test('全屏中的会话断开后仍可通过按钮退出全屏', async () => {
   }
 });
 
-test('画面高度按实际顶部与工具高度计算，滚动不扩大画面', () => {
-  const height = Object.getOwnPropertyDescriptor(window, 'innerHeight');
-  const scroll = Object.getOwnPropertyDescriptor(window, 'scrollY');
-  const view = render(React.createElement(WebClientPage));
-  const desktop = screen.getByLabelText(
-    'Remote desktop. Focus to send keyboard and mouse input.',
+test('侧栏默认悬浮；停靠和收起不重建画布，不断开会话', async () => {
+  const desktop = await readyDesktop();
+  const workspace = document.querySelector('[data-workspace]');
+  const count = worker.postMessage.mock.calls.length;
+  openTool('Clipboard');
+  expect(workspace?.getAttribute('data-sidebar-mode')).toBe('overlay');
+  fireEvent.click(screen.getByRole('button', { name: 'Dock right' }));
+  expect(workspace?.getAttribute('data-sidebar-mode')).toBe('docked');
+  expect(
+    screen.getByLabelText(
+      'Remote desktop. Focus to send keyboard and mouse input.',
+    ),
+  ).toBe(desktop);
+  fireEvent.click(screen.getByRole('button', { name: 'Close tools' }));
+  expect(workspace?.getAttribute('data-tools-open')).toBe('false');
+  expect(document.activeElement).toBe(
+    screen.getByRole('button', { name: 'Open tools' }),
   );
-  const workspace = desktop.parentElement?.parentElement;
-  const toolbar = screen.getByRole('navigation', {
-    name: 'Session tools',
-  }).parentElement;
-  if (!workspace || !toolbar) throw new Error('Missing workspace or toolbar');
-  jest
-    .spyOn(workspace, 'getBoundingClientRect')
-    .mockReturnValue({ top: 110 } as DOMRect);
-  jest
-    .spyOn(toolbar, 'getBoundingClientRect')
-    .mockReturnValue({ height: 56 } as DOMRect);
+  expect(
+    worker.postMessage.mock.calls
+      .slice(count)
+      .some(([m]) => ['disconnect', 'files-disconnect'].includes(m.type)),
+  ).toBe(false);
+});
+
+test('侧栏方向键切换功能，窄屏自动恢复悬浮并禁用停靠', async () => {
+  await start();
+  const width = window.innerWidth;
   try {
-    Object.defineProperty(window, 'innerHeight', {
+    openTool('Clipboard');
+    const clipboard = screen.getByRole('tab', { name: 'Clipboard' });
+    fireEvent.keyDown(clipboard, { key: 'ArrowRight' });
+    expect(document.activeElement).toBe(
+      screen.getByRole('tab', { name: 'File transfer' }),
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Dock right' }));
+    Object.defineProperty(window, 'innerWidth', {
       configurable: true,
-      value: 768,
+      value: 390,
     });
     act(() => window.dispatchEvent(new Event('resize')));
-    expect(workspace.style.height).toBe('586px');
-    Object.defineProperty(window, 'innerHeight', {
-      configurable: true,
-      value: 600,
-    });
-    act(() => window.dispatchEvent(new Event('resize')));
-    expect(workspace.style.height).toBe('418px');
-    Object.defineProperty(window, 'scrollY', {
-      configurable: true,
-      value: 100,
-    });
-    jest
-      .spyOn(workspace, 'getBoundingClientRect')
-      .mockReturnValue({ top: 10 } as DOMRect);
-    act(() => window.dispatchEvent(new Event('resize')));
-    expect(workspace.style.height).toBe('418px');
+    expect(
+      document
+        .querySelector('[data-workspace]')
+        ?.getAttribute('data-sidebar-mode'),
+    ).toBe('overlay');
+    expect(
+      (screen.getByRole('button', { name: 'Dock right' }) as HTMLButtonElement)
+        .disabled,
+    ).toBe(true);
   } finally {
-    view.unmount();
-    if (height) Object.defineProperty(window, 'innerHeight', height);
-    if (scroll) Object.defineProperty(window, 'scrollY', scroll);
+    Object.defineProperty(window, 'innerWidth', {
+      configurable: true,
+      value: width,
+    });
   }
+});
+
+test('连接时锁定页面滚动，断开恢复原滚动设置', async () => {
+  const previous = document.body.style.overflow;
+  document.body.style.overflow = 'auto';
+  try {
+    await start();
+    expect(document.body.style.overflow).toBe('hidden');
+    fireEvent.click(screen.getByRole('button', { name: 'Disconnect' }));
+    expect(document.body.style.overflow).toBe('auto');
+    expect(
+      document.querySelector('[data-device-selection]')?.hasAttribute('hidden'),
+    ).toBe(false);
+  } finally {
+    document.body.style.overflow = previous;
+  }
+});
+
+test('Escape仅在工具栏内收起面板，焦点回到入口', async () => {
+  await start();
+  openTool('Clipboard');
+  fireEvent.keyDown(screen.getByRole('tab', { name: 'Clipboard' }), {
+    key: 'Escape',
+  });
+  expect(
+    document.querySelector('[data-workspace]')?.getAttribute('data-tools-open'),
+  ).toBe('false');
+  expect(document.activeElement).toBe(
+    screen.getByRole('button', { name: 'Open tools' }),
+  );
+});
+
+test('侧栏展开时旧协议提示在栏内仍可见且可以展开详情', async () => {
+  await start();
+  worker.emit({
+    type: 'security',
+    kxVersion: 0,
+    generation: worker.generation,
+  });
+  openTool('Clipboard');
+  const button = screen.getByRole('button', { name: 'Session notices' });
+  expect(
+    screen
+      .getByRole('complementary', { name: 'Session tools' })
+      .contains(button),
+  ).toBe(true);
+  fireEvent.click(button);
+  expect(document.getElementById('web-client-notices')?.hidden).toBe(false);
+  expect(screen.getByText(legacyNotice).closest('[hidden]')).toBeNull();
 });

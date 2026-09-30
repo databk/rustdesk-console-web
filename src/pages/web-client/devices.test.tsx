@@ -42,7 +42,6 @@ test('默认读取当前账号的可访问设备，点击卡片直接交付 ID',
   render(
     React.createElement(DevicePicker, {
       disabled: false,
-      query: '',
       onConnect: connect,
     }),
   );
@@ -54,7 +53,7 @@ test('默认读取当前账号的可访问设备，点击卡片直接交付 ID',
     { current: 1, pageSize: 6, status: '1' },
     expect.objectContaining({ signal: expect.any(AbortSignal) }),
   );
-  fireEvent.click(screen.getByText('Next'));
+  fireEvent.click(screen.getByRole('button', { name: 'Next' }));
   await waitFor(() =>
     expect(mockList).toHaveBeenLastCalledWith(
       { current: 2, pageSize: 6, status: '1' },
@@ -63,43 +62,34 @@ test('默认读取当前账号的可访问设备，点击卡片直接交付 ID',
   );
 });
 
-test('查询和在线过滤交给可访问设备接口，切换账号立即遮蔽旧数据', async () => {
+test('在线开关重置分页，切换账号立即遮蔽旧数据', async () => {
   const view = render(
     React.createElement(DevicePicker, {
       disabled: false,
-      query: '',
       onConnect: jest.fn(),
     }),
   );
   await screen.findByText('办公室');
-  view.rerender(
-    React.createElement(DevicePicker, {
-      disabled: false,
-      query: '987',
-      onConnect: jest.fn(),
-    }),
-  );
-  expect(screen.queryByText('办公室')).toBeNull();
-  expect(mockList).toHaveBeenCalledTimes(1);
+  fireEvent.click(screen.getByRole('button', { name: 'Next' }));
   await waitFor(() =>
     expect(mockList).toHaveBeenLastCalledWith(
-      expect.objectContaining({ id: '987', current: 1 }),
+      expect.objectContaining({ current: 2 }),
       expect.anything(),
     ),
   );
-  fireEvent.click(screen.getByLabelText('Online only'));
+  fireEvent.click(screen.getByRole('switch', { name: 'Online only' }));
   await waitFor(() =>
     expect(mockList).toHaveBeenLastCalledWith(
-      expect.objectContaining({ is_online: '1' }),
+      { current: 1, pageSize: 6, status: '1', is_online: '1' },
       expect.anything(),
     ),
   );
+  await screen.findByText('办公室');
   mockList.mockImplementation(() => new Promise(() => {}));
   mockOwner = { id: 2 };
   view.rerender(
     React.createElement(DevicePicker, {
       disabled: false,
-      query: '',
       onConnect: jest.fn(),
     }),
   );
@@ -117,7 +107,6 @@ test('旧账号的晚到响应被丢弃，失败可刷新重试', async () => {
   const view = render(
     React.createElement(DevicePicker, {
       disabled: false,
-      query: '',
       onConnect: jest.fn(),
     }),
   );
@@ -126,12 +115,11 @@ test('旧账号的晚到响应被丢弃，失败可刷新重试', async () => {
   view.rerender(
     React.createElement(DevicePicker, {
       disabled: false,
-      query: '',
       onConnect: jest.fn(),
     }),
   );
   await screen.findByText(
-    'Could not load devices. Refresh to retry, or enter an ID above.',
+    'Could not load devices. Refresh to retry, or connect using an ID.',
   );
   await act(async () => finish({ data: [device], total: 1 }));
   expect(screen.queryByText('办公室')).toBeNull();
