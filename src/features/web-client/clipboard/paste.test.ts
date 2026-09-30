@@ -12,13 +12,15 @@ beforeEach(() => {
   jest.useFakeTimers();
   mockImage.mockReset();
 });
-afterEach(() => jest.useRealTimers());
+afterEach(() => {
+  jest.useRealTimers();
+});
 function setup() {
   const transport = {
-    clipboard: jest.fn<() => boolean>().mockReturnValue(true),
-    image: jest.fn<() => boolean>().mockReturnValue(true),
+    clipboard: jest.fn<(value: unknown) => boolean>().mockReturnValue(true),
+    image: jest.fn<(bytes: Uint8Array) => boolean>().mockReturnValue(true),
     flush: jest.fn<() => Promise<void>>().mockResolvedValue(undefined),
-    input: jest.fn<() => boolean>().mockReturnValue(true),
+    input: jest.fn<(value: unknown) => boolean>().mockReturnValue(true),
     status: jest.fn(),
   };
   return { transport, paste: new RemotePaste(transport) };
