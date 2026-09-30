@@ -75,14 +75,14 @@ Console 登录控制页面和公开配置的访问；Windows 被控端仍通过�
 
 需要可重复的原生互通和持续传帧检查时，参照 REAL-DEVICE-TESTING.md，并使用 scripts/web-client/validate-session.cjs。报告会脱敏，并明确断言实际协商协议和实际画面尺寸。
 
-    npm ci
+    npm ci --legacy-peer-deps
     npm run web-client:protocol:check
     npm run lint
     npm test -- --runInBand --runTestsByPath src/features/web-client/core/session.test.ts
     npm run build
     docker build -t rustdesk-console-web:web-client-local .
 
-锁文件已包含 Docker／CI 使用的正常 npm 对等依赖解析结果，不需要 legacy-peer-deps 安装参数。不要将锁定输入替换成上游 master 上会变化的文件。协议生成命令为 npm run web-client:protocol；source.json 分别记录固定的原生端与公共库修订、上游路径、输入哈希和父仓库许可证哈希。生成文件只能通过该生成器更新。
+当前验收分支基于官方 main 的 1.6.0 依赖，沿用其 Dockerfile 的 npm ci --legacy-peer-deps 安装方式；历史本机报告中的依赖安装结论对应旧基线。Docker 分层先安装依赖、后复制完整源码，因此源码复制后会重新执行 npm run postinstall，生成完整的 Umi 类型，再执行生产构建及检查。不要将锁定协议输入替换成上游 master 上会变化的文件。协议生成命令为 npm run web-client:protocol；source.json 分别记录固定的原生端与公共库修订、上游路径、输入哈希和父仓库许可证哈希。生成文件只能通过该生成器更新。
 
 源码来源：rustdesk/rustdesk 提交 4812a9815bd3c6a93f3ad903f29504168c4930a1 的 libs/base/protos/message.proto，以及其 hbb_common 子模块提交 229b904508364c8997aad0fb5af57effac859f60 的 protos/rendezvous.proto。准确来源见 vendor/rustdesk-protocol/NOTICE.md、source.json 和 LICENCE.upstream。生产许可证说明也从这些输入生成，不另行硬编码修订号。历史 V1 提交 212e8e755954ec48ad39517ea0688711f8c146ef 的代码仅用于协议研究。
 
