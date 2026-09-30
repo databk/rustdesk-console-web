@@ -109,12 +109,12 @@ export class BinaryTransport {
     }
   }
 
-  async drain() {
+  async drain(maxBufferedBytes = 1024 * 1024) {
     const deadline = Date.now() + 30000;
     while (
       !this.end &&
       this.socket &&
-      this.socket.bufferedAmount > 1024 * 1024
+      this.socket.bufferedAmount > maxBufferedBytes
     ) {
       if (Date.now() > deadline) throw new SessionError('timeout');
       await new Promise((resolve) => setTimeout(resolve, 10));

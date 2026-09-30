@@ -5,21 +5,21 @@ type SessionEvents = import('../core/session').SessionEvents;
 
 let mockEvents: SessionEvents;
 let mockOutput: (frame: VideoFrame) => void;
-const mockPost =
-  jest.fn<
-    (
-      message: {
-        type: string;
-        generation?: number;
-        [key: string]: unknown;
-      },
-      options?: { transfer: Transferable[] },
-    ) => void
-  >();
+const mockPost = jest.fn<
+  (
+    message: {
+      type: string;
+      generation?: number;
+      [key: string]: unknown;
+    },
+    options?: { transfer: Transferable[] },
+  ) => void
+>();
 const mockConnect = jest.fn();
 const mockPassword = jest.fn();
 const mockInput = jest.fn();
 const mockClipboard = jest.fn();
+const mockSendImage = jest.fn();
 const mockImage = jest.fn<(value: unknown) => Promise<Uint8Array>>();
 jest.mock('../clipboard/image', () => ({
   clipboardPng: (value: unknown) => mockImage(value),
@@ -42,6 +42,8 @@ jest.mock('../core/session', () => ({
     submitPassword = mockPassword;
     sendInput = mockInput;
     sendClipboard = mockClipboard;
+    sendImage = mockSendImage;
+    async flushClipboard() {}
     acknowledgeVideo() {}
     refreshVideo() {}
     setAudio() {
@@ -342,4 +344,68 @@ test('同屏 PeerInfo 热更新无需等待原生重复 SwitchDisplay 就能恢�
   });
   expect(mockInput).toHaveBeenCalledTimes(1);
   send({ type: 'disconnect', generation: 2 });
+});
+
+test('直接粘贴需要有效画面及剪贴板和键盘权限，切屏或新输入会取消排队快捷键', async () => {
+  await boot();
+  jest.useFakeTimers();
+  try {
+    mockClipboard.mockReturnValue(true);
+    mockInput.mockReturnValue(true);
+    connect(1);
+    const paste = () =>
+      send({
+        type: 'paste',
+        generation: 1,
+        displayGeneration: 0,
+        content: { text: 'clipboard' },
+      });
+    paste();
+    expect(mockClipboard).not.toHaveBeenCalled();
+    mockEvents.state('connected');
+    mockEvents.message({
+      loginResponse: {
+        peerInfo: {
+          platform: 'Mac OS',
+          currentDisplay: 0,
+          displays: [
+            { width: 800, height: 600 },
+            { width: 800, height: 600 },
+          ],
+        },
+      },
+    });
+    mockEvents.message({ videoFrame: { display: 0, vp9s: { frames: [] } } });
+    mockOutput(frame());
+    paste();
+    expect(mockClipboard).toHaveBeenCalledTimes(1);
+    send({
+      type: 'input',
+      generation: 1,
+      displayGeneration: 0,
+      input: { mouseEvent: { mask: 9 } },
+    });
+    jest.runOnlyPendingTimers();
+    expect(mockInput).toHaveBeenCalledTimes(1);
+    mockEvents.permissions({
+      keyboard: true,
+      clipboard: false,
+      audio: true,
+      file: true,
+    });
+    paste();
+    expect(mockClipboard).toHaveBeenCalledTimes(1);
+    mockEvents.permissions({
+      keyboard: true,
+      clipboard: true,
+      audio: true,
+      file: true,
+    });
+    paste();
+    send({ type: 'select-display', generation: 1, index: 1 });
+    jest.runOnlyPendingTimers();
+    expect(mockInput).toHaveBeenCalledTimes(1);
+  } finally {
+    jest.useRealTimers();
+  }
 });

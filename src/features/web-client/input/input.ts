@@ -118,12 +118,24 @@ export class RemoteInput {
   private keydown = (event: KeyboardEvent) => {
     if (event.isComposing || event.key === 'Dead' || event.key === 'Process')
       return;
+    // 交给浏览器产生真实 paste 事件；提前发送 V 会粘贴远端的旧内容。
+    if (
+      !event.altKey &&
+      (((event.ctrlKey || event.metaKey) && event.code === 'KeyV') ||
+        (event.shiftKey &&
+          !event.ctrlKey &&
+          !event.metaKey &&
+          event.code === 'Insert'))
+    ) {
+      this.release();
+      return;
+    }
     const key: hbb.IKeyEvent | undefined =
       control[event.code] !== undefined
         ? { controlKey: control[event.code] }
         : Array.from(event.key).length === 1
-          ? { chr: event.key.codePointAt(0) }
-          : undefined;
+        ? { chr: event.key.codePointAt(0) }
+        : undefined;
     if (!key) return;
     event.preventDefault();
     this.keys.set(event.code, key);

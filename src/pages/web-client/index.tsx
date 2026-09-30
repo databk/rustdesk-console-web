@@ -1,9 +1,33 @@
 import { PageContainer } from '@ant-design/pro-components';
 import { useIntl, useLocation, useModel } from '@umijs/max';
-import { Alert, Button, Card, Input, Space, Spin, Tag, Typography } from 'antd';
+import {
+  Alert,
+  Button,
+  Card,
+  Input,
+  Space,
+  Spin,
+  Typography,
+  theme,
+} from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
+import {
+  DesktopOutlined,
+  FolderOpenOutlined,
+  CopyOutlined,
+  ControlOutlined,
+  SoundOutlined,
+  ExpandOutlined,
+  CompressOutlined,
+  CloseOutlined,
+  ArrowRightOutlined,
+  SafetyCertificateOutlined,
+  DisconnectOutlined,
+} from '@ant-design/icons';
+import styles from './index.less';
 import { AudioPlayer } from '@/features/web-client/media/audio-player';
 import { MAX_TEXT_BYTES } from '@/features/web-client/clipboard/text';
+import { IMAGE_LIMITS } from '@/features/web-client/clipboard/image';
 import type { KxVersion } from '@/features/web-client/core/crypto';
 import { normalizeTargetId } from '@/features/web-client/core/profile';
 import type { SessionState } from '@/features/web-client/core/session';
@@ -24,15 +48,28 @@ import {
   type TouchMode,
   type Viewport,
 } from '@/features/web-client/input/touch';
-import { FilePanel, type FilePanelHandle } from './files';
+import { FilePanel, type FilePanelHandle, type FilePanelStatus } from './files';
 import { ImageClipboard } from './images';
+import { DevicePicker } from './devices';
 
 export default function WebClientPage() {
   const intl = useIntl();
+  const { token } = theme.useToken();
   const text = (key: string, fallback: string) =>
     intl.formatMessage({ id: `webClient.${key}`, defaultMessage: fallback });
   const location = useLocation();
   const { configuration, loading, unavailable, reload } = useModel('webClient');
+  const [tool, setTool] = useState<'files' | 'clipboard' | 'input' | 'audio'>();
+  const [fullscreen, setFullscreen] = useState(false);
+  const [fileStatus, setFileStatus] = useState<FilePanelStatus>({
+    state: 'idle',
+    legacy: false,
+    error: '',
+    busy: false,
+  });
+  const toolButtons = useRef<Partial<Record<string, HTMLButtonElement | null>>>(
+    {},
+  );
   const [id, setId] = useState(
     () => new URLSearchParams(location.search).get('id') || '',
   );
@@ -51,6 +88,9 @@ export default function WebClientPage() {
   const [remoteText, setRemoteText] = useState('');
   const [remoteImage, setRemoteImage] = useState<Uint8Array>();
   const [clipboardFallback, setClipboardFallback] = useState(false);
+  const [pasteStatus, setPasteStatus] = useState('');
+  const pasteEpoch = useRef(0);
+  const readingPaste = useRef(false);
   const [display, setDisplay] = useState<RemoteDisplay>();
   const [permissions, setPermissions] = useState({
     keyboard: true,
@@ -87,6 +127,13 @@ export default function WebClientPage() {
   const connected = state === 'connected';
   const activeSession = !['idle', 'closed', 'failed'].includes(state);
 
+  const cancelPaste = () => {
+    ++pasteEpoch.current;
+    readingPaste.current = false;
+    setPasteStatus('');
+    post({ type: 'cancel-paste' });
+  };
+
   const stopAudio = () => {
     player.current?.dispose();
     player.current = undefined;
@@ -107,10 +154,13 @@ export default function WebClientPage() {
     if (pointer.current) pointer.current.style.display = 'none';
   };
   const disconnect = () => {
+    cancelPaste();
     stopAudio();
     files.current?.dispose();
     releaseModifiers();
     setSoftText('');
+    setTool(undefined);
+    setSoftKeyboard(false);
     input.current?.release();
     ++generation.current;
     post({ type: 'disconnect' });
@@ -207,6 +257,10 @@ export default function WebClientPage() {
               cursors.clear();
               clearDisplay();
             }
+          } else if (message.type === 'paste-status') {
+            setPasteStatus(
+              message.status === 'cancelled' ? '' : message.status,
+            );
           } else if (message.type === 'security') {
             setKxVersion(
               message.kxVersion === 0 || message.kxVersion === 1
@@ -218,6 +272,8 @@ export default function WebClientPage() {
             setError(message.code);
           } else if (message.type === 'permissions') {
             setPermissions(message.permissions);
+            if (!message.permissions.keyboard || !message.permissions.clipboard)
+              cancelPaste();
             if (!message.permissions.keyboard) releaseModifiers();
             if (!message.permissions.audio) stopAudio();
             if (!message.permissions.clipboard) {
@@ -352,8 +408,12 @@ export default function WebClientPage() {
             const element = canvas.current;
             marker.style.display =
               x >= 0 && x < 1 && y >= 0 && y < 1 ? 'block' : 'none';
-            marker.style.left = `${element.offsetLeft + x * element.clientWidth}px`;
-            marker.style.top = `${element.offsetTop + y * element.clientHeight}px`;
+            marker.style.left = `${
+              element.offsetLeft + x * element.clientWidth
+            }px`;
+            marker.style.top = `${
+              element.offsetTop + y * element.clientHeight
+            }px`;
           }
         };
       })
@@ -409,8 +469,74 @@ export default function WebClientPage() {
   }, [connected, permissions.keyboard, displayReady, display]);
 
   useEffect(() => {
+    const element = canvas.current;
+    if (!element || !connected || !displayReady) return;
+    const paste = async (event: ClipboardEvent) => {
+      event.preventDefault();
+      if (readingPaste.current) return;
+      if (!permissions.clipboard || !permissions.keyboard) {
+        setPasteStatus('denied');
+        return;
+      }
+      input.current?.release();
+      releaseModifiers();
+      const clipboard = event.clipboardData;
+      const epoch = ++pasteEpoch.current;
+      const current = generation.current;
+      const screenEpoch = displayEpoch.current;
+      const valid = () =>
+        epoch === pasteEpoch.current &&
+        current === generation.current &&
+        screenEpoch === displayEpoch.current;
+      readingPaste.current = true;
+      try {
+        const images = Array.from(clipboard?.items || []).filter(
+          (item) => item.kind === 'file' && item.type.startsWith('image/'),
+        );
+        if (images.length) {
+          const png = images
+            .find((item) => item.type === 'image/png')
+            ?.getAsFile();
+          if (!png || png.size > IMAGE_LIMITS.encoded) throw new Error();
+          const bytes = new Uint8Array(await png.arrayBuffer());
+          if (valid()) post({ type: 'paste', content: { bytes } });
+        } else {
+          const value = clipboard?.getData('text/plain') || '';
+          if (
+            !value ||
+            value.length > MAX_TEXT_BYTES ||
+            new TextEncoder().encode(value).byteLength > MAX_TEXT_BYTES
+          )
+            throw new Error();
+          if (valid()) post({ type: 'paste', content: { text: value } });
+        }
+      } catch {
+        if (valid()) setPasteStatus('failed');
+      } finally {
+        if (valid()) readingPaste.current = false;
+      }
+    };
+    element.addEventListener('paste', paste);
+    element.addEventListener('blur', cancelPaste);
+    window.addEventListener('blur', cancelPaste);
+    return () => {
+      element.removeEventListener('paste', paste);
+      element.removeEventListener('blur', cancelPaste);
+      window.removeEventListener('blur', cancelPaste);
+      cancelPaste();
+    };
+  }, [
+    connected,
+    displayReady,
+    display,
+    permissions.clipboard,
+    permissions.keyboard,
+  ]);
+
+  useEffect(() => {
     const pause = () => {
       if (document.hidden) {
+        cancelPaste();
         stopAudio();
         post({ type: 'audio', enabled: false });
         input.current?.release();
@@ -483,10 +609,12 @@ export default function WebClientPage() {
       window.removeEventListener('blur', releaseModifiers);
     };
   }, []);
-  const connect = () => {
+  const connect = (targetId = id) => {
     if (!configuration?.enabled || !ready) return;
     try {
-      const target = normalizeTargetId(id);
+      const target = normalizeTargetId(targetId);
+      setId(target);
+      cancelPaste();
       ++generation.current;
       displayEpoch.current = 0;
       setViewport({ scale: 1, x: 0, y: 0 });
@@ -529,10 +657,65 @@ export default function WebClientPage() {
     }
   };
 
+  const chooseTool = (next: typeof tool) => {
+    if (tool === 'input' && next !== 'input') {
+      input.current?.release();
+      releaseModifiers();
+      setSoftKeyboard(false);
+    }
+    setTool(next);
+  };
+  const closeTool = () => {
+    const previous = tool;
+    chooseTool(undefined);
+    if (previous) toolButtons.current[previous]?.focus();
+  };
+  useEffect(() => {
+    const update = () =>
+      setFullscreen(document.fullscreenElement === surface.current);
+    document.addEventListener('fullscreenchange', update);
+    return () => document.removeEventListener('fullscreenchange', update);
+  }, []);
+  const toggleFullscreen = () => {
+    const action =
+      document.fullscreenElement === surface.current
+        ? document.exitFullscreen?.()
+        : surface.current?.requestFullscreen?.();
+    if (!action) {
+      setError('fullscreen');
+      return;
+    }
+    void action.catch(() => setError('fullscreen'));
+  };
+  const toolItems = [
+    {
+      key: 'clipboard' as const,
+      icon: <CopyOutlined />,
+      label: text('toolClipboard', 'Clipboard'),
+    },
+    {
+      key: 'files' as const,
+      icon: <FolderOpenOutlined />,
+      label: text('files', 'File transfer'),
+    },
+    {
+      key: 'input' as const,
+      icon: <ControlOutlined />,
+      label: text('toolInput', 'Input controls'),
+    },
+    {
+      key: 'audio' as const,
+      icon: <SoundOutlined />,
+      label: text('toolAudio', 'Audio'),
+    },
+  ];
+  const authenticating = ['authenticating', 'awaitingApproval'].includes(state);
   return (
-    <PageContainer title={text('title', 'Web Client')}>
+    <PageContainer title={false}>
       {loading ? (
-        <Spin />
+        <div className={styles.loading}>
+          <Spin />
+        </div>
       ) : !configuration?.enabled ? (
         <Alert
           type="info"
@@ -550,79 +733,219 @@ export default function WebClientPage() {
           }
         />
       ) : (
-        <Space direction="vertical" size="middle" style={{ width: '100%' }}>
-          <Card size="small">
-            <Space wrap>
+        <section
+          ref={surface}
+          className={styles.workbench}
+          style={
+            {
+              '--wc-bg': token.colorBgContainer,
+              '--wc-text': token.colorText,
+              '--wc-muted': token.colorTextSecondary,
+              '--wc-border': token.colorBorderSecondary,
+              '--wc-soft': token.colorFillQuaternary,
+              '--wc-accent': token.colorPrimary,
+              '--wc-accent-bg': token.colorPrimaryBg,
+            } as React.CSSProperties
+          }
+          aria-label={text('title', 'Web Client')}
+          data-session-state={state}
+        >
+          <header className={styles.header}>
+            <div className={styles.brand}>
+              <span className={styles.brandIcon}>
+                <DesktopOutlined />
+              </span>
+              <div>
+                <h1>{text('title', 'Web Client')}</h1>
+                <p>
+                  {text(
+                    'workspaceSubtitle',
+                    'Your remote desktop, with everything within reach.',
+                  )}
+                </p>
+              </div>
+            </div>
+            <span
+              className={styles.status}
+              data-connected={connected}
+              role="status"
+              aria-live="polite"
+            >
+              <span className={styles.statusDot} />
+              {text('state.' + state, state)}
+            </span>
+          </header>
+          <div className={styles.connectionBar}>
+            <div className={styles.connectionField}>
+              <label htmlFor="web-client-target">
+                {text('id', 'Remote ID')}
+              </label>
               <Input
+                id="web-client-target"
                 aria-label={text('id', 'Remote ID')}
-                placeholder={text('id', 'Remote ID')}
+                placeholder={text('idPlaceholder', 'Enter the device ID')}
                 value={id}
                 onChange={(event) => setId(event.target.value)}
-                onPressEnter={connect}
+                onPressEnter={() => connect()}
                 disabled={activeSession}
                 maxLength={256}
-                style={{ width: 250 }}
               />
-              <Button
-                type="primary"
-                onClick={connect}
-                disabled={!ready || activeSession}
-              >
-                {text('connect', 'Connect')}
-              </Button>
-              <Button onClick={disconnect} disabled={!activeSession}>
-                {text('disconnect', 'Disconnect')}
-              </Button>
-              <Tag color={connected ? 'green' : undefined}>
-                {text(`state.${state}`, state)}
-              </Tag>
-              {connected && (
-                <>
-                  {!audioSupported && (
-                    <span>
-                      {text(
-                        'audioUnavailable',
-                        'Opus audio decoding is unavailable in this browser.',
-                      )}
-                    </span>
+            </div>
+            <Button
+              type="primary"
+              icon={<ArrowRightOutlined />}
+              onClick={() => connect()}
+              disabled={!ready || activeSession}
+            >
+              {text('connect', 'Connect')}
+            </Button>
+            <Button
+              danger={activeSession}
+              icon={<DisconnectOutlined />}
+              onClick={disconnect}
+              disabled={!activeSession}
+            >
+              {text('disconnect', 'Disconnect')}
+            </Button>
+            <span className={styles.connectionHint}>
+              <SafetyCertificateOutlined />
+              {text('nativeAuth', 'Verified by the remote device')}
+            </span>
+          </div>
+          {!activeSession && (
+            <DevicePicker disabled={!ready} onConnect={connect} />
+          )}
+          <div className={styles.notices} aria-live="polite">
+            {connected && (
+              <div className={styles.pasteHint} role="status">
+                <CopyOutlined />
+                <span>
+                  {text(
+                    pasteStatus ? 'paste.' + pasteStatus : 'pasteHint',
+                    pasteStatus === 'failed'
+                      ? 'Paste failed. Use clipboard tools to retry.'
+                      : pasteStatus === 'denied'
+                      ? 'The remote device has disabled clipboard or keyboard access.'
+                      : pasteStatus === 'sending'
+                      ? 'Sending clipboard…'
+                      : pasteStatus === 'sent'
+                      ? 'Paste sent to the remote device.'
+                      : 'Focus the remote desktop and press Ctrl/Cmd+V to paste text or a PNG image.',
                   )}
-                  <Button
-                    disabled={!audioSupported || !permissions.audio}
-                    onClick={() => void toggleAudio()}
-                  >
-                    {text(
-                      audioEnabled ? 'audioStop' : 'audioStart',
-                      audioEnabled ? 'Stop audio' : 'Play audio',
-                    )}
+                </span>
+                {(pasteStatus === 'failed' || pasteStatus === 'denied') && (
+                  <Button type="link" onClick={() => chooseTool('clipboard')}>
+                    {text('toolClipboard', 'Clipboard')}
                   </Button>
-                  <Button
-                    disabled={!audioEnabled}
-                    onClick={() => {
-                      setMuted(!muted);
-                      player.current?.volume(!muted ? 0 : volume);
-                    }}
-                  >
-                    {text(muted ? 'unmute' : 'mute', muted ? 'Unmute' : 'Mute')}
+                )}
+              </div>
+            )}
+            {error && (
+              <Alert
+                type={error === 'password' ? 'warning' : 'error'}
+                showIcon
+                message={text(
+                  'error.' + error,
+                  'The operation failed. Disconnect and try again.',
+                )}
+              />
+            )}
+            {activeSession && kxVersion === 0 && (
+              <Alert
+                type="warning"
+                showIcon
+                message={text(
+                  'legacyEncryption',
+                  'The remote device uses a legacy encryption protocol with known security risks. Upgrade the remote client when possible.',
+                )}
+              />
+            )}
+            {connected && !permissions.keyboard && (
+              <Alert
+                type="warning"
+                showIcon
+                message={text(
+                  'keyboardDenied',
+                  'Keyboard and mouse are disabled by the remote device. Previously held keys or buttons may remain pressed; restore permission or press and release them on the remote device.',
+                )}
+              />
+            )}
+            {connected && tool !== 'files' && fileStatus.legacy && (
+              <Alert
+                type="warning"
+                showIcon
+                message={text(
+                  'legacyEncryption',
+                  'The remote device uses a legacy encryption protocol with known security risks. Upgrade the remote client when possible.',
+                )}
+              />
+            )}
+            {connected && tool !== 'files' && fileStatus.error && (
+              <Alert
+                type="error"
+                showIcon
+                message={text(
+                  'error.files',
+                  'File operation failed or was denied. Retry the file session.',
+                )}
+                action={
+                  <Button onClick={() => chooseTool('files')}>
+                    {text('files', 'File transfer')}
                   </Button>
-                  <input
-                    type="range"
-                    aria-label={text('volume', 'Volume')}
-                    min="0"
-                    max="1"
-                    step="0.05"
-                    value={volume}
-                    onChange={(event) => {
-                      const value = Number(event.target.value);
-                      setVolume(value);
-                      player.current?.volume(muted ? 0 : value);
-                    }}
-                  />
-                </>
-              )}
+                }
+              />
+            )}
+          </div>
+          <div className={styles.toolbar}>
+            <nav
+              className={styles.toolNav}
+              aria-label={text('tools', 'Session tools')}
+            >
+              {toolItems.map((item) => (
+                <button
+                  key={item.key}
+                  type="button"
+                  ref={(element) => {
+                    toolButtons.current[item.key] = element;
+                  }}
+                  className={styles.toolButton}
+                  aria-label={item.label}
+                  disabled={!connected}
+                  aria-expanded={tool === item.key}
+                  aria-controls={'web-client-tool-' + item.key}
+                  data-active={tool === item.key}
+                  onClick={() =>
+                    chooseTool(tool === item.key ? undefined : item.key)
+                  }
+                >
+                  {item.icon}
+                  <span>{item.label}</span>
+                  {item.key === 'files' && fileStatus.busy && (
+                    <span
+                      className={styles.activityDot}
+                      role="img"
+                      aria-label={text(
+                        'fileInProgress',
+                        'Transfer in progress',
+                      )}
+                    />
+                  )}
+                  {item.key === 'audio' && audioEnabled && (
+                    <span
+                      className={styles.activityDot}
+                      role="img"
+                      aria-label={text('audioPlaying', 'Audio is playing')}
+                    />
+                  )}
+                </button>
+              ))}
+            </nav>
+            <div className={styles.viewTools}>
               {connected && displays.length > 1 && (
-                <label>
+                <label className={styles.monitor}>
                   {text('display', 'Monitor')}
                   <select
+                    className={styles.select}
                     aria-label={text('display', 'Monitor')}
                     value={selectedDisplay}
                     onChange={(event) => {
@@ -651,231 +974,28 @@ export default function WebClientPage() {
                   </select>
                 </label>
               )}
-              {connected && (
-                <Button
-                  onClick={() => {
-                    if (!surface.current?.requestFullscreen) {
-                      setError('fullscreen');
-                      return;
-                    }
-                    void surface.current
-                      .requestFullscreen()
-                      .catch(() => setError('fullscreen'));
-                  }}
-                >
-                  {text('fullscreen', 'Fullscreen')}
-                </Button>
-              )}
-            </Space>
-            <Typography.Paragraph
-              type="secondary"
-              style={{ marginTop: 12, marginBottom: 0 }}
-            >
-              {text(
-                'notice',
-                'Connects through the configured server. The remote device must approve the session or accept its own password. Extensions require remote permissions and browser support.',
-              )}
-            </Typography.Paragraph>
-          </Card>
-          {error && (
-            <Alert
-              type={error === 'password' ? 'warning' : 'error'}
-              showIcon
-              message={text(
-                `error.${error}`,
-                'The operation failed. Disconnect and try again.',
-              )}
-            />
-          )}
-          {['authenticating', 'awaitingApproval'].includes(state) && (
-            <Card size="small">
-              <Space wrap>
-                <Input.Password
-                  aria-label={text('password', 'Remote device password')}
-                  placeholder={text('password', 'Remote device password')}
-                  autoComplete="off"
-                  value={password}
-                  onChange={(event) => setPassword(event.target.value)}
-                  onPressEnter={submit}
-                  maxLength={4096}
-                />
-                <Button onClick={submit} disabled={!password}>
-                  {text('authenticate', 'Send password')}
-                </Button>
-                <Typography.Text type="secondary">
-                  {text(
-                    'approval',
-                    'You can also approve the connection on the remote device.',
-                  )}
-                </Typography.Text>
-              </Space>
-            </Card>
-          )}
-          <div
-            ref={surface}
-            style={{
-              height: '70dvh',
-              minHeight: 260,
-              display: 'flex',
-              flexDirection: 'column',
-              overflow: 'hidden',
-              background: '#111827',
-              borderRadius: 6,
-            }}
-          >
-            {connected && (
-              <div
-                style={{
-                  display: 'flex',
-                  flexWrap: 'wrap',
-                  gap: 8,
-                  padding: 8,
-                  color: 'white',
-                  flexShrink: 0,
-                }}
+
+              <Button
+                type="text"
+                icon={fullscreen ? <CompressOutlined /> : <ExpandOutlined />}
+                disabled={!connected}
+                onClick={toggleFullscreen}
               >
-                <label>
-                  {text('touchMode', 'Touch mode')}{' '}
-                  <select
-                    aria-label={text('touchMode', 'Touch mode')}
-                    value={touchMode}
-                    onChange={(event) => {
-                      input.current?.release();
-                      setTouchMode(event.target.value as TouchMode);
-                    }}
-                  >
-                    <option value="pointer">
-                      {text('touchPointer', 'Point / drag')}
-                    </option>
-                    <option value="scroll">
-                      {text('touchScroll', 'Scroll')}
-                    </option>
-                    <option value="zoom">
-                      {text('touchZoom', 'Pan zoomed view')}
-                    </option>
-                  </select>
-                </label>
-                <Button
-                  onClick={() => {
-                    setViewport({ scale: 1, x: 0, y: 0 });
-                    touch.current?.setViewport({ scale: 1, x: 0, y: 0 });
-                    setTouchMode('pointer');
-                  }}
-                >
-                  {text('zoomReset', 'Reset zoom')}
-                </Button>
-                <Button
-                  disabled={!permissions.keyboard || !displayReady}
-                  onClick={() => setSoftKeyboard(!softKeyboard)}
-                >
-                  {text('softKeyboard', 'Keyboard')}
-                </Button>
-                {[
-                  hbb.ControlKey.Control,
-                  hbb.ControlKey.Alt,
-                  hbb.ControlKey.Shift,
-                ].map((controlKey) => (
-                  <Button
-                    key={controlKey}
-                    aria-pressed={heldModifiers.includes(controlKey)}
-                    disabled={!permissions.keyboard || !displayReady}
-                    onClick={() => {
-                      const down = !modifierRef.current.includes(controlKey);
-                      modifierRef.current = down
-                        ? [...modifierRef.current, controlKey]
-                        : modifierRef.current.filter(
-                            (key) => key !== controlKey,
-                          );
-                      setHeldModifiers([...modifierRef.current]);
-                      post({
-                        type: 'input',
-                        input: { keyEvent: { controlKey, down } },
-                      });
-                    }}
-                  >
-                    {hbb.ControlKey[controlKey]}
-                  </Button>
-                ))}
-                {[
-                  hbb.ControlKey.Tab,
-                  hbb.ControlKey.Return,
-                  hbb.ControlKey.Escape,
-                  hbb.ControlKey.Backspace,
-                ].map((controlKey) => (
-                  <Button
-                    key={controlKey}
-                    disabled={!permissions.keyboard || !displayReady}
-                    onClick={() =>
-                      post({
-                        type: 'input',
-                        input: {
-                          keyEvent: {
-                            controlKey,
-                            press: true,
-                            modifiers: modifierRef.current,
-                          },
-                        },
-                      })
-                    }
-                  >
-                    {hbb.ControlKey[controlKey]}
-                  </Button>
-                ))}
-                {softKeyboard && (
-                  <Space wrap>
-                    <Input
-                      aria-label={text('softText', 'Keyboard text')}
-                      value={softText}
-                      maxLength={MAX_TEXT_BYTES}
-                      onChange={(event) => setSoftText(event.target.value)}
-                    />
-                    <Button
-                      disabled={
-                        !permissions.keyboard || !displayReady || !softText
-                      }
-                      onClick={() => {
-                        post({ type: 'text', text: softText });
-                        setSoftText('');
-                      }}
-                    >
-                      {text('sendText', 'Send text')}
-                    </Button>
-                  </Space>
+                {text(
+                  fullscreen ? 'exitFullscreen' : 'fullscreen',
+                  fullscreen ? 'Exit fullscreen' : 'Fullscreen',
                 )}
-              </div>
-            )}
-            {activeSession && kxVersion === 0 && (
-              <Alert
-                type="warning"
-                showIcon
-                style={{ flexShrink: 0 }}
-                message={text(
-                  'legacyEncryption',
-                  'The remote device uses a legacy encryption protocol with known security risks. Upgrade the remote client when possible.',
-                )}
-              />
-            )}
-            {connected && !permissions.keyboard && (
-              <Alert
-                type="warning"
-                showIcon
-                style={{ flexShrink: 0 }}
-                message={text(
-                  'keyboardDenied',
-                  'Keyboard and mouse are disabled by the remote device. Previously held keys or buttons may remain pressed; restore permission or press and release them on the remote device.',
-                )}
-              />
-            )}
+              </Button>
+            </div>
+          </div>
+          <div
+            className={styles.workspace}
+            data-tools-open={!!tool}
+            data-active-session={activeSession}
+          >
             <div
-              style={{
-                position: 'relative',
-                flex: 1,
-                minHeight: 0,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                overflow: 'hidden',
-              }}
+              className={styles.screen}
+              data-ready={connected && displayReady}
             >
               <canvas
                 ref={canvas}
@@ -903,107 +1023,428 @@ export default function WebClientPage() {
               <div
                 ref={pointer}
                 aria-hidden="true"
-                style={{
-                  display: 'none',
-                  position: 'absolute',
-                  width: 8,
-                  height: 8,
-                  border: '1px solid white',
-                  background: '#fa541c',
-                  borderRadius: '50%',
-                  pointerEvents: 'none',
-                }}
+                className={styles.pointer}
               />
+              {(!connected || !displayReady) && (
+                <div className={styles.stageOverlay}>
+                  <div className={styles.stageCard}>
+                    <span className={styles.stageIcon}>
+                      <DesktopOutlined />
+                    </span>
+                    <span className={styles.eyebrow}>
+                      {text('remoteWorkspace', 'REMOTE WORKSPACE')}
+                    </span>
+                    <h2>
+                      {text(
+                        authenticating
+                          ? 'authTitle'
+                          : connected
+                          ? 'waitingFrame'
+                          : activeSession
+                          ? 'state.' + state
+                          : state === 'failed'
+                          ? 'state.failed'
+                          : 'idleTitle',
+                        authenticating
+                          ? 'Approve your connection'
+                          : connected
+                          ? 'Waiting for the desktop'
+                          : activeSession
+                          ? state
+                          : state === 'failed'
+                          ? 'Connection failed'
+                          : 'A desktop, one connection away',
+                      )}
+                    </h2>
+                    <p>
+                      {text(
+                        authenticating
+                          ? 'approval'
+                          : activeSession
+                          ? 'connectingHint'
+                          : 'idleHint',
+                        authenticating
+                          ? 'You can also approve the connection on the remote device.'
+                          : activeSession
+                          ? 'The session is being prepared. You can disconnect at any time.'
+                          : 'Choose a device above or enter its ID, then authenticate to begin.',
+                      )}
+                    </p>
+                    {authenticating && (
+                      <div className={styles.authForm}>
+                        <Input.Password
+                          aria-label={text(
+                            'password',
+                            'Remote device password',
+                          )}
+                          placeholder={text(
+                            'password',
+                            'Remote device password',
+                          )}
+                          autoComplete="off"
+                          value={password}
+                          onChange={(event) => setPassword(event.target.value)}
+                          onPressEnter={submit}
+                          maxLength={4096}
+                        />
+                        <Button
+                          type="primary"
+                          onClick={submit}
+                          disabled={!password}
+                        >
+                          {text('authenticate', 'Send password')}
+                        </Button>
+                      </div>
+                    )}
+                    {!activeSession && (
+                      <div className={styles.stageSteps}>
+                        <span>
+                          <b>01</b>
+                          {text('stepDevice', 'Choose device')}
+                        </span>
+                        <span>
+                          <b>02</b>
+                          {text('stepApprove', 'Authenticate')}
+                        </span>
+                        <span>
+                          <b>03</b>
+                          {text('stepControl', 'Take control')}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
-          </div>
-          <Typography.Text type="secondary">
-            {text(
-              'touchNotice',
-              'Touch to click, move to drag, hold for right click. Pinch with two fingers to zoom locally; use Scroll mode for the remote wheel. Send keyboard text after IME composition.',
-            )}
-          </Typography.Text>
-          <FilePanel
-            key={`files-${generation.current}`}
-            ref={files}
-            enabled={connected}
-            post={post}
-            text={text}
-          />
-          <ImageClipboard
-            key={`images-${generation.current}`}
-            enabled={connected && permissions.clipboard}
-            remote={remoteImage}
-            post={post}
-            text={text}
-            fail={() => setError('clipboard')}
-          />
-          <Card size="small" title={text('clipboard', 'Text clipboard')}>
-            <Space direction="vertical" style={{ width: '100%' }}>
-              {!permissions.clipboard && (
-                <Alert
-                  type="warning"
-                  message={text(
-                    'clipboardDenied',
-                    'Clipboard is disabled by the remote device.',
-                  )}
+            <aside
+              className={styles.toolsPanel}
+              hidden={!tool}
+              aria-label={text('tools', 'Session tools')}
+            >
+              <div className={styles.panelHeader}>
+                <strong>
+                  {toolItems.find((item) => item.key === tool)?.label}
+                </strong>
+                <Button
+                  type="text"
+                  icon={<CloseOutlined />}
+                  aria-label={text('closeTools', 'Close tools')}
+                  onClick={closeTool}
                 />
-              )}
-              <Input.TextArea
-                aria-label={text('localText', 'Local text')}
-                placeholder={text('localText', 'Paste local text here')}
-                value={localText}
-                onChange={(event) => setLocalText(event.target.value)}
-                maxLength={MAX_TEXT_BYTES}
-                autoSize={{ minRows: 2, maxRows: 6 }}
-              />
-              <Space wrap>
-                <Button
-                  disabled={!connected || !permissions.clipboard}
-                  onClick={() =>
-                    post({
-                      type: 'clipboard',
-                      text: localText,
-                    })
-                  }
+              </div>
+              <div className={styles.panelBody}>
+                <div id="web-client-tool-files" hidden={tool !== 'files'}>
+                  <FilePanel
+                    key={'files-' + generation.current}
+                    ref={files}
+                    enabled={connected}
+                    post={post}
+                    text={text}
+                    onStatusChange={setFileStatus}
+                  />
+                </div>
+                <div
+                  id="web-client-tool-clipboard"
+                  hidden={tool !== 'clipboard'}
                 >
-                  {text('sendClipboard', 'Send to remote clipboard')}
-                </Button>
-                <Button
-                  disabled={!connected || !permissions.keyboard || !localText}
-                  onClick={() =>
-                    post({
-                      type: 'text',
-                      text: localText,
-                    })
-                  }
-                >
-                  {text('sendText', 'Send text as input')}
-                </Button>
-              </Space>
-              <Input.TextArea
-                aria-label={text('remoteText', 'Remote clipboard text')}
-                placeholder={text('remoteText', 'Remote clipboard text')}
-                value={remoteText}
-                readOnly
-                autoSize={{ minRows: 2, maxRows: 6 }}
-              />
-              <Button
-                disabled={!connected || !permissions.clipboard}
-                onClick={() => void copyRemote()}
-              >
-                {text('copyRemote', 'Copy remote text')}
-              </Button>
-              {clipboardFallback && (
-                <Typography.Text>
-                  {text(
-                    'clipboardFallback',
-                    'Clipboard access was denied. Select and copy the remote text in the box manually.',
+                  <Card
+                    size="small"
+                    title={text('clipboard', 'Text clipboard')}
+                  >
+                    <Space direction="vertical" style={{ width: '100%' }}>
+                      {!permissions.clipboard && (
+                        <Alert
+                          type="warning"
+                          message={text(
+                            'clipboardDenied',
+                            'Clipboard is disabled by the remote device.',
+                          )}
+                        />
+                      )}
+                      <Input.TextArea
+                        aria-label={text('localText', 'Local text')}
+                        placeholder={text('localText', 'Paste local text here')}
+                        value={localText}
+                        onChange={(event) => setLocalText(event.target.value)}
+                        maxLength={MAX_TEXT_BYTES}
+                        autoSize={{ minRows: 2, maxRows: 6 }}
+                      />
+                      <Space wrap>
+                        <Button
+                          disabled={!connected || !permissions.clipboard}
+                          onClick={() =>
+                            post({
+                              type: 'clipboard',
+                              text: localText,
+                            })
+                          }
+                        >
+                          {text('sendClipboard', 'Send to remote clipboard')}
+                        </Button>
+                        <Button
+                          disabled={
+                            !connected || !permissions.keyboard || !localText
+                          }
+                          onClick={() =>
+                            post({
+                              type: 'text',
+                              text: localText,
+                            })
+                          }
+                        >
+                          {text('sendText', 'Send text as input')}
+                        </Button>
+                      </Space>
+                      <Input.TextArea
+                        aria-label={text('remoteText', 'Remote clipboard text')}
+                        placeholder={text(
+                          'remoteText',
+                          'Remote clipboard text',
+                        )}
+                        value={remoteText}
+                        readOnly
+                        autoSize={{ minRows: 2, maxRows: 6 }}
+                      />
+                      <Button
+                        disabled={!connected || !permissions.clipboard}
+                        onClick={() => void copyRemote()}
+                      >
+                        {text('copyRemote', 'Copy remote text')}
+                      </Button>
+                      {clipboardFallback && (
+                        <Typography.Text>
+                          {text(
+                            'clipboardFallback',
+                            'Clipboard access was denied. Select and copy the remote text in the box manually.',
+                          )}
+                        </Typography.Text>
+                      )}
+                    </Space>
+                  </Card>
+                  <ImageClipboard
+                    key={'images-' + generation.current}
+                    enabled={connected && permissions.clipboard}
+                    remote={remoteImage}
+                    post={post}
+                    text={text}
+                    fail={() => setError('clipboard')}
+                  />
+                </div>
+                <div id="web-client-tool-input" hidden={tool !== 'input'}>
+                  <p className={styles.panelHint}>
+                    {text(
+                      'keyboardNotice',
+                      'Click the desktop to control it. Browser/system shortcuts may be reserved. Use Send text for IME/Unicode input. Losing focus releases held keys while input permission is available.',
+                    )}
+                  </p>
+                  <div className={styles.inputControls}>
+                    <label>
+                      {text('touchMode', 'Touch mode')}{' '}
+                      <select
+                        className={styles.select}
+                        aria-label={text('touchMode', 'Touch mode')}
+                        value={touchMode}
+                        onChange={(event) => {
+                          input.current?.release();
+                          setTouchMode(event.target.value as TouchMode);
+                        }}
+                      >
+                        <option value="pointer">
+                          {text('touchPointer', 'Point / drag')}
+                        </option>
+                        <option value="scroll">
+                          {text('touchScroll', 'Scroll')}
+                        </option>
+                        <option value="zoom">
+                          {text('touchZoom', 'Pan zoomed view')}
+                        </option>
+                      </select>
+                    </label>
+                    <Button
+                      onClick={() => {
+                        setViewport({ scale: 1, x: 0, y: 0 });
+                        touch.current?.setViewport({ scale: 1, x: 0, y: 0 });
+                        setTouchMode('pointer');
+                      }}
+                    >
+                      {text('zoomReset', 'Reset zoom')}
+                    </Button>
+                    <Button
+                      disabled={!permissions.keyboard || !displayReady}
+                      onClick={() => {
+                        releaseModifiers();
+                        setSoftKeyboard(!softKeyboard);
+                      }}
+                    >
+                      {text('softKeyboard', 'Keyboard')}
+                    </Button>
+                    {[
+                      hbb.ControlKey.Control,
+                      hbb.ControlKey.Alt,
+                      hbb.ControlKey.Shift,
+                    ].map((controlKey) => (
+                      <Button
+                        key={controlKey}
+                        aria-pressed={heldModifiers.includes(controlKey)}
+                        disabled={!permissions.keyboard || !displayReady}
+                        onClick={() => {
+                          const down =
+                            !modifierRef.current.includes(controlKey);
+                          modifierRef.current = down
+                            ? [...modifierRef.current, controlKey]
+                            : modifierRef.current.filter(
+                                (key) => key !== controlKey,
+                              );
+                          setHeldModifiers([...modifierRef.current]);
+                          post({
+                            type: 'input',
+                            input: { keyEvent: { controlKey, down } },
+                          });
+                        }}
+                      >
+                        {hbb.ControlKey[controlKey]}
+                      </Button>
+                    ))}
+                    {[
+                      hbb.ControlKey.Tab,
+                      hbb.ControlKey.Return,
+                      hbb.ControlKey.Escape,
+                      hbb.ControlKey.Backspace,
+                    ].map((controlKey) => (
+                      <Button
+                        key={controlKey}
+                        disabled={!permissions.keyboard || !displayReady}
+                        onClick={() =>
+                          post({
+                            type: 'input',
+                            input: {
+                              keyEvent: {
+                                controlKey,
+                                press: true,
+                                modifiers: modifierRef.current,
+                              },
+                            },
+                          })
+                        }
+                      >
+                        {hbb.ControlKey[controlKey]}
+                      </Button>
+                    ))}
+                    {softKeyboard && (
+                      <Space wrap className={styles.keyboardText}>
+                        <Input
+                          aria-label={text('softText', 'Keyboard text')}
+                          value={softText}
+                          maxLength={MAX_TEXT_BYTES}
+                          onChange={(event) => setSoftText(event.target.value)}
+                        />
+                        <Button
+                          disabled={
+                            !permissions.keyboard || !displayReady || !softText
+                          }
+                          onClick={() => {
+                            post({ type: 'text', text: softText });
+                            setSoftText('');
+                          }}
+                        >
+                          {text('sendText', 'Send text')}
+                        </Button>
+                      </Space>
+                    )}
+                  </div>
+                  <p className={styles.panelHint}>
+                    {text(
+                      'touchNotice',
+                      'Touch to click, move to drag, hold for right click. Pinch with two fingers to zoom locally; use Scroll mode for the remote wheel. Send keyboard text after IME composition.',
+                    )}
+                  </p>
+                </div>
+                <div id="web-client-tool-audio" hidden={tool !== 'audio'}>
+                  <div className={styles.audioHero}>
+                    <SoundOutlined />
+                    <strong>{text('toolAudio', 'Audio')}</strong>
+                    <p>
+                      {text(
+                        'audioHint',
+                        'Start playback when you want to hear the remote device. Playback stops when the session ends.',
+                      )}
+                    </p>
+                  </div>
+                  {!permissions.audio && (
+                    <Alert
+                      type="warning"
+                      showIcon
+                      message={text(
+                        'audioDenied',
+                        'Audio is disabled by the remote device.',
+                      )}
+                    />
                   )}
-                </Typography.Text>
+                  <div className={styles.audioControls}>
+                    {!audioSupported && (
+                      <span>
+                        {text(
+                          'audioUnavailable',
+                          'Opus audio decoding is unavailable in this browser.',
+                        )}
+                      </span>
+                    )}
+                    <Button
+                      disabled={!audioSupported || !permissions.audio}
+                      onClick={() => void toggleAudio()}
+                    >
+                      {text(
+                        audioEnabled ? 'audioStop' : 'audioStart',
+                        audioEnabled ? 'Stop audio' : 'Play audio',
+                      )}
+                    </Button>
+                    <Button
+                      disabled={!audioEnabled}
+                      onClick={() => {
+                        setMuted(!muted);
+                        player.current?.volume(!muted ? 0 : volume);
+                      }}
+                    >
+                      {text(
+                        muted ? 'unmute' : 'mute',
+                        muted ? 'Unmute' : 'Mute',
+                      )}
+                    </Button>
+                    <input
+                      type="range"
+                      aria-label={text('volume', 'Volume')}
+                      min="0"
+                      max="1"
+                      step="0.05"
+                      value={volume}
+                      onChange={(event) => {
+                        const value = Number(event.target.value);
+                        setVolume(value);
+                        player.current?.volume(muted ? 0 : value);
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+            </aside>
+          </div>
+          <footer className={styles.footer}>
+            <span>
+              <SafetyCertificateOutlined />
+              {text(
+                connected ? 'sessionHint' : 'notice',
+                connected
+                  ? 'Click the desktop to control it. Open a tool only when you need it.'
+                  : 'Connects through the configured server. Native password or local approval is required. Extensions depend on remote permissions and browser support.',
               )}
-            </Space>
-          </Card>
-        </Space>
+            </span>
+            {connected && display && (
+              <span className={styles.resolution}>
+                {display.width} × {display.height}
+              </span>
+            )}
+          </footer>
+        </section>
       )}
     </PageContainer>
   );

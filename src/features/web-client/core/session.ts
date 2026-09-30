@@ -384,8 +384,8 @@ export class RemoteSession {
         ? key.controlKey != null
           ? `control:${key.mode ?? hbb.KeyboardMode.Legacy}:${key.controlKey}`
           : key.chr != null
-            ? `chr:${key.mode ?? hbb.KeyboardMode.Legacy}:${key.chr}`
-            : undefined
+          ? `chr:${key.mode ?? hbb.KeyboardMode.Legacy}:${key.chr}`
+          : undefined
         : undefined;
     if (
       keyId &&
@@ -450,6 +450,25 @@ export class RemoteSession {
         clipboards: [{ format: hbb.ClipboardFormat.ImagePng, content: bytes }],
       },
     });
+  }
+
+  async flushClipboard() {
+    const transport = this.transport;
+    if (
+      !transport ||
+      this.kind !== 'desktop' ||
+      this.state !== 'connected' ||
+      !this.permissions.clipboard
+    )
+      throw new SessionError('denied');
+    // 等待本地发送队列清空，不将其当作远端系统写入确认。
+    await transport.drain(0);
+    if (
+      transport !== this.transport ||
+      this.state !== 'connected' ||
+      !this.permissions.clipboard
+    )
+      throw new SessionError('cancelled');
   }
 
   selectDisplay(index: number) {

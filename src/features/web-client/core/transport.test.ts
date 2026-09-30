@@ -142,6 +142,26 @@ test('encrypted packet bounds include the authentication tag', async () => {
   expect(() => cipher.encrypt(new Uint8Array())).toThrow('encryption');
 });
 
+test('剪贴板可等待全部本地发送缓冲清空，而非仅下降到文件低水位', async () => {
+  jest.useFakeTimers();
+  const { socket, transport } = create();
+  const open = transport.open('wss://example.test');
+  socket.opened();
+  await open;
+  socket.bufferedAmount = 1024;
+  let finished = false;
+  const draining = transport.drain(0).then(() => {
+    finished = true;
+  });
+  await jest.advanceTimersByTimeAsync(20);
+  expect(finished).toBe(false);
+  socket.bufferedAmount = 0;
+  await jest.advanceTimersByTimeAsync(10);
+  await draining;
+  expect(finished).toBe(true);
+  transport.close();
+});
+
 test('文件背压等待发送缓冲下降，断开立即使后续发送失效', async () => {
   jest.useFakeTimers();
   const { socket, transport } = create();

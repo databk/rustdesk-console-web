@@ -5,6 +5,7 @@ import {
   MAX_TEXT_BYTES,
 } from '../clipboard/text';
 import { clipboardPng } from '../clipboard/image';
+import { RemotePaste } from '../clipboard/paste';
 import { cryptoReady } from '../core/crypto';
 import type { Command, SessionEvent } from './contract';
 import { FileTransfer } from '../files/transfer';
@@ -29,6 +30,8 @@ let decoded = 0;
 let generation = 0;
 let videoSupported = false;
 let clipboardAllowed = true;
+let keyboardAllowed = true;
+let peerPlatform = '';
 let imageBusy = false;
 let imageEpoch = 0;
 async function convertImage(clipboard: hbb.IClipboard, outbound: boolean) {
@@ -138,6 +141,7 @@ function resetAudio() {
 }
 
 function disposeVideo() {
+  paste.cancel();
   inputReady = false;
   decoder?.dispose();
   decoder = undefined;
@@ -174,6 +178,8 @@ const session = new RemoteSession({
   error: (code) => post({ type: 'error', code }),
   permissions: (permissions) => {
     clipboardAllowed = permissions.clipboard;
+    keyboardAllowed = permissions.keyboard;
+    if (!clipboardAllowed || !keyboardAllowed) paste.cancel();
     if (!clipboardAllowed) ++imageEpoch;
     audioAllowed = permissions.audio;
     if (!audioAllowed) {
@@ -187,6 +193,7 @@ const session = new RemoteSession({
     if (message.loginResponse?.peerInfo || message.peerInfo) {
       const peer = message.loginResponse?.peerInfo || message.peerInfo;
       if (!peer) return;
+      peerPlatform = peer.platform || '';
       const previousDisplay = display;
       displays = peer.displays || [];
       display =
@@ -310,6 +317,14 @@ const session = new RemoteSession({
   },
 });
 
+const paste = new RemotePaste({
+  clipboard: (value) => session.sendClipboard(value),
+  image: (bytes) => session.sendImage(bytes),
+  flush: () => session.flushClipboard(),
+  input: (value) => session.sendInput(value),
+  status: (status) => post({ type: 'paste-status', status }),
+});
+
 globalThis.onmessage = (event: MessageEvent<Command>) => {
   if (shuttingDown) return;
   const command = event.data;
@@ -339,6 +354,8 @@ globalThis.onmessage = (event: MessageEvent<Command>) => {
     connection = { profile: command.profile, id: command.id };
     ++imageEpoch;
     clipboardAllowed = true;
+    keyboardAllowed = true;
+    peerPlatform = '';
     audioAllowed = true;
     audioEnabled = false;
     resetAudio();
@@ -369,7 +386,24 @@ globalThis.onmessage = (event: MessageEvent<Command>) => {
   else if (command.type === 'password')
     void session.submitPassword(command.password);
   else if (command.type === 'disconnect') session.disconnect();
-  else if (
+  else if (command.type === 'cancel-paste') paste.cancel();
+  else if (command.type === 'paste') {
+    const current = generation;
+    const epoch = displayGeneration;
+    void paste.send(
+      command.content,
+      () =>
+        current === generation &&
+        epoch === displayGeneration &&
+        command.displayGeneration === displayGeneration &&
+        desktopConnected &&
+        inputReady &&
+        !awaitingDisplay &&
+        keyboardAllowed &&
+        clipboardAllowed,
+      /mac/i.test(peerPlatform),
+    );
+  } else if (
     command.type === 'rendered' &&
     command.displayGeneration === displayGeneration
   ) {
@@ -408,9 +442,17 @@ globalThis.onmessage = (event: MessageEvent<Command>) => {
     !awaitingDisplay &&
     inputReady &&
     command.displayGeneration === displayGeneration
-  )
+  ) {
+    // 新的点击、滚动或按键会改变输入目标，取消尚未发出的粘贴快捷键。
+    if (
+      command.input.keyEvent?.down ||
+      command.input.keyEvent?.press ||
+      (command.input.mouseEvent &&
+        ((command.input.mouseEvent.mask || 0) & 7) !== 0)
+    )
+      paste.cancel();
     session.sendInput(command.input);
-  else if (command.type === 'image')
+  } else if (command.type === 'image')
     void convertImage(
       { content: command.bytes, format: hbb.ClipboardFormat.ImagePng },
       true,

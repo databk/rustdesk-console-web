@@ -1,4 +1,61 @@
 export default {
+  'webClient.devicesTitle': 'Accessible devices',
+  'webClient.devicesHint':
+    'Choose a device available to your account. Remote approval or password is still required.',
+  'webClient.devicesRefresh': 'Refresh devices',
+  'webClient.devicesSearch': 'Search device ID',
+  'webClient.devicesOnlineOnly': 'Online only',
+  'webClient.devicesFailed':
+    'Could not load devices. Refresh to retry, or enter an ID above.',
+  'webClient.devicesEmpty':
+    'No matching devices are available to this account. You can still enter an ID above.',
+  'webClient.deviceOnline': 'Online',
+  'webClient.deviceOffline': 'Offline',
+  'webClient.deviceCount': 'devices',
+  'webClient.search': 'Search',
+  'webClient.previous': 'Previous',
+  'webClient.next': 'Next',
+  'webClient.pasteHint':
+    'Focus the remote desktop and press Ctrl/Cmd+V to paste text or a PNG image.',
+  'webClient.paste.sending': 'Sending clipboard…',
+  'webClient.paste.sent': 'Paste sent to the remote device.',
+  'webClient.paste.failed':
+    'Direct paste failed or the content is not supported text / PNG. Use clipboard tools to retry.',
+  'webClient.paste.denied':
+    'The remote device has disabled clipboard or keyboard access.',
+  'webClient.workspaceSubtitle':
+    'Your remote desktop, with everything within reach.',
+  'webClient.idPlaceholder': 'Enter the device ID',
+  'webClient.nativeAuth': 'Verified by the remote device',
+  'webClient.toolClipboard': 'Clipboard',
+  'webClient.toolInput': 'Input controls',
+  'webClient.toolAudio': 'Audio',
+  'webClient.tools': 'Session tools',
+  'webClient.closeTools': 'Close tools',
+  'webClient.exitFullscreen': 'Exit fullscreen',
+  'webClient.remoteWorkspace': 'REMOTE WORKSPACE',
+  'webClient.idleTitle': 'A desktop, one connection away',
+  'webClient.idleHint':
+    'Choose a device above or enter its ID, then authenticate to begin.',
+  'webClient.authTitle': 'Approve your connection',
+  'webClient.waitingFrame': 'Waiting for the desktop',
+  'webClient.connectingHint':
+    'The session is being prepared. You can disconnect at any time.',
+  'webClient.stepDevice': 'Choose device',
+  'webClient.stepApprove': 'Authenticate',
+  'webClient.stepControl': 'Take control',
+  'webClient.audioHint':
+    'Start playback when you want to hear the remote device. Playback stops when the session ends.',
+  'webClient.audioDenied': 'Audio is disabled by the remote device.',
+  'webClient.audioPlaying': 'Audio is playing',
+  'webClient.fileInProgress': 'Transfer in progress',
+  'webClient.sessionHint':
+    'Click the desktop to control it. Open a tool only when you need it.',
+  'webClient.fileEmpty': 'This directory is empty',
+  'webClient.fileDownload': 'Download file',
+  'webClient.imagePreview': 'Remote image preview',
+  'webClient.imageEmpty': 'Remote images will appear here',
+
   'webClient.legacyEncryption':
     'The remote device uses a legacy encryption protocol with known security risks. Upgrade the remote client when possible.',
   'webClient.open': 'Connect in browser',

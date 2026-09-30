@@ -14,6 +14,8 @@ export type SessionCommand =
   | { type: 'select-display'; index: number }
   | { type: 'audio'; enabled: boolean }
   | { type: 'image'; bytes: Uint8Array }
+  | { type: 'paste'; content: { text: string } | { bytes: Uint8Array } }
+  | { type: 'cancel-paste' }
   | { type: 'files-connect' | 'files-disconnect'; fileGeneration: number }
   | { type: 'files-password'; password: string; fileGeneration: number }
   | { type: 'files-command'; command: FileCommand; fileGeneration: number }
@@ -28,6 +30,10 @@ export type Command = SessionCommand & {
   displayGeneration?: number;
 };
 export type SessionEvent =
+  | {
+      type: 'paste-status';
+      status: 'sending' | 'sent' | 'cancelled' | 'failed';
+    }
   | {
       type: 'ready';
       secureContext: boolean;

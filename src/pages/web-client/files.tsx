@@ -1,4 +1,12 @@
 import { Alert, Button, Card, Input, Space } from 'antd';
+import {
+  FolderOutlined,
+  FileOutlined,
+  DownloadOutlined,
+  UploadOutlined,
+  FolderOpenOutlined,
+} from '@ant-design/icons';
+import styles from './index.less';
 import React, {
   forwardRef,
   useEffect,
@@ -23,6 +31,12 @@ import type {
 } from '@/features/web-client/worker/contract';
 
 type FileWorkerEvent = Extract<WorkerEvent, { fileGeneration: number }>;
+export interface FilePanelStatus {
+  state: SessionState;
+  legacy: boolean;
+  error: string;
+  busy: boolean;
+}
 export interface FilePanelHandle {
   handle(event: FileWorkerEvent): void;
   dispose(): void;
@@ -31,10 +45,11 @@ export const FilePanel = forwardRef<
   FilePanelHandle,
   {
     enabled: boolean;
+    onStatusChange?: (status: FilePanelStatus) => void;
     post: (command: SessionCommand) => void;
     text: (key: string, fallback: string) => string;
   }
->(function FilePanel({ enabled, post, text }, ref) {
+>(function FilePanel({ enabled, post, text, onStatusChange }, ref) {
   const [state, setState] = useState<SessionState>('idle');
   const [password, setPassword] = useState('');
   const [security, setSecurity] = useState<KxVersion>();
@@ -52,6 +67,14 @@ export const FilePanel = forwardRef<
     choosing ||
     (!!progress &&
       !['done', 'skipped', 'cancelled', 'error'].includes(progress.phase));
+  useEffect(() => {
+    onStatusChange?.({
+      state,
+      legacy: security === 0 && !['idle', 'closed', 'failed'].includes(state),
+      error,
+      busy,
+    });
+  }, [state, security, error, busy, onStatusChange]);
   const command = (value: FileCommand) =>
     post({
       type: 'files-command',
@@ -187,9 +210,9 @@ export const FilePanel = forwardRef<
     }
   };
   return (
-    <Card size="small" title={text('files', 'File transfer')}>
+    <Card className={styles.featureCard} size="small">
       <Space direction="vertical" style={{ width: '100%' }}>
-        <span>
+        <span className={styles.panelHint}>
           {text(
             'fileAuthNotice',
             'File transfer requires its own remote authentication. Files are processed one at a time; downloads without a file picker are limited to 16 MiB.',
@@ -224,7 +247,9 @@ export const FilePanel = forwardRef<
           >
             {text('fileDisconnect', 'Disconnect files')}
           </Button>
-          <span>{text(`state.${state}`, state)}</span>
+          <span className={styles.fileState} role="status">
+            {text(`state.${state}`, state)}
+          </span>
         </Space>
         {security === 0 && (
           <Alert
@@ -298,8 +323,8 @@ export const FilePanel = forwardRef<
                 {text('fileUp', 'Parent directory')}
               </Button>
             </Space>
-            <label>
-              {text('fileUpload', 'Upload files')}
+            <label className={styles.uploadField}>
+              <UploadOutlined /> {text('fileUpload', 'Upload files')}
               <input
                 aria-label={text('fileUpload', 'Upload files')}
                 type="file"
@@ -312,22 +337,55 @@ export const FilePanel = forwardRef<
                 }}
               />
             </label>
-            <div style={{ maxHeight: 240, overflow: 'auto' }}>
+            <div className={styles.fileList}>
+              {entries.length === 0 && (
+                <div className={styles.emptyFiles}>
+                  <FolderOpenOutlined />
+                  <span>{text('fileEmpty', 'This directory is empty')}</span>
+                </div>
+              )}
               <ul>
                 {entries.map((entry) => (
                   <li key={entry.path}>
-                    <Button
+                    <button
+                      type="button"
+                      className={styles.fileRow}
+                      aria-label={
+                        entry.directory
+                          ? entry.name
+                          : text('fileDownload', 'Download file') +
+                            ': ' +
+                            entry.name
+                      }
                       disabled={busy}
+                      title={
+                        entry.directory
+                          ? entry.name
+                          : text('fileDownload', 'Download file') +
+                            ': ' +
+                            entry.name
+                      }
                       onClick={() =>
                         entry.directory
                           ? command({ type: 'list', path: entry.path })
                           : void download(entry)
                       }
                     >
-                      {entry.directory ? '📁 ' : '↓ '}
-                      {entry.name}
-                    </Button>
-                    {!entry.directory && <span> {entry.size} B</span>}
+                      {entry.directory ? <FolderOutlined /> : <FileOutlined />}
+                      <span className={styles.fileName}>{entry.name}</span>
+                      {!entry.directory && (
+                        <>
+                          <span className={styles.fileSize}>
+                            {entry.size < 1024
+                              ? entry.size + ' B'
+                              : entry.size < 1048576
+                              ? (entry.size / 1024).toFixed(1) + ' KiB'
+                              : (entry.size / 1048576).toFixed(1) + ' MiB'}
+                          </span>
+                          <DownloadOutlined />
+                        </>
+                      )}
+                    </button>
                   </li>
                 ))}
               </ul>
@@ -335,7 +393,7 @@ export const FilePanel = forwardRef<
           </>
         )}
         {progress && (
-          <div role="status">
+          <div className={styles.transferProgress} role="status">
             {progress.name}:{' '}
             {text(`filePhase.${progress.phase}`, progress.phase)} (
             {progress.transferred} / {progress.total} B)

@@ -5,6 +5,35 @@ import { hbb } from '../protocol';
 import { modifiers, RemoteInput, remotePoint } from './input';
 
 const handlers: RemoteInput[] = [];
+test('Ctrl/Cmd+V 和 Shift+Insert 保留浏览器粘贴事件，先释放远端修饰键', () => {
+  for (const shortcut of [
+    { code: 'KeyV', key: 'v', ctrlKey: true },
+    { code: 'KeyV', key: 'v', metaKey: true },
+    { code: 'Insert', key: 'Insert', shiftKey: true },
+  ]) {
+    const { canvas, sent } = setup();
+    canvas.dispatchEvent(
+      new KeyboardEvent('keydown', {
+        code: 'ControlLeft',
+        key: 'Control',
+        ctrlKey: true,
+      }),
+    );
+    const event = new KeyboardEvent('keydown', {
+      ...shortcut,
+      cancelable: true,
+    });
+    canvas.dispatchEvent(event);
+    expect(event.defaultPrevented).toBe(false);
+    expect(sent).toHaveLength(2);
+    expect(sent[1].keyEvent).toMatchObject({
+      controlKey: hbb.ControlKey.Control,
+      down: false,
+    });
+    canvas.dispatchEvent(new KeyboardEvent('keyup', shortcut));
+    expect(sent).toHaveLength(2);
+  }
+});
 afterEach(() => {
   for (const handler of handlers) handler.dispose();
   handlers.length = 0;
@@ -15,7 +44,7 @@ function setup() {
   document.body.appendChild(canvas);
   canvas.tabIndex = 0;
   canvas.getBoundingClientRect = () =>
-    ({ left: 100, top: 50, width: 800, height: 450 }) as DOMRect;
+    ({ left: 100, top: 50, width: 800, height: 450 } as DOMRect);
   canvas.setPointerCapture = jest.fn();
   canvas.hasPointerCapture = () => false;
   const sent: { keyEvent?: hbb.IKeyEvent; mouseEvent?: hbb.IMouseEvent }[] = [];

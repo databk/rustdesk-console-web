@@ -1,4 +1,6 @@
 import { Button, Card, Space } from 'antd';
+import { PictureOutlined, UploadOutlined } from '@ant-design/icons';
+import styles from './index.less';
 import React, { useEffect, useRef, useState } from 'react';
 import { IMAGE_LIMITS } from '@/features/web-client/clipboard/image';
 import type { SessionCommand } from '@/features/web-client/worker/contract';
@@ -71,13 +73,27 @@ export function ImageClipboard({
     }
   };
   return (
-    <Card size="small" title={text('images', 'Image clipboard')}>
+    <Card
+      className={styles.featureCard}
+      size="small"
+      title={text('images', 'Image clipboard')}
+    >
+      <div className={styles.imagePreview}>
+        {url && enabled ? (
+          <img src={url} alt={text('imagePreview', 'Remote image preview')} />
+        ) : (
+          <>
+            <PictureOutlined />
+            <span>{text('imageEmpty', 'Remote images will appear here')}</span>
+          </>
+        )}
+      </div>
       <Space wrap>
         <Button disabled={!enabled} onClick={() => void read()}>
           {text('imageRead', 'Send clipboard PNG')}
         </Button>
-        <label>
-          {text('imageFile', 'Choose PNG')}
+        <label className={styles.uploadField}>
+          <UploadOutlined /> {text('imageFile', 'Choose PNG')}
           <input
             aria-label={text('imageFile', 'Choose PNG')}
             type="file"
@@ -98,7 +114,7 @@ export function ImageClipboard({
             {text('imageDownload', 'Download remote PNG')}
           </a>
         )}
-        <span>
+        <span className={styles.panelHint}>
           {text(
             'imageLimit',
             'PNG only; 4 MiB encoded, 4 million pixels. Use file selection or download if clipboard access is denied.',

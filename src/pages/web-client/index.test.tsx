@@ -66,12 +66,19 @@ jest.mock('antd', () => {
   }: TextAreaProps & { autoSize?: unknown }) =>
     React.createElement('textarea', props);
   return {
+    theme: { useToken: () => ({ token: {} }) },
     Card: Box,
     Space: Box,
     Tag: Box,
     Spin: Box,
     Typography: { Paragraph: Box, Text: Box },
-    Button: ({ children, type: _type, ...props }: ButtonProps) =>
+    Button: ({
+      children,
+      type: _type,
+      danger: _danger,
+      icon: _icon,
+      ...props
+    }: ButtonProps & { danger?: boolean; icon?: unknown }) =>
       React.createElement('button', props, children),
     Alert: ({ message }: { message: string }) =>
       React.createElement('div', null, message),
@@ -151,6 +158,114 @@ async function start() {
 function value(label: string) {
   return (screen.getByLabelText(label) as HTMLInputElement).value;
 }
+
+async function readyDesktop() {
+  await start();
+  worker.emit({
+    type: 'peer',
+    peer: { displays: [{ width: 800, height: 600 }], currentDisplay: 0 },
+    generation: worker.generation,
+  });
+  worker.emit({
+    type: 'frame',
+    frame: { displayWidth: 800, displayHeight: 600, close: jest.fn() },
+    displayGeneration: 0,
+    generation: worker.generation,
+  });
+  return screen.getByLabelText(
+    'Remote desktop. Focus to send keyboard and mouse input.',
+  );
+}
+
+test('无需打开面板即可从远程画面粘贴文字；不会截获文本框粘贴', async () => {
+  const desktop = await readyDesktop();
+  const clipboardData = { items: [], getData: () => '直接粘贴的文字' };
+  fireEvent.paste(desktop, { clipboardData });
+  expect(worker.postMessage).toHaveBeenCalledWith(
+    expect.objectContaining({
+      type: 'paste',
+      content: { text: '直接粘贴的文字' },
+      displayGeneration: 0,
+    }),
+  );
+  const count = worker.postMessage.mock.calls.length;
+  fireEvent.paste(screen.getByLabelText('Remote ID'), { clipboardData });
+  expect(worker.postMessage.mock.calls).toHaveLength(count);
+});
+
+test('截图粘贴优先使用 PNG；断开后丢弃尚未读完的图片', async () => {
+  const desktop = await readyDesktop();
+  let finish!: (value: ArrayBuffer) => void;
+  const bytes = new Uint8Array([1, 2, 3]);
+  const clipboardData = {
+    getData: () => 'image alt text',
+    items: [
+      {
+        kind: 'file',
+        type: 'image/png',
+        getAsFile: () => ({
+          size: 3,
+          arrayBuffer: () =>
+            new Promise<ArrayBuffer>((resolve) => {
+              finish = resolve;
+            }),
+        }),
+      },
+    ],
+  };
+  fireEvent.paste(desktop, { clipboardData });
+  await act(async () => finish(bytes.buffer));
+  expect(worker.postMessage).toHaveBeenCalledWith(
+    expect.objectContaining({ type: 'paste', content: { bytes } }),
+  );
+  const count = worker.postMessage.mock.calls.filter(
+    ([m]) => m.type === 'paste',
+  ).length;
+  fireEvent.paste(desktop, { clipboardData });
+  fireEvent.click(screen.getByText('Disconnect'));
+  await act(async () => finish(bytes.buffer));
+  expect(
+    worker.postMessage.mock.calls.filter(([m]) => m.type === 'paste'),
+  ).toHaveLength(count);
+});
+
+test('权限撤销与离开画面会取消粘贴，超限图片不读入内存', async () => {
+  const desktop = await readyDesktop();
+  const arrayBuffer = jest.fn();
+  fireEvent.paste(desktop, {
+    clipboardData: {
+      items: [
+        {
+          kind: 'file',
+          type: 'image/png',
+          getAsFile: () => ({ size: 5 * 1024 * 1024, arrayBuffer }),
+        },
+      ],
+    },
+  });
+  expect(arrayBuffer).not.toHaveBeenCalled();
+  expect(
+    screen.getByText('Paste failed. Use clipboard tools to retry.'),
+  ).toBeDefined();
+  fireEvent.blur(desktop);
+  expect(worker.postMessage).toHaveBeenLastCalledWith(
+    expect.objectContaining({ type: 'cancel-paste' }),
+  );
+  worker.emit({
+    type: 'permissions',
+    permissions: { keyboard: true, clipboard: false, audio: true, file: true },
+    generation: worker.generation,
+  });
+  const count = worker.postMessage.mock.calls.filter(
+    ([m]) => m.type === 'paste',
+  ).length;
+  fireEvent.paste(desktop, {
+    clipboardData: { items: [], getData: () => 'no access' },
+  });
+  expect(
+    worker.postMessage.mock.calls.filter(([m]) => m.type === 'paste'),
+  ).toHaveLength(count);
+});
 
 test('disconnect immediately discards queued old clipboard and frames, including after reconnect', async () => {
   await start();
@@ -297,7 +412,7 @@ test('input revocation explains held-key recovery and blocks text until permissi
     'Remote desktop. Focus to send keyboard and mouse input.',
   );
   expect(canvas.tabIndex).toBe(-1);
-  const surface = canvas.parentElement?.parentElement;
+  const surface = canvas.closest('section');
   if (!surface) throw new Error('Missing fullscreen surface');
   surface.requestFullscreen = jest
     .fn<() => Promise<void>>()
@@ -360,9 +475,9 @@ test('legacy warning survives password submission and login without blocking eit
     generation: worker.generation,
   });
   expect(screen.getByText(legacyNotice)).toBeDefined();
-  const fullscreenSurface = screen.getByLabelText(
-    'Remote desktop. Focus to send keyboard and mouse input.',
-  ).parentElement?.parentElement;
+  const fullscreenSurface = screen
+    .getByLabelText('Remote desktop. Focus to send keyboard and mouse input.')
+    .closest('section');
   expect(fullscreenSurface?.contains(screen.getByText(legacyNotice))).toBe(
     true,
   );
@@ -414,6 +529,7 @@ test.each(['configuration', 'crash', 'failed'] as const)(
 
 test('文件会话单独认证并拒绝断开后的目录事件', async () => {
   await start();
+  fireEvent.click(screen.getByRole('button', { name: 'File transfer' }));
   fireEvent.click(screen.getByText('Connect files'));
   const fileGeneration =
     worker.postMessage.mock.calls.at(-1)?.[0].fileGeneration;
@@ -516,6 +632,7 @@ test('独立审查：取消旧下载后其迟到写入失败不能取消新下�
   });
   try {
     await start();
+    fireEvent.click(screen.getByRole('button', { name: 'File transfer' }));
     fireEvent.click(screen.getByText('Connect files'));
     const generation = worker.generation;
     const fileGeneration =
@@ -555,7 +672,9 @@ test('独立审查：取消旧下载后其迟到写入失败不能取消新下�
         directory: false,
       })),
     });
-    fireEvent.click(screen.getByRole('button', { name: '↓ a.bin' }));
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Download file: a.bin' }),
+    );
     await waitFor(() =>
       expect(worker.postMessage).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -567,7 +686,9 @@ test('独立审查：取消旧下载后其迟到写入失败不能取消新下�
     emit({ type: 'chunk', id: 1, sequence: 1, bytes: new Uint8Array([1]) });
     fireEvent.click(screen.getByText('Cancel transfer'));
     progress(1, 'a.bin', 'cancelled');
-    fireEvent.click(screen.getByRole('button', { name: '↓ b.bin' }));
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Download file: b.bin' }),
+    );
     await waitFor(() =>
       expect(worker.postMessage).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -600,6 +721,7 @@ test('独立审查：页面隐藏时释放软键盘修饰键', async () => {
     displayGeneration: 0,
     generation: worker.generation,
   });
+  fireEvent.click(screen.getByRole('button', { name: 'Input controls' }));
   fireEvent.click(screen.getByRole('button', { name: 'Shift' }));
   const down = worker.postMessage.mock.calls.at(-1)?.[0];
   expect(down).toMatchObject({
@@ -671,4 +793,129 @@ test('独立审查：旧音频启动失败不能关闭后来启动的播放器',
   } finally {
     Object.assign(globalThis, { AudioContext: original });
   }
+});
+
+test('工具面板按需展开，切换和关闭时保留文件会话与画布', async () => {
+  await start();
+  const desktop = screen.getByLabelText(
+    'Remote desktop. Focus to send keyboard and mouse input.',
+  );
+  expect(screen.queryByRole('button', { name: 'Connect files' })).toBeNull();
+  fireEvent.click(screen.getByRole('button', { name: 'File transfer' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Connect files' }));
+  const fileGeneration =
+    worker.postMessage.mock.calls.at(-1)?.[0].fileGeneration;
+  worker.emit({
+    type: 'files-state',
+    state: 'connected',
+    generation: worker.generation,
+    fileGeneration,
+  });
+  worker.emit({
+    type: 'files-event',
+    event: { type: 'directory', path: 'C:/测试资料', entries: [] },
+    generation: worker.generation,
+    fileGeneration,
+  });
+  const count = worker.postMessage.mock.calls.length;
+  fireEvent.click(screen.getByRole('button', { name: 'Clipboard' }));
+  expect(screen.queryByRole('button', { name: 'Disconnect files' })).toBeNull();
+  worker.emit({
+    type: 'files-event',
+    event: { type: 'directory', path: 'C:/后台更新', entries: [] },
+    generation: worker.generation,
+    fileGeneration,
+  });
+  fireEvent.click(screen.getByRole('button', { name: 'File transfer' }));
+  expect(value('Remote directory')).toBe('C:/后台更新');
+  expect(worker.postMessage.mock.calls.slice(count)).toEqual([]);
+  expect(
+    screen.getByLabelText(
+      'Remote desktop. Focus to send keyboard and mouse input.',
+    ),
+  ).toBe(desktop);
+  fireEvent.click(screen.getByRole('button', { name: 'Close tools' }));
+  expect(screen.queryByRole('button', { name: 'Disconnect files' })).toBeNull();
+  expect(document.activeElement).toBe(
+    screen.getByRole('button', { name: 'File transfer' }),
+  );
+  expect(worker.postMessage.mock.calls.slice(count)).toEqual([]);
+});
+
+test('收起输入工具释放修饰键，隐藏区域不暴露可操作按钮', async () => {
+  await start();
+  worker.emit({
+    type: 'peer',
+    peer: { displays: [{ width: 800, height: 600 }], currentDisplay: 0 },
+    generation: worker.generation,
+  });
+  worker.emit({
+    type: 'frame',
+    frame: { displayWidth: 800, displayHeight: 600, close: jest.fn() },
+    displayGeneration: 0,
+    generation: worker.generation,
+  });
+  fireEvent.click(screen.getByRole('button', { name: 'Input controls' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Control' }));
+  const count = worker.postMessage.mock.calls.length;
+  fireEvent.click(screen.getByRole('button', { name: 'Close tools' }));
+  expect(worker.postMessage.mock.calls.slice(count)).toContainEqual([
+    expect.objectContaining({
+      type: 'input',
+      input: { keyEvent: { controlKey: hbb.ControlKey.Control, down: false } },
+    }),
+  ]);
+  expect(screen.queryByRole('button', { name: 'Control' })).toBeNull();
+  fireEvent.click(screen.getByRole('button', { name: 'Input controls' }));
+  expect(
+    screen
+      .getByRole('button', { name: 'Control' })
+      .getAttribute('aria-pressed'),
+  ).toBe('false');
+});
+
+test('文件面板隐藏时仍显示旧协议提醒和文件错误', async () => {
+  await start();
+  fireEvent.click(screen.getByRole('button', { name: 'File transfer' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Connect files' }));
+  const fileGeneration =
+    worker.postMessage.mock.calls.at(-1)?.[0].fileGeneration;
+  worker.emit({
+    type: 'files-security',
+    kxVersion: 0,
+    generation: worker.generation,
+    fileGeneration,
+  });
+  fireEvent.click(screen.getByRole('button', { name: 'Close tools' }));
+  const visibleNotices = screen
+    .getAllByText(legacyNotice)
+    .filter((element) => !element.closest('[hidden]'));
+  expect(visibleNotices).toHaveLength(1);
+  worker.emit({
+    type: 'files-error',
+    code: 'files',
+    generation: worker.generation,
+    fileGeneration,
+  });
+  expect(
+    screen
+      .getAllByText(
+        'File operation failed or was denied. Retry the file session.',
+      )
+      .some((element) => !element.closest('[hidden]')),
+  ).toBe(true);
+});
+
+test('全屏容器包括连接栏、工具面板与断开按钮', async () => {
+  await start();
+  const surface = screen.getByLabelText('Web Client');
+  const requestFullscreen = jest.fn<() => Promise<void>>().mockResolvedValue();
+  Object.assign(surface, { requestFullscreen });
+  fireEvent.click(screen.getByRole('button', { name: 'Fullscreen' }));
+  expect(requestFullscreen).toHaveBeenCalledTimes(1);
+  fireEvent.click(screen.getByRole('button', { name: 'File transfer' }));
+  expect(
+    surface.contains(screen.getByRole('button', { name: 'Close tools' })),
+  ).toBe(true);
+  expect(surface.contains(screen.getByText('Disconnect'))).toBe(true);
 });
