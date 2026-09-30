@@ -8,3 +8,27 @@ dist
 *.md
 !README.md
 Dockerfile
+
+# 排除开发缓存、配置、凭据及本机验收数据。
+.tmp
+.trellis
+.agents
+.codex
+.claude
+.playwright-mcp
+.env
+.env.*
+*.log
+coverage
+data
+data.*
+*.db
+*.db-*
+*.sqlite
+*.sqlite-*
+*.pem
+id_ed25519
+deploy
+
+# Worker 构建需读取固定协议来源声明，不得被通用 Markdown 规则排除。
+!vendor/rustdesk-protocol/NOTICE.md

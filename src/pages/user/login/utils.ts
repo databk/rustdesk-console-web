@@ -40,6 +40,7 @@ function canAccessPath(pathname: string, access: AccessCapabilities): boolean {
     new RegExp(`^${prefix}/[^/]+$`).test(pathname);
   if (
     pathname === '/user/center' ||
+    pathname === '/web-client' ||
     pathname === '/address-book' ||
     pathname === '/address-book/personal'
   ) {

@@ -2,9 +2,8 @@ import type { RequestOptions } from '@@/plugin-request/request';
 import type { RequestConfig } from '@umijs/max';
 import { getIntl, history } from '@umijs/max';
 import { message, notification } from 'antd';
-import { getToken, removeToken } from '@/utils/auth';
+import { getLoginPath, getToken, removeToken } from '@/utils/auth';
 
-const loginPath = '/user/login';
 export const PERMISSIONS_STALE_EVENT = 'auth:permissions-stale';
 
 const formatMessage = (
@@ -73,7 +72,7 @@ export const errorConfig: RequestConfig = {
         if (status === 401) {
           removeToken();
           window.dispatchEvent(new CustomEvent('auth:session-expired'));
-          history.push(loginPath);
+          history.push(getLoginPath(history.location));
           message.error(
             formatMessage(
               'pages.request.loginExpired',
