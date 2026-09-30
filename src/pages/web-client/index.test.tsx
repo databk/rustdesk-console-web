@@ -919,3 +919,108 @@ test('全屏容器包括连接栏、工具面板与断开按钮', async () => {
   ).toBe(true);
   expect(surface.contains(screen.getByText('Disconnect'))).toBe(true);
 });
+
+test('画面排在工具和统一设备选择区之前，同一 ID 输入同时作为设备筛选条件', () => {
+  render(React.createElement(WebClientPage));
+  const desktop = screen.getByLabelText(
+    'Remote desktop. Focus to send keyboard and mouse input.',
+  );
+  const tools = screen.getByRole('navigation', { name: 'Session tools' });
+  const selection = document.querySelector('[data-device-selection]');
+  if (!selection) throw new Error('Missing device selection');
+  expect(selection?.contains(screen.getByLabelText('Remote ID'))).toBe(true);
+  expect(selection?.contains(screen.getByLabelText('Accessible devices'))).toBe(
+    true,
+  );
+  expect(
+    desktop.compareDocumentPosition(tools) & Node.DOCUMENT_POSITION_FOLLOWING,
+  ).toBeTruthy();
+  expect(
+    tools.compareDocumentPosition(selection) & Node.DOCUMENT_POSITION_FOLLOWING,
+  ).toBeTruthy();
+  expect(screen.queryByLabelText('Search device ID')).toBeNull();
+});
+
+test('全屏中的会话断开后仍可通过按钮退出全屏', async () => {
+  await start();
+  const surface = screen.getByLabelText('Web Client');
+  const original = Object.getOwnPropertyDescriptor(
+    document,
+    'fullscreenElement',
+  );
+  const exitFullscreen = jest.fn<() => Promise<void>>().mockResolvedValue();
+  const originalExit = Object.getOwnPropertyDescriptor(
+    document,
+    'exitFullscreen',
+  );
+  try {
+    Object.defineProperty(document, 'fullscreenElement', {
+      configurable: true,
+      value: surface,
+    });
+    Object.defineProperty(document, 'exitFullscreen', {
+      configurable: true,
+      value: exitFullscreen,
+    });
+    act(() => document.dispatchEvent(new Event('fullscreenchange')));
+    fireEvent.click(screen.getByRole('button', { name: 'Disconnect' }));
+    const exit = screen.getByRole('button', { name: 'Exit fullscreen' });
+    expect((exit as HTMLButtonElement).disabled).toBe(false);
+    fireEvent.click(exit);
+    expect(exitFullscreen).toHaveBeenCalledTimes(1);
+  } finally {
+    if (original)
+      Object.defineProperty(document, 'fullscreenElement', original);
+    else Reflect.deleteProperty(document, 'fullscreenElement');
+    if (originalExit)
+      Object.defineProperty(document, 'exitFullscreen', originalExit);
+    else Reflect.deleteProperty(document, 'exitFullscreen');
+  }
+});
+
+test('画面高度按实际顶部与工具高度计算，滚动不扩大画面', () => {
+  const height = Object.getOwnPropertyDescriptor(window, 'innerHeight');
+  const scroll = Object.getOwnPropertyDescriptor(window, 'scrollY');
+  const view = render(React.createElement(WebClientPage));
+  const desktop = screen.getByLabelText(
+    'Remote desktop. Focus to send keyboard and mouse input.',
+  );
+  const workspace = desktop.parentElement?.parentElement;
+  const toolbar = screen.getByRole('navigation', {
+    name: 'Session tools',
+  }).parentElement;
+  if (!workspace || !toolbar) throw new Error('Missing workspace or toolbar');
+  jest
+    .spyOn(workspace, 'getBoundingClientRect')
+    .mockReturnValue({ top: 110 } as DOMRect);
+  jest
+    .spyOn(toolbar, 'getBoundingClientRect')
+    .mockReturnValue({ height: 56 } as DOMRect);
+  try {
+    Object.defineProperty(window, 'innerHeight', {
+      configurable: true,
+      value: 768,
+    });
+    act(() => window.dispatchEvent(new Event('resize')));
+    expect(workspace.style.height).toBe('586px');
+    Object.defineProperty(window, 'innerHeight', {
+      configurable: true,
+      value: 600,
+    });
+    act(() => window.dispatchEvent(new Event('resize')));
+    expect(workspace.style.height).toBe('418px');
+    Object.defineProperty(window, 'scrollY', {
+      configurable: true,
+      value: 100,
+    });
+    jest
+      .spyOn(workspace, 'getBoundingClientRect')
+      .mockReturnValue({ top: 10 } as DOMRect);
+    act(() => window.dispatchEvent(new Event('resize')));
+    expect(workspace.style.height).toBe('418px');
+  } finally {
+    view.unmount();
+    if (height) Object.defineProperty(window, 'innerHeight', height);
+    if (scroll) Object.defineProperty(window, 'scrollY', scroll);
+  }
+});

@@ -40,7 +40,11 @@ afterEach(cleanup);
 test('默认读取当前账号的可访问设备，点击卡片直接交付 ID', async () => {
   const connect = jest.fn();
   render(
-    React.createElement(DevicePicker, { disabled: false, onConnect: connect }),
+    React.createElement(DevicePicker, {
+      disabled: false,
+      query: '',
+      onConnect: connect,
+    }),
   );
   fireEvent.click(
     await screen.findByRole('button', { name: 'Connect: 办公室 (123456789)' }),
@@ -63,14 +67,20 @@ test('查询和在线过滤交给可访问设备接口，切换账号立即遮�
   const view = render(
     React.createElement(DevicePicker, {
       disabled: false,
+      query: '',
       onConnect: jest.fn(),
     }),
   );
   await screen.findByText('办公室');
-  fireEvent.change(screen.getByLabelText('Search device ID'), {
-    target: { value: '987' },
-  });
-  fireEvent.click(screen.getByText('Search'));
+  view.rerender(
+    React.createElement(DevicePicker, {
+      disabled: false,
+      query: '987',
+      onConnect: jest.fn(),
+    }),
+  );
+  expect(screen.queryByText('办公室')).toBeNull();
+  expect(mockList).toHaveBeenCalledTimes(1);
   await waitFor(() =>
     expect(mockList).toHaveBeenLastCalledWith(
       expect.objectContaining({ id: '987', current: 1 }),
@@ -89,6 +99,7 @@ test('查询和在线过滤交给可访问设备接口，切换账号立即遮�
   view.rerender(
     React.createElement(DevicePicker, {
       disabled: false,
+      query: '',
       onConnect: jest.fn(),
     }),
   );
@@ -106,6 +117,7 @@ test('旧账号的晚到响应被丢弃，失败可刷新重试', async () => {
   const view = render(
     React.createElement(DevicePicker, {
       disabled: false,
+      query: '',
       onConnect: jest.fn(),
     }),
   );
@@ -114,6 +126,7 @@ test('旧账号的晚到响应被丢弃，失败可刷新重试', async () => {
   view.rerender(
     React.createElement(DevicePicker, {
       disabled: false,
+      query: '',
       onConnect: jest.fn(),
     }),
   );

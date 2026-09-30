@@ -10,7 +10,7 @@ import {
   Typography,
   theme,
 } from 'antd';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import {
   DesktopOutlined,
   FolderOpenOutlined,
@@ -114,6 +114,8 @@ export default function WebClientPage() {
   const files = useRef<FilePanelHandle>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
   const surface = useRef<HTMLDivElement>(null);
+  const workspaceElement = useRef<HTMLDivElement>(null);
+  const toolbarElement = useRef<HTMLDivElement>(null);
   const pointer = useRef<HTMLDivElement>(null);
   const worker = useRef<Worker | undefined>(undefined);
   const generation = useRef(0);
@@ -609,6 +611,39 @@ export default function WebClientPage() {
       window.removeEventListener('blur', releaseModifiers);
     };
   }, []);
+  useLayoutEffect(() => {
+    const workspace = workspaceElement.current;
+    const root = surface.current;
+    if (!workspace || !root) return;
+    const resize = () => {
+      if (document.fullscreenElement === root) {
+        workspace.style.removeProperty('height');
+        return;
+      }
+      // 使用文档坐标，不跟随滚动增高，否则会把下方设备区不断推远。
+      const top = workspace.getBoundingClientRect().top + window.scrollY;
+      const height = window.visualViewport?.height || window.innerHeight;
+      const tools =
+        toolbarElement.current?.getBoundingClientRect().height || 56;
+      const available = Math.max(80, height - Math.max(0, top) - tools - 16);
+      workspace.style.height = Math.floor(available) + 'px';
+    };
+    resize();
+    const observer =
+      typeof ResizeObserver === 'undefined'
+        ? undefined
+        : new ResizeObserver(resize);
+    observer?.observe(root);
+    if (toolbarElement.current) observer?.observe(toolbarElement.current);
+    window.addEventListener('resize', resize);
+    window.visualViewport?.addEventListener('resize', resize);
+    return () => {
+      observer?.disconnect();
+      window.removeEventListener('resize', resize);
+      window.visualViewport?.removeEventListener('resize', resize);
+    };
+  }, [loading, configuration?.enabled, activeSession, fullscreen]);
+
   const connect = (targetId = id) => {
     if (!configuration?.enabled || !ready) return;
     try {
@@ -621,6 +656,7 @@ export default function WebClientPage() {
       touch.current?.setViewport({ scale: 1, x: 0, y: 0 });
       setSoftText('');
       setState('connecting');
+      surface.current?.scrollIntoView?.({ block: 'start', behavior: 'auto' });
       setKxVersion(undefined);
       setError('');
       setPassword('');
@@ -760,7 +796,7 @@ export default function WebClientPage() {
                 <p>
                   {text(
                     'workspaceSubtitle',
-                    'Your remote desktop, with everything within reach.',
+                    'Connect to a device in your browser.',
                   )}
                 </p>
               </div>
@@ -775,220 +811,8 @@ export default function WebClientPage() {
               {text('state.' + state, state)}
             </span>
           </header>
-          <div className={styles.connectionBar}>
-            <div className={styles.connectionField}>
-              <label htmlFor="web-client-target">
-                {text('id', 'Remote ID')}
-              </label>
-              <Input
-                id="web-client-target"
-                aria-label={text('id', 'Remote ID')}
-                placeholder={text('idPlaceholder', 'Enter the device ID')}
-                value={id}
-                onChange={(event) => setId(event.target.value)}
-                onPressEnter={() => connect()}
-                disabled={activeSession}
-                maxLength={256}
-              />
-            </div>
-            <Button
-              type="primary"
-              icon={<ArrowRightOutlined />}
-              onClick={() => connect()}
-              disabled={!ready || activeSession}
-            >
-              {text('connect', 'Connect')}
-            </Button>
-            <Button
-              danger={activeSession}
-              icon={<DisconnectOutlined />}
-              onClick={disconnect}
-              disabled={!activeSession}
-            >
-              {text('disconnect', 'Disconnect')}
-            </Button>
-            <span className={styles.connectionHint}>
-              <SafetyCertificateOutlined />
-              {text('nativeAuth', 'Verified by the remote device')}
-            </span>
-          </div>
-          {!activeSession && (
-            <DevicePicker disabled={!ready} onConnect={connect} />
-          )}
-          <div className={styles.notices} aria-live="polite">
-            {connected && (
-              <div className={styles.pasteHint} role="status">
-                <CopyOutlined />
-                <span>
-                  {text(
-                    pasteStatus ? 'paste.' + pasteStatus : 'pasteHint',
-                    pasteStatus === 'failed'
-                      ? 'Paste failed. Use clipboard tools to retry.'
-                      : pasteStatus === 'denied'
-                      ? 'The remote device has disabled clipboard or keyboard access.'
-                      : pasteStatus === 'sending'
-                      ? 'Sending clipboard…'
-                      : pasteStatus === 'sent'
-                      ? 'Paste sent to the remote device.'
-                      : 'Focus the remote desktop and press Ctrl/Cmd+V to paste text or a PNG image.',
-                  )}
-                </span>
-                {(pasteStatus === 'failed' || pasteStatus === 'denied') && (
-                  <Button type="link" onClick={() => chooseTool('clipboard')}>
-                    {text('toolClipboard', 'Clipboard')}
-                  </Button>
-                )}
-              </div>
-            )}
-            {error && (
-              <Alert
-                type={error === 'password' ? 'warning' : 'error'}
-                showIcon
-                message={text(
-                  'error.' + error,
-                  'The operation failed. Disconnect and try again.',
-                )}
-              />
-            )}
-            {activeSession && kxVersion === 0 && (
-              <Alert
-                type="warning"
-                showIcon
-                message={text(
-                  'legacyEncryption',
-                  'The remote device uses a legacy encryption protocol with known security risks. Upgrade the remote client when possible.',
-                )}
-              />
-            )}
-            {connected && !permissions.keyboard && (
-              <Alert
-                type="warning"
-                showIcon
-                message={text(
-                  'keyboardDenied',
-                  'Keyboard and mouse are disabled by the remote device. Previously held keys or buttons may remain pressed; restore permission or press and release them on the remote device.',
-                )}
-              />
-            )}
-            {connected && tool !== 'files' && fileStatus.legacy && (
-              <Alert
-                type="warning"
-                showIcon
-                message={text(
-                  'legacyEncryption',
-                  'The remote device uses a legacy encryption protocol with known security risks. Upgrade the remote client when possible.',
-                )}
-              />
-            )}
-            {connected && tool !== 'files' && fileStatus.error && (
-              <Alert
-                type="error"
-                showIcon
-                message={text(
-                  'error.files',
-                  'File operation failed or was denied. Retry the file session.',
-                )}
-                action={
-                  <Button onClick={() => chooseTool('files')}>
-                    {text('files', 'File transfer')}
-                  </Button>
-                }
-              />
-            )}
-          </div>
-          <div className={styles.toolbar}>
-            <nav
-              className={styles.toolNav}
-              aria-label={text('tools', 'Session tools')}
-            >
-              {toolItems.map((item) => (
-                <button
-                  key={item.key}
-                  type="button"
-                  ref={(element) => {
-                    toolButtons.current[item.key] = element;
-                  }}
-                  className={styles.toolButton}
-                  aria-label={item.label}
-                  disabled={!connected}
-                  aria-expanded={tool === item.key}
-                  aria-controls={'web-client-tool-' + item.key}
-                  data-active={tool === item.key}
-                  onClick={() =>
-                    chooseTool(tool === item.key ? undefined : item.key)
-                  }
-                >
-                  {item.icon}
-                  <span>{item.label}</span>
-                  {item.key === 'files' && fileStatus.busy && (
-                    <span
-                      className={styles.activityDot}
-                      role="img"
-                      aria-label={text(
-                        'fileInProgress',
-                        'Transfer in progress',
-                      )}
-                    />
-                  )}
-                  {item.key === 'audio' && audioEnabled && (
-                    <span
-                      className={styles.activityDot}
-                      role="img"
-                      aria-label={text('audioPlaying', 'Audio is playing')}
-                    />
-                  )}
-                </button>
-              ))}
-            </nav>
-            <div className={styles.viewTools}>
-              {connected && displays.length > 1 && (
-                <label className={styles.monitor}>
-                  {text('display', 'Monitor')}
-                  <select
-                    className={styles.select}
-                    aria-label={text('display', 'Monitor')}
-                    value={selectedDisplay}
-                    onChange={(event) => {
-                      input.current?.release();
-                      releaseModifiers();
-                      setDisplayReady(false);
-                      clearDisplay();
-                      post({
-                        type: 'select-display',
-                        index: Number(event.target.value),
-                      });
-                    }}
-                  >
-                    {displays.map((item, index) => (
-                      <option
-                        key={
-                          item.name ||
-                          [item.x, item.y, item.width, item.height].join(':')
-                        }
-                        value={index}
-                      >
-                        {index + 1}:{' '}
-                        {item.name || `${item.width} × ${item.height}`}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-              )}
-
-              <Button
-                type="text"
-                icon={fullscreen ? <CompressOutlined /> : <ExpandOutlined />}
-                disabled={!connected}
-                onClick={toggleFullscreen}
-              >
-                {text(
-                  fullscreen ? 'exitFullscreen' : 'fullscreen',
-                  fullscreen ? 'Exit fullscreen' : 'Fullscreen',
-                )}
-              </Button>
-            </div>
-          </div>
           <div
+            ref={workspaceElement}
             className={styles.workspace}
             data-tools-open={!!tool}
             data-active-session={activeSession}
@@ -1028,34 +852,31 @@ export default function WebClientPage() {
               {(!connected || !displayReady) && (
                 <div className={styles.stageOverlay}>
                   <div className={styles.stageCard}>
-                    <span className={styles.stageIcon}>
-                      <DesktopOutlined />
-                    </span>
-                    <span className={styles.eyebrow}>
-                      {text('remoteWorkspace', 'REMOTE WORKSPACE')}
-                    </span>
-                    <h2>
-                      {text(
-                        authenticating
-                          ? 'authTitle'
-                          : connected
-                          ? 'waitingFrame'
-                          : activeSession
-                          ? 'state.' + state
-                          : state === 'failed'
-                          ? 'state.failed'
-                          : 'idleTitle',
-                        authenticating
-                          ? 'Approve your connection'
-                          : connected
-                          ? 'Waiting for the desktop'
-                          : activeSession
-                          ? state
-                          : state === 'failed'
-                          ? 'Connection failed'
-                          : 'A desktop, one connection away',
-                      )}
-                    </h2>
+                    {(activeSession || state === 'failed') && (
+                      <>
+                        <span className={styles.stageIcon}>
+                          <DesktopOutlined />
+                        </span>
+                        <h2>
+                          {text(
+                            authenticating
+                              ? 'authTitle'
+                              : connected
+                              ? 'waitingFrame'
+                              : activeSession
+                              ? 'state.' + state
+                              : 'state.failed',
+                            authenticating
+                              ? 'Approve your connection'
+                              : connected
+                              ? 'Waiting for the desktop'
+                              : activeSession
+                              ? state
+                              : 'Connection failed',
+                          )}
+                        </h2>
+                      </>
+                    )}
                     <p>
                       {text(
                         authenticating
@@ -1067,7 +888,7 @@ export default function WebClientPage() {
                           ? 'You can also approve the connection on the remote device.'
                           : activeSession
                           ? 'The session is being prepared. You can disconnect at any time.'
-                          : 'Choose a device above or enter its ID, then authenticate to begin.',
+                          : 'Choose a device below, or enter its ID to connect.',
                       )}
                     </p>
                     {authenticating && (
@@ -1094,22 +915,6 @@ export default function WebClientPage() {
                         >
                           {text('authenticate', 'Send password')}
                         </Button>
-                      </div>
-                    )}
-                    {!activeSession && (
-                      <div className={styles.stageSteps}>
-                        <span>
-                          <b>01</b>
-                          {text('stepDevice', 'Choose device')}
-                        </span>
-                        <span>
-                          <b>02</b>
-                          {text('stepApprove', 'Authenticate')}
-                        </span>
-                        <span>
-                          <b>03</b>
-                          {text('stepControl', 'Take control')}
-                        </span>
                       </div>
                     )}
                   </div>
@@ -1428,6 +1233,236 @@ export default function WebClientPage() {
               </div>
             </aside>
           </div>
+          <div className={styles.toolbar} ref={toolbarElement}>
+            <nav
+              className={styles.toolNav}
+              aria-label={text('tools', 'Session tools')}
+            >
+              {toolItems.map((item) => (
+                <button
+                  key={item.key}
+                  type="button"
+                  ref={(element) => {
+                    toolButtons.current[item.key] = element;
+                  }}
+                  className={styles.toolButton}
+                  aria-label={item.label}
+                  disabled={!connected}
+                  aria-expanded={tool === item.key}
+                  aria-controls={'web-client-tool-' + item.key}
+                  data-active={tool === item.key}
+                  onClick={() =>
+                    chooseTool(tool === item.key ? undefined : item.key)
+                  }
+                >
+                  {item.icon}
+                  <span>{item.label}</span>
+                  {item.key === 'files' && fileStatus.busy && (
+                    <span
+                      className={styles.activityDot}
+                      role="img"
+                      aria-label={text(
+                        'fileInProgress',
+                        'Transfer in progress',
+                      )}
+                    />
+                  )}
+                  {item.key === 'audio' && audioEnabled && (
+                    <span
+                      className={styles.activityDot}
+                      role="img"
+                      aria-label={text('audioPlaying', 'Audio is playing')}
+                    />
+                  )}
+                </button>
+              ))}
+            </nav>
+            <div className={styles.viewTools}>
+              <Button
+                danger={activeSession}
+                icon={<DisconnectOutlined />}
+                onClick={disconnect}
+                disabled={!activeSession}
+              >
+                {text('disconnect', 'Disconnect')}
+              </Button>
+
+              {connected && displays.length > 1 && (
+                <label className={styles.monitor}>
+                  {text('display', 'Monitor')}
+                  <select
+                    className={styles.select}
+                    aria-label={text('display', 'Monitor')}
+                    value={selectedDisplay}
+                    onChange={(event) => {
+                      input.current?.release();
+                      releaseModifiers();
+                      setDisplayReady(false);
+                      clearDisplay();
+                      post({
+                        type: 'select-display',
+                        index: Number(event.target.value),
+                      });
+                    }}
+                  >
+                    {displays.map((item, index) => (
+                      <option
+                        key={
+                          item.name ||
+                          [item.x, item.y, item.width, item.height].join(':')
+                        }
+                        value={index}
+                      >
+                        {index + 1}:{' '}
+                        {item.name || `${item.width} × ${item.height}`}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              )}
+
+              <Button
+                type="text"
+                icon={fullscreen ? <CompressOutlined /> : <ExpandOutlined />}
+                disabled={!connected && !fullscreen}
+                onClick={toggleFullscreen}
+              >
+                {text(
+                  fullscreen ? 'exitFullscreen' : 'fullscreen',
+                  fullscreen ? 'Exit fullscreen' : 'Fullscreen',
+                )}
+              </Button>
+            </div>
+          </div>
+          <div className={styles.notices} aria-live="polite">
+            {connected && (
+              <div className={styles.pasteHint} role="status">
+                <CopyOutlined />
+                <span>
+                  {text(
+                    pasteStatus ? 'paste.' + pasteStatus : 'pasteHint',
+                    pasteStatus === 'failed'
+                      ? 'Paste failed. Use clipboard tools to retry.'
+                      : pasteStatus === 'denied'
+                      ? 'The remote device has disabled clipboard or keyboard access.'
+                      : pasteStatus === 'sending'
+                      ? 'Sending clipboard…'
+                      : pasteStatus === 'sent'
+                      ? 'Paste sent to the remote device.'
+                      : 'Focus the remote desktop and press Ctrl/Cmd+V to paste text or a PNG image.',
+                  )}
+                </span>
+                {(pasteStatus === 'failed' || pasteStatus === 'denied') && (
+                  <Button type="link" onClick={() => chooseTool('clipboard')}>
+                    {text('toolClipboard', 'Clipboard')}
+                  </Button>
+                )}
+              </div>
+            )}
+            {error && (
+              <Alert
+                type={error === 'password' ? 'warning' : 'error'}
+                showIcon
+                message={text(
+                  'error.' + error,
+                  'The operation failed. Disconnect and try again.',
+                )}
+              />
+            )}
+            {activeSession && kxVersion === 0 && (
+              <Alert
+                type="warning"
+                showIcon
+                message={text(
+                  'legacyEncryption',
+                  'The remote device uses a legacy encryption protocol with known security risks. Upgrade the remote client when possible.',
+                )}
+              />
+            )}
+            {connected && !permissions.keyboard && (
+              <Alert
+                type="warning"
+                showIcon
+                message={text(
+                  'keyboardDenied',
+                  'Keyboard and mouse are disabled by the remote device. Previously held keys or buttons may remain pressed; restore permission or press and release them on the remote device.',
+                )}
+              />
+            )}
+            {connected && tool !== 'files' && fileStatus.legacy && (
+              <Alert
+                type="warning"
+                showIcon
+                message={text(
+                  'legacyEncryption',
+                  'The remote device uses a legacy encryption protocol with known security risks. Upgrade the remote client when possible.',
+                )}
+              />
+            )}
+            {connected && tool !== 'files' && fileStatus.error && (
+              <Alert
+                type="error"
+                showIcon
+                message={text(
+                  'error.files',
+                  'File operation failed or was denied. Retry the file session.',
+                )}
+                action={
+                  <Button onClick={() => chooseTool('files')}>
+                    {text('files', 'File transfer')}
+                  </Button>
+                }
+              />
+            )}
+          </div>
+          <section
+            className={styles.deviceSelection}
+            data-device-selection
+            hidden={activeSession}
+            aria-label={text('selectDevice', 'Choose a device')}
+          >
+            <div className={styles.selectionHeading}>
+              <h2>{text('selectDevice', 'Choose a device')}</h2>
+              <p>
+                {text(
+                  'selectionHint',
+                  'Enter a device ID, or choose a device from the list below.',
+                )}
+              </p>
+            </div>
+            <div className={styles.connectionBar}>
+              <div className={styles.connectionField}>
+                <label htmlFor="web-client-target">
+                  {text('id', 'Remote ID')}
+                </label>
+                <Input
+                  id="web-client-target"
+                  aria-label={text('id', 'Remote ID')}
+                  placeholder={text('idPlaceholder', 'Enter the device ID')}
+                  value={id}
+                  onChange={(event) => setId(event.target.value)}
+                  onPressEnter={() => connect()}
+                  disabled={activeSession}
+                  maxLength={256}
+                />
+              </div>
+              <Button
+                type="primary"
+                icon={<ArrowRightOutlined />}
+                onClick={() => connect()}
+                disabled={!ready || activeSession}
+              >
+                {text('connect', 'Connect')}
+              </Button>
+              <span className={styles.connectionHint}>
+                <SafetyCertificateOutlined />
+                {text('nativeAuth', 'Verified by the remote device')}
+              </span>
+            </div>
+            {!activeSession && (
+              <DevicePicker query={id} disabled={!ready} onConnect={connect} />
+            )}
+          </section>
           <footer className={styles.footer}>
             <span>
               <SafetyCertificateOutlined />

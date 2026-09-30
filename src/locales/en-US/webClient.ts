@@ -1,4 +1,7 @@
 export default {
+  'webClient.selectDevice': 'Choose a device',
+  'webClient.selectionHint':
+    'Enter a device ID, or choose one from the list below.',
   'webClient.devicesTitle': 'Accessible devices',
   'webClient.devicesHint':
     'Choose a device available to your account. Remote approval or password is still required.',
@@ -23,8 +26,7 @@ export default {
     'Direct paste failed or the content is not supported text / PNG. Use clipboard tools to retry.',
   'webClient.paste.denied':
     'The remote device has disabled clipboard or keyboard access.',
-  'webClient.workspaceSubtitle':
-    'Your remote desktop, with everything within reach.',
+  'webClient.workspaceSubtitle': 'Connect to a device in your browser.',
   'webClient.idPlaceholder': 'Enter the device ID',
   'webClient.nativeAuth': 'Verified by the remote device',
   'webClient.toolClipboard': 'Clipboard',
@@ -33,17 +35,11 @@ export default {
   'webClient.tools': 'Session tools',
   'webClient.closeTools': 'Close tools',
   'webClient.exitFullscreen': 'Exit fullscreen',
-  'webClient.remoteWorkspace': 'REMOTE WORKSPACE',
-  'webClient.idleTitle': 'A desktop, one connection away',
-  'webClient.idleHint':
-    'Choose a device above or enter its ID, then authenticate to begin.',
+  'webClient.idleHint': 'Choose a device below, or enter its ID to connect.',
   'webClient.authTitle': 'Approve your connection',
   'webClient.waitingFrame': 'Waiting for the desktop',
   'webClient.connectingHint':
     'The session is being prepared. You can disconnect at any time.',
-  'webClient.stepDevice': 'Choose device',
-  'webClient.stepApprove': 'Authenticate',
-  'webClient.stepControl': 'Take control',
   'webClient.audioHint':
     'Start playback when you want to hear the remote device. Playback stops when the session ends.',
   'webClient.audioDenied': 'Audio is disabled by the remote device.',

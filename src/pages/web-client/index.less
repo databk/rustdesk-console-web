@@ -235,7 +235,7 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   min-width: 0;
-  height: clamp(390px, 63dvh, 850px);
+  height: calc(100dvh - 240px);
 }
 .workspace[data-tools-open='true'] {
   grid-template-columns: minmax(0, 1fr) 344px;
@@ -314,29 +314,6 @@
   border-radius: 18px;
   box-shadow: 0 10px 35px #00000012;
   place-items: center;
-}
-.eyebrow {
-  color: #92a5bf;
-  font-size: 10px;
-  letter-spacing: 3px;
-}
-.stageSteps {
-  display: flex;
-  gap: 22px;
-  justify-content: center;
-  margin-top: 32px;
-  color: #a9b7ca;
-  font-size: 11px;
-  span {
-    display: flex;
-    gap: 6px;
-    align-items: center;
-  }
-  b {
-    color: #65819e;
-    font-weight: 500;
-    font-variant-numeric: tabular-nums;
-  }
 }
 .authForm {
   display: flex;
@@ -714,12 +691,12 @@
     display: flex;
     flex-direction: column;
     height: auto;
-    min-height: 360px;
+    min-height: 0;
   }
   .screen {
     flex-shrink: 0;
-    height: 52dvh;
-    min-height: 290px;
+    height: 100%;
+    min-height: 0;
   }
   .toolsPanel {
     position: absolute;
@@ -734,10 +711,6 @@
   }
   .panelBody {
     padding: 14px;
-  }
-  .stageSteps {
-    flex-wrap: wrap;
-    gap: 14px;
   }
   .stageOverlay {
     padding: 20px;
@@ -794,15 +767,9 @@
   background: var(--wc-soft);
   border-top: 1px solid var(--wc-border);
 }
-.workspace[data-active-session='false'] .screen {
-  height: 330px;
-  min-height: 330px;
-}
+
 .workspace[data-active-session='false'] .stageIcon {
   display: none;
-}
-.workspace[data-active-session='false'] .stageSteps {
-  margin-top: 22px;
 }
 .devicesHeading {
   display: flex;
@@ -946,5 +913,80 @@
       flex: 1;
       min-width: 110px;
     }
+  }
+}
+
+/* 画面优先：控件按真实 DOM 顺序位于画面之后。 */
+.header {
+  padding: 12px 20px;
+}
+.brand p {
+  margin-bottom: 0;
+}
+.toolbar {
+  border-top: 1px solid var(--wc-border);
+}
+.deviceSelection {
+  background: var(--wc-soft);
+  border-top: 1px solid var(--wc-border);
+}
+.selectionHeading {
+  padding: 20px 24px 0;
+}
+.selectionHeading h2 {
+  margin: 0;
+  font-weight: 600;
+  font-size: 16px;
+}
+.selectionHeading p {
+  margin: 7px 0 0;
+  color: var(--wc-muted);
+  font-size: 12px;
+}
+.deviceSelection .connectionBar {
+  padding: 16px 24px;
+}
+.deviceSelection .devices {
+  padding-top: 0;
+  border-top: 0;
+}
+.deviceSelection .devicesHeading h2 {
+  font-size: 13px;
+}
+.deviceSelection .devicesHeading p {
+  display: none;
+}
+.deviceFilters {
+  margin-top: 8px;
+}
+.workbench:fullscreen .deviceSelection,
+.workbench:fullscreen .footer {
+  display: none;
+}
+.workbench:fullscreen .toolbar {
+  flex-shrink: 0;
+}
+.workbench:fullscreen .notices {
+  flex-shrink: 0;
+  max-height: 24vh;
+  overflow: auto;
+}
+@media (max-width: 680px) {
+  .header {
+    padding: 10px 14px;
+  }
+  .selectionHeading {
+    padding: 18px 14px 0;
+  }
+  .deviceSelection .connectionBar {
+    padding: 14px;
+  }
+  .screen {
+    height: 100%;
+    min-height: 0;
+  }
+  .workbench:fullscreen .screen {
+    flex: 1 1 0;
+    min-height: 0;
   }
 }

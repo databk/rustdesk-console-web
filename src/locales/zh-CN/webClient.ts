@@ -1,4 +1,6 @@
 export default {
+  'webClient.selectDevice': '选择设备',
+  'webClient.selectionHint': '输入设备 ID，或从下面的列表里选一台。',
   'webClient.devicesTitle': '可访问设备',
   'webClient.devicesHint':
     '来自当前账号的设备权限范围。选择设备即可连接，仍需远端密码或同意。',
@@ -22,7 +24,7 @@ export default {
   'webClient.paste.failed':
     '暂时无法直接粘贴，或内容不是受支持的文字 / PNG。请通过剪贴板工具重试。',
   'webClient.paste.denied': '远端已关闭剪贴板或键盘权限，暂时不能粘贴。',
-  'webClient.workspaceSubtitle': '连接远端，专注眼前。',
+  'webClient.workspaceSubtitle': '在浏览器里连接你的电脑。',
   'webClient.idPlaceholder': '输入被控设备 ID',
   'webClient.nativeAuth': '由被控设备确认连接',
   'webClient.toolClipboard': '剪贴板',
@@ -31,15 +33,10 @@ export default {
   'webClient.tools': '会话工具',
   'webClient.closeTools': '收起工具面板',
   'webClient.exitFullscreen': '退出全屏',
-  'webClient.remoteWorkspace': '远程工作空间',
-  'webClient.idleTitle': '你的远程桌面，即刻连接',
-  'webClient.idleHint': '从上方选择设备，或输入设备 ID，验证后即可开始操作。',
+  'webClient.idleHint': '在下方选择设备，或输入设备 ID 后连接。',
   'webClient.authTitle': '确认这次连接',
   'webClient.waitingFrame': '正在等待远程画面',
   'webClient.connectingHint': '正在建立会话，你可以随时断开连接。',
-  'webClient.stepDevice': '选择设备',
-  'webClient.stepApprove': '验证身份',
-  'webClient.stepControl': '开始远控',
   'webClient.audioHint': '需要时开启远端声音。断开连接后，播放会自动停止。',
   'webClient.audioDenied': '被控设备已关闭声音权限。',
   'webClient.audioPlaying': '正在播放声音',

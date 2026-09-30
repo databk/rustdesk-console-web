@@ -1,10 +1,6 @@
-import {
-  DesktopOutlined,
-  ReloadOutlined,
-  SearchOutlined,
-} from '@ant-design/icons';
+import { DesktopOutlined, ReloadOutlined } from '@ant-design/icons';
 import { useIntl, useModel } from '@umijs/max';
-import { Alert, Button, Input, Spin } from 'antd';
+import { Alert, Button, Spin } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { getDeviceList } from '@/services/rustdesk-console/device';
 import styles from './index.less';
@@ -14,8 +10,10 @@ const PAGE_SIZE = 6;
 export function DevicePicker({
   disabled,
   onConnect,
+  query,
 }: {
   disabled: boolean;
+  query: string;
   onConnect: (id: string) => void;
 }) {
   const intl = useIntl();
@@ -23,9 +21,8 @@ export function DevicePicker({
     intl.formatMessage({ id: 'webClient.' + key, defaultMessage: fallback });
   const { initialState } = useModel('@@initialState');
   const owner = initialState?.currentUser;
-  const [query, setQuery] = useState('');
   const [filter, setFilter] = useState({
-    id: '',
+    id: query.trim(),
     online: false,
     page: 1,
     revision: 0,
@@ -37,6 +34,16 @@ export function DevicePicker({
     total: number;
     failed?: boolean;
   }>();
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setFilter((previous) =>
+        previous.id === query.trim()
+          ? previous
+          : { ...previous, id: query.trim(), page: 1 },
+      );
+    }, 250);
+    return () => clearTimeout(timer);
+  }, [query]);
   useEffect(() => {
     if (!owner) return;
     const controller = new AbortController();
@@ -62,9 +69,12 @@ export function DevicePicker({
   }, [owner, filter]);
   // 同一渲染即遮蔽旧账号或旧筛选结果，不能等 effect 清理后才隐藏。
   const current =
-    result?.owner === owner && result?.filter === filter ? result : undefined;
+    result?.owner === owner &&
+    result?.filter === filter &&
+    filter.id === query.trim()
+      ? result
+      : undefined;
   const loading = !!owner && !current;
-  const search = () => setFilter({ ...filter, id: query.trim(), page: 1 });
   const pages = Math.max(1, Math.ceil((current?.total || 0) / PAGE_SIZE));
   return (
     <section
@@ -92,17 +102,6 @@ export function DevicePicker({
         />
       </div>
       <div className={styles.deviceFilters}>
-        <Input
-          value={query}
-          maxLength={256}
-          aria-label={text('devicesSearch', 'Search device ID')}
-          placeholder={text('devicesSearch', 'Search device ID')}
-          onChange={(event) => setQuery(event.target.value)}
-          onPressEnter={search}
-        />
-        <Button icon={<SearchOutlined />} onClick={search}>
-          {text('search', 'Search')}
-        </Button>
         <label className={styles.onlineFilter}>
           <input
             type="checkbox"
