@@ -123,6 +123,12 @@ const UserGroupList: React.FC = () => {
       ),
       dataIndex: 'name',
       width: 200,
+      fieldProps: {
+        placeholder: intl.formatMessage({
+          id: 'pages.userGroups.searchNamePlaceholder',
+          defaultMessage: 'Search by name',
+        }),
+      },
       render: (_, record) => (
         <Space>
           <a
@@ -278,6 +284,7 @@ const UserGroupList: React.FC = () => {
           });
           return toTableResult(result);
         }}
+        search={{ labelWidth: 'auto', defaultCollapsed: true }}
         columns={columns}
         pagination={DEFAULT_PAGINATION}
         scroll={{ x: 800 }}

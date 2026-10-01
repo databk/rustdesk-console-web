@@ -410,9 +410,7 @@ const FileAudit: React.FC = () => {
         }}
         actionRef={actionRef}
         rowKey="id"
-        search={{
-          labelWidth: 120,
-        }}
+        search={{ labelWidth: 'auto', defaultCollapsed: true }}
         request={async (params) => {
           const requestParams: any = {
             current: params.current,

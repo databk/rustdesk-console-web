@@ -113,6 +113,12 @@ const SharedAddressBook: React.FC = () => {
         <FormattedMessage id="pages.addressBook.name" defaultMessage="Name" />
       ),
       dataIndex: 'name',
+      fieldProps: {
+        placeholder: intl.formatMessage({
+          id: 'pages.addressBook.searchNamePlaceholder',
+          defaultMessage: 'Search by name',
+        }),
+      },
       render: (_, record: API.SharedAddressBook) => (
         <a
           onClick={() => {
@@ -130,6 +136,12 @@ const SharedAddressBook: React.FC = () => {
       ),
       dataIndex: 'note',
       ellipsis: true,
+      fieldProps: {
+        placeholder: intl.formatMessage({
+          id: 'pages.addressBook.searchNotePlaceholder',
+          defaultMessage: 'Search by note',
+        }),
+      },
     },
     ...(canOpenAccessSettings
       ? [
@@ -260,6 +272,7 @@ const SharedAddressBook: React.FC = () => {
           }
           return toTableResult(result);
         }}
+        search={{ labelWidth: 'auto', defaultCollapsed: true }}
         columns={columns}
         rowSelection={
           access.canAddressBooksEdit

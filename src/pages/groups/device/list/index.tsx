@@ -105,6 +105,12 @@ const DeviceGroupList: React.FC = () => {
         <FormattedMessage id="pages.deviceGroups.name" defaultMessage="Name" />
       ),
       dataIndex: 'name',
+      fieldProps: {
+        placeholder: intl.formatMessage({
+          id: 'pages.deviceGroups.searchNamePlaceholder',
+          defaultMessage: 'Search by name',
+        }),
+      },
       render: (_, record: API.DeviceGroupItem) => (
         <a
           onClick={() => {
@@ -200,11 +206,7 @@ const DeviceGroupList: React.FC = () => {
           return toTableResult(result);
         }}
         columns={columns}
-        search={{
-          labelWidth: 'auto',
-          defaultCollapsed: true,
-          optionRender: (_searchConfig, _formProps, dom) => [...dom.reverse()],
-        }}
+        search={{ labelWidth: 'auto', defaultCollapsed: true }}
         pagination={DEFAULT_PAGINATION}
         toolBarRender={() => [
           <Button

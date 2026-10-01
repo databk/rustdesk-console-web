@@ -179,6 +179,12 @@ export const getDeviceColumns = (options?: {
       title: <FormattedMessage id="pages.common.id" defaultMessage="ID" />,
       dataIndex: 'id',
       width: '11%',
+      fieldProps: {
+        placeholder: intl.formatMessage({
+          id: 'pages.devices.searchIdPlaceholder',
+          defaultMessage: 'Search by device ID',
+        }),
+      },
       ellipsis: true,
       sorter: true,
       render: (_: unknown, record: API.DeviceItem) => {
@@ -291,6 +297,12 @@ export const getDeviceColumns = (options?: {
       title: <FormattedMessage id="pages.devices.user" defaultMessage="User" />,
       dataIndex: 'user_name',
       ellipsis: true,
+      fieldProps: {
+        placeholder: intl.formatMessage({
+          id: 'pages.devices.searchUserPlaceholder',
+          defaultMessage: 'Search by username',
+        }),
+      },
       sorter: true,
       render: (_: unknown, record: API.DeviceItem) => record.user_name || '-',
     },
@@ -347,6 +359,12 @@ export const getDeviceColumns = (options?: {
       title: <FormattedMessage id="pages.devices.os" defaultMessage="OS" />,
       dataIndex: 'os',
       hideInTable: true,
+      fieldProps: {
+        placeholder: intl.formatMessage({
+          id: 'pages.devices.searchOsPlaceholder',
+          defaultMessage: 'Search by OS',
+        }),
+      },
     },
     {
       title: (
@@ -357,6 +375,12 @@ export const getDeviceColumns = (options?: {
       ),
       dataIndex: 'device_group_name_search',
       hideInTable: true,
+      fieldProps: {
+        placeholder: intl.formatMessage({
+          id: 'pages.devices.searchDeviceGroupPlaceholder',
+          defaultMessage: 'Search by device group name',
+        }),
+      },
       tooltip: intl.formatMessage({
         id: 'pages.devices.deviceGroupSearchTip',
         defaultMessage: 'Filter by device group name',

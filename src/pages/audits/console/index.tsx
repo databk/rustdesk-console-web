@@ -21,6 +21,12 @@ const ConsoleAudit: React.FC = () => {
       ),
       dataIndex: 'operator',
       hideInTable: true,
+      fieldProps: {
+        placeholder: intl.formatMessage({
+          id: 'pages.audits.searchOperatorPlaceholder',
+          defaultMessage: 'Search by operator',
+        }),
+      },
     },
     {
       title: <FormattedMessage id="pages.audits.user" defaultMessage="User" />,
@@ -41,6 +47,12 @@ const ConsoleAudit: React.FC = () => {
       ),
       dataIndex: 'action',
       width: 150,
+      fieldProps: {
+        placeholder: intl.formatMessage({
+          id: 'pages.audits.searchActionPlaceholder',
+          defaultMessage: 'Search by action',
+        }),
+      },
     },
     {
       title: (
@@ -51,6 +63,12 @@ const ConsoleAudit: React.FC = () => {
       ),
       dataIndex: 'target_type',
       width: 150,
+      fieldProps: {
+        placeholder: intl.formatMessage({
+          id: 'pages.audits.searchTargetTypePlaceholder',
+          defaultMessage: 'Search by target type',
+        }),
+      },
     },
     {
       title: (
@@ -62,6 +80,12 @@ const ConsoleAudit: React.FC = () => {
       dataIndex: 'target_guid',
       width: 180,
       ellipsis: true,
+      fieldProps: {
+        placeholder: intl.formatMessage({
+          id: 'pages.audits.searchTargetIdPlaceholder',
+          defaultMessage: 'Search by target ID',
+        }),
+      },
     },
     {
       title: (
@@ -92,6 +116,12 @@ const ConsoleAudit: React.FC = () => {
       ),
       dataIndex: 'reason',
       ellipsis: true,
+      fieldProps: {
+        placeholder: intl.formatMessage({
+          id: 'pages.audits.searchReasonPlaceholder',
+          defaultMessage: 'Search by reason',
+        }),
+      },
     },
     {
       title: <FormattedMessage id="pages.audits.time" defaultMessage="Time" />,
@@ -156,7 +186,7 @@ const ConsoleAudit: React.FC = () => {
         }}
         columns={columns}
         search={{
-          defaultCollapsed: false,
+          defaultCollapsed: true,
           labelWidth: 'auto',
         }}
         pagination={DEFAULT_PAGINATION}

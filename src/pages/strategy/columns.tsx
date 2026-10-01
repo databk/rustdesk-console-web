@@ -35,6 +35,12 @@ const StrategyColumns = (
       ),
       dataIndex: 'name',
       width: 200,
+      fieldProps: {
+        placeholder: intl.formatMessage({
+          id: 'pages.strategies.searchNamePlaceholder',
+          defaultMessage: 'Search by strategy name',
+        }),
+      },
     },
     {
       title: (
