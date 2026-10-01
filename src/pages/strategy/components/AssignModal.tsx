@@ -31,7 +31,7 @@ import {
   getAssignableStrategyTargetTypes,
   type StrategyAssignmentTargetType,
 } from '../strategyAccess';
-import { loadAllPages } from '@/utils/pagination';
+import { MAX_PAGE_SIZE, loadAllPages } from '@/utils/pagination';
 
 type TargetType = StrategyAssignmentTargetType;
 
@@ -74,8 +74,8 @@ const targetTypeOptions: { label: React.ReactNode; value: TargetType }[] = [
   },
 ];
 
-const ASSIGNMENT_PAGE_SIZE = 100;
-const TARGET_PAGE_SIZE = 100;
+const ASSIGNMENT_PAGE_SIZE = MAX_PAGE_SIZE;
+const TARGET_PAGE_SIZE = MAX_PAGE_SIZE;
 
 interface AssignedItem {
   type: TargetType;
@@ -130,30 +130,36 @@ const AssignModal: React.FC<AssignModalProps> = ({
     }
     setAssignedLoading(true);
     try {
-      const [deviceResult, userResult, groupResult] = await Promise.all([
-        getStrategyAssignments(record.guid, {
-          target_type: 'device',
-          current: 1,
-          pageSize: ASSIGNMENT_PAGE_SIZE,
-        }),
+      const [devices, users, groups] = await Promise.all([
+        loadAllPages<API.StrategyAssignmentDeviceItem>((current) =>
+          getStrategyAssignments(record.guid, {
+            target_type: 'device',
+            current,
+            pageSize: ASSIGNMENT_PAGE_SIZE,
+          }),
+        ),
         canAssignUsers
-          ? getStrategyAssignments(record.guid, {
-              target_type: 'user',
-              current: 1,
-              pageSize: ASSIGNMENT_PAGE_SIZE,
-            })
-          : Promise.resolve({ data: [], total: 0 }),
-        getStrategyAssignments(record.guid, {
-          target_type: 'device_group',
-          current: 1,
-          pageSize: ASSIGNMENT_PAGE_SIZE,
-        }),
+          ? loadAllPages<API.StrategyAssignmentUserItem>((current) =>
+              getStrategyAssignments(record.guid, {
+                target_type: 'user',
+                current,
+                pageSize: ASSIGNMENT_PAGE_SIZE,
+              }),
+            )
+          : Promise.resolve([]),
+        loadAllPages<API.StrategyAssignmentDeviceGroupItem>((current) =>
+          getStrategyAssignments(record.guid, {
+            target_type: 'device_group',
+            current,
+            pageSize: ASSIGNMENT_PAGE_SIZE,
+          }),
+        ),
       ]);
       if (requestVersion !== assignedRequestVersionRef.current) return;
 
       const items: AssignedItem[] = [];
 
-      deviceResult.data.forEach((device) => {
+      devices.forEach((device) => {
         items.push({
           type: 'device',
           guid: device.uuid,
@@ -161,7 +167,7 @@ const AssignModal: React.FC<AssignModalProps> = ({
         });
       });
 
-      userResult.data.forEach((user) => {
+      users.forEach((user) => {
         items.push({
           type: 'user',
           guid: user.guid,
@@ -170,7 +176,7 @@ const AssignModal: React.FC<AssignModalProps> = ({
         });
       });
 
-      groupResult.data.forEach((group) => {
+      groups.forEach((group) => {
         items.push({
           type: 'device_group',
           guid: group.guid,

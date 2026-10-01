@@ -2,12 +2,12 @@ import { updateDevice } from '@/services/rustdesk-console/device';
 import { getDeviceGroupList } from '@/services/rustdesk-console/deviceGroup';
 import { getStrategyList } from '@/services/rustdesk-console/strategy';
 import { getAdminUserList } from '@/services/rustdesk-console/user';
-import { loadAllPages } from '@/utils/pagination';
+import { MAX_PAGE_SIZE, loadAllPages } from '@/utils/pagination';
 import { FormattedMessage, useIntl } from '@umijs/max';
 import { App, Form, Input, Modal, Select } from 'antd';
 import React, { useEffect, useState } from 'react';
 
-const OPTIONS_PAGE_SIZE = 100;
+const OPTIONS_PAGE_SIZE = MAX_PAGE_SIZE;
 
 export interface EditDeviceModalProps {
   open: boolean;

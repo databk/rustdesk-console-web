@@ -1,6 +1,6 @@
 import type { RequestOptions } from '@@/plugin-request/request';
 import { request } from '@umijs/max';
-import { loadAllPages } from '@/utils/pagination';
+import { MAX_PAGE_SIZE, loadAllPages } from '@/utils/pagination';
 
 type ActionResponse = string | Record<string, unknown> | null | undefined;
 
@@ -46,7 +46,7 @@ export async function getCustomAddressBooks(
 
 export async function getAllCustomAddressBooks() {
   return loadAllPages<API.AddressBookProfile>((current) =>
-    getCustomAddressBooks({ current, pageSize: 100 }),
+    getCustomAddressBooks({ current, pageSize: MAX_PAGE_SIZE }),
   );
 }
 
@@ -193,7 +193,7 @@ export async function getRules(
 
 export async function getAllRules(ab: string) {
   return loadAllPages<API.RuleItem>((current) =>
-    getRules({ ab, current, pageSize: 100 }),
+    getRules({ ab, current, pageSize: MAX_PAGE_SIZE }),
   );
 }
 
