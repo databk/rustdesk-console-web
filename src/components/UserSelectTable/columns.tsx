@@ -49,6 +49,12 @@ export const getUserColumns = (): ProColumns<API.UserItem>[] => {
       ),
       dataIndex: 'name',
       width: 180,
+      fieldProps: {
+        placeholder: intl.formatMessage({
+          id: 'pages.users.searchNamePlaceholder',
+          defaultMessage: 'Search by username',
+        }),
+      },
       ellipsis: true,
       render: (_: unknown, record: API.UserItem) => (
         <Space orientation="vertical" size={0}>
@@ -85,6 +91,12 @@ export const getUserColumns = (): ProColumns<API.UserItem>[] => {
       title: <FormattedMessage id="pages.users.email" defaultMessage="Email" />,
       dataIndex: 'email',
       ellipsis: true,
+      fieldProps: {
+        placeholder: intl.formatMessage({
+          id: 'pages.users.searchEmailPlaceholder',
+          defaultMessage: 'Search by email',
+        }),
+      },
       render: (_: unknown, record: API.UserItem) => record.email || '-',
     },
     {
@@ -125,6 +137,12 @@ export const getUserColumns = (): ProColumns<API.UserItem>[] => {
         <FormattedMessage id="pages.users.strategy" defaultMessage="Strategy" />
       ),
       dataIndex: 'strategy_name',
+      fieldProps: {
+        placeholder: intl.formatMessage({
+          id: 'pages.users.searchStrategyPlaceholder',
+          defaultMessage: 'Search by strategy',
+        }),
+      },
       render: (_: unknown, record: API.UserItem) => record.strategy_name || '-',
     },
     {
@@ -135,6 +153,12 @@ export const getUserColumns = (): ProColumns<API.UserItem>[] => {
         />
       ),
       dataIndex: 'user_group_name',
+      fieldProps: {
+        placeholder: intl.formatMessage({
+          id: 'pages.users.searchUserGroupPlaceholder',
+          defaultMessage: 'Search by user group',
+        }),
+      },
       render: (_: unknown, record: API.UserItem) => (
         <Space>
           <TeamOutlined />

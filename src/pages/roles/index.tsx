@@ -350,6 +350,12 @@ const RoleList: React.FC = () => {
       ),
       dataIndex: 'name',
       width: 220,
+      fieldProps: {
+        placeholder: intl.formatMessage({
+          id: 'pages.roles.searchNamePlaceholder',
+          defaultMessage: 'Search by role name',
+        }),
+      },
       render: (_, record) => (
         <Space>
           <SafetyCertificateOutlined style={{ color: '#1677ff' }} />
@@ -370,6 +376,12 @@ const RoleList: React.FC = () => {
       dataIndex: 'note',
       width: 260,
       ellipsis: true,
+      fieldProps: {
+        placeholder: intl.formatMessage({
+          id: 'pages.roles.searchNotePlaceholder',
+          defaultMessage: 'Search by note',
+        }),
+      },
       render: (_, record) => record.note || '-',
     },
     {
@@ -609,7 +621,6 @@ const RoleList: React.FC = () => {
           showQuickJumper: true,
         }}
         scroll={{ x: 900 }}
-        search={{ labelWidth: 'auto' }}
         toolBarRender={() => [
           <Tooltip
             key="create-tip"

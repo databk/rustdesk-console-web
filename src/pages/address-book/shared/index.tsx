@@ -113,6 +113,12 @@ const SharedAddressBook: React.FC = () => {
         <FormattedMessage id="pages.addressBook.name" defaultMessage="Name" />
       ),
       dataIndex: 'name',
+      fieldProps: {
+        placeholder: intl.formatMessage({
+          id: 'pages.addressBook.searchNamePlaceholder',
+          defaultMessage: 'Search by name',
+        }),
+      },
       render: (_, record: API.SharedAddressBook) => (
         <a
           onClick={() => {
@@ -130,6 +136,12 @@ const SharedAddressBook: React.FC = () => {
       ),
       dataIndex: 'note',
       ellipsis: true,
+      fieldProps: {
+        placeholder: intl.formatMessage({
+          id: 'pages.addressBook.searchNotePlaceholder',
+          defaultMessage: 'Search by note',
+        }),
+      },
     },
     ...(canOpenAccessSettings
       ? [
@@ -254,6 +266,7 @@ const SharedAddressBook: React.FC = () => {
             pageSize: params.pageSize || 20,
             current: params.current || 1,
             name: params.name,
+            note: params.note,
           });
           if (!Array.isArray(result.data) || typeof result.total !== 'number') {
             throw new Error('Invalid shared address book response');

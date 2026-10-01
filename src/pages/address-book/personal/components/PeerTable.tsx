@@ -62,11 +62,6 @@ const PeerTable: React.FC<PeerTableProps> = ({
           ? columns
           : columns.filter((column) => column.valueType !== 'option')
       }
-      search={{
-        labelWidth: 'auto',
-        defaultCollapsed: false,
-        optionRender: (_searchConfig, _formProps, dom) => [dom[1], dom[0]],
-      }}
       pagination={DEFAULT_PAGINATION}
       scroll={{ x: 1100 }}
       toolBarRender={() =>

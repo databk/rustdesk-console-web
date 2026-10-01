@@ -22,6 +22,12 @@ export const usePeerColumns = (
       title: <FormattedMessage id="pages.common.id" defaultMessage="ID" />,
       dataIndex: 'id',
       width: '15%',
+      fieldProps: {
+        placeholder: intl.formatMessage({
+          id: 'pages.addressBook.searchIdPlaceholder',
+          defaultMessage: 'Search by ID',
+        }),
+      },
       ellipsis: true,
       sorter: true,
       render: (_: unknown, record: API.PeerItem) => {

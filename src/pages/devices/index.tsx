@@ -462,11 +462,6 @@ const DeviceList: React.FC<DeviceListProps> = ({
           return tableResult;
         }}
         columns={columns}
-        search={{
-          labelWidth: 'auto',
-          defaultCollapsed: true,
-          optionRender: (_searchConfig, _formProps, dom) => [...dom.reverse()],
-        }}
         pagination={DEFAULT_PAGINATION}
         scroll={{ x: '100%' }}
         toolBarRender={() =>

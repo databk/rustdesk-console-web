@@ -91,7 +91,7 @@ export async function addSharedAddressBook(data: API.AddSharedAddressBookParams)
 }
 
 export async function getWebSharedAddressBooks(
-  params?: API.PageParams & { name?: string },
+  params?: API.PageParams & { name?: string; note?: string },
   options?: { [key: string]: any },
 ) {
   return request<API.PaginatedResult<API.SharedAddressBook>>(

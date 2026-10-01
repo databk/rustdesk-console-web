@@ -123,6 +123,12 @@ const UserGroupList: React.FC = () => {
       ),
       dataIndex: 'name',
       width: 200,
+      fieldProps: {
+        placeholder: intl.formatMessage({
+          id: 'pages.userGroups.searchNamePlaceholder',
+          defaultMessage: 'Search by name',
+        }),
+      },
       render: (_, record) => (
         <Space>
           <a
