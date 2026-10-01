@@ -74,8 +74,8 @@ const targetTypeOptions: { label: React.ReactNode; value: TargetType }[] = [
   },
 ];
 
-const ASSIGNMENT_PAGE_SIZE = 200;
-const TARGET_PAGE_SIZE = 200;
+const ASSIGNMENT_PAGE_SIZE = 100;
+const TARGET_PAGE_SIZE = 100;
 
 interface AssignedItem {
   type: TargetType;
