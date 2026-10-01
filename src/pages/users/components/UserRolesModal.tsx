@@ -32,7 +32,7 @@ import {
   replaceUserRoles,
 } from '@/services/rustdesk-console/userRole';
 import { getRequestErrorMessage } from '@/utils/requestError';
-import { loadAllPages } from '@/utils/pagination';
+import { MAX_PAGE_SIZE, loadAllPages } from '@/utils/pagination';
 import {
   type AssignmentScopeType,
   type AssignmentValidationError,
@@ -57,7 +57,7 @@ interface UserRolesModalProps {
 
 const loadAllRoles = async () => {
   return loadAllPages<API.RoleItem>((current) =>
-    getRoleList({ current, pageSize: 100 }),
+    getRoleList({ current, pageSize: MAX_PAGE_SIZE }),
   );
 };
 

@@ -2,6 +2,7 @@ import { updateDevice } from '@/services/rustdesk-console/device';
 import { getDeviceGroupList } from '@/services/rustdesk-console/deviceGroup';
 import { getStrategyList } from '@/services/rustdesk-console/strategy';
 import { getAdminUserList } from '@/services/rustdesk-console/user';
+import { MAX_PAGE_SIZE, loadAllPages } from '@/utils/pagination';
 import { FormattedMessage, useIntl } from '@umijs/max';
 import { App, Form, Input, Modal, Select } from 'antd';
 import React, { useEffect, useState } from 'react';
@@ -48,19 +49,23 @@ const EditDeviceModal: React.FC<EditDeviceModalProps> = ({
 
   const fetchOptions = async () => {
     try {
-      const [usersRes, groupsRes, strategiesRes] = await Promise.all([
-        getAdminUserList({ current: 1, pageSize: 1000 }),
-        getDeviceGroupList({ current: 1, pageSize: 1000 }),
-        getStrategyList({ current: 1, pageSize: 1000 }),
+      const [users, groups, strategies] = await Promise.all([
+        loadAllPages<API.UserItem>((current) =>
+          getAdminUserList({ current, pageSize: MAX_PAGE_SIZE }),
+        ),
+        loadAllPages<API.DeviceGroupItem>((current) =>
+          getDeviceGroupList({ current, pageSize: MAX_PAGE_SIZE }),
+        ),
+        loadAllPages<API.StrategyItem>((current) =>
+          getStrategyList({ current, pageSize: MAX_PAGE_SIZE }),
+        ),
       ]);
-      setUserOptions(
-        (usersRes.data || []).map((u) => ({ label: u.name, value: u.name })),
-      );
+      setUserOptions(users.map((u) => ({ label: u.name, value: u.name })));
       setDeviceGroupOptions(
-        (groupsRes.data || []).map((g) => ({ label: g.name, value: g.name })),
+        groups.map((g) => ({ label: g.name, value: g.name })),
       );
       setStrategyOptions(
-        (strategiesRes.data || []).map((s) => ({
+        strategies.map((s) => ({
           label: s.name,
           value: s.name,
         })),

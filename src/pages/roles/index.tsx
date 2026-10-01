@@ -36,6 +36,7 @@ import {
   updateRole,
 } from '@/services/rustdesk-console/role';
 import { getRequestErrorMessage } from '@/utils/requestError';
+import { MAX_PAGE_SIZE } from '@/utils/pagination';
 import {
   addRequiredPermissions,
   removeDependentPermissions,
@@ -582,7 +583,7 @@ const RoleList: React.FC = () => {
             window.builtInOffset + window.builtInLimit,
           );
 
-          const chunkSize = 100;
+          const chunkSize = MAX_PAGE_SIZE;
           const firstCustomPage =
             Math.floor(window.customOffset / chunkSize) + 1;
           const firstCustomOffset = window.customOffset % chunkSize;

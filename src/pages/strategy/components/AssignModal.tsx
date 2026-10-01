@@ -31,7 +31,7 @@ import {
   getAssignableStrategyTargetTypes,
   type StrategyAssignmentTargetType,
 } from '../strategyAccess';
-import { loadAllPages } from '@/utils/pagination';
+import { MAX_PAGE_SIZE, loadAllPages } from '@/utils/pagination';
 
 type TargetType = StrategyAssignmentTargetType;
 
@@ -73,9 +73,6 @@ const targetTypeOptions: { label: React.ReactNode; value: TargetType }[] = [
     value: 'device_group',
   },
 ];
-
-const ASSIGNMENT_PAGE_SIZE = 200;
-const TARGET_PAGE_SIZE = 200;
 
 interface AssignedItem {
   type: TargetType;
@@ -130,30 +127,36 @@ const AssignModal: React.FC<AssignModalProps> = ({
     }
     setAssignedLoading(true);
     try {
-      const [deviceResult, userResult, groupResult] = await Promise.all([
-        getStrategyAssignments(record.guid, {
-          target_type: 'device',
-          current: 1,
-          pageSize: ASSIGNMENT_PAGE_SIZE,
-        }),
+      const [devices, users, groups] = await Promise.all([
+        loadAllPages<API.StrategyAssignmentDeviceItem>((current) =>
+          getStrategyAssignments(record.guid, {
+            target_type: 'device',
+            current,
+            pageSize: MAX_PAGE_SIZE,
+          }),
+        ),
         canAssignUsers
-          ? getStrategyAssignments(record.guid, {
-              target_type: 'user',
-              current: 1,
-              pageSize: ASSIGNMENT_PAGE_SIZE,
-            })
-          : Promise.resolve({ data: [], total: 0 }),
-        getStrategyAssignments(record.guid, {
-          target_type: 'device_group',
-          current: 1,
-          pageSize: ASSIGNMENT_PAGE_SIZE,
-        }),
+          ? loadAllPages<API.StrategyAssignmentUserItem>((current) =>
+              getStrategyAssignments(record.guid, {
+                target_type: 'user',
+                current,
+                pageSize: MAX_PAGE_SIZE,
+              }),
+            )
+          : Promise.resolve([]),
+        loadAllPages<API.StrategyAssignmentDeviceGroupItem>((current) =>
+          getStrategyAssignments(record.guid, {
+            target_type: 'device_group',
+            current,
+            pageSize: MAX_PAGE_SIZE,
+          }),
+        ),
       ]);
       if (requestVersion !== assignedRequestVersionRef.current) return;
 
       const items: AssignedItem[] = [];
 
-      deviceResult.data.forEach((device) => {
+      devices.forEach((device) => {
         items.push({
           type: 'device',
           guid: device.uuid,
@@ -161,7 +164,7 @@ const AssignModal: React.FC<AssignModalProps> = ({
         });
       });
 
-      userResult.data.forEach((user) => {
+      users.forEach((user) => {
         items.push({
           type: 'user',
           guid: user.guid,
@@ -170,7 +173,7 @@ const AssignModal: React.FC<AssignModalProps> = ({
         });
       });
 
-      groupResult.data.forEach((group) => {
+      groups.forEach((group) => {
         items.push({
           type: 'device_group',
           guid: group.guid,
@@ -221,7 +224,7 @@ const AssignModal: React.FC<AssignModalProps> = ({
               getStrategyTargetCandidates({
                 target_type: 'device',
                 current,
-                pageSize: TARGET_PAGE_SIZE,
+                pageSize: MAX_PAGE_SIZE,
               }),
             );
             if (requestVersion !== optionsRequestVersionRef.current) return;
@@ -233,7 +236,7 @@ const AssignModal: React.FC<AssignModalProps> = ({
               getStrategyTargetCandidates({
                 target_type: 'user',
                 current,
-                pageSize: TARGET_PAGE_SIZE,
+                pageSize: MAX_PAGE_SIZE,
               }),
             );
             if (requestVersion !== optionsRequestVersionRef.current) return;
@@ -244,7 +247,7 @@ const AssignModal: React.FC<AssignModalProps> = ({
             const result = await loadAllPages((current) =>
               getStrategyTargetDeviceGroupList({
                 current,
-                pageSize: TARGET_PAGE_SIZE,
+                pageSize: MAX_PAGE_SIZE,
               }),
             );
             if (requestVersion !== optionsRequestVersionRef.current) return;

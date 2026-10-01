@@ -1,5 +1,5 @@
 import { request } from '@umijs/max';
-import { loadAllPages } from '@/utils/pagination';
+import { MAX_PAGE_SIZE, loadAllPages } from '@/utils/pagination';
 
 export async function getUserGroupList(
   params?: API.PageParams & {
@@ -50,6 +50,6 @@ export async function moveUsersToGroup(guid: string, userGuids: string[]) {
 
 export async function getAllUserGroups() {
   return loadAllPages<API.UserGroupItem>((current) =>
-    getUserGroupList({ current, pageSize: 100 }),
+    getUserGroupList({ current, pageSize: MAX_PAGE_SIZE }),
   );
 }

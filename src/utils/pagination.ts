@@ -4,6 +4,8 @@ export const DEFAULT_PAGINATION = {
   showQuickJumper: true,
 } as const;
 
+export const MAX_PAGE_SIZE = 100;
+
 export function toTableResult<T>(result: API.PaginatedResult<T>) {
   return {
     data: result.data || [],
