@@ -825,6 +825,7 @@ export default {
   'pages.addressBook.untagged': '未标记',
   'pages.addressBook.searchIdPlaceholder': '搜索ID',
   'pages.addressBook.searchNamePlaceholder': '搜索名称',
+  'pages.addressBook.searchNotePlaceholder': '搜索备注',
   'pages.common.cancel': '否',
   'pages.common.confirm': '是',
   'pages.common.enterDescription': '请输入描述',

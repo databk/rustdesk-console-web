@@ -897,6 +897,7 @@ export default {
   'pages.addressBook.untagged': 'Untagged',
   'pages.addressBook.searchIdPlaceholder': 'Search by ID',
   'pages.addressBook.searchNamePlaceholder': 'Search by name',
+  'pages.addressBook.searchNotePlaceholder': 'Search by note',
   'pages.common.cancel': 'No',
   'pages.common.confirm': 'Yes',
   'pages.common.enterDescription': 'Enter description',

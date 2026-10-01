@@ -947,6 +947,7 @@ export default {
   'pages.addressBook.untagged': 'Без тегов',
   'pages.addressBook.searchIdPlaceholder': 'Поиск по ID',
   'pages.addressBook.searchNamePlaceholder': 'Поиск по названию',
+  'pages.addressBook.searchNotePlaceholder': 'Поиск по примечанию',
   'pages.common.cancel': 'Нет',
   'pages.common.confirm': 'Да',
   'pages.common.enterDescription': 'Введите описание',

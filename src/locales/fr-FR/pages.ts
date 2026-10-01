@@ -914,6 +914,7 @@ export default {
   'pages.addressBook.viewShareSettings': 'Paramètres de partage',
   'pages.addressBook.searchIdPlaceholder': 'Rechercher par ID',
   'pages.addressBook.searchNamePlaceholder': 'Rechercher par nom',
+  'pages.addressBook.searchNotePlaceholder': 'Rechercher par note',
   'pages.audits.connectionId': 'ID de connexion',
   'pages.audits.currentConnections': 'Connexions actuelles',
   'pages.audits.operator': 'Opérateur',

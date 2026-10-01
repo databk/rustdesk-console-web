@@ -950,6 +950,7 @@ export default {
   'pages.addressBook.untagged': 'Sem Tag',
   'pages.addressBook.searchIdPlaceholder': 'Buscar por ID',
   'pages.addressBook.searchNamePlaceholder': 'Buscar por nome',
+  'pages.addressBook.searchNotePlaceholder': 'Buscar por observação',
   'pages.common.cancel': 'Não',
   'pages.common.confirm': 'Sim',
   'pages.common.enterDescription': 'Informe uma descrição',
