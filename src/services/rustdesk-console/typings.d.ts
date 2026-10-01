@@ -55,7 +55,7 @@ declare namespace API {
   type LoginParams = {
     username?: string;
     password?: string;
-    type?: 'email_code' | 'tfa_code' | 'sms_code';
+    type?: 'account' | 'mobile' | 'sms_code' | 'email_code' | 'tfa_code' | 'passkey_check';
     verificationCode?: string;
     tfaCode?: string;
     secret?: string;
@@ -1063,7 +1063,7 @@ declare namespace API {
 
   type SubmitBuildParams = {
     os: 'windows';
-    arch: 'x64' | 'arm64' | 'x86';
+    arch: 'x86_64' | 'aarch64' | 'x86';
     custom: BuildCustomConfig;
   };
 
