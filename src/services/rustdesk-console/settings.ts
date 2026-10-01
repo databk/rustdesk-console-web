@@ -1,13 +1,13 @@
 import { request } from '@umijs/max';
 
-export async function getFrontendSettings(options?: { [key: string]: any }) {
+export async function getFrontendSettings(options?: Record<string, unknown>) {
   return request<API.FrontendSettings>('/api/settings/frontend', {
     method: 'GET',
     ...(options || {}),
   });
 }
 
-export async function getGeneralSettings(options?: { [key: string]: any }) {
+export async function getGeneralSettings(options?: Record<string, unknown>) {
   return request<API.GeneralSettings>('/api/settings/general', {
     method: 'GET',
     ...(options || {}),

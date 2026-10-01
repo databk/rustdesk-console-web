@@ -1,16 +1,8 @@
 import { request } from '@umijs/max';
 
 export async function getDeviceList(
-  params: API.PageParams & {
-    id?: string;
-    status?: string;
-    is_online?: string;
-    user_name?: string;
-    device_group_name?: string;
-    device_group_guid?: string;
-    os?: string;
-  },
-  options?: { [key: string]: any },
+  params: API.DeviceListParams,
+  options?: Record<string, unknown>,
 ) {
   return request<API.PaginatedResult<API.DeviceItem>>('/api/peers', {
     method: 'GET',
@@ -20,18 +12,8 @@ export async function getDeviceList(
 }
 
 export async function getAdminDeviceList(
-  params: API.PageParams & {
-    id?: string;
-    status?: string;
-    is_online?: string;
-    device_name?: string;
-    user_name?: string;
-    device_username?: string;
-    os?: string;
-    device_group_name?: string;
-    device_group_guid?: string;
-  },
-  options?: { [key: string]: any },
+  params: API.AdminDeviceListParams,
+  options?: Record<string, unknown>,
 ) {
   return request<API.PaginatedResult<API.DeviceItem>>('/api/devices', {
     method: 'GET',

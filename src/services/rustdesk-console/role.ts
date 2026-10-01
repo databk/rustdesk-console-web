@@ -5,7 +5,7 @@ export async function getRoleList(
     name?: string;
     note?: string;
   },
-  options?: { [key: string]: any },
+  options?: Record<string, unknown>,
 ) {
   return request<API.PaginatedResult<API.RoleItem>>('/api/roles', {
     method: 'GET',
@@ -16,7 +16,7 @@ export async function getRoleList(
 
 export async function getRoleDetail(
   guid: string,
-  options?: { [key: string]: any },
+  options?: Record<string, unknown>,
 ) {
   return request<API.RoleItem>(`/api/roles/${guid}`, {
     method: 'GET',

@@ -1,12 +1,26 @@
 declare namespace API {
+  // ── Enum types (aligned with backend enums) ─────────────────────
+
+  type UserStatus = -1 | 0 | 1;
+  type PeerStatus = 0 | 1;
+  type ConnType = -1 | 0 | 1 | 2 | 3 | 4;
+  type PrimaryAuth = 0 | 1 | 2 | 3 | 4;
+  type TwoFactorType = 0 | 1 | 2;
+  type FileAuditType = 0 | 1;
+  type AlarmType = 0 | 1 | 2 | 6 | 7 | 8 | 9 | 10;
+  type ShareRule = 1 | 2 | 3;
+  type BuildStatus = 'pending' | 'building' | 'completed' | 'failed' | 'cancelled';
+
+  // ── Auth ────────────────────────────────────────────────────────
+
   type CurrentUser = {
     guid?: string;
     name?: string;
     display_name?: string;
-    email?: string;
+    email?: string | null;
     note?: string;
     avatar?: string;
-    status?: number;
+    status?: UserStatus;
     is_admin?: boolean;
     tfa_enabled?: boolean;
     third_auth_type?: string;
@@ -14,7 +28,7 @@ declare namespace API {
     info?: {
       email_verification?: boolean;
       email_alarm_notification?: boolean;
-      other?: Record<string, any>;
+      other?: Record<string, unknown>;
     };
   };
 
@@ -74,7 +88,7 @@ declare namespace API {
     user?: CurrentUser;
   };
 
-  // --- WebAuthn JSON types (base64url-encoded, as returned by the server) ---
+  // ── WebAuthn JSON types (base64url-encoded) ─────────────────────
 
   type PublicKeyCredentialCreationOptionsJSON = {
     rp: { name: string; id?: string };
@@ -116,7 +130,7 @@ declare namespace API {
       transports?: string[];
     };
     authenticatorAttachment?: string;
-    clientExtensionResults: Record<string, any>;
+    clientExtensionResults: Record<string, unknown>;
     type: 'public-key';
   };
 
@@ -130,11 +144,11 @@ declare namespace API {
       userHandle?: string;
     };
     authenticatorAttachment?: string;
-    clientExtensionResults: Record<string, any>;
+    clientExtensionResults: Record<string, unknown>;
     type: 'public-key';
   };
 
-  // --- Passkey API types ---
+  // ── Passkey ─────────────────────────────────────────────────────
 
   type PasskeyAuthBeginResponse = {
     secret: string;
@@ -171,6 +185,8 @@ declare namespace API {
     enabled: boolean;
   };
 
+  // ── Session ─────────────────────────────────────────────────────
+
   type SessionItem = {
     jti: string;
     deviceId?: string | null;
@@ -181,6 +197,8 @@ declare namespace API {
     createdAt?: string;
     expiresAt?: string;
   };
+
+  // ── OIDC ────────────────────────────────────────────────────────
 
   type OidcLoginInfo = {
     name: string;
@@ -200,6 +218,8 @@ declare namespace API {
     url?: string;
   };
 
+  // ── Pagination ──────────────────────────────────────────────────
+
   type PageParams = {
     current?: number;
     pageSize?: number;
@@ -212,16 +232,20 @@ declare namespace API {
 
   type ResponseResult = {
     succ?: boolean;
-    [key: string]: any;
+    message?: string;
+    status?: string;
+    data?: unknown;
   };
+
+  // ── User ────────────────────────────────────────────────────────
 
   type UserItem = {
     guid: string;
     name: string;
     display_name?: string;
-    email: string;
-    note: string;
-    status: number; // -1=unverified, 0=disabled, 1=normal
+    email?: string | null;
+    note?: string;
+    status: UserStatus;
     is_admin: boolean;
     is_protected?: boolean;
     third_auth_type?: string;
@@ -257,14 +281,14 @@ declare namespace API {
     display_name?: string;
     email?: string;
     note?: string;
-    status?: number;
+    status?: UserStatus;
     is_admin?: boolean;
     user_group_guid?: string;
   };
 
   type BatchUpdateUserStatusParams = {
     user_guids: string[];
-    status: number; // -1=unverified, 0=disabled, 1=normal
+    status: UserStatus;
   };
 
   type BatchUpdateUserSecurityParams = {
@@ -291,8 +315,8 @@ declare namespace API {
     failedCount: number;
   };
 
-  type AdminUserListParams = API.PageParams & {
-    status?: number;
+  type AdminUserListParams = PageParams & {
+    status?: UserStatus;
     name?: string;
     email?: string;
     is_admin?: 0 | 1;
@@ -302,30 +326,56 @@ declare namespace API {
     user_group_name?: string;
   };
 
+  // ── Device ──────────────────────────────────────────────────────
+
+  type DeviceSysInfo = {
+    device_name?: string;
+    username?: string;
+    os?: string;
+    version?: string;
+    cpu?: string;
+    memory?: string;
+    ip?: string;
+  };
+
   type DeviceItem = {
-    id: string;
     guid: string;
-    info?: {
-      device_name?: string;
-      username?: string;
-      os?: string;
-      version?: string;
-      cpu?: string;
-      memory?: string;
-      ip?: string;
-    };
-    status?: number;
-    is_online?: boolean;
-    last_online?: string;
+    id: string;
+    userGuid?: string | null;
     user?: string;
     user_name?: string;
-    device_group?: string;
+    deviceGroupGuid?: string | null;
     device_group_name?: string;
     strategy_name?: string;
     note?: string;
+    status?: PeerStatus;
+    is_online?: boolean;
+    last_online?: string | null;
+    info?: DeviceSysInfo;
     created_at?: string;
     updated_at?: string;
-    [key: string]: any;
+  };
+
+  type DeviceListParams = PageParams & {
+    id?: string;
+    status?: string;
+    is_online?: string;
+    user_name?: string;
+    device_group_name?: string;
+    device_group_guid?: string;
+    os?: string;
+  };
+
+  type AdminDeviceListParams = PageParams & {
+    id?: string;
+    status?: string;
+    is_online?: string;
+    device_name?: string;
+    user_name?: string;
+    device_username?: string;
+    os?: string;
+    device_group_name?: string;
+    device_group_guid?: string;
   };
 
   type UpdateDeviceParams = {
@@ -335,13 +385,14 @@ declare namespace API {
     note?: string | null;
   };
 
+  // ── Device Group ────────────────────────────────────────────────
+
   type DeviceGroupItem = {
     guid: string;
     name: string;
     note?: string;
     created_at?: string;
     updated_at?: string;
-    [key: string]: any;
   };
 
   type CreateDeviceGroupParams = {
@@ -354,6 +405,8 @@ declare namespace API {
     note?: string;
   };
 
+  // ── Address Book ────────────────────────────────────────────────
+
   type AddressBookProfile = {
     guid: string;
     name: string;
@@ -361,15 +414,18 @@ declare namespace API {
     is_personal?: boolean;
   };
 
+  type AddressBookInfo = {
+    password?: string;
+  };
+
   type SharedAddressBook = {
     guid: string;
     name: string;
     owner?: string;
     note?: string;
-    rule?: 1 | 2 | 3;
+    rule?: ShareRule;
     is_owner?: boolean;
-    info?: Record<string, any>;
-    [key: string]: any;
+    info?: AddressBookInfo;
   };
 
   type AddSharedAddressBookParams = {
@@ -386,13 +442,14 @@ declare namespace API {
 
   type PeerItem = {
     id: string;
+    hash?: string | null;
+    password?: string | null;
+    username?: string;
     hostname?: string;
-    os?: string;
-    os_version?: string;
-    status?: string;
-    note?: string;
+    platform?: string;
+    alias?: string | null;
+    note?: string | null;
     tags?: string[];
-    [key: string]: any;
   };
 
   type AddPeerParams = {
@@ -444,13 +501,13 @@ declare namespace API {
       guid: string;
       name?: string;
     };
-    user?: string;
-    group?: string;
+    user?: string | null;
+    group?: string | null;
     target?: {
       name: string;
       display_name?: string;
     };
-    rule: 1 | 2 | 3;
+    rule: ShareRule;
     ruleType: 'user' | 'group' | 'everyone';
     createdAt?: string;
     updatedAt?: string;
@@ -460,12 +517,12 @@ declare namespace API {
     guid: string;
     user?: string;
     group?: string;
-    rule?: 1 | 2 | 3;
+    rule?: ShareRule;
   };
 
   type UpdateRuleParams = {
     guid: string;
-    rule: 1 | 2 | 3;
+    rule: ShareRule;
   };
 
   type AddressBookShareCandidateUser = {
@@ -484,28 +541,33 @@ declare namespace API {
     groups: AddressBookShareCandidateGroup[];
   };
 
+  type AddressBookSettings = {
+    max_peer_one_ab?: number;
+  };
+
+  // ── Audit ───────────────────────────────────────────────────────
+
   type ConnectionAuditItem = {
     id?: number;
     deviceId?: string;
     deviceUuid?: string;
-    connId?: string | number;
-    sessionId?: string;
+    connId?: string | null;
+    sessionId?: string | null;
     ip?: string;
     action?: string;
-    peerId?: string;
-    peerName?: string;
-    type?: number;
-    note?: string;
+    peerId?: string | null;
+    peerName?: string | null;
+    type?: ConnType;
+    note?: string | null;
     createdAt?: string;
-    requestedAt?: string;
-    establishedAt?: string;
-    closedAt?: string;
-    nonce?: string;
-    connAuditRef?: string;
-    primaryAuth?: number;
-    twoFactor?: number;
+    requestedAt?: string | null;
+    establishedAt?: string | null;
+    closedAt?: string | null;
+    nonce?: string | null;
+    connAuditRef?: string | null;
+    primaryAuth?: PrimaryAuth | null;
+    twoFactor?: TwoFactorType | null;
     can_disconnect: boolean;
-    [key: string]: any;
   };
 
   type ActiveConnectionItem = {
@@ -520,32 +582,30 @@ declare namespace API {
     deviceId?: string;
     deviceUuid?: string;
     peerId?: string;
-    connId?: string;
-    type?: number;
-    path?: string;
+    connId?: string | null;
+    type?: FileAuditType;
+    path?: string | null;
     isFile?: boolean;
     clientIp?: string;
     clientName?: string;
     fileCount?: number;
     files?: Array<[string, number]>;
     createdAt?: string;
-    nonce?: string;
-    [key: string]: any;
+    nonce?: string | null;
   };
 
   type AlarmAuditItem = {
     id?: number;
     deviceId?: string;
     deviceUuid?: string;
-    typ?: number;
-    infoId?: string;
+    typ?: AlarmType;
+    infoId?: string | null;
     infoIp?: string;
-    infoName?: string;
+    infoName?: string | null;
     createdAt?: string;
-    connId?: string;
-    nonce?: string;
-    connAuditRef?: string;
-    [key: string]: any;
+    connId?: string | null;
+    nonce?: string | null;
+    connAuditRef?: string | null;
   };
 
   type ConsoleAuditItem = {
@@ -555,19 +615,49 @@ declare namespace API {
     action?: string;
     target_type?: string | null;
     target_guid?: string | null;
-    result?: string | number | boolean | null;
+    result?: 'allowed' | 'denied';
     reason?: string | null;
-    before_state?: unknown;
-    after_state?: unknown;
+    before_state?: string | null;
+    after_state?: string | null;
     request_id?: string | null;
     created_at?: string | null;
   };
 
-  type AddressBookSettings = {
-    max_peer_one_ab?: number;
-    [key: string]: any;
+  type ConnectionAuditQueryParams = PageParams & {
+    deviceId?: string;
+    type?: number;
+    startTime?: string;
+    endTime?: string;
   };
 
+  type ActiveConnectionQueryParams = PageParams & {
+    deviceId?: string;
+  };
+
+  type FileAuditQueryParams = PageParams & {
+    deviceId?: string;
+    type?: FileAuditType;
+    startTime?: string;
+    endTime?: string;
+  };
+
+  type AlarmAuditQueryParams = PageParams & {
+    deviceId?: string;
+    type?: AlarmType;
+    startTime?: string;
+    endTime?: string;
+  };
+
+  type ConsoleAuditQueryParams = PageParams & {
+    operator?: string;
+    action?: string;
+    target_type?: string;
+    result?: 'allowed' | 'denied';
+    start_time?: string;
+    end_time?: string;
+  };
+
+  // ── Update Check ────────────────────────────────────────────────
 
   type UpdateCheckParams = {
     frontend_version: string;
@@ -582,10 +672,11 @@ declare namespace API {
   };
 
   type UpdateCheckResult = {
-    backend: API.UpdateCheckComponent;
-    frontend: API.UpdateCheckComponent;
+    backend: UpdateCheckComponent;
+    frontend: UpdateCheckComponent;
   };
 
+  // ── RBAC ────────────────────────────────────────────────────────
 
   type RoleItem = {
     guid: string;
@@ -689,13 +780,14 @@ declare namespace API {
     assignments: UserRoleAssignmentParams[];
   };
 
+  // ── Strategy ────────────────────────────────────────────────────
+
   type StrategyItem = {
     guid: string;
     name: string;
     note?: string;
     config_options?: Record<string, string>;
     updated_at?: string;
-    [key: string]: any;
   };
 
   type CreateStrategyParams = {
@@ -750,13 +842,21 @@ declare namespace API {
     is_protected?: boolean;
   };
 
-  type StrategyTargetCandidateParams = API.PageParams & {
+  type StrategyTargetCandidateParams = PageParams & {
     target_type: 'device' | 'user';
   };
 
-  type StrategyAssignmentParams = API.PageParams & {
+  type StrategyAssignmentParams = PageParams & {
     target_type: 'device' | 'user' | 'device_group';
   };
+
+  type StrategyCandidateItem = {
+    guid: string;
+    name: string;
+    note: string;
+  };
+
+  // ── User Group ──────────────────────────────────────────────────
 
   type UserGroupItem = {
     guid: string;
@@ -766,7 +866,6 @@ declare namespace API {
     is_default?: boolean;
     created_at?: string;
     updated_at?: string;
-    [key: string]: any;
   };
 
   type CreateUserGroupParams = {
@@ -779,75 +878,21 @@ declare namespace API {
     note?: string;
   };
 
-  type StrategyCandidateItem = {
-    guid: string;
-    name: string;
-    note: string;
-  };
-
   type UserGroupMoveResult = {
     message: string;
     moved_user_count: number;
   };
 
+  // ── Settings ────────────────────────────────────────────────────
 
   type SettingItem = {
     key: string;
-    value: string | number | boolean;
-    type?: string;
+    value: string;
+    category: string;
     description?: string;
-    category?: string;
-    [key: string]: any;
-  };
-
-  type DashboardData = {
-    users: {
-      total: number;
-      admin: number;
-      normal: number;
-    };
-    devices: {
-      total: number;
-      online: number;
-      offline: number;
-    };
-    connections: {
-      today: number;
-      successCount: number;
-      failureCount: number;
-    };
-    files: {
-      transferredToday: number;
-      uploadToday: number;
-      downloadToday: number;
-    };
-    counts: {
-      addressBooks: number;
-      groups: number;
-      roles: number;
-      strategies: number;
-    };
-    systemStatus: {
-      cpu: number | null;
-      memory: number | null;
-      disk: number | null;
-      uptime: number | null;
-    };
-  };
-
-  type DashboardTrends = {
-    connectionTrend?: Array<{
-      date: string;
-      count: number;
-    }>;
-    newUserTrend?: Array<{
-      date: string;
-      newUsers: number;
-    }>;
-    alarmTrend?: Array<{
-      date: string;
-      count: number;
-    }>;
+    isSensitive?: boolean;
+    created_at?: string;
+    updated_at?: string;
   };
 
   type GeneralSettings = {
@@ -870,6 +915,8 @@ declare namespace API {
     defaultLanguage: string;
     webauthnEnabled: boolean;
   };
+
+  // ── SMTP ────────────────────────────────────────────────────────
 
   type SMTPConfig = {
     host: string;
@@ -907,6 +954,8 @@ declare namespace API {
     message: string;
   };
 
+  // ── OIDC Provider ───────────────────────────────────────────────
+
   type OidcProviderType = 'oidc' | 'oauth2';
 
   type OidcProvider = {
@@ -926,7 +975,6 @@ declare namespace API {
     priority: number;
     created_at?: string;
     updated_at?: string;
-    [key: string]: any;
   };
 
   type CreateOidcProviderParams = {
@@ -975,6 +1023,8 @@ declare namespace API {
     message: string;
     endpoints?: OidcTestEndpoints;
   };
+
+  // ── LDAP ────────────────────────────────────────────────────────
 
   type LdapTlsOptions = {
     ca?: string;
@@ -1026,7 +1076,59 @@ declare namespace API {
     message: string;
   };
 
-  // Nexus types
+  // ── Dashboard ───────────────────────────────────────────────────
+
+  type DashboardData = {
+    users: {
+      total: number;
+      admin: number;
+      normal: number;
+    };
+    devices: {
+      total: number;
+      online: number;
+      offline: number;
+    };
+    connections: {
+      today: number;
+      successCount: number;
+      failureCount: number;
+    };
+    files: {
+      transferredToday: number;
+      uploadToday: number;
+      downloadToday: number;
+    };
+    counts: {
+      addressBooks: number;
+      groups: number;
+      roles: number;
+      strategies: number;
+    };
+    systemStatus: {
+      cpu: number | null;
+      memory: number | null;
+      disk: number | null;
+      uptime: number | null;
+    };
+  };
+
+  type DashboardTrends = {
+    connectionTrend?: Array<{
+      date: string;
+      count: number;
+    }>;
+    newUserTrend?: Array<{
+      date: string;
+      newUsers: number;
+    }>;
+    alarmTrend?: Array<{
+      date: string;
+      count: number;
+    }>;
+  };
+
+  // ── Nexus ───────────────────────────────────────────────────────
 
   type NexusLoginResult = {
     login_id: string;
@@ -1057,8 +1159,8 @@ declare namespace API {
     'disable-ab'?: 'Y' | 'N';
     'disable-tcp-listen'?: 'Y' | 'N';
     'app-name'?: string;
-    'override-settings'?: Record<string, string>;
-    'default-settings'?: Record<string, string>;
+    'override-settings'?: Record<string, unknown>;
+    'default-settings'?: Record<string, unknown>;
   };
 
   type SubmitBuildParams = {
@@ -1080,12 +1182,10 @@ declare namespace API {
     arch: string;
     appName: string;
     custom: string | null;
-    status: 'pending' | 'building' | 'completed' | 'failed' | 'cancelled';
+    status: BuildStatus;
     files: string | null;
     message: string | null;
     createdAt: string;
     updatedAt: string;
   };
-
-
 }

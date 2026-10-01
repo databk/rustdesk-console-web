@@ -77,7 +77,7 @@ export async function deleteCustomAddressBooks(guids: string[]) {
 
 export async function getSharedAddressBooks(
   params?: API.PageParams & { search?: string },
-  options?: { [key: string]: any },
+  options?: Record<string, unknown>,
 ) {
   return request<API.PaginatedResult<API.SharedAddressBook>>('/api/ab/shared/profiles', {
     method: 'GET',
@@ -92,7 +92,7 @@ export async function addSharedAddressBook(data: API.AddSharedAddressBookParams)
 
 export async function getWebSharedAddressBooks(
   params?: API.PageParams & { name?: string; note?: string },
-  options?: { [key: string]: any },
+  options?: Record<string, unknown>,
 ) {
   return request<API.PaginatedResult<API.SharedAddressBook>>(
     '/api/ab/shared/list',

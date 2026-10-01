@@ -3,7 +3,7 @@ import { request } from '@umijs/max';
 // Admin user list (management panel)
 export async function getAdminUserList(
   params: API.AdminUserListParams,
-  options?: { [key: string]: any },
+  options?: Record<string, unknown>,
 ) {
   return request<API.PaginatedResult<API.UserItem>>('/api/admin/users', {
     method: 'GET',
