@@ -1,3 +1,14 @@
+## [1.6.1](https://github.com/databk/rustdesk-console-web/compare/1.6.0...1.6.1) (2026-10-01)
+
+
+### Bug Fixes
+
+* respect backend pageSize limit of 100 in remaining callers ([#345](https://github.com/databk/rustdesk-console-web/issues/345)) ([c6305c9](https://github.com/databk/rustdesk-console-web/commit/c6305c94bf4f980b76c08e3ab8dec27c7f38ab8e))
+* **users:** prevent system owner status and deletion actions ([#341](https://github.com/databk/rustdesk-console-web/issues/341)) ([a77a85f](https://github.com/databk/rustdesk-console-web/commit/a77a85f29ca46d498142c978199b1a2f80e2f711))
+* **users:** remove obsolete admin toggle from edit user modal ([#340](https://github.com/databk/rustdesk-console-web/issues/340)) ([2254ac4](https://github.com/databk/rustdesk-console-web/commit/2254ac4efeb44a029d24826f27b7bb7d8d0f367e)), closes [#379](https://github.com/databk/rustdesk-console-web/issues/379)
+
+
+
 # [1.6.0](https://github.com/databk/rustdesk-console-web/compare/1.5.1...1.6.0) (2026-09-27)
 
 
@@ -112,18 +123,6 @@
 ### Reverts
 
 * remove site name functionality from commit 56839cb ([#202](https://github.com/databk/rustdesk-console-web/issues/202)) ([8fc55cc](https://github.com/databk/rustdesk-console-web/commit/8fc55cc8af04be0650a2e3ef1e66722f836fe796))
-
-
-
-# [1.3.0](https://github.com/databk/rustdesk-console-web/compare/1.2.2...1.3.0) (2026-07-15)
-
-
-### Features
-
-* add custom client generation via Nexus API ([#180](https://github.com/databk/rustdesk-console-web/issues/180)) ([2c5b2a5](https://github.com/databk/rustdesk-console-web/commit/2c5b2a5c7dd16e6ee0d38d35e3d75d782d47c5b4))
-* add Portuguese (Brazil) localization support ([#175](https://github.com/databk/rustdesk-console-web/issues/175)) ([811a9fe](https://github.com/databk/rustdesk-console-web/commit/811a9fed8d157d4a96100002206935a89284da2e))
-* add update check support for POST /api/update-check ([#169](https://github.com/databk/rustdesk-console-web/issues/169)) ([04a6527](https://github.com/databk/rustdesk-console-web/commit/04a652757144b0e87d715b5199ecdee29075039e))
-* make SMTP user and pass fields optional to support non-auth servers ([#181](https://github.com/databk/rustdesk-console-web/issues/181)) ([bc47f52](https://github.com/databk/rustdesk-console-web/commit/bc47f527204e3cd05206b7c1502168b9d8e6ea7a))
 
 
 
