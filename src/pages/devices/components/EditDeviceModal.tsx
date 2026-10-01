@@ -7,8 +7,6 @@ import { FormattedMessage, useIntl } from '@umijs/max';
 import { App, Form, Input, Modal, Select } from 'antd';
 import React, { useEffect, useState } from 'react';
 
-const OPTIONS_PAGE_SIZE = MAX_PAGE_SIZE;
-
 export interface EditDeviceModalProps {
   open: boolean;
   record: API.DeviceItem | null;
@@ -53,13 +51,13 @@ const EditDeviceModal: React.FC<EditDeviceModalProps> = ({
     try {
       const [users, groups, strategies] = await Promise.all([
         loadAllPages<API.UserItem>((current) =>
-          getAdminUserList({ current, pageSize: OPTIONS_PAGE_SIZE }),
+          getAdminUserList({ current, pageSize: MAX_PAGE_SIZE }),
         ),
         loadAllPages<API.DeviceGroupItem>((current) =>
-          getDeviceGroupList({ current, pageSize: OPTIONS_PAGE_SIZE }),
+          getDeviceGroupList({ current, pageSize: MAX_PAGE_SIZE }),
         ),
         loadAllPages<API.StrategyItem>((current) =>
-          getStrategyList({ current, pageSize: OPTIONS_PAGE_SIZE }),
+          getStrategyList({ current, pageSize: MAX_PAGE_SIZE }),
         ),
       ]);
       setUserOptions(users.map((u) => ({ label: u.name, value: u.name })));

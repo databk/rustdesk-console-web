@@ -74,9 +74,6 @@ const targetTypeOptions: { label: React.ReactNode; value: TargetType }[] = [
   },
 ];
 
-const ASSIGNMENT_PAGE_SIZE = MAX_PAGE_SIZE;
-const TARGET_PAGE_SIZE = MAX_PAGE_SIZE;
-
 interface AssignedItem {
   type: TargetType;
   guid: string;
@@ -135,7 +132,7 @@ const AssignModal: React.FC<AssignModalProps> = ({
           getStrategyAssignments(record.guid, {
             target_type: 'device',
             current,
-            pageSize: ASSIGNMENT_PAGE_SIZE,
+            pageSize: MAX_PAGE_SIZE,
           }),
         ),
         canAssignUsers
@@ -143,7 +140,7 @@ const AssignModal: React.FC<AssignModalProps> = ({
               getStrategyAssignments(record.guid, {
                 target_type: 'user',
                 current,
-                pageSize: ASSIGNMENT_PAGE_SIZE,
+                pageSize: MAX_PAGE_SIZE,
               }),
             )
           : Promise.resolve([]),
@@ -151,7 +148,7 @@ const AssignModal: React.FC<AssignModalProps> = ({
           getStrategyAssignments(record.guid, {
             target_type: 'device_group',
             current,
-            pageSize: ASSIGNMENT_PAGE_SIZE,
+            pageSize: MAX_PAGE_SIZE,
           }),
         ),
       ]);
@@ -227,7 +224,7 @@ const AssignModal: React.FC<AssignModalProps> = ({
               getStrategyTargetCandidates({
                 target_type: 'device',
                 current,
-                pageSize: TARGET_PAGE_SIZE,
+                pageSize: MAX_PAGE_SIZE,
               }),
             );
             if (requestVersion !== optionsRequestVersionRef.current) return;
@@ -239,7 +236,7 @@ const AssignModal: React.FC<AssignModalProps> = ({
               getStrategyTargetCandidates({
                 target_type: 'user',
                 current,
-                pageSize: TARGET_PAGE_SIZE,
+                pageSize: MAX_PAGE_SIZE,
               }),
             );
             if (requestVersion !== optionsRequestVersionRef.current) return;
@@ -250,7 +247,7 @@ const AssignModal: React.FC<AssignModalProps> = ({
             const result = await loadAllPages((current) =>
               getStrategyTargetDeviceGroupList({
                 current,
-                pageSize: TARGET_PAGE_SIZE,
+                pageSize: MAX_PAGE_SIZE,
               }),
             );
             if (requestVersion !== optionsRequestVersionRef.current) return;
