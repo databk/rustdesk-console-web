@@ -395,9 +395,13 @@ declare namespace API {
     os?: string;
     os_version?: string;
     status?: string;
+    alias?: string;
+    hash?: string;
+    password?: string;
+    username?: string;
+    platform?: string;
     note?: string;
     tags?: string[];
-
   };
 
   type AddPeerParams = {

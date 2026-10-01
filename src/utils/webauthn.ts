@@ -121,7 +121,11 @@ export function serializeRegistrationResponse(
       transports,
     },
     authenticatorAttachment: credential.authenticatorAttachment ?? undefined,
-    clientExtensionResults: credential.getClientExtensionResults(),
+    clientExtensionResults:
+      credential.getClientExtensionResults() as unknown as Record<
+        string,
+        unknown
+      >,
     type: credential.type as 'public-key',
   };
 }
@@ -147,7 +151,11 @@ export function serializeAuthenticationResponse(
         : undefined,
     },
     authenticatorAttachment: credential.authenticatorAttachment ?? undefined,
-    clientExtensionResults: credential.getClientExtensionResults(),
+    clientExtensionResults:
+      credential.getClientExtensionResults() as unknown as Record<
+        string,
+        unknown
+      >,
     type: credential.type as 'public-key',
   };
 }
