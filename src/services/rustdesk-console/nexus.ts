@@ -48,12 +48,6 @@ export async function submitBuild(data: API.SubmitBuildParams) {
   });
 }
 
-export async function getBuildStatus(uuid: string) {
-  return request<API.BuildStatusResponse>('/api/nexus/builds/' + uuid + '/status', {
-    method: 'GET',
-    skipErrorHandler: true,
-  });
-}
 
 export async function deleteBuild(uuid: string) {
   return request('/api/nexus/builds/' + uuid, {

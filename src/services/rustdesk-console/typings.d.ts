@@ -568,10 +568,6 @@ declare namespace API {
     [key: string]: any;
   };
 
-  type SystemInfo = {
-    version?: string;
-    [key: string]: any;
-  };
 
   type UpdateCheckParams = {
     frontend_version: string;
@@ -590,13 +586,6 @@ declare namespace API {
     frontend: API.UpdateCheckComponent;
   };
 
-  type LicenseInfo = {
-    currentDevices?: number;
-    maxDevices?: number | string;
-    expireTime?: string;
-    warning?: string;
-    [key: string]: any;
-  };
 
   type RoleItem = {
     guid: string;
@@ -801,25 +790,6 @@ declare namespace API {
     moved_user_count: number;
   };
 
-  type CustomClientItem = {
-    guid: string;
-    name: string;
-    config?: Record<string, any>;
-    download_url?: string;
-    created_at?: string;
-    updated_at?: string;
-    [key: string]: any;
-  };
-
-  type CreateCustomClientParams = {
-    name: string;
-    config?: Record<string, any>;
-  };
-
-  type UpdateCustomClientParams = {
-    name?: string;
-    config?: Record<string, any>;
-  };
 
   type SettingItem = {
     key: string;
@@ -1117,10 +1087,5 @@ declare namespace API {
     updatedAt: string;
   };
 
-  type BuildStatusResponse = {
-    uuid: string;
-    status: 'pending' | 'building' | 'completed' | 'failed' | 'cancelled';
-    files?: string[];
-    message?: string;
-  };
+
 }

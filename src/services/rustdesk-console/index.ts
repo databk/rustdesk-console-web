@@ -20,7 +20,7 @@ export {
   batchUpdateDeviceStatus,
   deleteDevice,
   updateDevice,
-  assignDevice,
+
 } from './device';
 export {
   getAdminUserList,
@@ -109,7 +109,7 @@ export {
   getStrategyAssignments,
   getStrategyTargetCandidates,
 } from './strategy';
-export { getSystemInfo, getLicenseStatus, checkUpdate } from './system';
+export { checkUpdate } from './system';
 export {
   createNexusLogin,
   pollNexusLoginStatus,
@@ -117,7 +117,7 @@ export {
   unbindNexus,
   getBuildList,
   submitBuild,
-  getBuildStatus,
+
   deleteBuild,
   getBuildFiles,
   downloadBuildFile,

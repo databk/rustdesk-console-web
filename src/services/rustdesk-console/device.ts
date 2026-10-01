@@ -88,9 +88,4 @@ export async function updateDevice(
   });
 }
 
-export async function assignDevice(guid: string, data: Record<string, any>) {
-  return request(`/api/peers/${guid}/assign`, {
-    method: 'POST',
-    data,
-  });
-}
+
