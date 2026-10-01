@@ -5,7 +5,7 @@ export async function getUserGroupList(
   params?: API.PageParams & {
     search?: string;
   },
-  options?: { [key: string]: any },
+  options?: Record<string, unknown>,
 ) {
   return request<API.PaginatedResult<API.UserGroupItem>>('/api/user-groups', {
     method: 'GET',

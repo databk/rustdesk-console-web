@@ -10,7 +10,7 @@ export async function getDashboardTrends(
   params?: {
     range?: '7d' | '30d' | '90d';
   },
-  options?: { [key: string]: any },
+  options?: Record<string, unknown>,
 ) {
   return request<API.DashboardTrends>('/api/dashboard/trends', {
     method: 'GET',

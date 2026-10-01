@@ -10,7 +10,7 @@ export async function getDeviceList(
     device_group_guid?: string;
     os?: string;
   },
-  options?: { [key: string]: any },
+  options?: Record<string, unknown>,
 ) {
   return request<API.PaginatedResult<API.DeviceItem>>('/api/peers', {
     method: 'GET',
@@ -31,7 +31,7 @@ export async function getAdminDeviceList(
     device_group_name?: string;
     device_group_guid?: string;
   },
-  options?: { [key: string]: any },
+  options?: Record<string, unknown>,
 ) {
   return request<API.PaginatedResult<API.DeviceItem>>('/api/devices', {
     method: 'GET',

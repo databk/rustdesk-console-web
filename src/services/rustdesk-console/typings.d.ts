@@ -14,7 +14,7 @@ declare namespace API {
     info?: {
       email_verification?: boolean;
       email_alarm_notification?: boolean;
-      other?: Record<string, any>;
+      other?: Record<string, unknown>;
     };
   };
 
@@ -116,7 +116,7 @@ declare namespace API {
       transports?: string[];
     };
     authenticatorAttachment?: string;
-    clientExtensionResults: Record<string, any>;
+    clientExtensionResults: Record<string, unknown>;
     type: 'public-key';
   };
 
@@ -130,7 +130,7 @@ declare namespace API {
       userHandle?: string;
     };
     authenticatorAttachment?: string;
-    clientExtensionResults: Record<string, any>;
+    clientExtensionResults: Record<string, unknown>;
     type: 'public-key';
   };
 
@@ -212,7 +212,9 @@ declare namespace API {
 
   type ResponseResult = {
     succ?: boolean;
-    [key: string]: any;
+    message?: string;
+    status?: string;
+    data?: unknown;
   };
 
   type UserItem = {
@@ -325,7 +327,7 @@ declare namespace API {
     note?: string;
     created_at?: string;
     updated_at?: string;
-    [key: string]: any;
+
   };
 
   type UpdateDeviceParams = {
@@ -341,7 +343,7 @@ declare namespace API {
     note?: string;
     created_at?: string;
     updated_at?: string;
-    [key: string]: any;
+
   };
 
   type CreateDeviceGroupParams = {
@@ -361,6 +363,10 @@ declare namespace API {
     is_personal?: boolean;
   };
 
+  type AddressBookInfo = {
+    password?: string;
+  };
+
   type SharedAddressBook = {
     guid: string;
     name: string;
@@ -368,8 +374,7 @@ declare namespace API {
     note?: string;
     rule?: 1 | 2 | 3;
     is_owner?: boolean;
-    info?: Record<string, any>;
-    [key: string]: any;
+    info?: AddressBookInfo;
   };
 
   type AddSharedAddressBookParams = {
@@ -392,7 +397,7 @@ declare namespace API {
     status?: string;
     note?: string;
     tags?: string[];
-    [key: string]: any;
+
   };
 
   type AddPeerParams = {
@@ -505,7 +510,7 @@ declare namespace API {
     primaryAuth?: number;
     twoFactor?: number;
     can_disconnect: boolean;
-    [key: string]: any;
+
   };
 
   type ActiveConnectionItem = {
@@ -530,7 +535,7 @@ declare namespace API {
     files?: Array<[string, number]>;
     createdAt?: string;
     nonce?: string;
-    [key: string]: any;
+
   };
 
   type AlarmAuditItem = {
@@ -545,7 +550,7 @@ declare namespace API {
     connId?: string;
     nonce?: string;
     connAuditRef?: string;
-    [key: string]: any;
+
   };
 
   type ConsoleAuditItem = {
@@ -565,7 +570,7 @@ declare namespace API {
 
   type AddressBookSettings = {
     max_peer_one_ab?: number;
-    [key: string]: any;
+
   };
 
 
@@ -695,7 +700,7 @@ declare namespace API {
     note?: string;
     config_options?: Record<string, string>;
     updated_at?: string;
-    [key: string]: any;
+
   };
 
   type CreateStrategyParams = {
@@ -766,7 +771,7 @@ declare namespace API {
     is_default?: boolean;
     created_at?: string;
     updated_at?: string;
-    [key: string]: any;
+
   };
 
   type CreateUserGroupParams = {
@@ -793,11 +798,12 @@ declare namespace API {
 
   type SettingItem = {
     key: string;
-    value: string | number | boolean;
-    type?: string;
+    value: string;
+    category: string;
     description?: string;
-    category?: string;
-    [key: string]: any;
+    isSensitive?: boolean;
+    created_at?: string;
+    updated_at?: string;
   };
 
   type DashboardData = {
@@ -926,7 +932,7 @@ declare namespace API {
     priority: number;
     created_at?: string;
     updated_at?: string;
-    [key: string]: any;
+
   };
 
   type CreateOidcProviderParams = {

@@ -2,7 +2,7 @@ import { request } from '@umijs/max';
 
 export async function getOidcProviderList(
   params?: API.PageParams,
-  options?: { [key: string]: any },
+  options?: Record<string, unknown>,
 ) {
   return request<API.PaginatedResult<API.OidcProvider>>('/api/oidc-providers', {
     method: 'GET',
@@ -13,7 +13,7 @@ export async function getOidcProviderList(
 
 export async function getOidcProvider(
   guid: string,
-  options?: { [key: string]: any },
+  options?: Record<string, unknown>,
 ) {
   return request<API.OidcProvider>(`/api/oidc-providers/${guid}`, {
     method: 'GET',

@@ -7,7 +7,7 @@ export async function getConnectionAudits(
     startTime?: string;
     endTime?: string;
   },
-  options?: { [key: string]: any },
+  options?: Record<string, unknown>,
 ) {
   return request<API.PaginatedResult<API.ConnectionAuditItem>>('/api/audits/conn', {
     method: 'GET',
@@ -20,7 +20,7 @@ export async function getActiveConnections(
   params: API.PageParams & {
     deviceId?: string;
   },
-  options?: { [key: string]: any },
+  options?: Record<string, unknown>,
 ) {
   return request<API.PaginatedResult<API.ActiveConnectionItem>>(
     '/api/audits/conn/active',
@@ -39,7 +39,7 @@ export async function getFileAudits(
     startTime?: string;
     endTime?: string;
   },
-  options?: { [key: string]: any },
+  options?: Record<string, unknown>,
 ) {
   return request<API.PaginatedResult<API.FileAuditItem>>('/api/audits/file', {
     method: 'GET',
@@ -55,7 +55,7 @@ export async function getAlarmAudits(
     startTime?: string;
     endTime?: string;
   },
-  options?: { [key: string]: any },
+  options?: Record<string, unknown>,
 ) {
   return request<API.PaginatedResult<API.AlarmAuditItem>>('/api/audits/alarm', {
     method: 'GET',
@@ -73,7 +73,7 @@ export async function getConsoleAudits(
     start_time?: string;
     end_time?: string;
   },
-  options?: { [key: string]: any },
+  options?: Record<string, unknown>,
 ) {
   return request<API.PaginatedResult<API.ConsoleAuditItem>>('/api/audits/console', {
     method: 'GET',
@@ -85,7 +85,7 @@ export async function getConsoleAudits(
 export async function updateConnectionAudit(
   id: number,
   data: { note: string },
-  options?: { [key: string]: any },
+  options?: Record<string, unknown>,
 ) {
   return request<API.ResponseResult>(`/api/audits/conn/${id}`, {
     method: 'PATCH',
@@ -97,7 +97,7 @@ export async function updateConnectionAudit(
 export async function disconnectConnection(
   uuid: string,
   connIds: number[],
-  options?: { [key: string]: any },
+  options?: Record<string, unknown>,
 ) {
   return request<API.ResponseResult>(`/api/devices/${uuid}/disconnect`, {
     method: 'POST',

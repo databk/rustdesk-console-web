@@ -2,7 +2,7 @@ import { request } from '@umijs/max';
 
 export async function getUserRoles(
   userGuid: string,
-  options?: { [key: string]: any },
+  options?: Record<string, unknown>,
 ) {
   return request<API.UserRolesResponse>(`/api/users/${userGuid}/roles`, {
     method: 'GET',

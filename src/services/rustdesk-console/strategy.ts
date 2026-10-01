@@ -4,7 +4,7 @@ export async function getStrategyList(
   params?: API.PageParams & {
     name?: string;
   },
-  options?: { [key: string]: any },
+  options?: Record<string, unknown>,
 ) {
   return request<API.PaginatedResult<API.StrategyItem>>('/api/strategies', {
     method: 'GET',
@@ -17,7 +17,7 @@ export async function getStrategyCandidates(
   params?: API.PageParams & {
     name?: string;
   },
-  options?: { [key: string]: any },
+  options?: Record<string, unknown>,
 ) {
   return request<API.PaginatedResult<API.StrategyCandidateItem>>(
     '/api/strategies/candidates',
