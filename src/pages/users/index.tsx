@@ -439,7 +439,7 @@ const UserList: React.FC<UserListProps> = ({
         ? {
             name: record.name,
             display_name: record.display_name,
-            email: record.email,
+            email: record.email ?? undefined,
             note: record.note,
           }
         : {}),
