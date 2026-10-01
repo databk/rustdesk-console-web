@@ -106,6 +106,11 @@ export default {
   'pages.devices.connectRdp': 'RDP',
   'pages.devices.connectTerminal': 'Terminal',
   'pages.devices.connectTerminalAdmin': 'Terminal (Admin)',
+  'pages.devices.searchIdPlaceholder': 'Rechercher par ID de périphérique',
+  'pages.devices.searchUserPlaceholder': "Rechercher par nom d'utilisateur",
+  'pages.devices.searchOsPlaceholder': 'Rechercher par OS',
+  'pages.devices.searchDeviceGroupPlaceholder':
+    'Rechercher par nom de groupe de périphériques',
   'pages.addressBook.name': 'Nom',
   'pages.addressBook.note': 'Note',
   'pages.addressBook.shared': "Carnets d'adresses partagés",
@@ -174,6 +179,7 @@ export default {
   'pages.deviceGroups.importSuccess':
     '{count} appareil(s) importé(s) avec succès',
   'pages.deviceGroups.importFailed': "Échec de l'importation des appareils",
+  'pages.deviceGroups.searchNamePlaceholder': 'Rechercher par nom',
   'pages.users.list': 'Liste des utilisateurs',
   'pages.users.name': 'Nom',
   'pages.users.displayName': "Nom d'affichage",
@@ -906,6 +912,9 @@ export default {
   'pages.addressBook.accessReadOnlyTitle':
     '{name} - Paramètres de partage en lecture seule',
   'pages.addressBook.viewShareSettings': 'Paramètres de partage',
+  'pages.addressBook.searchIdPlaceholder': 'Rechercher par ID',
+  'pages.addressBook.searchNamePlaceholder': 'Rechercher par nom',
+  'pages.addressBook.searchNotePlaceholder': 'Rechercher par note',
   'pages.audits.connectionId': 'ID de connexion',
   'pages.audits.currentConnections': 'Connexions actuelles',
   'pages.audits.operator': 'Opérateur',
@@ -919,6 +928,11 @@ export default {
   'pages.audits.target': 'Cible',
   'pages.audits.beforeState': 'État antérieur',
   'pages.audits.afterState': 'État postérieur',
+  'pages.audits.searchOperatorPlaceholder': 'Rechercher par opérateur',
+  'pages.audits.searchActionPlaceholder': 'Rechercher par action',
+  'pages.audits.searchTargetTypePlaceholder': 'Rechercher par type de cible',
+  'pages.audits.searchTargetIdPlaceholder': 'Rechercher par ID de cible',
+  'pages.audits.searchReasonPlaceholder': 'Rechercher par raison',
   'pages.common.back': 'Retour',
   'pages.common.close': 'Fermer',
   'pages.login.permissionsLoadFailed':
@@ -1018,6 +1032,8 @@ export default {
   'pages.roles.unknownPermission': 'Autorisation inconnue',
   'pages.roles.unknownResource': 'Ressource inconnue',
   'pages.roles.view': 'Voir le rôle',
+  'pages.roles.searchNamePlaceholder': 'Rechercher par nom de rôle',
+  'pages.roles.searchNotePlaceholder': 'Rechercher par note',
   'pages.strategies.loadAssignedFailed':
     'Échec du chargement des cibles attribuées',
   'pages.strategies.loadTargetsFailed': 'Échec du chargement des cibles',
@@ -1223,12 +1239,14 @@ export default {
   'pages.strategies.values.no': 'Non',
   'pages.strategies.values.yes': 'Oui',
   'pages.strategies.view': 'Voir la stratégie',
+  'pages.strategies.searchNamePlaceholder': 'Rechercher par nom de stratégie',
   'pages.userGroups.addSelected': 'Ajouter les utilisateurs sélectionnés',
   'pages.userGroups.addUsers': 'Ajouter des utilisateurs',
   'pages.userGroups.currentMembers': 'Membres actuels',
   'pages.userGroups.members': 'Membres',
   'pages.userGroups.membersTitle': 'Membres de {name}',
   'pages.userGroups.moveSelected': 'Déplacer la sélection',
+  'pages.userGroups.searchNamePlaceholder': 'Rechercher par nom',
   'pages.users.addRole': 'Ajouter un rôle',
   'pages.users.deviceGroupScope': "Groupes d'appareils sélectionnés",
   'pages.users.deviceGroupScopeRequired':
@@ -1293,4 +1311,9 @@ export default {
     'Gérer les paramètres système',
   'pages.users.unsupportedDeviceGroupScope':
     "La portée de groupe d'appareils n'est disponible que pour les rôles contenant des actions sur les appareils et l'attribution de stratégies",
+  'pages.users.searchNamePlaceholder': "Rechercher par nom d'utilisateur",
+  'pages.users.searchEmailPlaceholder': 'Rechercher par email',
+  'pages.users.searchStrategyPlaceholder': 'Rechercher par stratégie',
+  'pages.users.searchUserGroupPlaceholder':
+    "Rechercher par groupe d'utilisateurs",
 };
