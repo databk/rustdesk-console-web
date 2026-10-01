@@ -113,9 +113,12 @@ export const useUserColumns = (
           {record.is_protected && (
             <Tooltip
               title={intl.formatMessage({
-                id: 'pages.users.protectedAccountInfo',
-                defaultMessage:
-                  'Protected accounts can only be managed by the super administrator.',
+                id: record.is_admin
+                  ? 'pages.users.systemOwnerMutationBlocked'
+                  : 'pages.users.protectedAccountInfo',
+                defaultMessage: record.is_admin
+                  ? 'The system owner cannot be disabled or deleted.'
+                  : 'Protected accounts can only be managed by the super administrator.',
               })}
             >
               <SafetyCertificateOutlined
@@ -223,7 +226,7 @@ export const useUserColumns = (
               </span>
             </Tooltip>
           )}
-          {canDelete && (isSuperAdmin || !record.is_admin) && (
+          {canDelete && !record.is_admin && (
             <Popconfirm
               key="delete"
               title={

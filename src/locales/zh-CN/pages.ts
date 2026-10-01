@@ -669,6 +669,8 @@ export default {
   'pages.users.rolesScopeInfo': '全局授权会覆盖范围更小的设备组授权。',
   'pages.users.protectedAccount': '受保护账号',
   'pages.users.protectedAccountInfo': '受保护账号只能由超级管理员管理。',
+  'pages.users.systemOwnerStatusBlocked': '系统所有者不能被启用或禁用。',
+  'pages.users.systemOwnerMutationBlocked': '系统所有者不能被禁用或删除。',
   'pages.users.systemCapabilities': '系统能力',
   'pages.users.systemCapability.roles.create': '创建角色定义',
   'pages.users.systemCapability.roles.edit': '编辑角色定义',

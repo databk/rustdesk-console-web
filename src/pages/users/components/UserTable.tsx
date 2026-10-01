@@ -102,6 +102,7 @@ const UserTable: React.FC<UserTableProps> = ({
             batchStatusUpdating={batchStatusUpdating}
             batchForceLoggingOut={batchForceLoggingOut}
             selectedRowCount={selectedRows.length}
+            hasSystemOwnerSelection={selectedRows.some((row) => row.is_admin)}
             hasUnmanageableSelection={selectionBlocked}
             onDestinationChange={onDestinationChange}
             onBatchMove={onBatchMove}
@@ -122,6 +123,7 @@ const UserTable: React.FC<UserTableProps> = ({
             batchStatusUpdating={batchStatusUpdating}
             batchForceLoggingOut={batchForceLoggingOut}
             selectedRowCount={selectedRows.length}
+            hasSystemOwnerSelection={selectedRows.some((row) => row.is_admin)}
             hasUnmanageableSelection={selectionBlocked}
             onDestinationChange={onDestinationChange}
             onBatchMove={onBatchMove}

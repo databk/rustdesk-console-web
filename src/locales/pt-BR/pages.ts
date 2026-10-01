@@ -773,6 +773,10 @@ export default {
   'pages.users.protectedAccount': 'Conta protegida',
   'pages.users.protectedAccountInfo':
     'Contas protegidas só podem ser gerenciadas pelo superadministrador.',
+  'pages.users.systemOwnerStatusBlocked':
+    'O proprietário do sistema não pode ser ativado nem desativado.',
+  'pages.users.systemOwnerMutationBlocked':
+    'O proprietário do sistema não pode ser desativado nem excluído.',
   'pages.users.systemCapabilities': 'Capacidades do sistema',
   'pages.users.systemCapability.roles.create': 'Criar definições de função',
   'pages.users.systemCapability.roles.edit': 'Editar definições de função',
