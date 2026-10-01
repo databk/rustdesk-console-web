@@ -34,7 +34,7 @@ export async function getActiveConnections(
 
 export async function getFileAudits(
   params: API.PageParams & {
-    peerId?: string;
+    deviceId?: string;
     type?: number;
     startTime?: string;
     endTime?: string;

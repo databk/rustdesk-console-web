@@ -313,7 +313,7 @@ const CustomClientPage: React.FC = () => {
       const custom = record.custom ? JSON.parse(record.custom) : {};
       const result = await submitBuild({
         os: record.os as 'windows',
-        arch: record.arch as 'x64' | 'arm64' | 'x86',
+        arch: record.arch as 'x86_64' | 'aarch64' | 'x86',
         custom,
       });
       msgApi.success(result.message || 'Build request submitted');
