@@ -136,12 +136,7 @@ const SharedAddressBook: React.FC = () => {
       ),
       dataIndex: 'note',
       ellipsis: true,
-      fieldProps: {
-        placeholder: intl.formatMessage({
-          id: 'pages.addressBook.searchNotePlaceholder',
-          defaultMessage: 'Search by note',
-        }),
-      },
+      search: false,
     },
     ...(canOpenAccessSettings
       ? [

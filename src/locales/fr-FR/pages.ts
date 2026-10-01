@@ -914,7 +914,6 @@ export default {
   'pages.addressBook.viewShareSettings': 'Paramètres de partage',
   'pages.addressBook.searchIdPlaceholder': 'Rechercher par ID',
   'pages.addressBook.searchNamePlaceholder': 'Rechercher par nom',
-  'pages.addressBook.searchNotePlaceholder': 'Rechercher par note',
   'pages.audits.connectionId': 'ID de connexion',
   'pages.audits.currentConnections': 'Connexions actuelles',
   'pages.audits.operator': 'Opérateur',
@@ -931,8 +930,6 @@ export default {
   'pages.audits.searchOperatorPlaceholder': 'Rechercher par opérateur',
   'pages.audits.searchActionPlaceholder': 'Rechercher par action',
   'pages.audits.searchTargetTypePlaceholder': 'Rechercher par type de cible',
-  'pages.audits.searchTargetIdPlaceholder': 'Rechercher par ID de cible',
-  'pages.audits.searchReasonPlaceholder': 'Rechercher par raison',
   'pages.common.back': 'Retour',
   'pages.common.close': 'Fermer',
   'pages.login.permissionsLoadFailed':

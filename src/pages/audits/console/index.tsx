@@ -80,12 +80,7 @@ const ConsoleAudit: React.FC = () => {
       dataIndex: 'target_guid',
       width: 180,
       ellipsis: true,
-      fieldProps: {
-        placeholder: intl.formatMessage({
-          id: 'pages.audits.searchTargetIdPlaceholder',
-          defaultMessage: 'Search by target ID',
-        }),
-      },
+      search: false,
     },
     {
       title: (
@@ -116,12 +111,7 @@ const ConsoleAudit: React.FC = () => {
       ),
       dataIndex: 'reason',
       ellipsis: true,
-      fieldProps: {
-        placeholder: intl.formatMessage({
-          id: 'pages.audits.searchReasonPlaceholder',
-          defaultMessage: 'Search by reason',
-        }),
-      },
+      search: false,
     },
     {
       title: <FormattedMessage id="pages.audits.time" defaultMessage="Time" />,
