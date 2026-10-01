@@ -409,3 +409,68 @@ test('直接粘贴需要有效画面及剪贴板和键盘权限，切屏或新�
     jest.useRealTimers();
   }
 });
+
+test('剪贴板上下文只接受当前会话递增代次，旧PNG转换不跨失焦恢复', async () => {
+  await boot();
+  connect(1);
+  let finish!: (bytes: Uint8Array) => void;
+  mockImage.mockImplementationOnce(
+    () =>
+      new Promise<Uint8Array>((resolve) => {
+        finish = resolve;
+      }),
+  );
+  send({ type: 'clipboard-context', generation: 1, clipboardGeneration: 2 });
+  mockEvents.message({
+    multiClipboards: {
+      clipboards: [{ format: 22, content: new Uint8Array([1]) }],
+    },
+  } as never);
+  send({ type: 'clipboard-context', generation: 1, clipboardGeneration: 3 });
+  finish(new Uint8Array([1]));
+  await Promise.resolve();
+  await Promise.resolve();
+  expect(
+    mockPost.mock.calls.some(([message]) => message.type === 'image'),
+  ).toBe(false);
+  send({ type: 'clipboard-context', generation: 0, clipboardGeneration: 99 });
+  send({ type: 'clipboard-context', generation: 1, clipboardGeneration: 1 });
+  send({ type: 'clipboard-context', generation: 1, clipboardGeneration: NaN });
+  mockEvents.message({
+    clipboard: { content: new TextEncoder().encode('fresh'), format: 0 },
+  } as never);
+  expect(mockPost).toHaveBeenCalledWith(
+    expect.objectContaining({
+      type: 'clipboard',
+      text: 'fresh',
+      clipboardGeneration: 3,
+    }),
+  );
+  mockImage.mockImplementationOnce(
+    () =>
+      new Promise<Uint8Array>((resolve) => {
+        finish = resolve;
+      }),
+  );
+  mockEvents.message({
+    multiClipboards: {
+      clipboards: [{ format: 22, content: new Uint8Array([1]) }],
+    },
+  } as never);
+  for (const invalid of [3, 3.5, -1, Infinity, Number.MAX_SAFE_INTEGER + 1])
+    send({
+      type: 'clipboard-context',
+      generation: 1,
+      clipboardGeneration: invalid,
+    });
+  finish(new Uint8Array([2]));
+  await Promise.resolve();
+  await Promise.resolve();
+  expect(mockPost).toHaveBeenCalledWith(
+    expect.objectContaining({
+      type: 'image',
+      bytes: new Uint8Array([2]),
+      clipboardGeneration: 3,
+    }),
+  );
+});

@@ -34,6 +34,7 @@ let keyboardAllowed = true;
 let peerPlatform = '';
 let imageBusy = false;
 let imageEpoch = 0;
+let clipboardGeneration = 0;
 async function convertImage(clipboard: hbb.IClipboard, outbound: boolean) {
   if (!clipboardAllowed || imageBusy) return;
   imageBusy = true;
@@ -44,7 +45,7 @@ async function convertImage(clipboard: hbb.IClipboard, outbound: boolean) {
     if (current !== generation || epoch !== imageEpoch || !clipboardAllowed)
       return;
     if (outbound) session.sendImage(bytes);
-    else post({ type: 'image', bytes });
+    else post({ type: 'image', bytes, clipboardGeneration });
   } catch {
     if (current === generation && epoch === imageEpoch)
       post({ type: 'warning', code: 'clipboard' });
@@ -275,7 +276,8 @@ const session = new RemoteSession({
         );
         if (image) void convertImage(image, false);
         const text = clipboard ? decodeText(clipboard) : undefined;
-        if (text !== undefined) post({ type: 'clipboard', text });
+        if (text !== undefined)
+          post({ type: 'clipboard', text, clipboardGeneration });
       } catch {
         post({ type: 'warning', code: 'clipboard' });
       }
@@ -386,7 +388,15 @@ globalThis.onmessage = (event: MessageEvent<Command>) => {
   else if (command.type === 'password')
     void session.submitPassword(command.password);
   else if (command.type === 'disconnect') session.disconnect();
-  else if (command.type === 'cancel-paste') paste.cancel();
+  else if (command.type === 'clipboard-context') {
+    if (
+      !Number.isSafeInteger(command.clipboardGeneration) ||
+      command.clipboardGeneration <= clipboardGeneration
+    )
+      return;
+    clipboardGeneration = command.clipboardGeneration;
+    ++imageEpoch;
+  } else if (command.type === 'cancel-paste') paste.cancel();
   else if (command.type === 'paste') {
     const current = generation;
     const epoch = displayGeneration;

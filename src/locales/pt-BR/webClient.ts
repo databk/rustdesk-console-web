@@ -22,16 +22,9 @@ export default {
     'Clique na tela para controlar. Atalhos do navegador/sistema podem ser reservados. Use Enviar texto para IME/Unicode. As teclas são liberadas ao perder o foco enquanto a entrada remota estiver permitida.',
   'webClient.keyboardDenied':
     'O dispositivo remoto desativou teclado e mouse. Teclas ou botões anteriormente pressionados podem continuar assim; restaure a permissão ou pressione e solte-os no dispositivo remoto.',
-  'webClient.clipboard': 'Área de transferência de texto',
   'webClient.clipboardDenied':
     'O dispositivo remoto desativou a área de transferência.',
-  'webClient.localText': 'Cole o texto local aqui',
-  'webClient.remoteText': 'Texto da área de transferência remota',
-  'webClient.sendClipboard': 'Enviar para a área de transferência remota',
   'webClient.sendText': 'Enviar texto como entrada',
-  'webClient.copyRemote': 'Copiar texto remoto',
-  'webClient.clipboardFallback':
-    'A permissão foi negada. Selecione e copie o texto manualmente.',
   'webClient.state.idle': 'Pronto',
   'webClient.state.connecting': 'Conectando',
   'webClient.state.securing': 'Verificando identidade',
@@ -77,13 +70,6 @@ export default {
   'webClient.unmute': 'Ativar som',
   'webClient.audioUnavailable':
     'A decodificação de áudio Opus não está disponível neste navegador.',
-  'webClient.images': 'Área de transferência de imagens',
-  'webClient.imageRead': 'Enviar PNG da área de transferência',
-  'webClient.imageFile': 'Selecionar PNG',
-  'webClient.imageCopy': 'Copiar PNG remoto',
-  'webClient.imageDownload': 'Baixar PNG remoto',
-  'webClient.imageLimit':
-    'Somente PNG: até 4 MiB e 4 milhões de pixels. Se o acesso for negado, selecione um arquivo ou baixe a imagem.',
   'webClient.files': 'Transferência de arquivos',
   'webClient.fileAuthNotice':
     'A sessão de arquivos exige autenticação remota própria. Os arquivos são processados um por vez; sem gravação em fluxo, o limite de download é 16 MiB.',
@@ -119,4 +105,39 @@ export default {
     'Áudio indisponível ou limite de buffer excedido. Verifique o suporte a Opus e ative novamente.',
   'webClient.error.files':
     'A operação falhou, foi negada ou excedeu o limite. Tente reconectar a sessão de arquivos. Cancelar o salvamento interrompe o download.',
+  'webClient.openTools': 'Show session menu',
+  'webClient.sessionMenu': 'Session menu',
+  'webClient.pinMenu': 'Pin menu',
+  'webClient.unpinMenu': 'Unpin menu',
+  'webClient.displayOptions': 'Display',
+  'webClient.remoteFiles': 'Remote files',
+  'webClient.hideFiles': 'Minimize file window',
+  'webClient.fileRefresh': 'Refresh directory',
+  'webClient.fileName': 'Name',
+  'webClient.fileType': 'Type',
+  'webClient.fileSize': 'Size',
+  'webClient.fileFolder': 'Folder',
+  'webClient.fileDocument': 'File',
+  'webClient.fileEntries': 'Remote directory contents',
+  'webClient.fileSelectHint': 'Select a file to download',
+  'webClient.fileUploadHere': 'Upload to this folder',
+  'webClient.fileDownloadSelected': 'Download selected file',
+  'webClient.fileLimit':
+    'Files transfer one at a time. Without streaming save, downloads are limited to 16 MiB.',
+  'webClient.error.filePath':
+    'Invalid directory. Enter a full drive path such as C:/Users; the current directory is unchanged.',
+  'webClient.keyboardMenuHint':
+    'Use the keyboard below for reserved shortcuts and text input.',
+  'webClient.touchHelp': 'Touch help',
+  'webClient.clipboardRetryHint': 'Browser blocked clipboard sync.',
+  'webClient.clipboardRetry': 'Click to copy',
+  'webClient.legacyFileBadge': 'File connection: legacy encryption',
+  'webClient.legacyTitle': 'About this encryption warning',
+  'webClient.remoteVersion': 'Remote client',
+  'webClient.legacyRisk':
+    'This connection uses an older key exchange with a risk of key and nonce reuse across directions. This can weaken confidentiality; it does not mean the connection is unencrypted.',
+  'webClient.legacyUpgrade':
+    'RustDesk 1.4.9 still uses this exchange. We verified a specific official 1.5.0 nightly build with the new exchange; a stable release containing this change has not been verified. Upgrade the remote client and reconnect; the negotiated exchange determines this warning.',
+  'webClient.legacyVerified':
+    'Verified 2026-09-30 · Windows nightly asset SHA-256 starts dc446869860d. Nightly is a development build; a version label alone is not proof.',
 };

@@ -16,6 +16,7 @@ export type SessionCommand =
   | { type: 'image'; bytes: Uint8Array }
   | { type: 'paste'; content: { text: string } | { bytes: Uint8Array } }
   | { type: 'cancel-paste' }
+  | { type: 'clipboard-context'; clipboardGeneration: number }
   | { type: 'files-connect' | 'files-disconnect'; fileGeneration: number }
   | { type: 'files-password'; password: string; fileGeneration: number }
   | { type: 'files-command'; command: FileCommand; fileGeneration: number }
@@ -50,8 +51,8 @@ export type SessionEvent =
   | { type: 'frame'; frame: VideoFrame; displayGeneration: number }
   | { type: 'audio-frame'; pcm: PcmFrame; audioGeneration: number }
   | { type: 'audio-reset'; audioGeneration: number }
-  | { type: 'image'; bytes: Uint8Array }
-  | { type: 'clipboard'; text: string }
+  | { type: 'image'; bytes: Uint8Array; clipboardGeneration: number }
+  | { type: 'clipboard'; text: string; clipboardGeneration: number }
   | { type: 'cursor-position'; position: hbb.ICursorPosition }
   | { type: 'cursor-id'; id: string }
   | {

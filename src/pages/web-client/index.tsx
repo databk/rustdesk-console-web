@@ -1,27 +1,13 @@
 import { PageContainer } from '@ant-design/pro-components';
 import { useIntl, useLocation, useModel } from '@umijs/max';
-import {
-  Alert,
-  Button,
-  Card,
-  Input,
-  Space,
-  Spin,
-  Typography,
-  theme,
-} from 'antd';
+import { Alert, Button, Input, Space, Spin, theme } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import {
   DesktopOutlined,
-  FolderOpenOutlined,
   CopyOutlined,
-  ControlOutlined,
   SoundOutlined,
-  ExpandOutlined,
-  CompressOutlined,
   ArrowRightOutlined,
   SafetyCertificateOutlined,
-  DisconnectOutlined,
 } from '@ant-design/icons';
 import styles from './index.less';
 import { AudioPlayer } from '@/features/web-client/media/audio-player';
@@ -48,9 +34,13 @@ import {
   type Viewport,
 } from '@/features/web-client/input/touch';
 import { FilePanel, type FilePanelHandle, type FilePanelStatus } from './files';
-import { ImageClipboard } from './images';
 import { DevicePicker } from './devices';
-import { SessionSidebar, type SidebarMode, type ToolName } from './sidebar';
+import { SessionToolbar, FileDialog, type ToolName } from './toolbar';
+import { LegacyEncryptionNotice } from './legacy-notice';
+import {
+  RemoteClipboardSync,
+  writeRemoteClipboard,
+} from '@/features/web-client/clipboard/remote-sync';
 
 export default function WebClientPage() {
   const intl = useIntl();
@@ -60,15 +50,10 @@ export default function WebClientPage() {
   const location = useLocation();
   const { configuration, loading, unavailable, reload } = useModel('webClient');
   const [tool, setTool] = useState<ToolName>();
-  const [sidebarMode, setSidebarMode] = useState<SidebarMode>('overlay');
-  const [narrow, setNarrow] = useState(
-    () => typeof window !== 'undefined' && window.innerWidth <= 760,
-  );
+  const [fileOpen, setFileOpen] = useState(false);
+  const [peerVersion, setPeerVersion] = useState<string>();
   const [noticesOpen, setNoticesOpen] = useState(false);
-  const lastTool = useRef<ToolName>('clipboard');
-  const toolLauncher = useRef<HTMLButtonElement>(null);
   const noticesElement = useRef<HTMLDivElement>(null);
-  const wasToolOpen = useRef(false);
   const [fullscreen, setFullscreen] = useState(false);
   const [fileStatus, setFileStatus] = useState<FilePanelStatus>({
     state: 'idle',
@@ -90,9 +75,6 @@ export default function WebClientPage() {
   const [ready, setReady] = useState(false);
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [localText, setLocalText] = useState('');
-  const [remoteText, setRemoteText] = useState('');
-  const [remoteImage, setRemoteImage] = useState<Uint8Array>();
   const [clipboardFallback, setClipboardFallback] = useState(false);
   const [pasteStatus, setPasteStatus] = useState('');
   const pasteEpoch = useRef(0);
@@ -133,6 +115,37 @@ export default function WebClientPage() {
   const connected = state === 'connected';
   const activeSession = !['idle', 'closed', 'failed'].includes(state);
 
+  const clipboardEpoch = useRef(0);
+  const clipboardContext = useRef({
+    enabled: false,
+    connected: false,
+    allowed: false,
+  });
+  clipboardContext.current = {
+    enabled: !!configuration?.enabled,
+    connected,
+    allowed: permissions.clipboard,
+  };
+  const clipboardSync = useRef<RemoteClipboardSync | undefined>(undefined);
+  if (!clipboardSync.current)
+    clipboardSync.current = new RemoteClipboardSync(
+      () =>
+        clipboardContext.current.enabled &&
+        clipboardContext.current.connected &&
+        clipboardContext.current.allowed &&
+        !document.hidden &&
+        document.hasFocus(),
+      writeRemoteClipboard,
+      setClipboardFallback,
+    );
+  const resetClipboard = () => {
+    clipboardSync.current?.reset();
+    post({
+      type: 'clipboard-context',
+      clipboardGeneration: ++clipboardEpoch.current,
+    });
+  };
+
   const cancelPaste = () => {
     ++pasteEpoch.current;
     readingPaste.current = false;
@@ -168,6 +181,9 @@ export default function WebClientPage() {
     setTool(undefined);
     setNoticesOpen(false);
     setSoftKeyboard(false);
+    setFileOpen(false);
+    clipboardContext.current.connected = false;
+    resetClipboard();
     input.current?.release();
     ++generation.current;
     post({ type: 'disconnect' });
@@ -177,9 +193,6 @@ export default function WebClientPage() {
     setDisplayReady(false);
     setDisplays([]);
     setPassword('');
-    setLocalText('');
-    setRemoteText('');
-    setRemoteImage(undefined);
     clearDisplay();
   };
 
@@ -210,6 +223,7 @@ export default function WebClientPage() {
         worker.current = instance;
         instance.onerror = () => {
           if (active) {
+            clipboardContext.current.connected = false;
             stopAudio();
             files.current?.dispose();
             releaseModifiers();
@@ -219,9 +233,8 @@ export default function WebClientPage() {
             setKxVersion(undefined);
             setReady(false);
             setPassword('');
-            setRemoteText('');
-            setRemoteImage(undefined);
-            setLocalText('');
+
+            resetClipboard();
             ++generation.current;
             input.current?.dispose();
             input.current = undefined;
@@ -250,6 +263,8 @@ export default function WebClientPage() {
               setError('unsupported');
           } else if (message.type === 'state') {
             acceptsFrames = message.state === 'connected';
+            clipboardContext.current.connected = message.state === 'connected';
+            if (message.state !== 'connected') resetClipboard();
             setState(message.state);
             if (message.state === 'failed' || message.state === 'closed') {
               stopAudio();
@@ -258,9 +273,8 @@ export default function WebClientPage() {
               setSoftText('');
               setKxVersion(undefined);
               setPassword('');
-              setRemoteText('');
-              setRemoteImage(undefined);
-              setLocalText('');
+
+              resetClipboard();
               cursors.clear();
               clearDisplay();
             }
@@ -278,16 +292,15 @@ export default function WebClientPage() {
             if (message.code === 'audio') stopAudio();
             setError(message.code);
           } else if (message.type === 'permissions') {
+            clipboardContext.current.allowed = message.permissions.clipboard;
             setPermissions(message.permissions);
             if (!message.permissions.keyboard || !message.permissions.clipboard)
               cancelPaste();
             if (!message.permissions.keyboard) releaseModifiers();
             if (!message.permissions.audio) stopAudio();
-            if (!message.permissions.clipboard) {
-              setRemoteText('');
-              setRemoteImage(undefined);
-            }
+            if (!message.permissions.clipboard) resetClipboard();
           } else if (message.type === 'peer') {
+            setPeerVersion(message.peer.version || undefined);
             const remote =
               message.peer.displays?.[message.peer.currentDisplay || 0];
             if (!remote) return;
@@ -367,9 +380,13 @@ export default function WebClientPage() {
                 generation: message.generation,
               });
             }
-          } else if (message.type === 'image') setRemoteImage(message.bytes);
-          else if (message.type === 'clipboard') setRemoteText(message.text);
-          else if (message.type === 'cursor') {
+          } else if (message.type === 'image') {
+            if (message.clipboardGeneration === clipboardEpoch.current)
+              clipboardSync.current?.receive({ bytes: message.bytes });
+          } else if (message.type === 'clipboard') {
+            if (message.clipboardGeneration === clipboardEpoch.current)
+              clipboardSync.current?.receive({ text: message.text });
+          } else if (message.type === 'cursor') {
             const cursor = message.cursor;
             const image = document.createElement('canvas');
             image.width = cursor.width || 0;
@@ -432,6 +449,9 @@ export default function WebClientPage() {
       });
     return () => {
       active = false;
+      clipboardContext.current.connected = false;
+      resetClipboard();
+      setFileOpen(false);
       stopAudio();
       files.current?.dispose();
       releaseModifiers();
@@ -445,9 +465,6 @@ export default function WebClientPage() {
       setKxVersion(undefined);
       cursors.clear();
       setPassword('');
-      setLocalText('');
-      setRemoteText('');
-      setRemoteImage(undefined);
       setClipboardFallback(false);
       setDisplay(undefined);
       setDisplayReady(false);
@@ -487,6 +504,7 @@ export default function WebClientPage() {
       }
       input.current?.release();
       releaseModifiers();
+      resetClipboard();
       const clipboard = event.clipboardData;
       const epoch = ++pasteEpoch.current;
       const current = generation.current;
@@ -506,7 +524,10 @@ export default function WebClientPage() {
             ?.getAsFile();
           if (!png || png.size > IMAGE_LIMITS.encoded) throw new Error();
           const bytes = new Uint8Array(await png.arrayBuffer());
-          if (valid()) post({ type: 'paste', content: { bytes } });
+          if (valid()) {
+            clipboardSync.current?.rememberLocal({ bytes });
+            post({ type: 'paste', content: { bytes } });
+          }
         } else {
           const value = clipboard?.getData('text/plain') || '';
           if (
@@ -515,7 +536,10 @@ export default function WebClientPage() {
             new TextEncoder().encode(value).byteLength > MAX_TEXT_BYTES
           )
             throw new Error();
-          if (valid()) post({ type: 'paste', content: { text: value } });
+          if (valid()) {
+            clipboardSync.current?.rememberLocal({ text: value });
+            post({ type: 'paste', content: { text: value } });
+          }
         }
       } catch {
         if (valid()) setPasteStatus('failed');
@@ -543,6 +567,7 @@ export default function WebClientPage() {
   useEffect(() => {
     const pause = () => {
       if (document.hidden) {
+        resetClipboard();
         cancelPaste();
         stopAudio();
         post({ type: 'audio', enabled: false });
@@ -610,17 +635,18 @@ export default function WebClientPage() {
       touch.current?.setViewport({ scale: 1, x: 0, y: 0 });
     };
     window.addEventListener('orientationchange', reset);
-    window.addEventListener('blur', releaseModifiers);
+    const blur = () => {
+      releaseModifiers();
+      resetClipboard();
+    };
+    window.addEventListener('blur', blur);
     return () => {
       window.removeEventListener('orientationchange', reset);
-      window.removeEventListener('blur', releaseModifiers);
+      window.removeEventListener('blur', blur);
     };
   }, []);
   useEffect(() => {
     const resize = () => {
-      const compact = window.innerWidth <= 760;
-      setNarrow(compact);
-      if (compact) setSidebarMode('overlay');
       cancelPaste();
       input.current?.release();
       releaseModifiers();
@@ -638,14 +664,6 @@ export default function WebClientPage() {
       document.body.style.overflow = previous;
     };
   }, [activeSession]);
-  useEffect(() => {
-    if (tool) wasToolOpen.current = true;
-    else if (wasToolOpen.current) {
-      toolLauncher.current?.focus({ preventScroll: true });
-      wasToolOpen.current = false;
-    }
-  }, [tool]);
-
   useEffect(() => {
     if (!noticesOpen) return;
     const dismiss = (event: PointerEvent) => {
@@ -670,6 +688,7 @@ export default function WebClientPage() {
       const target = normalizeTargetId(targetId);
       setId(target);
       cancelPaste();
+      resetClipboard();
       ++generation.current;
       displayEpoch.current = 0;
       setViewport({ scale: 1, x: 0, y: 0 });
@@ -677,14 +696,13 @@ export default function WebClientPage() {
       setSoftText('');
       setState('connecting');
       setTool(undefined);
-      setSidebarMode('overlay');
+      setFileOpen(false);
+      setPeerVersion(undefined);
       setNoticesOpen(false);
       setKxVersion(undefined);
       setError('');
       setPassword('');
-      setRemoteText('');
-      setRemoteImage(undefined);
-      setLocalText('');
+
       setDisplay(undefined);
       setDisplayReady(false);
       setDisplays([]);
@@ -697,6 +715,10 @@ export default function WebClientPage() {
         },
         id: target,
       });
+      post({
+        type: 'clipboard-context',
+        clipboardGeneration: clipboardEpoch.current,
+      });
     } catch {
       setError('configuration');
     }
@@ -706,41 +728,23 @@ export default function WebClientPage() {
     setPassword('');
     setError('');
   };
-  const copyRemote = async () => {
-    try {
-      await navigator.clipboard.writeText(remoteText);
-      setClipboardFallback(false);
-    } catch {
-      setClipboardFallback(true);
-    }
-  };
-
-  const chooseTool = (next: typeof tool) => {
-    if (!!tool !== !!next) {
-      input.current?.release();
-      cancelPaste();
-      setNoticesOpen(false);
-      if (sidebarMode === 'docked') {
-        setViewport({ scale: 1, x: 0, y: 0 });
-        touch.current?.setViewport({ scale: 1, x: 0, y: 0 });
-      }
-    }
+  const chooseTool = (next: ToolName | undefined) => {
+    input.current?.release();
+    cancelPaste();
+    releaseModifiers();
     if (tool === 'input' && next !== 'input') {
-      input.current?.release();
       releaseModifiers();
       setSoftKeyboard(false);
     }
-    if (next) lastTool.current = next;
     setTool(next);
   };
-  const closeTool = () => chooseTool(undefined);
-  const changeSidebarMode = (next: SidebarMode) => {
-    input.current?.release();
-    releaseModifiers();
-    cancelPaste();
-    setViewport({ scale: 1, x: 0, y: 0 });
-    touch.current?.setViewport({ scale: 1, x: 0, y: 0 });
-    setSidebarMode(narrow ? 'overlay' : next);
+  const openFiles = () => {
+    chooseTool(undefined);
+    setFileOpen(true);
+  };
+  const closeFiles = () => {
+    setFileOpen(false);
+    canvas.current?.focus({ preventScroll: true });
   };
   useEffect(() => {
     const update = () =>
@@ -759,39 +763,9 @@ export default function WebClientPage() {
     }
     void action.catch(() => setError('fullscreen'));
   };
-  const toolItems = [
-    {
-      key: 'clipboard' as const,
-      icon: <CopyOutlined />,
-      label: text('toolClipboard', 'Clipboard'),
-    },
-    {
-      key: 'files' as const,
-      icon: <FolderOpenOutlined />,
-      label: text('files', 'File transfer'),
-      activity: fileStatus.busy
-        ? text('fileInProgress', 'Transfer in progress')
-        : undefined,
-    },
-    {
-      key: 'input' as const,
-      icon: <ControlOutlined />,
-      label: text('toolInput', 'Input controls'),
-    },
-    {
-      key: 'audio' as const,
-      icon: <SoundOutlined />,
-      label: text('toolAudio', 'Audio'),
-      activity: audioEnabled
-        ? text('audioPlaying', 'Audio is playing')
-        : undefined,
-    },
-  ];
   const authenticating = ['authenticating', 'awaitingApproval'].includes(state);
-  const legacyNotice = kxVersion === 0 || (connected && fileStatus.legacy);
   const hasNotices =
     !!error ||
-    legacyNotice ||
     (connected &&
       (!permissions.keyboard || !!fileStatus.error || !!pasteStatus));
   const noticeControl = hasNotices ? (
@@ -803,7 +777,6 @@ export default function WebClientPage() {
         !error &&
         !fileStatus.error &&
         permissions.keyboard &&
-        !legacyNotice &&
         (pasteStatus === 'sent' || pasteStatus === 'sending')
       }
       aria-label={text('sessionAlerts', 'Session notices')}
@@ -816,8 +789,6 @@ export default function WebClientPage() {
         ? text('errorBadge', 'Operation failed')
         : !permissions.keyboard
         ? text('viewOnlyBadge', 'View only')
-        : legacyNotice
-        ? text('legacyBadge', 'Legacy protocol')
         : pasteStatus === 'sent'
         ? text('pasteSentBadge', 'Clipboard sent')
         : pasteStatus === 'sending'
@@ -892,8 +863,6 @@ export default function WebClientPage() {
             data-workspace
             hidden={!activeSession}
             className={styles.workspace}
-            data-tools-open={!!tool}
-            data-sidebar-mode={narrow ? 'overlay' : sidebarMode}
             data-active-session={activeSession}
           >
             <div
@@ -1000,21 +969,22 @@ export default function WebClientPage() {
                 </div>
               )}
             </div>
-            <SessionSidebar
+            <SessionToolbar
+              key={'toolbar-' + generation.current}
               tool={tool}
-              mode={narrow ? 'overlay' : sidebarMode}
-              narrow={narrow}
-              disabled={!connected}
-              target={id}
-              items={toolItems}
               onSelect={chooseTool}
-              onModeChange={changeSidebarMode}
-              onClose={closeTool}
+              onFiles={openFiles}
+              onDisconnect={disconnect}
+              onFullscreen={toggleFullscreen}
+              fullscreen={fullscreen}
+              connected={connected}
+              busy={fileStatus.busy}
+              audio={audioEnabled}
               text={text}
-              noticeControl={tool ? noticeControl : null}
-              displayControl={
-                connected &&
-                displays.length > 1 && (
+            >
+              <div hidden={tool !== 'display'}>
+                <h3>{text('displayOptions', 'Display')}</h3>
+                {displays.length > 1 && (
                   <label className={styles.monitor}>
                     {text('display', 'Monitor')}
                     <select
@@ -1046,141 +1016,23 @@ export default function WebClientPage() {
                       ))}
                     </select>
                   </label>
-                )
-              }
-              footer={
-                <>
-                  <Button
-                    icon={
-                      fullscreen ? <CompressOutlined /> : <ExpandOutlined />
-                    }
-                    disabled={!activeSession && !fullscreen}
-                    onClick={toggleFullscreen}
-                  >
-                    {text(
-                      fullscreen ? 'exitFullscreen' : 'fullscreen',
-                      fullscreen ? 'Exit fullscreen' : 'Fullscreen',
-                    )}
-                  </Button>
-                  <Button
-                    danger
-                    icon={<DisconnectOutlined />}
-                    onClick={disconnect}
-                    disabled={!activeSession}
-                  >
-                    {text('disconnect', 'Disconnect')}
-                  </Button>
-                </>
-              }
-            >
-              <div
-                id="web-client-tool-files"
-                role="tabpanel"
-                aria-labelledby="web-client-tab-files"
-                hidden={tool !== 'files'}
-              >
-                <FilePanel
-                  key={'files-' + generation.current}
-                  ref={files}
-                  enabled={connected}
-                  post={post}
-                  text={text}
-                  onStatusChange={setFileStatus}
-                />
+                )}
+                <Button
+                  onClick={() => {
+                    input.current?.release();
+                    releaseModifiers();
+                    setViewport({ scale: 1, x: 0, y: 0 });
+                    touch.current?.setViewport({ scale: 1, x: 0, y: 0 });
+                  }}
+                >
+                  {text('zoomReset', 'Reset zoom')}
+                </Button>
               </div>
-              <div
-                id="web-client-tool-clipboard"
-                role="tabpanel"
-                aria-labelledby="web-client-tab-clipboard"
-                hidden={tool !== 'clipboard'}
-              >
-                <Card size="small" title={text('clipboard', 'Text clipboard')}>
-                  <Space direction="vertical" style={{ width: '100%' }}>
-                    {!permissions.clipboard && (
-                      <Alert
-                        type="warning"
-                        message={text(
-                          'clipboardDenied',
-                          'Clipboard is disabled by the remote device.',
-                        )}
-                      />
-                    )}
-                    <Input.TextArea
-                      aria-label={text('localText', 'Local text')}
-                      placeholder={text('localText', 'Paste local text here')}
-                      value={localText}
-                      onChange={(event) => setLocalText(event.target.value)}
-                      maxLength={MAX_TEXT_BYTES}
-                      autoSize={{ minRows: 2, maxRows: 6 }}
-                    />
-                    <Space wrap>
-                      <Button
-                        disabled={!connected || !permissions.clipboard}
-                        onClick={() =>
-                          post({
-                            type: 'clipboard',
-                            text: localText,
-                          })
-                        }
-                      >
-                        {text('sendClipboard', 'Send to remote clipboard')}
-                      </Button>
-                      <Button
-                        disabled={
-                          !connected || !permissions.keyboard || !localText
-                        }
-                        onClick={() =>
-                          post({
-                            type: 'text',
-                            text: localText,
-                          })
-                        }
-                      >
-                        {text('sendText', 'Send text as input')}
-                      </Button>
-                    </Space>
-                    <Input.TextArea
-                      aria-label={text('remoteText', 'Remote clipboard text')}
-                      placeholder={text('remoteText', 'Remote clipboard text')}
-                      value={remoteText}
-                      readOnly
-                      autoSize={{ minRows: 2, maxRows: 6 }}
-                    />
-                    <Button
-                      disabled={!connected || !permissions.clipboard}
-                      onClick={() => void copyRemote()}
-                    >
-                      {text('copyRemote', 'Copy remote text')}
-                    </Button>
-                    {clipboardFallback && (
-                      <Typography.Text>
-                        {text(
-                          'clipboardFallback',
-                          'Clipboard access was denied. Select and copy the remote text in the box manually.',
-                        )}
-                      </Typography.Text>
-                    )}
-                  </Space>
-                </Card>
-                <ImageClipboard
-                  key={'images-' + generation.current}
-                  enabled={connected && permissions.clipboard}
-                  remote={remoteImage}
-                  post={post}
-                  text={text}
-                  fail={() => setError('clipboard')}
-                />
-              </div>
-              <div
-                id="web-client-tool-input"
-                role="tabpanel"
-                aria-labelledby="web-client-tab-input"
-                hidden={tool !== 'input'}
-              >
+              <div id="web-client-tool-input" hidden={tool !== 'input'}>
                 <p className={styles.panelHint}>
                   {text(
-                    'keyboardNotice',
-                    'Click the desktop to control it. Browser/system shortcuts may be reserved. Use Send text for IME/Unicode input. Losing focus releases held keys while input permission is available.',
+                    'keyboardMenuHint',
+                    'Use the keyboard below for reserved shortcuts and text input.',
                   )}
                 </p>
                 <div className={styles.inputControls}>
@@ -1297,19 +1149,17 @@ export default function WebClientPage() {
                     </Space>
                   )}
                 </div>
-                <p className={styles.panelHint}>
-                  {text(
-                    'touchNotice',
-                    'Touch to click, move to drag, hold for right click. Pinch with two fingers to zoom locally; use Scroll mode for the remote wheel. Send keyboard text after IME composition.',
-                  )}
-                </p>
+                <details className={styles.touchHelp}>
+                  <summary>{text('touchHelp', 'Touch help')}</summary>
+                  <p className={styles.panelHint}>
+                    {text(
+                      'touchNotice',
+                      'Touch to click, move to drag, hold for right click. Pinch with two fingers to zoom locally; use Scroll mode for the remote wheel. Send keyboard text after IME composition.',
+                    )}
+                  </p>
+                </details>
               </div>
-              <div
-                id="web-client-tool-audio"
-                role="tabpanel"
-                aria-labelledby="web-client-tab-audio"
-                hidden={tool !== 'audio'}
-              >
+              <div id="web-client-tool-audio" hidden={tool !== 'audio'}>
                 <div className={styles.audioHero}>
                   <SoundOutlined />
                   <strong>{text('toolAudio', 'Audio')}</strong>
@@ -1372,62 +1222,31 @@ export default function WebClientPage() {
                   />
                 </div>
               </div>
-            </SessionSidebar>
-          </div>
-          <div
-            className={styles.sessionHandle}
-            hidden={!activeSession && !fullscreen}
-          >
-            <button
-              ref={toolLauncher}
-              type="button"
-              className={styles.launcher}
-              hidden={!activeSession || !!tool}
-              aria-label={text('openTools', 'Open tools')}
-              aria-expanded={!!tool}
-              aria-controls="web-client-sidebar"
-              onClick={() => chooseTool(lastTool.current)}
+            </SessionToolbar>
+            <FileDialog
+              open={fileOpen}
+              target={id}
+              onClose={closeFiles}
+              text={text}
             >
-              <ControlOutlined />
-              <span>{text('toolsShort', 'Tools')}</span>
-              {fileStatus.busy && (
-                <span
-                  className={styles.activityDot}
-                  role="img"
-                  aria-label={text('fileInProgress', 'Transfer in progress')}
-                />
-              )}
-            </button>
-            <div
-              className={styles.quickActions}
-              hidden={!!tool && activeSession}
-            >
-              <button
-                type="button"
-                onClick={toggleFullscreen}
-                aria-label={text(
-                  fullscreen ? 'exitFullscreen' : 'fullscreen',
-                  fullscreen ? 'Exit fullscreen' : 'Fullscreen',
-                )}
-                title={text(
-                  fullscreen ? 'exitFullscreen' : 'fullscreen',
-                  fullscreen ? 'Exit fullscreen' : 'Fullscreen',
-                )}
-              >
-                {fullscreen ? <CompressOutlined /> : <ExpandOutlined />}
-              </button>
-              <button
-                type="button"
-                hidden={!activeSession}
-                onClick={disconnect}
-                className={styles.quickDisconnect}
-                aria-label={text('disconnect', 'Disconnect')}
-                title={text('disconnect', 'Disconnect')}
-              >
-                <DisconnectOutlined />
-              </button>
-            </div>
+              <FilePanel
+                key={'files-' + generation.current}
+                ref={files}
+                enabled={connected}
+                post={post}
+                text={text}
+                onStatusChange={setFileStatus}
+              />
+            </FileDialog>
           </div>
+          {fullscreen && !activeSession && (
+            <Button
+              className={styles.exitFullscreen}
+              onClick={toggleFullscreen}
+            >
+              {text('exitFullscreen', 'Exit fullscreen')}
+            </Button>
+          )}
           {activeSession && (
             <div className={styles.sessionHud}>
               <span className={styles.sessionIdentity}>
@@ -1435,7 +1254,26 @@ export default function WebClientPage() {
                 <span title={id}>{id}</span>
                 <span className={styles.statusDot} data-connected={connected} />
               </span>
-              {!tool && noticeControl}
+              {kxVersion === 0 && (
+                <LegacyEncryptionNotice text={text} version={peerVersion} />
+              )}
+              {connected && fileStatus.legacy && !fileOpen && (
+                <LegacyEncryptionNotice text={text} context="files" />
+              )}
+              {noticeControl}
+            </div>
+          )}
+          {activeSession && clipboardFallback && (
+            <div className={styles.clipboardRetry} role="status">
+              <span>
+                {text('clipboardRetryHint', 'Browser blocked clipboard sync.')}
+              </span>
+              <button
+                type="button"
+                onClick={() => clipboardSync.current?.retry()}
+              >
+                {text('clipboardRetry', 'Click to copy')}
+              </button>
             </div>
           )}
           <div
@@ -1443,7 +1281,6 @@ export default function WebClientPage() {
             id="web-client-notices"
             ref={noticesElement}
             data-session={activeSession}
-            data-tools-open={!!tool}
             hidden={activeSession && !noticesOpen}
             aria-live="polite"
             onKeyDown={(event) => {
@@ -1460,7 +1297,7 @@ export default function WebClientPage() {
                   {text(
                     pasteStatus ? 'paste.' + pasteStatus : 'pasteHint',
                     pasteStatus === 'failed'
-                      ? 'Paste failed. Use clipboard tools to retry.'
+                      ? 'Paste failed. Check the content and try again.'
                       : pasteStatus === 'denied'
                       ? 'The remote device has disabled clipboard or keyboard access.'
                       : pasteStatus === 'sending'
@@ -1470,11 +1307,6 @@ export default function WebClientPage() {
                       : 'Focus the remote desktop and press Ctrl/Cmd+V to paste text or a PNG image.',
                   )}
                 </span>
-                {(pasteStatus === 'failed' || pasteStatus === 'denied') && (
-                  <Button type="link" onClick={() => chooseTool('clipboard')}>
-                    {text('toolClipboard', 'Clipboard')}
-                  </Button>
-                )}
               </div>
             )}
             {error && (
@@ -1484,16 +1316,6 @@ export default function WebClientPage() {
                 message={text(
                   'error.' + error,
                   'The operation failed. Disconnect and try again.',
-                )}
-              />
-            )}
-            {activeSession && kxVersion === 0 && (
-              <Alert
-                type="warning"
-                showIcon
-                message={text(
-                  'legacyEncryption',
-                  'The remote device uses a legacy encryption protocol with known security risks. Upgrade the remote client when possible.',
                 )}
               />
             )}
@@ -1507,16 +1329,6 @@ export default function WebClientPage() {
                 )}
               />
             )}
-            {connected && kxVersion !== 0 && fileStatus.legacy && (
-              <Alert
-                type="warning"
-                showIcon
-                message={text(
-                  'legacyEncryption',
-                  'The remote device uses a legacy encryption protocol with known security risks. Upgrade the remote client when possible.',
-                )}
-              />
-            )}
             {connected && fileStatus.error && (
               <Alert
                 type="error"
@@ -1526,7 +1338,7 @@ export default function WebClientPage() {
                   'File operation failed or was denied. Retry the file session.',
                 )}
                 action={
-                  <Button onClick={() => chooseTool('files')}>
+                  <Button onClick={openFiles}>
                     {text('files', 'File transfer')}
                   </Button>
                 }

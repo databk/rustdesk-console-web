@@ -22,18 +22,15 @@ export default {
     'Focus the remote desktop and press Ctrl/Cmd+V to paste text or a PNG image.',
   'webClient.paste.sending': 'Sending clipboard…',
   'webClient.paste.sent': 'Paste sent to the remote device.',
-  'webClient.paste.failed':
-    'Direct paste failed or the content is not supported text / PNG. Use clipboard tools to retry.',
+  'webClient.paste.failed': 'Paste failed. Check the content and try again.',
   'webClient.paste.denied':
     'The remote device has disabled clipboard or keyboard access.',
   'webClient.workspaceSubtitle': 'Connect to a device in your browser.',
   'webClient.idPlaceholder': 'Enter the device ID',
   'webClient.nativeAuth': 'Verified by the remote device',
-  'webClient.toolClipboard': 'Clipboard',
   'webClient.toolInput': 'Input controls',
   'webClient.toolAudio': 'Audio',
   'webClient.tools': 'Session tools',
-  'webClient.closeTools': 'Close tools',
   'webClient.exitFullscreen': 'Exit fullscreen',
   'webClient.idleHint': 'Choose a device below, or enter its ID to connect.',
   'webClient.authTitle': 'Approve your connection',
@@ -49,8 +46,6 @@ export default {
     'Click the desktop to control it. Open a tool only when you need it.',
   'webClient.fileEmpty': 'This directory is empty',
   'webClient.fileDownload': 'Download file',
-  'webClient.imagePreview': 'Remote image preview',
-  'webClient.imageEmpty': 'Remote images will appear here',
 
   'webClient.legacyEncryption':
     'The remote device uses a legacy encryption protocol with known security risks. Upgrade the remote client when possible.',
@@ -75,15 +70,8 @@ export default {
     'Click the desktop to control it. Browser/system shortcuts may be reserved. Use Send text for IME/Unicode input. Losing focus releases held keys while input permission is available.',
   'webClient.keyboardDenied':
     'Keyboard and mouse are disabled by the remote device. Previously held keys or buttons may remain pressed; restore permission or press and release them on the remote device.',
-  'webClient.clipboard': 'Text clipboard',
   'webClient.clipboardDenied': 'Clipboard is disabled by the remote device.',
-  'webClient.localText': 'Paste local text here',
-  'webClient.remoteText': 'Remote clipboard text',
-  'webClient.sendClipboard': 'Send to remote clipboard',
   'webClient.sendText': 'Send text as input',
-  'webClient.copyRemote': 'Copy remote text',
-  'webClient.clipboardFallback':
-    'Clipboard access was denied. Select and copy the remote text in the box manually.',
   'webClient.state.idle': 'Ready',
   'webClient.state.connecting': 'Connecting',
   'webClient.state.securing': 'Verifying identity',
@@ -116,7 +104,7 @@ export default {
   'webClient.error.worker':
     'The Web Client worker could not be loaded. Check deployment assets.',
   'webClient.error.clipboard':
-    'Clipboard access was denied, or data is invalid or too large. Text limit is 1 MiB; use PNG file selection or download as a fallback.',
+    'Clipboard data is invalid, too large or blocked by the browser. Text limit is 1 MiB and PNG limit is 4 MiB.',
   'webClient.error.fullscreen':
     'Fullscreen is unavailable in this browser context.',
   'webClient.error.cancelled': 'The operation was cancelled.',
@@ -129,13 +117,6 @@ export default {
   'webClient.unmute': 'Unmute',
   'webClient.audioUnavailable':
     'Opus audio decoding is unavailable in this browser.',
-  'webClient.images': 'Image clipboard',
-  'webClient.imageRead': 'Send clipboard PNG',
-  'webClient.imageFile': 'Choose PNG',
-  'webClient.imageCopy': 'Copy remote PNG',
-  'webClient.imageDownload': 'Download remote PNG',
-  'webClient.imageLimit':
-    'PNG only; 4 MiB encoded, 4 million pixels. Use file selection or download if clipboard access is denied.',
   'webClient.files': 'File transfer',
   'webClient.fileAuthNotice':
     'File transfer requires its own remote authentication. Files are processed one at a time; downloads without a file picker are limited to 16 MiB.',
@@ -174,12 +155,6 @@ export default {
   'webClient.connectDevice': 'Connect to a device',
   'webClient.connectionApproval':
     'Use the device password, or wait for approval on the remote device.',
-  'webClient.openTools': 'Open tools',
-  'webClient.toolsShort': 'Tools',
-  'webClient.sidebarPosition': 'Sidebar position',
-  'webClient.sidebarOverlay': 'Overlay',
-  'webClient.sidebarDocked': 'Dock right',
-  'webClient.sidebarNarrow': 'Docking needs a wider window.',
   'webClient.sessionAlerts': 'Session notices',
   'webClient.legacyBadge': 'Legacy protocol',
   'webClient.noticeBadge': 'Session notice',
@@ -187,4 +162,39 @@ export default {
   'webClient.viewOnlyBadge': 'View only',
   'webClient.pasteSentBadge': 'Clipboard sent',
   'webClient.pasteSendingBadge': 'Sending clipboard',
+  'webClient.openTools': 'Show session menu',
+  'webClient.sessionMenu': 'Session menu',
+  'webClient.pinMenu': 'Pin menu',
+  'webClient.unpinMenu': 'Unpin menu',
+  'webClient.displayOptions': 'Display',
+  'webClient.remoteFiles': 'Remote files',
+  'webClient.hideFiles': 'Minimize file window',
+  'webClient.fileRefresh': 'Refresh directory',
+  'webClient.fileName': 'Name',
+  'webClient.fileType': 'Type',
+  'webClient.fileSize': 'Size',
+  'webClient.fileFolder': 'Folder',
+  'webClient.fileDocument': 'File',
+  'webClient.fileEntries': 'Remote directory contents',
+  'webClient.fileSelectHint': 'Select a file to download',
+  'webClient.fileUploadHere': 'Upload to this folder',
+  'webClient.fileDownloadSelected': 'Download selected file',
+  'webClient.fileLimit':
+    'Files transfer one at a time. Without streaming save, downloads are limited to 16 MiB.',
+  'webClient.error.filePath':
+    'Invalid directory. Enter a full drive path such as C:/Users; the current directory is unchanged.',
+  'webClient.keyboardMenuHint':
+    'Use the keyboard below for reserved shortcuts and text input.',
+  'webClient.touchHelp': 'Touch help',
+  'webClient.clipboardRetryHint': 'Browser blocked clipboard sync.',
+  'webClient.clipboardRetry': 'Click to copy',
+  'webClient.legacyFileBadge': 'File connection: legacy encryption',
+  'webClient.legacyTitle': 'About this encryption warning',
+  'webClient.remoteVersion': 'Remote client',
+  'webClient.legacyRisk':
+    'This connection uses an older key exchange with a risk of key and nonce reuse across directions. This can weaken confidentiality; it does not mean the connection is unencrypted.',
+  'webClient.legacyUpgrade':
+    'RustDesk 1.4.9 still uses this exchange. We verified a specific official 1.5.0 nightly build with the new exchange; a stable release containing this change has not been verified. Upgrade the remote client and reconnect; the negotiated exchange determines this warning.',
+  'webClient.legacyVerified':
+    'Verified 2026-09-30 · Windows nightly asset SHA-256 starts dc446869860d. Nightly is a development build; a version label alone is not proof.',
 };

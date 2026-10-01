@@ -1,12 +1,16 @@
-import { Alert, Button, Card, Input, Space } from 'antd';
+import { Alert, Button, Input, Space } from 'antd';
 import {
   FolderOutlined,
   FileOutlined,
   DownloadOutlined,
   UploadOutlined,
   FolderOpenOutlined,
+  ArrowUpOutlined,
+  ReloadOutlined,
 } from '@ant-design/icons';
 import styles from './index.less';
+import { LegacyEncryptionNotice } from './legacy-notice';
+import { safePath } from '@/features/web-client/files/transfer';
 import React, {
   forwardRef,
   useEffect,
@@ -55,6 +59,9 @@ export const FilePanel = forwardRef<
   const [security, setSecurity] = useState<KxVersion>();
   const [error, setError] = useState('');
   const [path, setPath] = useState('');
+  const [draftPath, setDraftPath] = useState('');
+  const [browsing, setBrowsing] = useState(false);
+  const [selectedPath, setSelectedPath] = useState<string>();
   const [entries, setEntries] = useState<RemoteEntry[]>([]);
   const [progress, setProgress] = useState<FileProgress>();
   const [choosing, setChoosing] = useState(false);
@@ -97,6 +104,9 @@ export const FilePanel = forwardRef<
     setEntries([]);
     setProgress(undefined);
     setPath('');
+    setDraftPath('');
+    setSelectedPath(undefined);
+    setBrowsing(false);
   };
   useImperativeHandle(ref, () => ({
     dispose,
@@ -108,14 +118,20 @@ export const FilePanel = forwardRef<
         if (event.state === 'connected') setPassword('');
       } else if (event.type === 'files-security') setSecurity(event.kxVersion);
       else if (event.type === 'files-error') {
+        setBrowsing(false);
         setError(event.code);
         abortSink();
       } else if (event.type === 'files-event') {
         const data = event.event;
         if (data.type === 'directory') {
           setPath(data.path);
+          setDraftPath(data.path);
+          setSelectedPath(undefined);
+          setBrowsing(false);
+          setError('');
           setEntries(data.entries);
         } else if (data.type === 'error') {
+          setBrowsing(false);
           setError('files');
           abortSink();
         } else if (data.type === 'progress') {
@@ -209,233 +225,274 @@ export const FilePanel = forwardRef<
       }
     }
   };
+  const selected = entries.find((entry) => entry.path === selectedPath);
+  const canNavigate = connected && !busy && !browsing;
+  const browse = (next: string) => {
+    if (!canNavigate) return;
+    try {
+      const normalized = safePath(next);
+      setError('');
+      setBrowsing(true);
+      command({ type: 'list', path: normalized });
+    } catch {
+      setError('filePath');
+    }
+  };
+  const parent =
+    path === '/' || !path || /^[A-Z]:\/$/.test(path)
+      ? '/'
+      : path.slice(0, path.lastIndexOf('/')) || '/';
   return (
-    <Card className={styles.featureCard} size="small">
-      <Space direction="vertical" style={{ width: '100%' }}>
-        <span className={styles.panelHint}>
+    <div className={styles.filePicker}>
+      <div className={styles.fileSessionBar}>
+        <Button
+          disabled={!enabled || !['idle', 'closed', 'failed'].includes(state)}
+          onClick={() => {
+            dispose();
+            setError('');
+            ++generation.current;
+            setState('connecting');
+            post({ type: 'files-connect', fileGeneration: generation.current });
+          }}
+        >
+          {text('fileConnect', 'Connect files')}
+        </Button>
+        <Button
+          disabled={['idle', 'closed', 'failed'].includes(state)}
+          onClick={() => {
+            post({
+              type: 'files-disconnect',
+              fileGeneration: generation.current,
+            });
+            ++generation.current;
+            dispose();
+          }}
+        >
+          {text('fileDisconnect', 'Disconnect files')}
+        </Button>
+        <span className={styles.fileState} role="status">
+          {text(`state.${state}`, state)}
+        </span>
+        {security === 0 && !['idle', 'closed', 'failed'].includes(state) && (
+          <LegacyEncryptionNotice text={text} context="files" />
+        )}
+      </div>
+      {!connected && (
+        <p className={styles.panelHint}>
           {text(
             'fileAuthNotice',
             'File transfer requires its own remote authentication. Files are processed one at a time; downloads without a file picker are limited to 16 MiB.',
           )}
-        </span>
-        <Space wrap>
-          <Button
-            disabled={!enabled || !['idle', 'closed', 'failed'].includes(state)}
-            onClick={() => {
-              dispose();
-              setError('');
-              ++generation.current;
-              setState('connecting');
+        </p>
+      )}
+      {error && (
+        <Alert
+          type="error"
+          message={text(
+            `error.${error}`,
+            'File operation failed or was denied. Retry the file session.',
+          )}
+        />
+      )}
+      {['authenticating', 'awaitingApproval'].includes(state) && (
+        <div className={styles.fileAuth}>
+          <Input.Password
+            autoComplete="off"
+            aria-label={text('filePassword', 'File session password')}
+            value={password}
+            maxLength={4096}
+            onChange={(event) => setPassword(event.target.value)}
+            onPressEnter={() => {
               post({
-                type: 'files-connect',
+                type: 'files-password',
+                password,
                 fileGeneration: generation.current,
               });
+              setPassword('');
             }}
-          >
-            {text('fileConnect', 'Connect files')}
-          </Button>
+          />
           <Button
-            disabled={['idle', 'closed', 'failed'].includes(state)}
             onClick={() => {
               post({
-                type: 'files-disconnect',
+                type: 'files-password',
+                password,
                 fileGeneration: generation.current,
               });
-              ++generation.current;
-              dispose();
+              setPassword('');
             }}
           >
-            {text('fileDisconnect', 'Disconnect files')}
+            {text('authenticate', 'Send password')}
           </Button>
-          <span className={styles.fileState} role="status">
-            {text(`state.${state}`, state)}
-          </span>
-        </Space>
-        {security === 0 && (
-          <Alert
-            type="warning"
-            message={text(
-              'legacyEncryption',
-              'The remote device uses a legacy encryption protocol with known security risks. Upgrade the remote client when possible.',
-            )}
-          />
-        )}
-        {error && (
-          <Alert
-            type="error"
-            message={text(
-              `error.${error}`,
-              'File operation failed or was denied. Retry the file session.',
-            )}
-          />
-        )}
-        {['authenticating', 'awaitingApproval'].includes(state) && (
-          <Space wrap>
-            <Input.Password
-              autoComplete="off"
-              aria-label={text('filePassword', 'File session password')}
-              value={password}
-              maxLength={4096}
-              onChange={(event) => setPassword(event.target.value)}
+        </div>
+      )}
+      {connected && (
+        <>
+          <div className={styles.fileNavigation}>
+            <Button
+              icon={<ArrowUpOutlined />}
+              aria-label={text('fileUp', 'Parent directory')}
+              title={text('fileUp', 'Parent directory')}
+              disabled={!canNavigate}
+              onClick={() => browse(parent)}
             />
             <Button
-              onClick={() => {
-                post({
-                  type: 'files-password',
-                  password,
-                  fileGeneration: generation.current,
-                });
-                setPassword('');
-              }}
-            >
-              {text('authenticate', 'Send password')}
+              icon={<ReloadOutlined />}
+              aria-label={text('fileRefresh', 'Refresh directory')}
+              title={text('fileRefresh', 'Refresh directory')}
+              disabled={!canNavigate}
+              onClick={() => browse(path)}
+            />
+            <Input
+              aria-label={text('filePath', 'Remote directory')}
+              value={draftPath}
+              onChange={(event) => setDraftPath(event.target.value)}
+              onPressEnter={() => browse(draftPath)}
+              disabled={!canNavigate}
+              maxLength={2048}
+            />
+            <Button disabled={!canNavigate} onClick={() => browse(draftPath)}>
+              {text('fileBrowse', 'Open directory')}
             </Button>
-          </Space>
-        )}
-        {connected && (
-          <>
-            <Space wrap>
-              <Input
-                aria-label={text('filePath', 'Remote directory')}
-                value={path}
-                onChange={(event) => setPath(event.target.value)}
-                disabled={busy}
-                maxLength={2048}
-              />
-              <Button
-                disabled={busy}
-                onClick={() => command({ type: 'list', path })}
-              >
-                {text('fileBrowse', 'Open directory')}
-              </Button>
-              <Button
-                disabled={busy}
-                onClick={() =>
-                  command({
-                    type: 'list',
-                    path:
-                      path === '/' || (path.length === 3 && path.endsWith(':/'))
-                        ? '/'
-                        : `${path.split('/').slice(0, -1).join('/')}/`,
-                  })
-                }
-              >
-                {text('fileUp', 'Parent directory')}
-              </Button>
-            </Space>
+          </div>
+          <div className={styles.fileList} aria-busy={browsing}>
+            <div className={styles.fileColumns} aria-hidden="true">
+              <span>{text('fileName', 'Name')}</span>
+              <span>{text('fileType', 'Type')}</span>
+              <span>{text('fileSize', 'Size')}</span>
+            </div>
+            {entries.length === 0 && (
+              <div className={styles.emptyFiles}>
+                <FolderOpenOutlined />
+                <span>{text('fileEmpty', 'This directory is empty')}</span>
+              </div>
+            )}
+            <ul aria-label={text('fileEntries', 'Remote directory contents')}>
+              {entries.map((entry) => (
+                <li key={entry.path}>
+                  <button
+                    type="button"
+                    className={styles.fileRow}
+                    aria-label={entry.name}
+                    aria-pressed={entry.path === selectedPath}
+                    disabled={!canNavigate}
+                    title={entry.name}
+                    onClick={() => setSelectedPath(entry.path)}
+                    onDoubleClick={() => {
+                      if (entry.directory) browse(entry.path);
+                    }}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter' && entry.directory) {
+                        event.preventDefault();
+                        browse(entry.path);
+                      }
+                    }}
+                  >
+                    <span className={styles.fileName}>
+                      {entry.directory ? <FolderOutlined /> : <FileOutlined />}{' '}
+                      {entry.name}
+                    </span>
+                    <span className={styles.fileType}>
+                      {text(
+                        entry.directory ? 'fileFolder' : 'fileDocument',
+                        entry.directory ? 'Folder' : 'File',
+                      )}
+                    </span>
+                    <span className={styles.fileSize}>
+                      {entry.directory
+                        ? '—'
+                        : entry.size < 1024
+                        ? entry.size + ' B'
+                        : entry.size < 1048576
+                        ? (entry.size / 1024).toFixed(1) + ' KiB'
+                        : (entry.size / 1048576).toFixed(1) + ' MiB'}
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className={styles.fileActions}>
+            <span className={styles.fileSelection} title={selected?.name}>
+              {selected?.name ||
+                text('fileSelectHint', 'Select a file to download')}
+            </span>
             <label className={styles.uploadField}>
-              <UploadOutlined /> {text('fileUpload', 'Upload files')}
+              <UploadOutlined />{' '}
+              {text('fileUploadHere', 'Upload to this folder')}
               <input
-                aria-label={text('fileUpload', 'Upload files')}
+                aria-label={text('fileUploadHere', 'Upload to this folder')}
                 type="file"
                 multiple
-                disabled={busy || !path || path === '/'}
+                disabled={!canNavigate || !path || path === '/'}
                 onChange={(event) => {
                   const files = Array.from(event.target.files || []);
                   event.target.value = '';
-                  if (files.length) command({ type: 'upload', path, files });
+                  if (files.length && canNavigate && path && path !== '/')
+                    command({ type: 'upload', path, files });
                 }}
               />
             </label>
-            <div className={styles.fileList}>
-              {entries.length === 0 && (
-                <div className={styles.emptyFiles}>
-                  <FolderOpenOutlined />
-                  <span>{text('fileEmpty', 'This directory is empty')}</span>
-                </div>
-              )}
-              <ul>
-                {entries.map((entry) => (
-                  <li key={entry.path}>
-                    <button
-                      type="button"
-                      className={styles.fileRow}
-                      aria-label={
-                        entry.directory
-                          ? entry.name
-                          : text('fileDownload', 'Download file') +
-                            ': ' +
-                            entry.name
-                      }
-                      disabled={busy}
-                      title={
-                        entry.directory
-                          ? entry.name
-                          : text('fileDownload', 'Download file') +
-                            ': ' +
-                            entry.name
-                      }
-                      onClick={() =>
-                        entry.directory
-                          ? command({ type: 'list', path: entry.path })
-                          : void download(entry)
-                      }
-                    >
-                      {entry.directory ? <FolderOutlined /> : <FileOutlined />}
-                      <span className={styles.fileName}>{entry.name}</span>
-                      {!entry.directory && (
-                        <>
-                          <span className={styles.fileSize}>
-                            {entry.size < 1024
-                              ? entry.size + ' B'
-                              : entry.size < 1048576
-                              ? (entry.size / 1024).toFixed(1) + ' KiB'
-                              : (entry.size / 1048576).toFixed(1) + ' MiB'}
-                          </span>
-                          <DownloadOutlined />
-                        </>
-                      )}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </>
-        )}
-        {progress && (
-          <div className={styles.transferProgress} role="status">
-            {progress.name}:{' '}
-            {text(`filePhase.${progress.phase}`, progress.phase)} (
-            {progress.transferred} / {progress.total} B)
-            <progress
-              max={Math.max(1, progress.total)}
-              value={progress.transferred}
-            />
+            <Button
+              icon={<DownloadOutlined />}
+              type="primary"
+              disabled={!canNavigate || !selected || selected.directory}
+              onClick={() => {
+                if (selected && !selected.directory) void download(selected);
+              }}
+            >
+              {text('fileDownloadSelected', 'Download selected file')}
+            </Button>
           </div>
-        )}
-        {progress?.phase === 'conflict' && (
-          <Space wrap>
-            <span>
-              {text('fileConflict', 'A remote file with this name exists.')}
-            </span>
-            <Button
-              onClick={() =>
-                command({ type: 'conflict', id: progress.id, overwrite: false })
-              }
-            >
-              {text('fileSkip', 'Keep remote file')}
-            </Button>
-            <Button
-              danger
-              onClick={() =>
-                command({ type: 'conflict', id: progress.id, overwrite: true })
-              }
-            >
-              {text('fileOverwrite', 'Overwrite remote file')}
-            </Button>
-          </Space>
-        )}
-        {busy && (
+          <small className={styles.fileLimit}>
+            {text(
+              'fileLimit',
+              'Files transfer one at a time. Without streaming save, downloads are limited to 16 MiB.',
+            )}
+          </small>
+        </>
+      )}
+      {progress && (
+        <div className={styles.transferProgress} role="status">
+          {progress.name}: {text(`filePhase.${progress.phase}`, progress.phase)}{' '}
+          ({progress.transferred} / {progress.total} B)
+          <progress
+            max={Math.max(1, progress.total)}
+            value={progress.transferred}
+          />
+        </div>
+      )}
+      {progress?.phase === 'conflict' && (
+        <Space wrap>
+          <span>
+            {text('fileConflict', 'A remote file with this name exists.')}
+          </span>
           <Button
-            onClick={() => {
-              abortSink();
-              command({ type: 'cancel' });
-            }}
+            onClick={() =>
+              command({ type: 'conflict', id: progress.id, overwrite: false })
+            }
           >
-            {text('fileCancel', 'Cancel transfer')}
+            {text('fileSkip', 'Keep remote file')}
           </Button>
-        )}
-      </Space>
-    </Card>
+          <Button
+            danger
+            onClick={() =>
+              command({ type: 'conflict', id: progress.id, overwrite: true })
+            }
+          >
+            {text('fileOverwrite', 'Overwrite remote file')}
+          </Button>
+        </Space>
+      )}
+      {busy && (
+        <Button
+          onClick={() => {
+            abortSink();
+            command({ type: 'cancel' });
+          }}
+        >
+          {text('fileCancel', 'Cancel transfer')}
+        </Button>
+      )}
+    </div>
   );
 });
