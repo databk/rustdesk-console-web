@@ -4,10 +4,24 @@ server {
 
     root /usr/share/nginx/html;
     index index.html;
+    # Docker DNS is resolved again after a backend container is replaced.
+    resolver 127.0.0.11 valid=5s ipv6=off;
+
+    location = /system-update-health.json {
+        add_header Cache-Control "no-store" always;
+        try_files $uri =404;
+    }
+
+    location = /index.html {
+        add_header Cache-Control "no-store" always;
+    }
 
     # API requests - reverse proxy to backend
     location /api/ {
-        proxy_pass ${BACKEND_URL};
+        set $backend "${BACKEND_URL}";
+        proxy_pass $backend$request_uri;
+        proxy_connect_timeout 5s;
+        proxy_read_timeout 30s;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -16,11 +30,13 @@ server {
 
     # SPA fallback - serve index.html for client-side routing
     location / {
+        add_header Cache-Control "no-cache" always;
         try_files $uri $uri/ /index.html;
     }
 
     # Cache static assets
     location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+        try_files $uri =404;
         expires 1y;
         add_header Cache-Control "public, immutable";
     }

@@ -2,22 +2,68 @@ name: Release
 
 on:
   workflow_dispatch:
+    inputs:
+      peer_version_range:
+        description: 'Tested backend range, e.g. >=1.10.0 <2.0.0'
+        required: true
+        type: string
 
 concurrency:
   group: release-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 permissions:
   contents: write
   packages: write
 
 jobs:
+  prepare:
+    name: Pin release version and commit
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.changelog.outputs.version }}
+      skipped: ${{ steps.changelog.outputs.skipped }}
+      source_commit: ${{ steps.identity.outputs.source_commit }}
+      changelog: ${{ steps.changelog.outputs.clean_changelog }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Generate changelog
+        id: changelog
+        uses: TriPSs/conventional-changelog-action@v6
+        with:
+          git-user-name: 'DataBK Auto Release'
+          git-user-email: 'databk.auto.release@github.com'
+          tag-prefix: ''
+          version-file: './package.json,./package-lock.json'
+
+      - name: Verify immutable release identity
+        if: steps.changelog.outputs.skipped == 'false'
+        id: identity
+        env:
+          RELEASE_VERSION: ${{ steps.changelog.outputs.version }}
+        run: |
+          set -eu
+          node -e 'if(!/^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$/.test(process.env.RELEASE_VERSION))throw Error("A stable release is required")'
+          COMMIT=$(git rev-parse "$RELEASE_VERSION^{commit}")
+          test "$COMMIT" = "$(git rev-parse HEAD)"
+          test "$RELEASE_VERSION" = "$(node -p 'require("./package.json").version')"
+          test -z "$(git status --porcelain --untracked-files=no)"
+          echo "source_commit=$COMMIT" >> "$GITHUB_OUTPUT"
+
   build:
+    needs: prepare
+    if: needs.prepare.outputs.skipped == 'false'
+    env:
+      SOURCE_COMMIT: ${{ needs.prepare.outputs.source_commit }}
     name: Build Release Artifacts
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.prepare.outputs.source_commit }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v7
@@ -42,7 +88,9 @@ jobs:
 
   build-binaries:
     name: Build Binary (${{ matrix.target }})
-    needs: build
+    needs: [prepare, build]
+    env:
+      SOURCE_COMMIT: ${{ needs.prepare.outputs.source_commit }}
     strategy:
       matrix:
         include:
@@ -71,6 +119,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.prepare.outputs.source_commit }}
 
       - name: Download build artifact
         uses: actions/download-artifact@v8
@@ -111,6 +161,21 @@ jobs:
         if: matrix.target == 'aarch64-unknown-linux-musl'
         run: cross build --release --target ${{ matrix.target }} --manifest-path server/Cargo.toml
 
+      - name: Package managed Linux bundle
+        if: runner.os == 'Linux'
+        shell: bash
+        env:
+          TARGET: ${{ matrix.target }}
+        run: node scripts/package-native.mjs --target="$TARGET"
+
+      - name: Upload managed Linux bundle
+        if: runner.os == 'Linux'
+        uses: actions/upload-artifact@v7
+        with:
+          name: bundle-${{ matrix.target }}
+          path: rustdesk-console-web-linux-*.tar.gz
+          if-no-files-found: error
+
       - name: Rename binary with target suffix
         shell: bash
         run: |
@@ -124,22 +189,14 @@ jobs:
 
   release:
     name: Create GitHub Release
-    needs: [build, build-binaries]
+    needs: [prepare, build, build-binaries]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v7
         with:
+          ref: ${{ needs.prepare.outputs.source_commit }}
           fetch-depth: 0
-
-      - name: Generate changelog
-        id: changelog
-        uses: TriPSs/conventional-changelog-action@v6
-        with:
-          git-user-name: 'DataBK Auto Release'
-          git-user-email: 'databk.auto.release@github.com'
-          tag-prefix: ''
-          version-file: './package.json,./package-lock.json'
 
       - name: Download build artifact
         uses: actions/download-artifact@v8
@@ -154,41 +211,51 @@ jobs:
           path: binaries/
           merge-multiple: true
 
+      - name: Download managed Linux bundles
+        uses: actions/download-artifact@v8
+        with:
+          pattern: bundle-*
+          path: bundles/
+          merge-multiple: true
+
       - name: Create release archive
-        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        if: ${{ needs.prepare.outputs.skipped == 'false' }}
         run: |
           cd dist
-          tar -czf ../rustdesk-console-web-${{ steps.changelog.outputs.version }}.tar.gz .
+          tar -czf ../rustdesk-console-web-${{ needs.prepare.outputs.version }}.tar.gz .
           cd ..
 
       - name: Create GitHub Release
-        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        if: ${{ needs.prepare.outputs.skipped == 'false' }}
         uses: softprops/action-gh-release@v3
         with:
-          tag_name: ${{ steps.changelog.outputs.version }}
-          name: ${{ steps.changelog.outputs.version }}
-          body: ${{ steps.changelog.outputs.clean_changelog }}
+          tag_name: ${{ needs.prepare.outputs.version }}
+          name: ${{ needs.prepare.outputs.version }}
+          body: ${{ needs.prepare.outputs.changelog }}
           draft: false
-          prerelease: ${{ contains(steps.changelog.outputs.version, '-') }}
+          prerelease: ${{ contains(needs.prepare.outputs.version, '-') }}
           files: |
-            rustdesk-console-web-${{ steps.changelog.outputs.version }}.tar.gz
+            rustdesk-console-web-${{ needs.prepare.outputs.version }}.tar.gz
             binaries/*
+            bundles/*
 
   docker:
     name: Publish Docker Image
-    needs: release
+    needs: [prepare, release]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v7
         with:
-          ref: ${{ github.ref_name }}
+          ref: ${{ needs.prepare.outputs.source_commit }}
           fetch-depth: 0
 
       - name: Determine version
         id: version
+        env:
+          RELEASE_VERSION: ${{ needs.prepare.outputs.version }}
         run: |
-          VERSION=$(git describe --tags --abbrev=0)
+          VERSION=$RELEASE_VERSION
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           MAJOR=$(echo $VERSION | cut -d. -f1)
           MINOR=$(echo $VERSION | cut -d. -f2)
@@ -216,10 +283,12 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and push Docker image
+        id: image
         uses: docker/build-push-action@v7
         with:
           context: .
           push: true
+          build-args: SOURCE_COMMIT=${{ needs.prepare.outputs.source_commit }}
           platforms: linux/amd64,linux/arm64
           tags: |
             ghcr.io/${{ github.repository }}:${{ steps.version.outputs.version }}
@@ -233,9 +302,48 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+      - name: Record immutable Docker evidence
+        env:
+          BUILD_METADATA: ${{ steps.image.outputs.metadata }}
+          RELEASE_VERSION: ${{ needs.prepare.outputs.version }}
+          SOURCE_COMMIT: ${{ needs.prepare.outputs.source_commit }}
+        run: |
+          node -e 'const fs=require("fs");const m=JSON.parse(process.env.BUILD_METADATA);const d=m["containerimage.descriptor"];if(!d||d.digest!==m["containerimage.digest"])throw Error("Missing OCI descriptor");fs.writeFileSync("docker-evidence.json",JSON.stringify({version:process.env.RELEASE_VERSION,sourceCommit:process.env.SOURCE_COMMIT,digest:d.digest,size:d.size,platforms:["linux/amd64","linux/arm64"]}));'
+      - uses: actions/upload-artifact@v7
+        with:
+          name: docker-build-evidence
+          path: docker-evidence.json
+          if-no-files-found: error
+
+  finalize:
+    name: Finalize executable update manifest
+    needs: [prepare, release, docker]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.prepare.outputs.source_commit }}
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+      - uses: actions/download-artifact@v8
+        with:
+          name: docker-build-evidence
+      - name: Verify all official artifacts and publish manifest last
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_VERSION: ${{ needs.prepare.outputs.version }}
+          PEER_VERSION_RANGE: ${{ inputs.peer_version_range }}
+        run: |
+          set -eu
+          gh api "repos/databk/rustdesk-console-web/releases/tags/$RELEASE_VERSION" > release.json
+          gh release download "$RELEASE_VERSION" --repo databk/rustdesk-console-web --pattern 'rustdesk-console-web-linux-*.tar.gz' --dir release-artifacts
+          node scripts/finalize-release.mjs --release=release.json --docker=docker-evidence.json --artifacts=release-artifacts --peer-range="$PEER_VERSION_RANGE" --out=update-manifest.json
+          gh release upload "$RELEASE_VERSION" update-manifest.json --repo databk/rustdesk-console-web
+
   deploy:
     name: Deploy Release
-    needs: release
+    needs: [prepare, release]
     runs-on: ubuntu-latest
     environment:
       name: production
@@ -243,6 +351,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.prepare.outputs.source_commit }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v7
@@ -257,6 +367,7 @@ jobs:
         run: npm run build
         env:
           NODE_ENV: production
+          SOURCE_COMMIT: ${{ needs.prepare.outputs.source_commit }}
           REACT_APP_HISTORY_TYPE: hash
           REACT_APP_PUBLIC_PATH: /${{ github.event.repository.name }}/
 

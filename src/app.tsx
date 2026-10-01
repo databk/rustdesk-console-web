@@ -21,6 +21,7 @@ import {
 } from '@/utils/generalSettings';
 import defaultSettings from '../config/defaultSettings';
 import AuthSync from './components/AuthSync';
+import HeaderUpdateEntry from './components/HeaderUpdateEntry';
 import { errorConfig } from './requestErrorConfig';
 
 const isDev = process.env.NODE_ENV === 'development' || process.env.CI;
@@ -159,6 +160,7 @@ export const layout: RunTimeLayoutConfig = ({
     actionsRender: () => [
       <ThemeToggle key="ThemeToggle" />,
       <SelectLang key="SelectLang" />,
+      <HeaderUpdateEntry key="HeaderUpdateEntry" />,
     ],
     avatarProps: {
       src: initialState?.currentUser?.avatar,
