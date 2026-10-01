@@ -272,7 +272,6 @@ const SharedAddressBook: React.FC = () => {
           }
           return toTableResult(result);
         }}
-        search={{ labelWidth: 'auto', defaultCollapsed: true }}
         columns={columns}
         rowSelection={
           access.canAddressBooksEdit

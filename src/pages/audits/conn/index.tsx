@@ -269,7 +269,6 @@ const ConnectionAudit: React.FC = () => {
           }}
           actionRef={actionRef}
           rowKey="id"
-          search={{ labelWidth: 'auto', defaultCollapsed: true }}
           request={async (params) => {
             const requestParams: Record<string, any> = {
               current: params.current,

@@ -185,10 +185,6 @@ const ConsoleAudit: React.FC = () => {
           return toTableResult(result);
         }}
         columns={columns}
-        search={{
-          defaultCollapsed: true,
-          labelWidth: 'auto',
-        }}
         pagination={DEFAULT_PAGINATION}
         options={{
           density: true,

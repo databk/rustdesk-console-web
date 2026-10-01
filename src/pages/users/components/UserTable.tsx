@@ -159,7 +159,6 @@ const UserTable: React.FC<UserTableProps> = ({
           ? columns.filter((col) => col.dataIndex !== 'user_group_name')
           : columns
       }
-      search={{ labelWidth: 'auto', defaultCollapsed: true }}
       pagination={DEFAULT_PAGINATION}
       scroll={{ x: 'max-content' }}
       toolBarRender={() =>

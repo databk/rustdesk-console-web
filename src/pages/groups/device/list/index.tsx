@@ -206,7 +206,6 @@ const DeviceGroupList: React.FC = () => {
           return toTableResult(result);
         }}
         columns={columns}
-        search={{ labelWidth: 'auto', defaultCollapsed: true }}
         pagination={DEFAULT_PAGINATION}
         toolBarRender={() => [
           <Button

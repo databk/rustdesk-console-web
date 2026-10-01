@@ -621,7 +621,6 @@ const RoleList: React.FC = () => {
           showQuickJumper: true,
         }}
         scroll={{ x: 900 }}
-        search={{ labelWidth: 'auto' }}
         toolBarRender={() => [
           <Tooltip
             key="create-tip"

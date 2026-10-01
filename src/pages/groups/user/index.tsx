@@ -284,7 +284,6 @@ const UserGroupList: React.FC = () => {
           });
           return toTableResult(result);
         }}
-        search={{ labelWidth: 'auto', defaultCollapsed: true }}
         columns={columns}
         pagination={DEFAULT_PAGINATION}
         scroll={{ x: 800 }}

@@ -174,7 +174,6 @@ const StrategyList: React.FC = () => {
             success: true,
           };
         }}
-        search={{ labelWidth: 'auto', defaultCollapsed: true }}
         columns={columns}
         pagination={DEFAULT_PAGINATION}
         scroll={{ x: 1000 }}
