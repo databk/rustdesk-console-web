@@ -625,7 +625,7 @@ declare namespace API {
 
   type ConnectionAuditQueryParams = PageParams & {
     deviceId?: string;
-    type?: number;
+    type?: ConnType;
     startTime?: string;
     endTime?: string;
   };
