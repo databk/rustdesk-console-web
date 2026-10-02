@@ -1,3 +1,4 @@
+import { afterEach, expect, jest, test } from "@jest/globals";
 import { request } from "@umijs/max";
 import {
   controlServer,
@@ -8,7 +9,7 @@ import {
 } from "./server";
 
 jest.mock("@umijs/max", () => ({ request: jest.fn() }));
-const mockedRequest = request as jest.MockedFunction<typeof request>;
+const mockedRequest = jest.mocked(request);
 afterEach(() => jest.clearAllMocks());
 
 test("calls only the Console proxy and encodes identifiers", async () => {
