@@ -6,6 +6,6 @@ export interface DetailField {
 
 export interface ConnectionAuditSearchParams extends API.PageParams {
   deviceId?: string;
-  type?: number;
+  type?: API.ConnType;
   createdAt?: [string, string];
 }
