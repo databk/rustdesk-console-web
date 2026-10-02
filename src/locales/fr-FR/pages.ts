@@ -1015,6 +1015,15 @@ export default {
   'pages.roles.resource.strategies': 'Stratégies',
   'pages.roles.resource.system': 'Capacités système',
   'pages.roles.resource.user_groups': "Groupes d'utilisateurs",
+  'pages.roles.resource.servers': 'Serveurs',
+  'pages.roles.permission.servers.view': 'Afficher les serveurs',
+  'pages.roles.permission.servers.control':
+    'Contrôler les services des serveurs',
+  'pages.roles.permission.servers.config': 'Configurer les serveurs',
+  'pages.roles.permission.servers.disconnect':
+    'Déconnecter les sessions relais',
+  'pages.roles.permission.servers.ban':
+    'Gérer les règles de blocage des serveurs',
   'pages.roles.resource.users': 'Utilisateurs',
   'pages.roles.superAdminInfo':
     "L'accès super administrateur est protégé séparément et ne peut être accordé via un rôle.",

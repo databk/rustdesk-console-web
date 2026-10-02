@@ -30,6 +30,13 @@ export default [
     component: './dashboard',
   },
   {
+    path: '/servers',
+    name: 'servers',
+    icon: 'cloudServer',
+    access: 'canServersView',
+    component: './servers',
+  },
+  {
     path: '/devices',
     name: 'devices',
     icon: 'desktop',

@@ -382,6 +382,12 @@ export default {
   'pages.roles.disableProtectionConfirm': 'Disable protection for this role?',
   'pages.roles.disableProtectionAffected':
     '{count} members will become manageable by delegated administrators.',
+  'pages.roles.resource.servers': 'Servers',
+  'pages.roles.permission.servers.view': 'View servers',
+  'pages.roles.permission.servers.control': 'Control server services',
+  'pages.roles.permission.servers.config': 'Configure servers',
+  'pages.roles.permission.servers.disconnect': 'Disconnect relay sessions',
+  'pages.roles.permission.servers.ban': 'Manage server bans',
   'pages.roles.resource.users': 'Users',
   'pages.roles.resource.user_groups': 'User groups',
   'pages.roles.resource.devices': 'Devices',

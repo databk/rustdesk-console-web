@@ -403,6 +403,13 @@ export default {
   'pages.roles.disableProtectionConfirm': 'Desativar a proteção desta função?',
   'pages.roles.disableProtectionAffected':
     '{count} membros poderão ser gerenciados por administradores delegados.',
+  'pages.roles.resource.servers': 'Servidores',
+  'pages.roles.permission.servers.view': 'Visualizar servidores',
+  'pages.roles.permission.servers.control': 'Controlar serviços dos servidores',
+  'pages.roles.permission.servers.config': 'Configurar servidores',
+  'pages.roles.permission.servers.disconnect':
+    'Desconectar sessões de retransmissão',
+  'pages.roles.permission.servers.ban': 'Gerenciar bloqueios dos servidores',
   'pages.roles.resource.users': 'Usuários',
   'pages.roles.resource.user_groups': 'Grupos de usuários',
   'pages.roles.resource.devices': 'Dispositivos',

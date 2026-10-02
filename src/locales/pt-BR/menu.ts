@@ -1,4 +1,5 @@
 export default {
+  'menu.servers': 'Server management',
   'menu.user.center': 'Conta',
   'menu.dashboard': 'Painel',
   'menu.devices': 'Dispositivos',

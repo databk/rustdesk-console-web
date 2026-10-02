@@ -1,4 +1,5 @@
 export default {
+  'menu.servers': '服务器管理',
   'menu.user.center': '个人中心',
   'menu.dashboard': '仪表盘',
   'menu.devices': '设备管理',
