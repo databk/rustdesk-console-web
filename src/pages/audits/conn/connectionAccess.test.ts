@@ -14,14 +14,14 @@ test('only offers disconnect for server-approved rows', () => {
   expect(
     canDisconnectAuditRecord(true, {
       deviceUuid: 'uuid-1',
-      connId: 42,
+      connId: '42',
       can_disconnect: true,
     }),
   ).toBe(true);
   expect(
     canDisconnectAuditRecord(true, {
       deviceUuid: 'uuid-1',
-      connId: 42,
+      connId: '42',
       can_disconnect: false,
     }),
   ).toBe(false);
@@ -29,7 +29,7 @@ test('only offers disconnect for server-approved rows', () => {
     canDisconnectAuditRecord(true, {
       action: 'closed',
       deviceUuid: 'uuid-1',
-      connId: 42,
+      connId: '42',
       can_disconnect: true,
     }),
   ).toBe(true);

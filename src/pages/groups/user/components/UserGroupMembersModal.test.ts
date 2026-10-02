@@ -9,7 +9,7 @@ const user = (guid: string, overrides: Partial<API.UserItem> = {}) => ({
   name: guid,
   email: `${guid}@example.com`,
   note: '',
-  status: 1,
+  status: 1 as API.UserStatus,
   is_admin: false,
   ...overrides,
 });

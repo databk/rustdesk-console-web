@@ -37,7 +37,7 @@ const isEffectivePermissionScope = (
  * the definitions returned by this endpoint and never invents permission
  * identifiers.
  */
-export async function getPermissionList(options?: { [key: string]: any }) {
+export async function getPermissionList(options?: Record<string, unknown>) {
   const response = await request<unknown>('/api/permissions', {
     method: 'GET',
     ...(options || {}),
@@ -57,7 +57,7 @@ export async function getPermissionList(options?: { [key: string]: any }) {
 }
 
 /** Load the caller's current effective permissions and scopes. */
-export async function getMyPermissions(options?: { [key: string]: any }) {
+export async function getMyPermissions(options?: Record<string, unknown>) {
   const response = await request<unknown>('/api/permissions/me', {
     method: 'GET',
     ...(options || {}),

@@ -1,13 +1,8 @@
 import { request } from '@umijs/max';
 
 export async function getConnectionAudits(
-  params: API.PageParams & {
-    deviceId?: string;
-    type?: number;
-    startTime?: string;
-    endTime?: string;
-  },
-  options?: { [key: string]: any },
+  params: API.ConnectionAuditQueryParams,
+  options?: Record<string, unknown>,
 ) {
   return request<API.PaginatedResult<API.ConnectionAuditItem>>('/api/audits/conn', {
     method: 'GET',
@@ -17,10 +12,8 @@ export async function getConnectionAudits(
 }
 
 export async function getActiveConnections(
-  params: API.PageParams & {
-    deviceId?: string;
-  },
-  options?: { [key: string]: any },
+  params: API.ActiveConnectionQueryParams,
+  options?: Record<string, unknown>,
 ) {
   return request<API.PaginatedResult<API.ActiveConnectionItem>>(
     '/api/audits/conn/active',
@@ -33,13 +26,8 @@ export async function getActiveConnections(
 }
 
 export async function getFileAudits(
-  params: API.PageParams & {
-    deviceId?: string;
-    type?: number;
-    startTime?: string;
-    endTime?: string;
-  },
-  options?: { [key: string]: any },
+  params: API.FileAuditQueryParams,
+  options?: Record<string, unknown>,
 ) {
   return request<API.PaginatedResult<API.FileAuditItem>>('/api/audits/file', {
     method: 'GET',
@@ -49,13 +37,8 @@ export async function getFileAudits(
 }
 
 export async function getAlarmAudits(
-  params: API.PageParams & {
-    deviceId?: string;
-    type?: number;
-    startTime?: string;
-    endTime?: string;
-  },
-  options?: { [key: string]: any },
+  params: API.AlarmAuditQueryParams,
+  options?: Record<string, unknown>,
 ) {
   return request<API.PaginatedResult<API.AlarmAuditItem>>('/api/audits/alarm', {
     method: 'GET',
@@ -65,15 +48,8 @@ export async function getAlarmAudits(
 }
 
 export async function getConsoleAudits(
-  params: API.PageParams & {
-    operator?: string;
-    action?: string;
-    target_type?: string;
-    result?: 'allowed' | 'denied';
-    start_time?: string;
-    end_time?: string;
-  },
-  options?: { [key: string]: any },
+  params: API.ConsoleAuditQueryParams,
+  options?: Record<string, unknown>,
 ) {
   return request<API.PaginatedResult<API.ConsoleAuditItem>>('/api/audits/console', {
     method: 'GET',
@@ -85,7 +61,7 @@ export async function getConsoleAudits(
 export async function updateConnectionAudit(
   id: number,
   data: { note: string },
-  options?: { [key: string]: any },
+  options?: Record<string, unknown>,
 ) {
   return request<API.ResponseResult>(`/api/audits/conn/${id}`, {
     method: 'PATCH',
@@ -97,7 +73,7 @@ export async function updateConnectionAudit(
 export async function disconnectConnection(
   uuid: string,
   connIds: number[],
-  options?: { [key: string]: any },
+  options?: Record<string, unknown>,
 ) {
   return request<API.ResponseResult>(`/api/devices/${uuid}/disconnect`, {
     method: 'POST',

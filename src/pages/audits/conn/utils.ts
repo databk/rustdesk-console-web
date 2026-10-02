@@ -3,7 +3,7 @@ import { renderNameIp } from '@/utils/audit';
 
 export const DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
-export const formatDateTime = (val?: string): string =>
+export const formatDateTime = (val?: string | null): string =>
   val ? dayjs(val).format(DATE_FORMAT) : '-';
 
 export const renderLocalField = (record: API.ConnectionAuditItem): string =>

@@ -270,7 +270,7 @@ const ConnectionAudit: React.FC = () => {
           actionRef={actionRef}
           rowKey="id"
           request={async (params) => {
-            const requestParams: Record<string, any> = {
+            const requestParams: API.ConnectionAuditQueryParams = {
               current: params.current,
               pageSize: params.pageSize,
             };

@@ -280,7 +280,7 @@ const Login: React.FC = () => {
           setVerifySession({
             username: values.username?.trim() || '',
             secret: msg.secret || '',
-            emailHint: msg.user?.email,
+            emailHint: msg.user?.email ?? undefined,
           });
           setAuthStep(actualType);
           if (actualType === 'email_check') {
@@ -377,7 +377,7 @@ const Login: React.FC = () => {
               ? {
                   ...prev,
                   secret: msg.secret || '',
-                  emailHint: msg.user?.email,
+                  emailHint: msg.user?.email ?? undefined,
                 }
               : null,
           );

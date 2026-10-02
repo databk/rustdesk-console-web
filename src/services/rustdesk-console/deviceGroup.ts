@@ -2,7 +2,7 @@ import { request } from '@umijs/max';
 
 export async function getDeviceGroupList(
   params: API.PageParams & { name?: string },
-  options?: { [key: string]: any },
+  options?: Record<string, unknown>,
 ) {
   return request<API.PaginatedResult<API.DeviceGroupItem>>('/api/device-groups', {
     method: 'GET',
@@ -13,7 +13,7 @@ export async function getDeviceGroupList(
 
 export async function getStrategyTargetDeviceGroupList(
   params: API.PageParams & { name?: string },
-  options?: { [key: string]: any },
+  options?: Record<string, unknown>,
 ) {
   return request<API.PaginatedResult<API.DeviceGroupItem>>(
     '/api/device-groups/strategy-targets',
