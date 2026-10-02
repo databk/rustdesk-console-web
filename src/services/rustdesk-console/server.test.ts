@@ -10,7 +10,9 @@ import {
 
 jest.mock("@umijs/max", () => ({ request: jest.fn() }));
 const mockedRequest = jest.mocked(request);
-afterEach(() => jest.clearAllMocks());
+afterEach(() => {
+  jest.clearAllMocks();
+});
 
 test("calls only the Console proxy and encodes identifiers", async () => {
   mockedRequest.mockResolvedValue({});
