@@ -64,6 +64,7 @@ const Servers: React.FC = () => {
   useEffect(() => {
     let active = true;
     let fetching = false;
+    let configLoaded = false;
     setLoading(true);
     setFailed(false);
     setPeers([]);
@@ -95,10 +96,11 @@ const Servers: React.FC = () => {
         } else if (tab === 'logs') {
           const response = await getServerLogs(node, service);
           if (active) setLogs(response.text);
-        } else if (tab === 'config' && initial) {
+        } else if (tab === 'config' && !configLoaded) {
           const response = await getServerConfig(node, service);
           if (active) {
             setConfig(response);
+            configLoaded = true;
             configForm.resetFields();
             configForm.setFieldsValue({ values: response.values });
           }
