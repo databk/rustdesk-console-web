@@ -8,6 +8,7 @@ import { useIntl } from '@umijs/max';
 import {
   Alert,
   Button,
+  Divider,
   Modal,
   Skeleton,
   Space,
@@ -20,6 +21,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { checkUpdate } from '@/services/rustdesk-console/system';
+import SystemUpdatePanel from './SystemUpdatePanel';
 
 const { Paragraph, Text } = Typography;
 
@@ -144,7 +146,9 @@ const UpdateCheckModal: React.FC<{
   open: boolean;
   onClose: () => void;
   cachedResult?: API.UpdateCheckResult | null;
-}> = ({ open, onClose, cachedResult }) => {
+  initialCheckPending?: boolean;
+  onCheckResult?: (result: API.UpdateCheckResult) => void;
+}> = ({ open, onClose, cachedResult, initialCheckPending = false, onCheckResult }) => {
   const intl = useIntl();
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<API.UpdateCheckResult | null>(
@@ -156,20 +160,21 @@ const UpdateCheckModal: React.FC<{
     try {
       const res = await checkUpdate({ frontend_version: FRONTEND_VERSION });
       setResult(res);
+      onCheckResult?.(res);
     } catch {
       setResult(null);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [onCheckResult]);
 
   useEffect(() => {
     if (open && cachedResult) {
       setResult(cachedResult);
-    } else if (open && !cachedResult) {
+    } else if (open && !cachedResult && !initialCheckPending) {
       doCheck();
     }
-  }, [open, cachedResult, doCheck]);
+  }, [open, cachedResult, initialCheckPending, doCheck]);
 
   const hasAnyUpdate =
     result && (result.backend?.has_update || result.frontend?.has_update);
@@ -189,7 +194,7 @@ const UpdateCheckModal: React.FC<{
           key="recheck"
           icon={<SyncOutlined />}
           onClick={doCheck}
-          loading={loading}
+          loading={loading || initialCheckPending}
         >
           {intl.formatMessage({ id: 'app.updateCheck.recheck' })}
         </Button>,
@@ -203,7 +208,11 @@ const UpdateCheckModal: React.FC<{
       ]}
       width={560}
     >
-      <Spin spinning={loading}>
+      <SystemUpdatePanel open={open} />
+      <Divider styles={{ content: { whiteSpace: 'normal', overflowWrap: 'anywhere' } }}>
+        {intl.formatMessage({ id: 'app.systemUpdate.manualCheck' })}
+      </Divider>
+      <Spin spinning={loading || initialCheckPending}>
         {result ? (
           <Space orientation="vertical" size={12} style={{ width: '100%' }}>
             <Alert
@@ -227,7 +236,7 @@ const UpdateCheckModal: React.FC<{
               data={result.frontend}
             />
           </Space>
-        ) : loading ? (
+        ) : loading || initialCheckPending ? (
           <Skeleton active paragraph={{ rows: 4 }} />
         ) : (
           <div

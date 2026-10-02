@@ -1,5 +1,7 @@
 node_modules
 dist
+server/target
+rustdesk-console-web-linux-*.tar.gz
 .git
 .github
 .husky
