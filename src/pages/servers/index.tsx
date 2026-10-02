@@ -79,8 +79,10 @@ const Servers: React.FC = () => {
         const response = await getServerNodes();
         if (!active) return;
         setNodes(response.data);
-        if (!node && response.data[0]) {
-          setNode(response.data[0].id);
+        if (!response.data.some((item) => item.id === node)) {
+          const nextNode = response.data[0]?.id || '';
+          if (node !== nextNode) setNode(nextNode);
+          setFailed(false);
           return;
         }
         if (!node) return;

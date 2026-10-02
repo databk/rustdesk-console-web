@@ -1,5 +1,5 @@
 export default {
-  'menu.servers': 'Server management',
+  'menu.servers': 'Gestion des serveurs',
   'menu.user.center': 'Compte',
   'menu.dashboard': 'Tableau de bord',
   'menu.devices': 'Appareils',
