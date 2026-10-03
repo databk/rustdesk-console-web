@@ -65,6 +65,7 @@ const Servers: React.FC = () => {
     let active = true;
     let fetching = false;
     let configLoaded = false;
+    let bansLoaded = false;
     setLoading(true);
     setFailed(false);
     setPeers([]);
@@ -73,7 +74,8 @@ const Servers: React.FC = () => {
     setConfig(undefined);
     setConfigDirty(false);
     setBans(undefined);
-    const load = async (initial: boolean) => {
+    bansForm.resetFields();
+    const load = async () => {
       if (fetching) return;
       fetching = true;
       try {
@@ -108,11 +110,13 @@ const Servers: React.FC = () => {
           const response = await getServerBans(node);
           if (active) {
             setBans(response);
-            if (initial) {
+            if (!bansLoaded) {
+              bansForm.resetFields();
               bansForm.setFieldsValue({
                 deviceIds: response.device_ids.join('\n'),
                 ips: response.ips.join('\n'),
               });
+              bansLoaded = true;
             }
           }
         }
@@ -124,9 +128,9 @@ const Servers: React.FC = () => {
         if (active) setLoading(false);
       }
     };
-    void load(true);
+    void load();
     const timer = setInterval(() => {
-      void load(false);
+      void load();
     }, 10000);
     return () => {
       active = false;
@@ -156,7 +160,12 @@ const Servers: React.FC = () => {
     <Select
       value={service}
       disabled={busy}
-      onChange={setService}
+      onChange={(nextService) => {
+        setConfig(undefined);
+        setConfigDirty(false);
+        configForm.resetFields();
+        setService(nextService);
+      }}
       options={[
         { value: 'hbbs', label: 'hbbs' },
         { value: 'hbbr', label: 'hbbr' },
@@ -555,7 +564,14 @@ const Servers: React.FC = () => {
           placeholder={t('选择节点', 'Select a node')}
           disabled={busy}
           style={{ minWidth: 180 }}
-          onChange={setNode}
+          onChange={(nextNode) => {
+            setConfig(undefined);
+            setConfigDirty(false);
+            configForm.resetFields();
+            setBans(undefined);
+            bansForm.resetFields();
+            setNode(nextNode);
+          }}
           options={nodes.map((item) => ({ value: item.id, label: item.name }))}
         />,
         <Button
