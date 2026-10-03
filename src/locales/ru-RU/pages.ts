@@ -396,6 +396,13 @@ export default {
   'pages.roles.disableProtectionConfirm': 'Отключить защиту этой роли?',
   'pages.roles.disableProtectionAffected':
     'Участники: {count}; ими смогут управлять делегированные администраторы.',
+  'pages.roles.resource.servers': 'Серверы',
+  'pages.roles.permission.servers.view': 'Просмотр серверов',
+  'pages.roles.permission.servers.control': 'Управление службами серверов',
+  'pages.roles.permission.servers.config': 'Настройка серверов',
+  'pages.roles.permission.servers.disconnect':
+    'Отключение сеансов ретрансляции',
+  'pages.roles.permission.servers.ban': 'Управление блокировками серверов',
   'pages.roles.resource.users': 'Пользователи',
   'pages.roles.resource.user_groups': 'Группы пользователей',
   'pages.roles.resource.devices': 'Устройства',

@@ -14,6 +14,18 @@ permissions:
   contents: read
 
 jobs:
+  server-management-tests:
+    name: Server API and access tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm test -- --runInBand src/access.test.ts src/services/rustdesk-console/server.test.ts src/pages/roles/rbacPresentation.test.ts
+
   lint:
     name: Lint & Format
     runs-on: ubuntu-latest

@@ -79,3 +79,23 @@ test('opens only the connection audit route for disconnect-only users', () => {
   expect(disconnectOnly.canAuditConnectionAccess).toBe(true);
   expect(disconnectOnly.canAuditView).toBe(false);
 });
+
+test('device operators cannot acquire global server controls', () => {
+  const deviceOperator = createAccess({
+    currentUser: { is_admin: false },
+    permissions: {
+      permissions: ['devices.view', 'devices.disconnect', 'devices.status'],
+      scopes: {},
+    },
+  });
+  expect(deviceOperator.canServersView).toBe(false);
+  expect(deviceOperator.canServersControl).toBe(false);
+  expect(deviceOperator.canServersDisconnect).toBe(false);
+  const observer = createAccess({
+    currentUser: { is_admin: false },
+    permissions: { permissions: ['servers.view'], scopes: {} },
+  });
+  expect(observer.canServersView).toBe(true);
+  expect(observer.canServersControl).toBe(false);
+  expect(observer.canServersBan).toBe(false);
+});

@@ -11,6 +11,11 @@ import {
 } from './rbacPresentation';
 
 const PERMISSION_CODES = [
+  'servers.view',
+  'servers.control',
+  'servers.config',
+  'servers.disconnect',
+  'servers.ban',
   'users.view',
   'users.create',
   'users.edit',
@@ -45,6 +50,7 @@ const PERMISSION_CODES = [
 ] as const;
 
 const RESOURCE_CODES = [
+  'servers',
   'users',
   'user_groups',
   'devices',

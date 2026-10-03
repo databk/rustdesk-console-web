@@ -355,6 +355,12 @@ export default {
   'pages.roles.disableProtectionConfirm': '确定要取消此角色的账号保护吗？',
   'pages.roles.disableProtectionAffected':
     '{count} 个成员将可由受委派管理员管理。',
+  'pages.roles.resource.servers': '服务器',
+  'pages.roles.permission.servers.view': '查看服务器',
+  'pages.roles.permission.servers.control': '控制服务器服务',
+  'pages.roles.permission.servers.config': '配置服务器',
+  'pages.roles.permission.servers.disconnect': '断开中继会话',
+  'pages.roles.permission.servers.ban': '管理服务器封禁',
   'pages.roles.resource.users': '用户',
   'pages.roles.resource.user_groups': '用户组',
   'pages.roles.resource.devices': '设备',

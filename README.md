@@ -54,3 +54,7 @@ npm run preview
 ## License
 
 [AGPL-3.0](LICENSE)
+
+## Server management
+
+The `/servers` page uses the Console backend proxy to display hbbs/hbbr services, registrations, relay sessions, logs, configuration and persistent bans. Access is controlled by the backend-owned global `servers.*` permissions. The Console repository documents node enrollment and the combined deployment in `docs/server-management.md`.
