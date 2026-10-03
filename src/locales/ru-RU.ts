@@ -1,3 +1,4 @@
+import webClient from './ru-RU/webClient';
 import component from './ru-RU/component';
 import globalHeader from './ru-RU/globalHeader';
 import menu from './ru-RU/menu';
@@ -7,6 +8,7 @@ import settingDrawer from './ru-RU/settingDrawer';
 import settings from './ru-RU/settings';
 
 export default {
+  ...webClient,
   'navBar.lang': 'Языки',
   'layout.user.link.help': 'Помощь',
   'layout.user.link.privacy': 'Конфиденциальность',

@@ -12,7 +12,10 @@ export default async (): Promise<any> => {
       ...(config?.testEnvironmentOptions || {}),
       url: 'http://localhost:8000',
     },
-    setupFiles: config.setupFiles || [],
+    setupFiles: [
+      ...(config.setupFiles || []),
+      '<rootDir>/tests/browser-environment.ts',
+    ],
     globals: {
       ...config.globals,
       localStorage: null,

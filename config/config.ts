@@ -1,4 +1,3 @@
-import { join } from 'node:path';
 import { defineConfig } from '@umijs/max';
 import defaultSettings from './defaultSettings';
 import proxy from './proxy';
@@ -32,7 +31,7 @@ export default defineConfig({
   model: {},
   initialState: {},
   title: 'RustDesk Console',
-  favicons: [join(PUBLIC_PATH, 'logo.svg')],
+  favicons: [`${PUBLIC_PATH}logo.svg`],
   layout: {
     locale: true,
     ...defaultSettings,
@@ -60,8 +59,8 @@ export default defineConfig({
   },
   request: {},
   access: {},
-  headScripts: [{ src: join(PUBLIC_PATH, 'scripts/loading.js'), async: true }],
-  links: [{ rel: 'manifest', href: join(PUBLIC_PATH, 'manifest.json') }],
+  headScripts: [{ src: `${PUBLIC_PATH}scripts/loading.js`, async: true }],
+  links: [{ rel: 'manifest', href: `${PUBLIC_PATH}manifest.json` }],
   metas: [
     { name: 'theme-color', content: '#1890ff' },
     { name: 'application-name', content: 'RustDesk Console' },

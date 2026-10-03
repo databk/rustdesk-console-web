@@ -9,6 +9,15 @@ const state = (
   permissions: { permissions, scopes: {} },
 });
 
+test('普通登录用户可以返回带设备参数的 Web Client，外部地址仍被拒绝', () => {
+  expect(resolvePostLoginPath('/web-client?id=123456789', state())).toBe(
+    '/web-client?id=123456789',
+  );
+  expect(
+    resolvePostLoginPath('https://example.com/web-client', state()),
+  ).toBe('/address-book/personal');
+});
+
 test('restores only an internal route the current user can access', () => {
   expect(
     resolvePostLoginPath('/devices?name=test#list', state(['devices.view'])),

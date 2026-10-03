@@ -1,8 +1,9 @@
 import { history, useIntl, useModel } from '@umijs/max';
 import { Alert, Button } from 'antd';
 import React, { useEffect, useRef } from 'react';
+import { flushSync } from 'react-dom';
 import { getMyPermissions } from '@/services/rustdesk-console/permission';
-import { getToken, removeToken, TOKEN_KEY } from '@/utils/auth';
+import { getLoginPath, getToken, removeToken, TOKEN_KEY } from '@/utils/auth';
 import { PERMISSIONS_STALE_EVENT } from '../requestErrorConfig';
 
 const loginPath = '/user/login';
@@ -25,16 +26,11 @@ const AuthSync: React.FC = () => {
 
     const handleStorageChange = (event: StorageEvent) => {
       if (event.key !== TOKEN_KEY) return;
-      permissionRefreshRef.current += 1;
+      // 同步销毁上一账户的会话，再等待新账户身份刷新。
+      flushSync(handleSessionExpired);
       if (!getToken()) {
-        setInitialState((state) => ({
-          ...state,
-          currentUser: undefined,
-          permissions: undefined,
-          permissionsLoadFailed: false,
-        }));
         if (history.location.pathname !== loginPath) {
-          history.push(loginPath);
+          history.push(getLoginPath(history.location));
         }
       } else {
         refresh();
@@ -58,7 +54,7 @@ const AuthSync: React.FC = () => {
         if (status === 401) {
           removeToken();
           window.dispatchEvent(new CustomEvent('auth:session-expired'));
-          history.push(loginPath);
+          history.push(getLoginPath(history.location));
         }
       }
     };

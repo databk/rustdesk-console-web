@@ -27,7 +27,7 @@
   "scripts": {
     "analyze": "cross-env ANALYZE=1 max build",
     "biome:lint": "npx @biomejs/biome lint",
-    "build": "max build",
+    "build": "max build && node scripts/write-web-client-manifest.cjs",
     "deploy": "npm run build && npm run gh-pages",
     "dev": "npm run start:dev",
     "gh-pages": "gh-pages -d dist",
@@ -49,7 +49,9 @@
     "test": "jest",
     "test:coverage": "npm run jest -- --coverage",
     "test:update": "npm run jest -- -u",
-    "tsc": "tsc --noEmit"
+    "tsc": "tsc --noEmit",
+    "web-client:protocol": "node scripts/generate-web-client-protocol.cjs",
+    "web-client:protocol:check": "node scripts/generate-web-client-protocol.cjs --check"
   },
   "browserslist": [
     "defaults"
@@ -71,7 +73,10 @@
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "react-markdown": "^10.1.0",
-    "remark-gfm": "^4.0.1"
+    "remark-gfm": "^4.0.1",
+    "fzstd": "0.1.1",
+    "libsodium-wrappers": "0.8.4",
+    "protobufjs": "8.8.0"
   },
   "devDependencies": {
     "@ant-design/pro-cli": "^3.4.0",
@@ -99,7 +104,8 @@
     "ts-node": "^10.9.2",
     "typescript": "^7.0.2",
     "umi-presets-pro": "^2.0.3",
-    "umi-serve": "^1.9.11"
+    "umi-serve": "^1.9.11",
+    "protobufjs-cli": "2.7.0"
   },
   "engines": {
     "node": ">=20.0.0"

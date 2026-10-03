@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 2,
+  "sources": {
+    "rustdesk": {
+      "repository": "https://github.com/rustdesk/rustdesk",
+      "revision": "4812a9815bd3c6a93f3ad903f29504168c4930a1"
+    },
+    "hbbCommon": {
+      "repository": "https://github.com/rustdesk/hbb_common",
+      "revision": "229b904508364c8997aad0fb5af57effac859f60"
+    }
+  },
+  "files": {
+    "message.proto": {
+      "source": "rustdesk",
+      "path": "libs/base/protos/message.proto",
+      "sha256": "d4acf89c7b73ebe26246068112b7134b56447f2bf73095106508b20b67fe933e"
+    },
+    "rendezvous.proto": {
+      "source": "hbbCommon",
+      "path": "protos/rendezvous.proto",
+      "sha256": "f8aee305dfd656863983a734c68fdff3b68175ce139efe9904daa9ac7f948567"
+    }
+  },
+  "license": {
+    "source": "rustdesk",
+    "path": "LICENCE",
+    "localFile": "LICENCE.upstream",
+    "sha256": "8486a10c4393cee1c25392769ddd3b2d6c242d6ec7928e1414efff7dfb2f07ef"
+  }
+}

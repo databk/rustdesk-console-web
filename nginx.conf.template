@@ -16,13 +16,20 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
     }
 
+    # Worker 清单必须与当前页面同步，禁止缓存。
+    location = /web-client-worker.json {
+        try_files $uri =404;
+        add_header Cache-Control "no-store";
+    }
+
     # SPA fallback - serve index.html for client-side routing
     location / {
         try_files $uri $uri/ /index.html;
     }
 
     # Cache static assets
-    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+    location ~* \.(js|wasm|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+        try_files $uri =404;
         expires 1y;
         add_header Cache-Control "public, immutable";
     }
