@@ -1,5 +1,8 @@
 import dayjs from 'dayjs';
 import { renderNameIp } from '@/utils/audit';
+import { sanitizeCsvCell } from '@/utils/csv';
+
+export { sanitizeCsvCell };
 
 export const DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
@@ -8,14 +11,6 @@ export const formatDateTime = (val?: string | null): string =>
 
 export const renderLocalField = (record: API.ConnectionAuditItem): string =>
   renderNameIp(record.peerName, record.ip);
-
-export const sanitizeCsvCell = (cell: string): string => {
-  let safe = cell.replace(/"/g, '""');
-  if (/^[=+\-@\t\r]/.test(safe)) {
-    safe = `'${safe}`;
-  }
-  return `"${safe}"`;
-};
 
 export const renderDuration = (record: API.ConnectionAuditItem): string => {
   if (!record.establishedAt || !record.closedAt) return '-';

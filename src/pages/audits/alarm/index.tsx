@@ -7,6 +7,7 @@ import dayjs from 'dayjs';
 import React, { useRef, useState } from 'react';
 import { getAlarmAudits } from '@/services/rustdesk-console/audit';
 import { renderNameIp } from '@/utils/audit';
+import { buildCsv, downloadCsv } from '@/utils/csv';
 import { DEFAULT_PAGINATION, toTableResult } from '@/utils/pagination';
 
 const ALARM_TYPE_MAP: Record<number, { msgId: string; color: string }> = {
@@ -40,14 +41,6 @@ const ALARM_TYPE_MAP: Record<number, { msgId: string; color: string }> = {
 
 const getAlarmTypeMsgId = (typ?: number): string => {
   return ALARM_TYPE_MAP[typ ?? -1]?.msgId ?? 'pages.audits.alarmType';
-};
-
-const sanitizeCsvCell = (cell: string): string => {
-  let safe = cell.replace(/"/g, '""');
-  if (/^[=+\-@\t\r]/.test(safe)) {
-    safe = `'${safe}`;
-  }
-  return `"${safe}"`;
 };
 
 interface AlarmAuditSearchParams extends API.PageParams {
@@ -128,21 +121,7 @@ const AlarmAudit: React.FC = () => {
       rows.push(row);
     });
 
-    return [
-      titles.map(sanitizeCsvCell).join(','),
-      ...rows.map((row) => row.map(sanitizeCsvCell).join(',')),
-    ].join('\n');
-  };
-
-  const downloadCsv = (csvContent: string) => {
-    const blob = new Blob([`\ufeff${csvContent}`], {
-      type: 'text/csv;charset=utf-8;',
-    });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `alarm-audit-${dayjs().format('YYYY-MM-DD-HHmmss')}.csv`;
-    link.click();
-    URL.revokeObjectURL(link.href);
+    return buildCsv(titles, rows);
   };
 
   const exportCsv = async () => {
@@ -176,7 +155,10 @@ const AlarmAudit: React.FC = () => {
             return;
           }
           const csvContent = generateCsvContent(items);
-          downloadCsv(csvContent);
+          downloadCsv(
+            `alarm-audit-${dayjs().format('YYYY-MM-DD-HHmmss')}.csv`,
+            csvContent,
+          );
           msgApi.success(
             intl.formatMessage({
               id: 'pages.audits.exportSuccess',

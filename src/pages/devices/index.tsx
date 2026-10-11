@@ -15,11 +15,13 @@ import type { ActionType } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { FormattedMessage, useAccess, useIntl } from '@umijs/max';
 import { App, Button, Popconfirm, Space } from 'antd';
+import dayjs from 'dayjs';
 import React, { useRef, useState } from 'react';
 import { getDeviceColumns } from '@/components/DeviceSelectTable/columns';
 import { getActionColumn } from './columns';
 import EditDeviceModal from './components/EditDeviceModal';
 import ImportDevicesModal from './components/ImportDevicesModal';
+import { buildCsv, downloadCsv } from '@/utils/csv';
 import { DEFAULT_PAGINATION, toTableResult } from '@/utils/pagination';
 
 export interface DeviceListProps {
@@ -34,7 +36,7 @@ const DeviceList: React.FC<DeviceListProps> = ({
   onBack,
 }) => {
   const intl = useIntl();
-  const { message: msgApi } = App.useApp();
+  const { message: msgApi, modal } = App.useApp();
   const access = useAccess();
   const actionRef = useRef<ActionType>(null);
   const searchParamsRef = useRef<Record<string, unknown>>({});
@@ -50,7 +52,6 @@ const DeviceList: React.FC<DeviceListProps> = ({
   const [batchRemoving, setBatchRemoving] = useState(false);
   const [batchStatusUpdating, setBatchStatusUpdating] = useState(false);
   const [hasDisabledDevice, setHasDisabledDevice] = useState(false);
-  const [exporting, setExporting] = useState(false);
 
   const handleEnable = async (guid: string) => {
     try {
@@ -280,75 +281,82 @@ const DeviceList: React.FC<DeviceListProps> = ({
   };
 
   const handleExportCsv = async () => {
-    setExporting(true);
-    try {
-      const params = searchParamsRef.current;
-      const allDevices: API.DeviceItem[] = [];
-      let current = 1;
-      const pageSize = 100;
-      let hasMore = true;
-      while (hasMore) {
-        const result = await getAdminDeviceList({
-          current,
-          pageSize,
-          id: params.id as string | undefined,
-          status: params.status as string | undefined,
-          is_online: params.is_online as string | undefined,
-          device_name: params.device_name as string | undefined,
-          user_name: params.user_name as string | undefined,
-          os: params.os as string | undefined,
-          device_group_name: params.device_group_name_search as
-            | string
-            | undefined,
-          device_group_guid: deviceGroupGuid,
-        });
-        const tableResult = toTableResult(result);
-        if (tableResult.data.length === 0) break;
-        allDevices.push(...tableResult.data);
-        hasMore = allDevices.length < tableResult.total;
-        current++;
-      }
+    modal.confirm({
+      title: intl.formatMessage({
+        id: 'pages.devices.exportCsv',
+        defaultMessage: 'Export CSV',
+      }),
+      content: intl.formatMessage({
+        id: 'pages.audits.exportConfirmContent',
+        defaultMessage: 'Export up to 1000 records. Continue?',
+      }),
+      okText: intl.formatMessage({
+        id: 'pages.common.confirm',
+        defaultMessage: 'Yes',
+      }),
+      cancelText: intl.formatMessage({
+        id: 'pages.common.cancel',
+        defaultMessage: 'No',
+      }),
+      onOk: async () => {
+        try {
+          const params = searchParamsRef.current;
+          const allDevices: API.DeviceItem[] = [];
+          let total = 0;
+          const pageSize = 100;
+          let current = 0;
 
-      const escapeCsv = (value: string | undefined | null): string => {
-        let str = value ?? '';
-        if (/^[=+\-@]/.test(str)) {
-          str = `'${str}`;
-        }
-        if (
-          str.includes(',') ||
-          str.includes('"') ||
-          str.includes('\n') ||
-          str.includes('\r')
-        ) {
-          return `"${str.replace(/"/g, '""')}"`;
-        }
-        return str;
-      };
+          do {
+            current++;
+            const result = await getAdminDeviceList({
+              current,
+              pageSize,
+              id: params.id as string | undefined,
+              status: params.status as string | undefined,
+              is_online: params.is_online as string | undefined,
+              device_name: params.device_name as string | undefined,
+              user_name: params.user_name as string | undefined,
+              os: params.os as string | undefined,
+              device_group_name: params.device_group_name_search as
+                | string
+                | undefined,
+              device_group_guid: deviceGroupGuid,
+            });
+            const tableResult = toTableResult(result);
+            if (total === 0) total = tableResult.total;
+            allDevices.push(...tableResult.data);
+          } while (current < 10 && pageSize * current < total);
 
-      const headers = [
-        'ID',
-        'Device',
-        'User',
-        'Group',
-        'Status',
-        'Online',
-        'OS',
-        'CPU',
-        'Memory',
-        'Version',
-        'Note',
-      ];
-      const rows = allDevices.map((d) =>
-        [
-          escapeCsv(d.id),
-          escapeCsv(
+          if (allDevices.length === 0) {
+            msgApi.warning(
+              intl.formatMessage({
+                id: 'pages.audits.noDataToExport',
+                defaultMessage: 'No data to export',
+              }),
+            );
+            return;
+          }
+
+          const headers = [
+            'ID',
+            'Device',
+            'User',
+            'Group',
+            'Status',
+            'Online',
+            'OS',
+            'CPU',
+            'Memory',
+            'Version',
+            'Note',
+          ];
+          const rows = allDevices.map((d) => [
+            d.id ?? '',
             d.info?.username && d.info?.device_name
               ? `${d.info.username}@${d.info.device_name}`
               : d.info?.device_name || d.info?.username || '',
-          ),
-          escapeCsv(d.user_name),
-          escapeCsv(d.device_group_name),
-          escapeCsv(
+            d.user_name ?? '',
+            d.device_group_name ?? '',
             d.status === 1
               ? intl.formatMessage({
                   id: 'pages.devices.statusNormal',
@@ -358,8 +366,6 @@ const DeviceList: React.FC<DeviceListProps> = ({
                   id: 'pages.devices.statusDisabled',
                   defaultMessage: 'Disabled',
                 }),
-          ),
-          escapeCsv(
             d.is_online
               ? intl.formatMessage({
                   id: 'pages.devices.online',
@@ -369,45 +375,37 @@ const DeviceList: React.FC<DeviceListProps> = ({
                   id: 'pages.devices.offline',
                   defaultMessage: 'Offline',
                 }),
-          ),
-          escapeCsv(d.info?.os),
-          escapeCsv(d.info?.cpu),
-          escapeCsv(d.info?.memory),
-          escapeCsv(d.info?.version),
-          escapeCsv(d.note),
-        ].join(','),
-      );
-      const csv = [headers.join(','), ...rows].join('\n');
-      const blob = new Blob([`\uFEFF${csv}`], {
-        type: 'text/csv;charset=utf-8;',
-      });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `devices-${new Date().toISOString().slice(0, 10)}.csv`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-      msgApi.success(
-        intl.formatMessage(
-          {
-            id: 'pages.devices.exportCsvSuccess',
-            defaultMessage: 'Exported {count} device(s) to CSV',
-          },
-          { count: allDevices.length },
-        ),
-      );
-    } catch {
-      msgApi.error(
-        intl.formatMessage({
-          id: 'pages.devices.exportCsvFailed',
-          defaultMessage: 'Failed to export CSV',
-        }),
-      );
-    } finally {
-      setExporting(false);
-    }
+            d.info?.os ?? '',
+            d.info?.cpu ?? '',
+            d.info?.memory ?? '',
+            d.info?.version ?? '',
+            d.note ?? '',
+          ]);
+
+          const csv = buildCsv(headers, rows);
+          downloadCsv(
+            `devices-${dayjs().format('YYYY-MM-DD-HHmmss')}.csv`,
+            csv,
+          );
+          msgApi.success(
+            intl.formatMessage(
+              {
+                id: 'pages.devices.exportCsvSuccess',
+                defaultMessage: 'Exported {count} device(s) to CSV',
+              },
+              { count: allDevices.length },
+            ),
+          );
+        } catch {
+          msgApi.error(
+            intl.formatMessage({
+              id: 'pages.devices.exportCsvFailed',
+              defaultMessage: 'Failed to export CSV',
+            }),
+          );
+        }
+      },
+    });
   };
 
   // Use shared columns definition and add action column
@@ -607,7 +605,6 @@ const DeviceList: React.FC<DeviceListProps> = ({
               <Button
                 key="export-csv"
                 icon={<DownloadOutlined />}
-                loading={exporting}
                 onClick={handleExportCsv}
               >
                 <FormattedMessage

@@ -13,6 +13,7 @@ import type { ProColumns, ActionType } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
 import { getFileAudits } from '@/services/rustdesk-console/audit';
 import { renderNameIp } from '@/utils/audit';
+import { buildCsv, downloadCsv } from '@/utils/csv';
 import { DEFAULT_PAGINATION, toTableResult } from '@/utils/pagination';
 import {
   ArrowLeftOutlined,
@@ -158,21 +159,7 @@ const FileAudit: React.FC = () => {
       rows.push(row);
     });
 
-    return [
-      titles.join(','),
-      ...rows.map((row) => row.map((cell) => `"${cell}"`).join(',')),
-    ].join('\n');
-  };
-
-  const downloadCsv = (csvContent: string) => {
-    const blob = new Blob([`\ufeff${csvContent}`], {
-      type: 'text/csv;charset=utf-8;',
-    });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `file-audit-${dayjs().format('YYYY-MM-DD-HHmmss')}.csv`;
-    link.click();
-    URL.revokeObjectURL(link.href);
+    return buildCsv(titles, rows);
   };
 
   const exportCsv = async () => {
@@ -196,8 +183,20 @@ const FileAudit: React.FC = () => {
       onOk: async () => {
         try {
           const items = await fetchExportData();
+          if (items.length === 0) {
+            msgApi.warning(
+              intl.formatMessage({
+                id: 'pages.audits.noDataToExport',
+                defaultMessage: 'No data to export',
+              }),
+            );
+            return;
+          }
           const csvContent = generateCsvContent(items);
-          downloadCsv(csvContent);
+          downloadCsv(
+            `file-audit-${dayjs().format('YYYY-MM-DD-HHmmss')}.csv`,
+            csvContent,
+          );
           msgApi.success(
             intl.formatMessage({
               id: 'pages.audits.exportSuccess',

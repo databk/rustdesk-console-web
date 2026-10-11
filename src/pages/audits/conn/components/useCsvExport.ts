@@ -2,6 +2,7 @@ import { useIntl } from '@umijs/max';
 import { App } from 'antd';
 import dayjs from 'dayjs';
 import { getConnectionAudits } from '@/services/rustdesk-console/audit';
+import { downloadCsv } from '@/utils/csv';
 import { renderDuration, renderLocalField, sanitizeCsvCell } from '../utils';
 import { getConnTypeMsgId } from '../connType';
 import type { ConnectionAuditSearchParams } from '../types';
@@ -97,17 +98,6 @@ export const useCsvExport = (options: UseCsvExportOptions) => {
     ].join('\n');
   };
 
-  const downloadCsv = (csvContent: string) => {
-    const blob = new Blob([`\ufeff${csvContent}`], {
-      type: 'text/csv;charset=utf-8;',
-    });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `connection-audit-${dayjs().format('YYYY-MM-DD-HHmmss')}.csv`;
-    link.click();
-    URL.revokeObjectURL(link.href);
-  };
-
   const exportCsv = async () => {
     modal.confirm({
       title: intl.formatMessage({
@@ -139,7 +129,10 @@ export const useCsvExport = (options: UseCsvExportOptions) => {
             return;
           }
           const csvContent = generateCsvContent(items);
-          downloadCsv(csvContent);
+          downloadCsv(
+            `connection-audit-${dayjs().format('YYYY-MM-DD-HHmmss')}.csv`,
+            csvContent,
+          );
           msgApi.success(
             intl.formatMessage({
               id: 'pages.audits.exportSuccess',
