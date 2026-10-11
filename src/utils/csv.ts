@@ -2,9 +2,9 @@
  * Shared CSV export utilities.
  *
  * sanitizeCsvCell neutralizes spreadsheet formula injection (OWASP CSV
- * Injection) by prefixing values that start with =, +, -, @, \t, or \r
- * with a single quote, then quoting every cell so embedded commas,
- * quotes, and newlines are preserved.
+ * Injection) by prefixing values that start with =, +, -, @, \t, \r,
+ * or \n with a single quote, then quoting every cell so embedded
+ * commas, quotes, and newlines are preserved.
  *
  * buildCsv assembles a complete CSV document from headers and rows.
  *
@@ -14,7 +14,7 @@
 
 export const sanitizeCsvCell = (cell: string): string => {
   let safe = cell.replace(/"/g, '""');
-  if (/^[=+\-@\t\r]/.test(safe)) {
+  if (/^[=+\-@\t\r\n]/.test(safe)) {
     safe = `'${safe}`;
   }
   return `"${safe}"`;
