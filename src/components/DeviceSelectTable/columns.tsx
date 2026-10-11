@@ -270,7 +270,12 @@ export const getDeviceColumns = (options?: {
       ),
       dataIndex: 'device_name',
       ellipsis: true,
-      search: false,
+      fieldProps: {
+        placeholder: intl.formatMessage({
+          id: 'pages.devices.searchDeviceNamePlaceholder',
+          defaultMessage: 'Search by device name',
+        }),
+      },
       sorter: true,
       render: (_: unknown, record: API.DeviceItem) => {
         const username = record.info?.username;

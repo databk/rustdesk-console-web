@@ -122,6 +122,11 @@ export default {
   'pages.devices.searchOsPlaceholder': 'Buscar por SO',
   'pages.devices.searchDeviceGroupPlaceholder':
     'Buscar por nome do grupo de dispositivos',
+  'pages.devices.searchDeviceNamePlaceholder': 'Buscar por nome do dispositivo',
+  'pages.devices.exportCsv': 'Exportar CSV',
+  'pages.devices.exportCsvSuccess':
+    '{count} dispositivo(s) exportado(s) para CSV',
+  'pages.devices.exportCsvFailed': 'Falha ao exportar CSV',
   'pages.addressBook.name': 'Nome',
   'pages.addressBook.note': 'Observação',
   'pages.addressBook.shared': 'Catálogos de Endereços Compartilhados',

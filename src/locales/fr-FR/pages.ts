@@ -111,6 +111,11 @@ export default {
   'pages.devices.searchOsPlaceholder': 'Rechercher par OS',
   'pages.devices.searchDeviceGroupPlaceholder':
     'Rechercher par nom de groupe de périphériques',
+  'pages.devices.searchDeviceNamePlaceholder':
+    'Rechercher par nom de périphérique',
+  'pages.devices.exportCsv': 'Exporter CSV',
+  'pages.devices.exportCsvSuccess': '{count} périphérique(s) exporté(s) en CSV',
+  'pages.devices.exportCsvFailed': "Échec de l'export CSV",
   'pages.addressBook.name': 'Nom',
   'pages.addressBook.note': 'Note',
   'pages.addressBook.shared': "Carnets d'adresses partagés",

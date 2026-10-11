@@ -1,5 +1,6 @@
 import {
   DeleteOutlined,
+  DownloadOutlined,
   PlusCircleOutlined,
   MinusCircleOutlined,
   SelectOutlined,
@@ -36,6 +37,7 @@ const DeviceList: React.FC<DeviceListProps> = ({
   const { message: msgApi } = App.useApp();
   const access = useAccess();
   const actionRef = useRef<ActionType>(null);
+  const searchParamsRef = useRef<Record<string, unknown>>({});
 
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [editingRecord, setEditingRecord] = useState<API.DeviceItem | null>(
@@ -48,6 +50,7 @@ const DeviceList: React.FC<DeviceListProps> = ({
   const [batchRemoving, setBatchRemoving] = useState(false);
   const [batchStatusUpdating, setBatchStatusUpdating] = useState(false);
   const [hasDisabledDevice, setHasDisabledDevice] = useState(false);
+  const [exporting, setExporting] = useState(false);
 
   const handleEnable = async (guid: string) => {
     try {
@@ -276,6 +279,128 @@ const DeviceList: React.FC<DeviceListProps> = ({
     }
   };
 
+  const handleExportCsv = async () => {
+    setExporting(true);
+    try {
+      const params = searchParamsRef.current;
+      const allDevices: API.DeviceItem[] = [];
+      let current = 1;
+      const pageSize = 100;
+      let hasMore = true;
+      while (hasMore) {
+        const result = await getAdminDeviceList({
+          current,
+          pageSize,
+          id: params.id as string | undefined,
+          status: params.status as string | undefined,
+          is_online: params.is_online as string | undefined,
+          device_name: params.device_name as string | undefined,
+          user_name: params.user_name as string | undefined,
+          os: params.os as string | undefined,
+          device_group_name: params.device_group_name_search as
+            | string
+            | undefined,
+          device_group_guid: deviceGroupGuid,
+        });
+        const tableResult = toTableResult(result);
+        allDevices.push(...tableResult.data);
+        hasMore = allDevices.length < tableResult.total;
+        current++;
+      }
+
+      const escapeCsv = (value: string | undefined | null): string => {
+        const str = value ?? '';
+        if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+          return `"${str.replace(/"/g, '""')}"`;
+        }
+        return str;
+      };
+
+      const headers = [
+        'ID',
+        'Device',
+        'User',
+        'Group',
+        'Status',
+        'Online',
+        'OS',
+        'CPU',
+        'Memory',
+        'Version',
+        'Note',
+      ];
+      const rows = allDevices.map((d) =>
+        [
+          escapeCsv(d.id),
+          escapeCsv(
+            d.info?.username && d.info?.device_name
+              ? `${d.info.username}@${d.info.device_name}`
+              : d.info?.device_name || d.info?.username || '',
+          ),
+          escapeCsv(d.user_name),
+          escapeCsv(d.device_group_name),
+          escapeCsv(
+            d.status === 1
+              ? intl.formatMessage({
+                  id: 'pages.devices.statusNormal',
+                  defaultMessage: 'Normal',
+                })
+              : intl.formatMessage({
+                  id: 'pages.devices.statusDisabled',
+                  defaultMessage: 'Disabled',
+                }),
+          ),
+          escapeCsv(
+            d.is_online
+              ? intl.formatMessage({
+                  id: 'pages.devices.online',
+                  defaultMessage: 'Online',
+                })
+              : intl.formatMessage({
+                  id: 'pages.devices.offline',
+                  defaultMessage: 'Offline',
+                }),
+          ),
+          escapeCsv(d.info?.os),
+          escapeCsv(d.info?.cpu),
+          escapeCsv(d.info?.memory),
+          escapeCsv(d.info?.version),
+          escapeCsv(d.note),
+        ].join(','),
+      );
+      const csv = [headers.join(','), ...rows].join('\n');
+      const blob = new Blob([`\uFEFF${csv}`], {
+        type: 'text/csv;charset=utf-8;',
+      });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `devices-${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      msgApi.success(
+        intl.formatMessage(
+          {
+            id: 'pages.devices.exportCsvSuccess',
+            defaultMessage: 'Exported {count} device(s) to CSV',
+          },
+          { count: allDevices.length },
+        ),
+      );
+    } catch {
+      msgApi.error(
+        intl.formatMessage({
+          id: 'pages.devices.exportCsvFailed',
+          defaultMessage: 'Failed to export CSV',
+        }),
+      );
+    } finally {
+      setExporting(false);
+    }
+  };
+
   // Use shared columns definition and add action column
   const baseColumns = getDeviceColumns();
 
@@ -446,12 +571,14 @@ const DeviceList: React.FC<DeviceListProps> = ({
           </Space>
         )}
         request={async (params) => {
+          searchParamsRef.current = params;
           const result = await getAdminDeviceList({
             current: params.current || 1,
             pageSize: params.pageSize || 20,
             id: params.id,
             status: params.status,
             is_online: params.is_online,
+            device_name: params.device_name,
             user_name: params.user_name,
             os: params.os,
             device_group_name: params.device_group_name_search,
@@ -464,22 +591,39 @@ const DeviceList: React.FC<DeviceListProps> = ({
         columns={columns}
         pagination={DEFAULT_PAGINATION}
         scroll={{ x: '100%' }}
-        toolBarRender={() =>
-          deviceGroupGuid && access.isSuperAdmin
-            ? [
-                <Button
-                  key="import"
-                  icon={<SelectOutlined />}
-                  onClick={() => setImportModalVisible(true)}
-                >
-                  <FormattedMessage
-                    id="pages.deviceGroups.import"
-                    defaultMessage="Import"
-                  />
-                </Button>,
-              ]
-            : []
-        }
+        toolBarRender={() => {
+          const buttons: React.ReactNode[] = [];
+          if (!deviceGroupGuid) {
+            buttons.push(
+              <Button
+                key="export-csv"
+                icon={<DownloadOutlined />}
+                loading={exporting}
+                onClick={handleExportCsv}
+              >
+                <FormattedMessage
+                  id="pages.devices.exportCsv"
+                  defaultMessage="Export CSV"
+                />
+              </Button>,
+            );
+          }
+          if (deviceGroupGuid && access.isSuperAdmin) {
+            buttons.push(
+              <Button
+                key="import"
+                icon={<SelectOutlined />}
+                onClick={() => setImportModalVisible(true)}
+              >
+                <FormattedMessage
+                  id="pages.deviceGroups.import"
+                  defaultMessage="Import"
+                />
+              </Button>,
+            );
+          }
+          return buttons;
+        }}
         options={{
           density: true,
           setting: {

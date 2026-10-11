@@ -21,6 +21,7 @@ export default function access(
     isSuperAdmin,
     permissions: [...permissionSet],
     hasPermission,
+    canDashboardView: hasPermission('dashboard.view'),
     canServersView: hasPermission('servers.view'),
     canServersControl: hasPermission('servers.control'),
     canServersConfig: hasPermission('servers.config'),

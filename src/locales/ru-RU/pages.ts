@@ -117,6 +117,10 @@ export default {
   'pages.devices.searchOsPlaceholder': 'Поиск по ОС',
   'pages.devices.searchDeviceGroupPlaceholder':
     'Поиск по названию группы устройств',
+  'pages.devices.searchDeviceNamePlaceholder': 'Поиск по названию устройства',
+  'pages.devices.exportCsv': 'Экспорт CSV',
+  'pages.devices.exportCsvSuccess': 'Экспортировано {count} устройств(а) в CSV',
+  'pages.devices.exportCsvFailed': 'Ошибка экспорта CSV',
   'pages.addressBook.name': 'Название',
   'pages.addressBook.note': 'Примечание',
   'pages.addressBook.shared': 'Общие адресные книги',
