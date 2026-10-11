@@ -303,14 +303,23 @@ const DeviceList: React.FC<DeviceListProps> = ({
           device_group_guid: deviceGroupGuid,
         });
         const tableResult = toTableResult(result);
+        if (tableResult.data.length === 0) break;
         allDevices.push(...tableResult.data);
         hasMore = allDevices.length < tableResult.total;
         current++;
       }
 
       const escapeCsv = (value: string | undefined | null): string => {
-        const str = value ?? '';
-        if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+        let str = value ?? '';
+        if (/^[=+\-@]/.test(str)) {
+          str = `'${str}`;
+        }
+        if (
+          str.includes(',') ||
+          str.includes('"') ||
+          str.includes('\n') ||
+          str.includes('\r')
+        ) {
           return `"${str.replace(/"/g, '""')}"`;
         }
         return str;

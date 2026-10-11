@@ -40,7 +40,7 @@ test('strategy target choices require the matching read capability', () => {
 
 test('route access mirrors the product, view-or-assign, and audit contracts', () => {
   expect(routeWithAccess('/strategy')?.access).toBe('canStrategiesAccess');
-  expect(routeWithAccess('/dashboard')?.access).toBe('canAdmin');
+  expect(routeWithAccess('/dashboard')?.access).toBe('canDashboardView');
   expect(routeWithoutAccess('/address-book/shared')).toBeDefined();
   expect(routeWithoutAccess('/address-book/shared/:guid')).toBeDefined();
   for (const path of ['/audits', '/audits/conn']) {

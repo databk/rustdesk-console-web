@@ -7,7 +7,7 @@ type AccessCapabilities = ReturnType<typeof createAccess>;
 const DEFAULT_DESTINATIONS: Array<
   [path: string, allowed: (access: AccessCapabilities) => boolean]
 > = [
-  ['/dashboard', (access) => access.isSuperAdmin],
+  ['/dashboard', (access) => access.canDashboardView],
   ['/devices', (access) => access.canDevicesView],
   ['/users', (access) => access.canUsersView],
   ['/roles', (access) => access.canRolesView],
@@ -51,7 +51,7 @@ function canAccessPath(pathname: string, access: AccessCapabilities): boolean {
   ) {
     return true;
   }
-  if (pathname === '/dashboard') return access.isSuperAdmin;
+  if (pathname === '/dashboard') return access.canDashboardView;
   if (pathname === '/devices') return access.canDevicesView;
   if (pathname === '/users') return access.canUsersView;
   if (pathname === '/groups') return access.canGroups;

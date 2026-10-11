@@ -66,6 +66,15 @@ test('sends a user without management permissions to the personal address book',
   );
 });
 
+test('sends a non-admin with dashboard.view to the dashboard', () => {
+  expect(resolvePostLoginPath(undefined, state(['dashboard.view']))).toBe(
+    '/dashboard',
+  );
+  expect(resolvePostLoginPath('/dashboard', state(['dashboard.view']))).toBe(
+    '/dashboard',
+  );
+});
+
 test.each([
   ['/roles', ['roles.view'], '/roles'],
   ['/roles/role-guid', ['roles.view'], '/roles'],
