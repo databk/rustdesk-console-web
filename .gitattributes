@@ -1,0 +1,7 @@
+# 固定来源的字节参与 SHA-256 校验，不能转换换行。
+vendor/rustdesk-protocol/*.proto -text whitespace=-blank-at-eol
+vendor/rustdesk-protocol/LICENCE.upstream -text
+vendor/rustdesk-protocol/NOTICE.md text eol=lf
+vendor/rustdesk-protocol/source.json text eol=lf
+src/features/web-client/protocol/generated/** text eol=lf
+.github/workflows/*.yml text eol=lf

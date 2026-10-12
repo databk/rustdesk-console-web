@@ -1,9 +1,11 @@
-import { join } from 'node:path';
 import { defineConfig } from '@umijs/max';
 import defaultSettings from './defaultSettings';
 import proxy from './proxy';
 import routes from './routes';
 import { version } from '../package.json';
+import path from 'node:path';
+
+const { buildIdentity } = require('../scripts/build-identity.cjs');
 
 const {
   REACT_APP_ENV = 'dev',
@@ -15,7 +17,7 @@ const PUBLIC_PATH = REACT_APP_PUBLIC_PATH.endsWith('/')
   ? REACT_APP_PUBLIC_PATH
   : `${REACT_APP_PUBLIC_PATH}/`;
 
-export default defineConfig({
+const config: ReturnType<typeof defineConfig> = defineConfig({
   hash: true,
   codeSplitting: {
     jsStrategy: 'granularChunks',
@@ -32,7 +34,7 @@ export default defineConfig({
   model: {},
   initialState: {},
   title: 'RustDesk Console',
-  favicons: [join(PUBLIC_PATH, 'logo.svg')],
+  favicons: [`${PUBLIC_PATH}logo.svg`],
   layout: {
     locale: true,
     ...defaultSettings,
@@ -60,8 +62,8 @@ export default defineConfig({
   },
   request: {},
   access: {},
-  headScripts: [{ src: join(PUBLIC_PATH, 'scripts/loading.js'), async: true }],
-  links: [{ rel: 'manifest', href: join(PUBLIC_PATH, 'manifest.json') }],
+  headScripts: [{ src: `${PUBLIC_PATH}scripts/loading.js`, async: true }],
+  links: [{ rel: 'manifest', href: `${PUBLIC_PATH}manifest.json` }],
   metas: [
     { name: 'theme-color', content: '#1890ff' },
     { name: 'application-name', content: 'RustDesk Console' },
@@ -78,7 +80,10 @@ export default defineConfig({
   requestRecord: {},
   define: {
     APP_PUBLIC_PATH: PUBLIC_PATH,
+    WEB_CLIENT_BUILD_ID: buildIdentity(path.resolve(__dirname, '..')),
     'process.env.CI': process.env.CI,
     FRONTEND_VERSION: version,
   },
 });
+
+export default config;

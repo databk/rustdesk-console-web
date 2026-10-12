@@ -47,6 +47,8 @@ const PERMISSION_CODES = [
   'roles.create',
   'roles.edit',
   'roles.delete',
+  'web_client.connect',
+  'web_client.file_transfer',
 ] as const;
 
 const RESOURCE_CODES = [

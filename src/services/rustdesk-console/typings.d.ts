@@ -617,8 +617,8 @@ declare namespace API {
     target_guid?: string | null;
     result?: 'allowed' | 'denied';
     reason?: string | null;
-    before_state?: string | null;
-    after_state?: string | null;
+    before_state?: unknown;
+    after_state?: unknown;
     request_id?: string | null;
     created_at?: string | null;
   };

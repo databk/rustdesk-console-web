@@ -1,0 +1,59 @@
+.inline {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
+  max-width: 100%;
+}
+.info {
+  display: inline-flex;
+  flex: 0 0 18px;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border: 0;
+  border-radius: 3px;
+  background: transparent;
+  color: inherit;
+  font-size: 12px;
+  line-height: 1;
+  opacity: .72;
+  transform: translateY(-4px);
+  cursor: pointer;
+  &:hover { opacity: 1; }
+  &:focus-visible { outline: 2px solid #1677ff; outline-offset: 2px; opacity: 1; }
+}
+.popup {
+  // Preserve CSS min(): Less must not evaluate viewport-dependent values.
+  width: ~"min(430px, calc(100vw - 48px))";
+  max-height: ~"min(460px, calc(100dvh - 80px))";
+  overflow: auto;
+  font-size: 13px;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+  p { margin: 0 0 10px; }
+  p:last-child { margin-bottom: 0; }
+}
+.environment { display: flex; flex-wrap: wrap; column-gap: 12px; row-gap: 2px; margin-bottom: 8px; font-weight: 500; }
+.reason { color: #cf1322; }
+.context { opacity: .75; }
+.profiles {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 16px;
+  row-gap: 4px;
+  margin: 0 0 12px;
+  dd { margin: 0; font-variant-numeric: tabular-nums; }
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  caption { margin-bottom: 8px; text-align: left; font-size: 12px; opacity: .75; }
+  th, td { padding: 7px 8px; vertical-align: top; border-bottom: 1px solid rgba(128,128,128,.22); }
+  th { font-weight: 500; }
+  th:first-child { padding-left: 0; white-space: nowrap; }
+  td:last-child, th:last-child { padding-right: 0; }
+  tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
+}

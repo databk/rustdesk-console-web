@@ -1,4 +1,32 @@
 export default {
+  'pages.audits.webClient.reportedFailure': 'Failure reported',
+  'pages.roles.resource.web_client': 'Web Client',
+  'pages.roles.permission.web_client.connect': 'Connect to remote devices',
+  'pages.roles.permission.web_client.file_transfer': 'Use the web file channel',
+  'pages.audits.webClient.request_allowed': 'Web connection allowed',
+  'pages.audits.webClient.request_denied': 'Web connection denied',
+  'pages.audits.webClient.gateway_open': 'Web channel opened',
+  'pages.audits.webClient.session_ended': 'Web session ended',
+  'pages.audits.webClient.remote_auth_succeeded':
+    'Remote authentication succeeded (browser report)',
+  'pages.audits.webClient.remote_auth_failed':
+    'Remote authentication failed (browser report)',
+  'pages.audits.webClient.file_started':
+    'File transfer started (browser report)',
+  'pages.audits.webClient.file_completed':
+    'File transfer completed (browser report)',
+  'pages.audits.webClient.file_failed': 'File transfer failed (browser report)',
+  'pages.audits.webClient.session': 'Web Client session',
+  'pages.audits.webClient.device': 'Remote device',
+  'pages.audits.webClient.source': 'Evidence source',
+  'pages.audits.webClient.source.server': 'Server confirmed',
+  'pages.audits.webClient.source.browser':
+    'Browser report, not verified by the server',
+  'pages.audits.webClient.source.unknown': 'Unknown source',
+  'pages.audits.webClient.disconnect': 'End Web Client connection',
+  'pages.audits.webClient.ended': 'The connection has ended.',
+  'pages.audits.webClient.endFailed':
+    'Could not end the connection. Try again.',
   'pages.request.loginExpired': 'Login expired, please sign in again',
   'pages.request.accessDenied':
     'You do not have permission to perform this action',

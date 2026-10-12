@@ -1,0 +1,139 @@
+.filePicker {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 6px;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  color: var(--wc-text);
+  font-size: 14px;
+}
+.filePanes {
+  display: grid;
+  flex: 1;
+  grid-template-columns: minmax(0, 1fr) 32px minmax(0, 1fr);
+  gap: 6px;
+  min-height: 0;
+}
+.filePane {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--wc-bg);
+  border: 1px solid var(--wc-border);
+  border-radius: 5px;
+  container-type: inline-size;
+}
+.filePicker .filePaneHeading {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 2px 8px;
+  background: var(--wc-soft);
+  strong { font-size: 14px; white-space: nowrap; }
+  > span { flex: 1; min-width: 0; overflow: hidden; color: var(--wc-muted); font-size: 12px; white-space: nowrap; text-overflow: ellipsis; }
+  :global(.ant-btn) { flex-shrink: 0; height: 28px; min-height: 28px; padding: 0 8px; font-size: 14px; }
+}
+.filePicker .filePaneTools { display: flex; gap: 4px; margin-left: auto; :global(.ant-btn) { width: 30px; padding: 0; } }
+@container (max-width: 360px) {
+  .filePicker .filePaneHeading :global(.ant-btn).fileChooseButton { width: 30px; padding: 0; }
+  .fileChooseLabel { display: none; }
+}
+.filePicker .fileNavigation {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-bottom: 1px solid var(--wc-border);
+  :global(.ant-input) { flex: 1; width: 0; min-width: 0; height: 28px; padding: 0 8px; font-size: 14px; }
+  :global(.ant-btn) { flex-shrink: 0; height: 28px; min-height: 28px; padding: 0 7px; font-size: 14px; }
+  :global(.ant-btn-icon-only) { width: 28px; padding: 0; }
+}
+.fileColumns, .filePicker .fileRow { display: grid; grid-template-columns: minmax(0, 1fr) 70px; align-items: center; gap: 10px; padding: 0 10px; }
+.fileColumns { flex-shrink: 0; height: 26px; color: var(--wc-muted); font-size: 12px; background: var(--wc-soft); border-bottom: 1px solid var(--wc-border); > :last-child { text-align: right; } }
+.fileList { flex: 1; min-height: 0; overflow: auto; overflow-x: hidden; overscroll-behavior: contain; ul { margin: 0; padding: 0; list-style: none; } }
+.filePicker .fileRow {
+  justify-content: normal;
+  width: 100%;
+  min-height: 34px;
+  color: var(--wc-text);
+  font-size: 14px;
+  line-height: 20px;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--wc-border);
+  border-radius: 0;
+  cursor: pointer;
+  &:hover:not(:disabled) { background: var(--wc-soft); }
+  &[aria-pressed='true'] { background: var(--wc-accent-bg); box-shadow: inset 2px 0 var(--wc-accent); }
+  &:disabled { cursor: not-allowed; opacity: .5; }
+}
+.fileName { display: flex; align-items: center; gap: 8px; min-width: 0; > :global(.anticon) { flex-shrink: 0; color: var(--wc-accent); font-size: 16px; } > span:last-child { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; } }
+.fileSize { color: var(--wc-muted); font-size: 12px; text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.emptyFiles { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 100%; padding: 12px; color: var(--wc-muted); font-size: 14px; line-height: 1.5; text-align: center; }
+.filePicker .emptyFiles button { padding: 8px; color: var(--wc-accent); font: inherit; background: transparent; border: 0; border-radius: 5px; cursor: pointer; &:disabled { color: var(--wc-muted); cursor: not-allowed; } }
+.filePicker .fileDirections { display: flex; flex-direction: column; justify-content: center; gap: 6px; :global(.ant-btn) { width: 32px; height: 32px; min-height: 32px; padding: 0; } }
+.fileStatusBar { display: flex; flex-shrink: 0; align-items: center; flex-wrap: wrap; gap: 8px; min-height: 30px; color: var(--wc-muted); font-size: 12px; progress { flex: 1; min-width: 80px; max-width: 160px; height: 6px; accent-color: var(--wc-accent); } small { white-space: nowrap; } }
+.fileProgressName { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.fileError { flex-shrink: 0; margin: 0; color: var(--wc-warning-text, #d4380d); font-size: 14px; line-height: 1.5; overflow-wrap: anywhere; }
+.fileAuthentication { flex-shrink: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px; max-height: 60%; overflow: auto; }
+.fileAuth { display: flex; flex-direction: column; gap: 12px; width: 100%; :global(.ant-input-affix-wrapper) { min-height: 40px; } }
+.filePicker .fileAuthActions { display: flex; justify-content: flex-end; gap: 12px; :global(.ant-btn) { height: 40px; } }
+.fileConflict { flex-shrink: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 0; border-top: 1px solid var(--wc-border); font-size: 14px; }
+.toolDialog {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  max-width: calc(100% - 16px);
+  max-height: calc(100% - 16px);
+  overflow: hidden;
+  color: var(--wc-text);
+  background: var(--wc-bg);
+  border: 1px solid var(--wc-border);
+  border-radius: 8px;
+  box-shadow: 0 12px 40px #0004;
+  font-size: 14px;
+  &[hidden] { display: none; }
+  > header { display: flex; flex-shrink: 0; align-items: center; gap: 8px; min-height: 44px; padding: 0 8px; background: var(--wc-soft); border-bottom: 1px solid var(--wc-border); > button { min-height: 32px; height: 32px; padding: 0 8px; background: transparent; border: 0; } }
+  button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 36px; padding: 0 12px; color: var(--wc-text); font: inherit; background: var(--wc-soft); border: 1px solid var(--wc-border); border-radius: 5px; cursor: pointer; &:hover:not(:disabled) { border-color: var(--wc-accent); } &:disabled { opacity: .5; cursor: not-allowed; } }
+}
+.toolDialog > header > .toolDrag { flex: 1; justify-content: flex-start; min-width: 0; height: 42px; touch-action: none; cursor: move; text-align: left; strong { overflow-wrap: anywhere; } }
+.chatDialog { top: 96px; right: 16px; width: 540px; height: 520px; }
+.callDialog { top: 112px; right: 24px; width: 350px; height: 300px; }
+.chatMessages { flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; padding: 16px; > div + div { margin-top: 16px; } small { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 4px; color: var(--wc-muted); font-size: 12px; } p { margin: 0; padding: 8px 12px; border-radius: 5px; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; } }
+.chatIncoming p { background: var(--wc-soft); }
+.chatOutgoing p { background: var(--wc-accent-bg); border: 1px solid var(--wc-border); }
+.chatEditor { display: flex; flex-shrink: 0; align-items: flex-end; gap: 8px; padding: 12px 16px; border-top: 1px solid var(--wc-border); textarea { flex: 1; width: 0; min-width: 0; min-height: 60px; resize: none; padding: 8px 12px; color: var(--wc-text); font: inherit; line-height: 1.5; background: var(--wc-bg); border: 1px solid var(--wc-border); border-radius: 5px; } button { max-width: 40%; min-height: 36px; height: auto; padding: 8px; overflow-wrap: anywhere; } }
+.chatNewMessages { flex-shrink: 0; align-self: center; margin: 4px 8px; }
+.toolHelp { flex-shrink: 0; margin: 0; padding: 0 16px 12px; color: var(--wc-muted); font-size: 12px; line-height: 1.6; overflow-wrap: anywhere; }
+.callContent { flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: center; gap: 16px; padding: 20px; overflow: auto; > p { margin: 0; line-height: 1.6; } .toolHelp { padding: 0; } }
+.callActions { display: flex; flex-wrap: wrap; gap: 8px; .dangerAction { color: #ff4d4f; border-color: #ff4d4f66; } }
+.fileRow:focus-visible, .emptyFiles button:focus-visible, .toolDialog button:focus-visible, .toolDialog textarea:focus-visible { outline: 2px solid var(--wc-accent); outline-offset: -2px; }
+.toolDialog button.toolResize {
+  position: absolute; z-index: 2; min-height: 0; padding: 0; background: transparent; border: 0; border-radius: 0; touch-action: none;
+  &[data-tool-resize='n'], &[data-tool-resize='s'] { right: 10px; left: 10px; height: 6px; cursor: ns-resize; }
+  &[data-tool-resize='n'] { top: 0; } &[data-tool-resize='s'] { bottom: 0; }
+  &[data-tool-resize='e'], &[data-tool-resize='w'] { top: 10px; bottom: 10px; width: 6px; cursor: ew-resize; }
+  &[data-tool-resize='e'] { right: 0; } &[data-tool-resize='w'] { left: 0; }
+  &[data-tool-resize='ne'], &[data-tool-resize='nw'], &[data-tool-resize='se'], &[data-tool-resize='sw'] { width: 10px; height: 10px; }
+  &[data-tool-resize='ne'], &[data-tool-resize='nw'] { top: 0; } &[data-tool-resize='se'], &[data-tool-resize='sw'] { bottom: 0; }
+  &[data-tool-resize='ne'], &[data-tool-resize='se'] { right: 0; } &[data-tool-resize='nw'], &[data-tool-resize='sw'] { left: 0; }
+  &[data-tool-resize='ne'], &[data-tool-resize='sw'] { cursor: nesw-resize; } &[data-tool-resize='nw'], &[data-tool-resize='se'] { cursor: nwse-resize; }
+  &[data-tool-resize='se']::after { content: ''; position: absolute; right: 3px; bottom: 3px; width: 6px; height: 6px; border-right: 2px solid var(--wc-muted); border-bottom: 2px solid var(--wc-muted); }
+}
+.fileList, .chatMessages, .callContent, .fileAuthentication { scrollbar-width: thin; scrollbar-color: var(--wc-border) var(--wc-bg); &::-webkit-scrollbar { width: 8px; height: 8px; } &::-webkit-scrollbar-track { background: var(--wc-bg); } &::-webkit-scrollbar-thumb { background: var(--wc-border); border: 2px solid var(--wc-bg); border-radius: 5px; } }
+@media (max-width: 599px) {
+  .filePanes { display: flex; flex-direction: column; overflow: auto; overflow-x: hidden; overscroll-behavior: contain; }
+  .filePane { flex: 1 0 200px; min-height: 200px; }
+  .filePicker .fileDirections { flex-shrink: 0; flex-direction: row; :global(.anticon) { transform: rotate(90deg); } }
+}
+@media (prefers-reduced-motion: reduce) { .filePicker *, .toolDialog * { transition: none !important; } }

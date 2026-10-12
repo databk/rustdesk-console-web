@@ -6,6 +6,7 @@ import {
   getServerNodes,
   saveServerBans,
   saveServerConfig,
+  getTcpNetwork,
 } from "./server";
 
 jest.mock("@umijs/max", () => ({ request: jest.fn() }));
@@ -24,6 +25,14 @@ test("calls only the Console proxy and encodes identifiers", async () => {
     "/api/servers/node%2Fname/sessions/session%2Fuuid",
     { method: "DELETE" },
   );
+});
+
+test('TCP information only performs GET and supports an integrated local observation', async () => {
+  mockedRequest.mockResolvedValue({});
+  expect((await getTcpNetwork('node/name')).reason).toBe('invalid_response');
+  await getTcpNetwork();
+  expect(mockedRequest).toHaveBeenNthCalledWith(1, '/api/servers/node%2Fname/network/tcp', { method: 'GET', timeout: 6000 });
+  expect(mockedRequest).toHaveBeenNthCalledWith(2, '/api/servers/network/tcp', { method: 'GET', timeout: 6000 });
 });
 
 test("distinguishes saving settings from applying them and uses the versioned policy shape", async () => {

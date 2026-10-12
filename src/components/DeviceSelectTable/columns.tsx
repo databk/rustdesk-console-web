@@ -19,6 +19,7 @@ import {
   QqCircleFilled,
 } from '@ant-design/icons';
 import React from 'react';
+import WebClientDeviceLink from '../WebClientDeviceLink';
 
 const buildConnectUrl = (command: string, id: string): string => {
   return `rustdesk://${command}/${id}`;
@@ -250,6 +251,7 @@ export const getDeviceColumns = (options?: {
                 {record.id}
               </Button>
             </Dropdown>
+            <WebClientDeviceLink id={record.id} />
           </span>
         );
       },

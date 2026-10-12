@@ -15,7 +15,7 @@ import {
 import { currentUser as queryCurrentUser } from '@/services/rustdesk-console/auth';
 import { getMyPermissions } from '@/services/rustdesk-console/permission';
 import { getFrontendSettings } from '@/services/rustdesk-console/settings';
-import { getToken, removeToken } from '@/utils/auth';
+import { getLoginPath, getToken, removeToken } from '@/utils/auth';
 import {
   DEFAULT_FRONTEND_SETTINGS,
   getUsernameWatermark,
@@ -81,7 +81,7 @@ export async function getInitialState(): Promise<{
       const status = (error as { response?: { status?: number } })?.response
         ?.status;
       if (status === 401) {
-        history.push(loginPath);
+        history.push(getLoginPath(history.location));
       }
     }
     return undefined;
@@ -114,7 +114,7 @@ export async function getInitialState(): Promise<{
         if (status === 401) {
           removeToken();
           authenticatedUser = undefined;
-          history.push(loginPath);
+          history.push(getLoginPath(history.location));
         } else {
           permissionsLoadFailed = true;
           if (history.location.pathname !== '/address-book/personal') {
@@ -174,7 +174,7 @@ export const layout: RunTimeLayoutConfig = ({
     onPageChange: () => {
       const { location } = history;
       if (!initialState?.currentUser && location.pathname !== loginPath) {
-        history.push(loginPath);
+        history.push(getLoginPath(history.location));
       }
     },
     bgLayoutImgList: [],

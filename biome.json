@@ -15,7 +15,8 @@
       "!**/public",
       "!**/coverage",
       "!**/node_modules",
-      "!biome.json"
+      "!biome.json",
+      "!**/src/features/web-client/protocol/generated"
     ]
   },
   "formatter": {

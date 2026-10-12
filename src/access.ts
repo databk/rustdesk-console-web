@@ -27,6 +27,10 @@ export default function access(
     canServersConfig: hasPermission('servers.config'),
     canServersDisconnect: hasPermission('servers.disconnect'),
     canServersBan: hasPermission('servers.ban'),
+    canWebClientConnect: hasPermission('web_client.connect'),
+    canWebClientFileTransfer:
+      hasPermission('web_client.connect') &&
+      hasPermission('web_client.file_transfer'),
     canDevicesView: hasPermission('devices.view'),
     canDevicesEdit: hasPermission('devices.edit'),
     canDevicesStatus: hasPermission('devices.status'),

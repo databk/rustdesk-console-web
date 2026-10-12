@@ -16,6 +16,28 @@ server {
         add_header Cache-Control "no-store" always;
     }
 
+    location = /sw.js {
+        try_files $uri =404;
+        add_header Cache-Control "no-store" always;
+    }
+
+    # 网页远控的授权通道需要 WebSocket 升级；保留原 API 转发规则。
+    location = /api/web-client/socket {
+        set $backend "${BACKEND_URL}";
+        proxy_pass $backend$request_uri;
+        proxy_connect_timeout 5s;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 8h;
+        proxy_send_timeout 60s;
+        proxy_buffering off;
+    }
+
     # API requests - reverse proxy to backend
     location /api/ {
         set $backend "${BACKEND_URL}";
@@ -29,6 +51,12 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
     }
 
+    # Worker 清单必须与当前页面同步，禁止缓存。
+    location = /web-client-worker.json {
+        try_files $uri =404;
+        add_header Cache-Control "no-store" always;
+    }
+
     # SPA fallback - serve index.html for client-side routing
     location / {
         add_header Cache-Control "no-cache" always;
@@ -36,7 +64,7 @@ server {
     }
 
     # Cache static assets
-    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+    location ~* \.(js|wasm|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
         try_files $uri =404;
         expires 1y;
         add_header Cache-Control "public, immutable";

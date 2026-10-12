@@ -1,0 +1,64 @@
+{
+  "source": "Locally generated moving colored rectangles; no user content",
+  "generator": "scripts/web-client/generate-vp9-fixture.js",
+  "codec": "vp09.00.10.08",
+  "browser": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36",
+  "frames": [
+    {
+      "width": 64,
+      "height": 48,
+      "pts": 0,
+      "key": true,
+      "data": "gkmDQkAD8AL2BjgkHBg6AAAgQAB+Hf//+fKP///suP///7aB3r//9nAPgX///90KDTUv//eDBk//+z8n2f///7iYR71eP///+4mDdDA///+z8n+0/////czA1C2//+yADyB7/t8GTgA="
+    },
+    {
+      "width": 64,
+      "height": 48,
+      "pts": 40,
+      "key": false,
+      "data": "hgBAkpwoSCAAC3aGIde3BGULQAAAf8EqjeKUW8GdAWcGnXmQDtbkRpE++qms+QQcqVBqj6YA"
+    },
+    {
+      "width": 64,
+      "height": 48,
+      "pts": 80,
+      "key": false,
+      "data": "hgBAkpwoSYAAA3AAAH/lVx7BlTW/kFUXkv3ny4pw"
+    },
+    {
+      "width": 64,
+      "height": 48,
+      "pts": 120,
+      "key": false,
+      "data": "hgBAkpwoSGAAB3NT1X/gAAB9qpC//+5GqPH+p2xNqzBOMCOTHJbc59clwS9Y0UilynFw+6Y1n7sK8tsM3H/136/gRdvmuB6LAA=="
+    },
+    {
+      "width": 128,
+      "height": 72,
+      "pts": 160,
+      "key": true,
+      "data": "gkmDQkAH8AR2BjgkHBg6AADAT7H7HcNG4ecfUYAAfgoWv//Zcf///20Du2kVf///90KDTUv//eDBk//+z8kb5nYECN8zl3EvfmdsKx7xg3SACwejf////czA1C2//+yAlILWP5OAkA=="
+    },
+    {
+      "width": 128,
+      "height": 72,
+      "pts": 200,
+      "key": false,
+      "data": "hgBAkpwoSCAAFH+Q2Mw69uCPt5YNc/Ab+a+pcAAAf8BcE8Uot4LRBRq7rWhoS/UnKfD+goRKMEFPVcciA4Ib//9yx///awf//2sH//9rB///awf/xA//iB//ED//+1g//iB//ED/+IH//9rB//ED/+IH/8QP/////9Srf///+pVv////Uq3//+pVv/////LJf////lkv////yyX///lkajjMO9vjLUUwAA=="
+    },
+    {
+      "width": 128,
+      "height": 72,
+      "pts": 240,
+      "key": false,
+      "data": "hgBAkpwoSYAAA3AAAH2qkL//1BeLWoq8YENusHfYyF1Rq8m1GjUpir//8pL//09gguA40lfokpJYuu0GwAA="
+    },
+    {
+      "width": 128,
+      "height": 72,
+      "pts": 280,
+      "key": false,
+      "data": "hgBAkpwoSGAAB3NT1IJvAAB9qpC//+5GqPH+p2xNqzBOMCOTHJbc59clwS9Y0Uilz87C0UbKjDO8NazcdFuV3KFe+O1yVqatB//+0e///rbf//1tv//623//9bb/9eX/68v/15f//1tv/15f/ry//Xl///W2//Xl/+vL/9eX/////+m/v////Tf3////pv7///Tf3/////lAj////ygR////5QI///ygHHTT8KTpBkYIAA=="
+    }
+  ]
+}

@@ -1,4 +1,35 @@
 export default {
+  'pages.audits.webClient.reportedFailure': 'Échec signalé',
+  'pages.roles.resource.web_client': 'Contrôle web',
+  'pages.roles.permission.web_client.connect':
+    'Connexion aux appareils distants',
+  'pages.roles.permission.web_client.file_transfer':
+    'Utiliser le canal de fichiers web',
+  'pages.audits.webClient.request_allowed': 'Connexion web autorisée',
+  'pages.audits.webClient.request_denied': 'Connexion web refusée',
+  'pages.audits.webClient.gateway_open': 'Canal web ouvert',
+  'pages.audits.webClient.session_ended': 'Session web terminée',
+  'pages.audits.webClient.remote_auth_succeeded':
+    'Authentification distante réussie (signalement du navigateur)',
+  'pages.audits.webClient.remote_auth_failed':
+    'Authentification distante échouée (signalement du navigateur)',
+  'pages.audits.webClient.file_started':
+    'Transfert démarré (signalement du navigateur)',
+  'pages.audits.webClient.file_completed':
+    'Transfert terminé (signalement du navigateur)',
+  'pages.audits.webClient.file_failed':
+    'Transfert échoué (signalement du navigateur)',
+  'pages.audits.webClient.session': 'Session de contrôle web',
+  'pages.audits.webClient.device': 'Appareil distant',
+  'pages.audits.webClient.source': 'Source du journal',
+  'pages.audits.webClient.source.server': 'Confirmé par le serveur',
+  'pages.audits.webClient.source.browser':
+    'Signalement du navigateur, non vérifié par le serveur',
+  'pages.audits.webClient.source.unknown': 'Source inconnue',
+  'pages.audits.webClient.disconnect': 'Terminer la connexion web',
+  'pages.audits.webClient.ended': 'La connexion est terminée.',
+  'pages.audits.webClient.endFailed':
+    'Impossible de terminer la connexion. Réessayez.',
   'pages.login.success': 'Connexion réussie !',
   'pages.login.failure': 'Échec de la connexion, veuillez réessayer !',
   'pages.login.username.placeholder': "Nom d'utilisateur",
@@ -184,7 +215,6 @@ export default {
   'pages.deviceGroups.importSuccess':
     '{count} appareil(s) importé(s) avec succès',
   'pages.deviceGroups.importFailed': "Échec de l'importation des appareils",
-  'pages.deviceGroups.searchNamePlaceholder': 'Rechercher par nom',
   'pages.users.list': 'Liste des utilisateurs',
   'pages.users.name': 'Nom',
   'pages.users.displayName': "Nom d'affichage",
@@ -917,9 +947,6 @@ export default {
   'pages.addressBook.accessReadOnlyTitle':
     '{name} - Paramètres de partage en lecture seule',
   'pages.addressBook.viewShareSettings': 'Paramètres de partage',
-  'pages.addressBook.searchIdPlaceholder': 'Rechercher par ID',
-  'pages.addressBook.searchNamePlaceholder': 'Rechercher par nom',
-  'pages.addressBook.searchNotePlaceholder': 'Rechercher par note',
   'pages.audits.connectionId': 'ID de connexion',
   'pages.audits.currentConnections': 'Connexions actuelles',
   'pages.audits.operator': 'Opérateur',
@@ -933,9 +960,6 @@ export default {
   'pages.audits.target': 'Cible',
   'pages.audits.beforeState': 'État antérieur',
   'pages.audits.afterState': 'État postérieur',
-  'pages.audits.searchOperatorPlaceholder': 'Rechercher par opérateur',
-  'pages.audits.searchActionPlaceholder': 'Rechercher par action',
-  'pages.audits.searchTargetTypePlaceholder': 'Rechercher par type de cible',
   'pages.common.back': 'Retour',
   'pages.common.close': 'Fermer',
   'pages.login.permissionsLoadFailed':

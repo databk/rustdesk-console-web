@@ -1,4 +1,33 @@
 export default {
+  'pages.audits.webClient.reportedFailure': 'Сообщено об ошибке',
+  'pages.roles.resource.web_client': 'Веб-управление',
+  'pages.roles.permission.web_client.connect':
+    'Подключение к удалённым устройствам',
+  'pages.roles.permission.web_client.file_transfer':
+    'Использовать веб-канал передачи файлов',
+  'pages.audits.webClient.request_allowed': 'Веб-подключение разрешено',
+  'pages.audits.webClient.request_denied': 'Веб-подключение отклонено',
+  'pages.audits.webClient.gateway_open': 'Веб-канал открыт',
+  'pages.audits.webClient.session_ended': 'Веб-сеанс завершён',
+  'pages.audits.webClient.remote_auth_succeeded':
+    'Удалённая аутентификация успешна (отчёт браузера)',
+  'pages.audits.webClient.remote_auth_failed':
+    'Удалённая аутентификация не удалась (отчёт браузера)',
+  'pages.audits.webClient.file_started': 'Передача начата (отчёт браузера)',
+  'pages.audits.webClient.file_completed':
+    'Передача завершена (отчёт браузера)',
+  'pages.audits.webClient.file_failed': 'Передача не удалась (отчёт браузера)',
+  'pages.audits.webClient.session': 'Сеанс веб-управления',
+  'pages.audits.webClient.device': 'Удалённое устройство',
+  'pages.audits.webClient.source': 'Источник записи',
+  'pages.audits.webClient.source.server': 'Подтверждено сервером',
+  'pages.audits.webClient.source.browser':
+    'Отчёт браузера, не проверен сервером',
+  'pages.audits.webClient.source.unknown': 'Источник неизвестен',
+  'pages.audits.webClient.disconnect': 'Завершить веб-подключение',
+  'pages.audits.webClient.ended': 'Подключение завершено.',
+  'pages.audits.webClient.endFailed':
+    'Не удалось завершить подключение. Повторите попытку.',
   'pages.request.loginExpired': 'Срок действия сеанса истёк. Войдите снова.',
   'pages.request.accessDenied':
     'У вас нет разрешения на выполнение этого действия',

@@ -1,15 +1,53 @@
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { Button, Drawer, Typography } from 'antd';
-import { FormattedMessage, useIntl } from '@umijs/max';
+import { FormattedMessage, useAccess, useIntl } from '@umijs/max';
+import { Button, Drawer, message, Typography } from 'antd';
 import React, { useRef, useState } from 'react';
 import { getConsoleAudits } from '@/services/rustdesk-console/audit';
+import {
+  endWebClientSession,
+  webClientHttpStatus,
+} from '@/services/rustdesk-console/webClient';
 import { DEFAULT_PAGINATION, toTableResult } from '@/utils/pagination';
+import { webClientAuditContext, webClientAuditLabel } from './web-client-audit';
 
 const ConsoleAudit: React.FC = () => {
   const intl = useIntl();
   const actionRef = useRef<ActionType>(null);
   const [selected, setSelected] = useState<API.ConsoleAuditItem>();
+  const access = useAccess();
+  const [ending, setEnding] = useState(false);
+  const finishSession = async (record: API.ConsoleAuditItem) => {
+    if (ending || !record.target_guid) return;
+    setEnding(true);
+    try {
+      await endWebClientSession(record.target_guid);
+      message.success(
+        intl.formatMessage({
+          id: 'pages.audits.webClient.ended',
+          defaultMessage: 'The connection has ended.',
+        }),
+      );
+      actionRef.current?.reload();
+    } catch (error) {
+      if (
+        webClientHttpStatus(error) !== 401 &&
+        webClientHttpStatus(error) !== 403
+      )
+        message.error(
+          intl.formatMessage({
+            id: 'pages.audits.webClient.endFailed',
+            defaultMessage: 'Could not end the connection. Try again.',
+          }),
+        );
+    } finally {
+      setEnding(false);
+    }
+  };
+
+  const selectedWebClientContext = selected
+    ? webClientAuditContext(selected)
+    : undefined;
 
   const columns: ProColumns<API.ConsoleAuditItem>[] = [
     {
@@ -47,6 +85,8 @@ const ConsoleAudit: React.FC = () => {
       ),
       dataIndex: 'action',
       width: 150,
+      render: (_, record) =>
+        webClientAuditLabel(record.action, intl.formatMessage),
       fieldProps: {
         placeholder: intl.formatMessage({
           id: 'pages.audits.searchActionPlaceholder',
@@ -63,6 +103,13 @@ const ConsoleAudit: React.FC = () => {
       ),
       dataIndex: 'target_type',
       width: 150,
+      render: (_, record) =>
+        record.target_type === 'web_client_session'
+          ? intl.formatMessage({
+              id: 'pages.audits.webClient.session',
+              defaultMessage: 'Web Client session',
+            })
+          : record.target_type || '-',
       fieldProps: {
         placeholder: intl.formatMessage({
           id: 'pages.audits.searchTargetTypePlaceholder',
@@ -88,6 +135,15 @@ const ConsoleAudit: React.FC = () => {
       ),
       dataIndex: 'result',
       width: 120,
+      render: (_, record) =>
+        ['web_client.remote_auth_failed', 'web_client.file_failed'].includes(
+          record.action || '',
+        )
+          ? intl.formatMessage({
+              id: 'pages.audits.webClient.reportedFailure',
+              defaultMessage: 'Failure reported',
+            })
+          : _,
       valueEnum: {
         allowed: {
           text: intl.formatMessage({
@@ -204,8 +260,46 @@ const ConsoleAudit: React.FC = () => {
                 })}
                 :
               </strong>{' '}
-              {selected.action || '-'}
+              {webClientAuditLabel(selected.action, intl.formatMessage)}
             </Typography.Paragraph>
+            {selectedWebClientContext && (
+              <>
+                <Typography.Paragraph>
+                  {intl.formatMessage({
+                    id: 'pages.audits.webClient.device',
+                    defaultMessage: 'Remote device',
+                  })}
+                  : {selectedWebClientContext.targetId || '-'}
+                </Typography.Paragraph>
+                <Typography.Paragraph>
+                  {intl.formatMessage({
+                    id: 'pages.audits.webClient.source',
+                    defaultMessage: 'Evidence source',
+                  })}
+                  :{' '}
+                  {intl.formatMessage({
+                    id: `pages.audits.webClient.source.${selectedWebClientContext.source || 'unknown'}`,
+                    defaultMessage: 'Unknown',
+                  })}
+                </Typography.Paragraph>
+                {access.canDevicesDisconnect &&
+                  selectedWebClientContext.event &&
+                  !['request_denied', 'session_ended'].includes(
+                    selectedWebClientContext.event,
+                  ) && (
+                    <Button
+                      danger
+                      loading={ending}
+                      onClick={() => void finishSession(selected)}
+                    >
+                      <FormattedMessage
+                        id="pages.audits.webClient.disconnect"
+                        defaultMessage="End Web Client connection"
+                      />
+                    </Button>
+                  )}
+              </>
+            )}
             <Typography.Paragraph>
               <strong>
                 {intl.formatMessage({

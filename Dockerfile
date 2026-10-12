@@ -8,7 +8,11 @@ RUN npm ci --legacy-peer-deps
 COPY . .
 ARG SOURCE_COMMIT
 ENV SOURCE_COMMIT=$SOURCE_COMMIT
-RUN npm run build
+
+# 发布流程传入本次提交链接，用于镜像中的对应源码声明。
+ARG WEB_CLIENT_SOURCE_URL
+# npm ci 时尚未复制项目配置；重新生成完整的 Umi 开发类型供检查使用。
+RUN npm run postinstall && npm run build
 
 FROM nginx:alpine
 ARG SOURCE_COMMIT

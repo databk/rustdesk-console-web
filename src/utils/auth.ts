@@ -1,5 +1,19 @@
 export const TOKEN_KEY = 'rustdesk_access_token';
 
+export function getLoginPath(location: {
+  pathname: string;
+  search?: string;
+  hash?: string;
+}): string {
+  const loginPath = '/user/login';
+  const suffix = (location.search || '') + (location.hash || '');
+  if (location.pathname === loginPath) return loginPath + suffix;
+  if (location.pathname === '/web-client') {
+    return `${loginPath}?redirect=${encodeURIComponent(`/web-client${suffix}`)}`;
+  }
+  return loginPath;
+}
+
 export function getToken(): string | null {
   return localStorage.getItem(TOKEN_KEY) || sessionStorage.getItem(TOKEN_KEY);
 }

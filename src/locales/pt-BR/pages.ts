@@ -1,4 +1,35 @@
 export default {
+  'pages.audits.webClient.reportedFailure': 'Falha relatada',
+  'pages.roles.resource.web_client': 'Controle web',
+  'pages.roles.permission.web_client.connect':
+    'Conectar a dispositivos remotos',
+  'pages.roles.permission.web_client.file_transfer':
+    'Usar o canal de arquivos web',
+  'pages.audits.webClient.request_allowed': 'Conexão web permitida',
+  'pages.audits.webClient.request_denied': 'Conexão web negada',
+  'pages.audits.webClient.gateway_open': 'Canal web aberto',
+  'pages.audits.webClient.session_ended': 'Sessão web encerrada',
+  'pages.audits.webClient.remote_auth_succeeded':
+    'Autenticação remota concluída (relato do navegador)',
+  'pages.audits.webClient.remote_auth_failed':
+    'Autenticação remota falhou (relato do navegador)',
+  'pages.audits.webClient.file_started':
+    'Transferência iniciada (relato do navegador)',
+  'pages.audits.webClient.file_completed':
+    'Transferência concluída (relato do navegador)',
+  'pages.audits.webClient.file_failed':
+    'Transferência falhou (relato do navegador)',
+  'pages.audits.webClient.session': 'Sessão de controle web',
+  'pages.audits.webClient.device': 'Dispositivo remoto',
+  'pages.audits.webClient.source': 'Origem do registro',
+  'pages.audits.webClient.source.server': 'Confirmado pelo servidor',
+  'pages.audits.webClient.source.browser':
+    'Relato do navegador, não verificado pelo servidor',
+  'pages.audits.webClient.source.unknown': 'Origem desconhecida',
+  'pages.audits.webClient.disconnect': 'Encerrar conexão web',
+  'pages.audits.webClient.ended': 'A conexão foi encerrada.',
+  'pages.audits.webClient.endFailed':
+    'Não foi possível encerrar a conexão. Tente novamente.',
   'pages.request.loginExpired':
     'A sessão expirou. Entre novamente para continuar',
   'pages.request.accessDenied':

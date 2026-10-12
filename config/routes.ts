@@ -44,6 +44,13 @@ export default [
     component: './devices',
   },
   {
+    path: '/web-client',
+    name: 'webClient',
+    icon: 'global',
+    access: 'canWebClientConnect',
+    component: './web-client',
+  },
+  {
     path: '/address-book',
     name: 'addressBook',
     icon: 'contacts',

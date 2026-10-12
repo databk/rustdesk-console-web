@@ -17,7 +17,10 @@ import { useSystemUpdate } from './useSystemUpdate';
 
 jest.mock('@umijs/max', () => ({
   request: jest.fn(),
-  history: { push: jest.fn() },
+  history: {
+    push: jest.fn(),
+    location: { pathname: '/settings', search: '', hash: '' },
+  },
   getIntl: () => ({
     formatMessage: ({ defaultMessage }: { defaultMessage: string }) =>
       defaultMessage,

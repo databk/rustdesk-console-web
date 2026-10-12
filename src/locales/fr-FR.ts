@@ -5,8 +5,10 @@ import pages from './fr-FR/pages';
 import pwa from './fr-FR/pwa';
 import settingDrawer from './fr-FR/settingDrawer';
 import settings from './fr-FR/settings';
+import webClient from './fr-FR/webClient';
 
 export default {
+  ...serverNetwork,
   'navBar.lang': 'Langues',
   'layout.user.link.help': 'Aide',
   'layout.user.link.privacy': 'Confidentialité',
@@ -20,4 +22,6 @@ export default {
   ...pwa,
   ...component,
   ...pages,
+  ...webClient,
 };
+import serverNetwork from './fr-FR/serverNetwork';

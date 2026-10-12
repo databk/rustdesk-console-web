@@ -1,4 +1,5 @@
 import { request } from "@umijs/max";
+import { parseTcpObservation, unavailableTcp, type TcpObservation } from './tcpObservation';
 
 export type ServerService = "hbbs" | "hbbr";
 export interface ServiceStatus {
@@ -18,6 +19,7 @@ export interface ServerNode {
   id: string;
   name: string;
   reachable: boolean;
+  local?: boolean;
   services: ServiceStatus[];
 }
 export interface ServerPeer {
@@ -63,6 +65,11 @@ export interface ServerBans {
 const base = (node: string) => `/api/servers/${encodeURIComponent(node)}`;
 export const getServerNodes = () =>
   request<{ data: ServerNode[] }>("/api/servers");
+export async function getTcpNetwork(node?: string, options: { signal?: AbortSignal } = {}): Promise<TcpObservation> {
+  const result = parseTcpObservation(await request<unknown>(node ? `${base(node)}/network/tcp` : '/api/servers/network/tcp',
+    { method: 'GET', timeout: 6000, ...options }));
+  return result?.kind === 'system' ? result : unavailableTcp('system', 'invalid_response');
+}
 export const getServerPeers = (node: string) =>
   request<{ data: ServerPeer[] }>(`${base(node)}/peers`);
 export const getRelaySessions = (node: string) =>

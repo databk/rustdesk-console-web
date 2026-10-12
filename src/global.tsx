@@ -1,6 +1,12 @@
 import { getIntl } from '@umijs/max';
 import { Button, message, notification } from 'antd';
+import { useState } from 'react';
 import defaultSettings from '../config/defaultSettings';
+import {
+  clearAppCaches,
+  createPageUpdater,
+  registerAppServiceWorker,
+} from './utils/pwa-update';
 
 const { pwa } = defaultSettings;
 const isHttps = document.location.protocol === 'https:';
@@ -8,19 +14,40 @@ const isLocalhost =
   document.location.hostname === 'localhost' ||
   document.location.hostname === '127.0.0.1';
 
-const clearCache = () => {
-  // remove all caches
-  if (window.caches) {
-    caches
-      .keys()
-      .then((keys) => {
-        keys.forEach((key) => {
-          caches.delete(key);
-        });
-      })
-      .catch((e) => console.log(e));
-  }
-};
+const appScope = new URL(APP_PUBLIC_PATH, window.location.origin).href;
+const refreshPage = createPageUpdater({
+  scope: appScope,
+  serviceWorker: navigator.serviceWorker,
+  caches: window.caches,
+  fetch: (input, options) => window.fetch(input, options),
+  reload: () => window.location.reload(),
+});
+const updateNotificationKey = 'console-pwa-update';
+
+function RefreshPageButton() {
+  const [loading, setLoading] = useState(false);
+  return (
+    <Button
+      type="primary"
+      loading={loading}
+      onClick={async () => {
+        setLoading(true);
+        try {
+          await refreshPage();
+          notification.destroy(updateNotificationKey);
+        } catch {
+          message.error(
+            getIntl().formatMessage({ id: 'app.systemUpdate.requestFailed' }),
+          );
+        } finally {
+          setLoading(false);
+        }
+      }}
+    >
+      {getIntl().formatMessage({ id: 'app.pwa.serviceworker.updated.ok' })}
+    </Button>
+  );
+}
 
 // if pwa is true
 if (pwa) {
@@ -30,82 +57,29 @@ if (pwa) {
   });
 
   // Pop up a prompt on the page asking the user if they want to use the latest version
-  window.addEventListener('sw.updated', (event: Event) => {
-    const e = event as CustomEvent;
-    const reloadSW = async () => {
-      // Check if there is sw whose state is waiting in ServiceWorkerRegistration
-      // https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerRegistration
-      const worker = e.detail?.waiting;
-      if (!worker) {
-        return true;
-      }
-      // Send skip-waiting event to waiting SW with MessageChannel
-      await new Promise((resolve, reject) => {
-        const channel = new MessageChannel();
-        channel.port1.onmessage = (msgEvent) => {
-          if (msgEvent.data.error) {
-            reject(msgEvent.data.error);
-          } else {
-            resolve(msgEvent.data);
-          }
-        };
-        worker.postMessage({ type: 'skip-waiting' }, [channel.port2]);
-      });
-
-      clearCache();
-      window.location.reload();
-      return true;
-    };
-    const key = `open${Date.now()}`;
-    const btn = (
-      <Button
-        type="primary"
-        onClick={() => {
-          notification.destroy(key);
-          reloadSW();
-        }}
-      >
-        {getIntl().formatMessage({ id: 'app.pwa.serviceworker.updated.ok' })}
-      </Button>
-    );
+  window.addEventListener('sw.updated', () => {
     notification.open({
       title: getIntl().formatMessage({ id: 'app.pwa.serviceworker.updated' }),
       description: getIntl().formatMessage({
         id: 'app.pwa.serviceworker.updated.hint',
       }),
-      actions: btn,
-      key,
+      actions: <RefreshPageButton />,
+      key: updateNotificationKey,
       onClose: async () => null,
     });
   });
 
   // Register service worker
   if ('serviceWorker' in navigator && (isHttps || isLocalhost)) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker
-        .register(`${APP_PUBLIC_PATH}sw.js`, { scope: APP_PUBLIC_PATH })
-        .then((registration) => {
-          registration.addEventListener('updatefound', () => {
-            const newWorker = registration.installing;
-            if (!newWorker) return;
-            newWorker.addEventListener('statechange', () => {
-              if (
-                newWorker.state === 'installed' &&
-                navigator.serviceWorker.controller
-              ) {
-                window.dispatchEvent(
-                  new CustomEvent('sw.updated', {
-                    detail: { waiting: registration.waiting },
-                  }),
-                );
-              }
-            });
-          });
-        })
-        .catch((error) => {
-          console.warn('Service worker registration failed:', error);
-        });
-    });
+    const register = () => {
+      registerAppServiceWorker(navigator.serviceWorker, appScope, () => {
+        window.dispatchEvent(new CustomEvent('sw.updated'));
+      }).catch((error) => {
+        console.warn('Service worker registration failed:', error);
+      });
+    };
+    if (document.readyState === 'complete') register();
+    else window.addEventListener('load', register, { once: true });
 
     // Notify offline status
     window.addEventListener('offline', () => {
@@ -113,18 +87,11 @@ if (pwa) {
     });
   }
 } else if ('serviceWorker' in navigator && isHttps) {
-  // unregister service worker
-  const { serviceWorker } = navigator;
-  if (serviceWorker.getRegistrations) {
-    serviceWorker.getRegistrations().then((sws) => {
-      sws.forEach((sw) => {
-        sw.unregister();
-      });
-    });
-  }
-  serviceWorker.getRegistration().then((sw) => {
-    if (sw) sw.unregister();
-  });
-
-  clearCache();
+  void navigator.serviceWorker
+    .getRegistration(appScope)
+    .then(async (registration) => {
+      if (registration?.scope === appScope) await registration.unregister();
+      await clearAppCaches(appScope, window.caches);
+    })
+    .catch((error) => console.warn('Service worker cleanup failed:', error));
 }

@@ -99,3 +99,32 @@ test('device operators cannot acquire global server controls', () => {
   expect(observer.canServersControl).toBe(false);
   expect(observer.canServersBan).toBe(false);
 });
+
+test('网页远控必须专门授权，文件权限不能独立打开网页连接', () => {
+  const ordinary = createAccess({
+    currentUser: { is_admin: false },
+    permissions: { permissions: ['devices.view'], scopes: {} },
+  });
+  expect(ordinary.canWebClientConnect).toBe(false);
+  expect(ordinary.canWebClientFileTransfer).toBe(false);
+  const fileOnly = createAccess({
+    currentUser: { is_admin: false },
+    permissions: { permissions: ['web_client.file_transfer'], scopes: {} },
+  });
+  expect(fileOnly.canWebClientFileTransfer).toBe(false);
+  const granted = createAccess({
+    currentUser: { is_admin: false },
+    permissions: {
+      permissions: ['web_client.connect', 'web_client.file_transfer'],
+      scopes: {},
+    },
+  });
+  expect(granted.canWebClientConnect).toBe(true);
+  expect(granted.canWebClientFileTransfer).toBe(true);
+  expect(
+    createAccess({ currentUser: { is_admin: true } }).canWebClientConnect,
+  ).toBe(true);
+  expect(routes.find((route) => route.path === '/web-client')?.access).toBe(
+    'canWebClientConnect',
+  );
+});
