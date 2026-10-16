@@ -95,7 +95,7 @@
     "typescript": "^7.0.2",
     "umi-presets-pro": "^2.0.3",
     "umi-serve": "^1.9.11",
-    "protobufjs-cli": "2.7.0"
+    "protobufjs-cli": "2.7.1"
   },
   "engines": {
     "node": ">=20.0.0"
