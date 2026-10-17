@@ -1,5 +1,5 @@
 import { useIntl } from '@umijs/max';
-import { App, Button, Divider } from 'antd';
+import { App, Button } from 'antd';
 import React, { useState } from 'react';
 import { oidcAuth } from '@/services/rustdesk-console/auth';
 import { getDeviceInfo } from '../utils';
@@ -65,12 +65,7 @@ const OidcLogin: React.FC<OidcLoginProps> = ({ options, loading }) => {
 
   return (
     <div className={styles.oidcSection}>
-      <Divider className={styles.oidcDivider}>
-        {intl.formatMessage({
-          id: 'pages.login.oidc.divider',
-          defaultMessage: 'Or continue with',
-        })}
-      </Divider>
+
       {options.map((item) => {
         return (
           <Button

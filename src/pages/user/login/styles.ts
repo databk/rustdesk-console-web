@@ -33,7 +33,7 @@ export const useStyles = createStyles(({ token }) => ({
     marginBottom: 24,
   },
   passkeyButton: {
-    marginBottom: 24,
+    marginBottom: 8,
   },
   forgotPassword: {
     color: token.colorPrimary,
@@ -59,7 +59,7 @@ export const useStyles = createStyles(({ token }) => ({
     marginBottom: 24,
   },
   oidcSection: {
-    marginTop: 24,
+    marginTop: 0,
   },
   oidcDivider: {
     color: token.colorTextSecondary,

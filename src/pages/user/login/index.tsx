@@ -13,7 +13,7 @@ import {
   useIntl,
   useModel,
 } from '@umijs/max';
-import { App, Button, Checkbox, Form } from 'antd';
+import { App, Button, Checkbox, Divider, Form } from 'antd';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { flushSync } from 'react-dom';
 import { Footer } from '@/components';
@@ -518,6 +518,36 @@ const Login: React.FC = () => {
                   },
                 }
           }
+          actions={
+            authStep === 'account' &&
+            ((passkeySupported && webauthnEnabled) ||
+              oidcOptions.length > 0) ? (
+              <div>
+                <Divider className={styles.oidcDivider}>
+                  {intl.formatMessage({
+                    id: 'pages.login.oidc.divider',
+                    defaultMessage: 'Or continue with',
+                  })}
+                </Divider>
+                {passkeySupported && webauthnEnabled && (
+                  <Button
+                    block
+                    size="large"
+                    icon={<KeyOutlined />}
+                    loading={submitting}
+                    onClick={handlePasskeyLogin}
+                    className={styles.passkeyButton}
+                  >
+                    {intl.formatMessage({
+                      id: 'pages.login.passkey.login',
+                      defaultMessage: 'Sign in with Passkey',
+                    })}
+                  </Button>
+                )}
+                <OidcLogin options={oidcOptions} loading={submitting} />
+              </div>
+            ) : null
+          }
         >
           {authStep === 'account' && (
             <div>
@@ -591,23 +621,6 @@ const Login: React.FC = () => {
                 </a>
               </div>
 
-              {passkeySupported && webauthnEnabled && (
-                <Button
-                  block
-                  size="large"
-                  icon={<KeyOutlined />}
-                  loading={submitting}
-                  onClick={handlePasskeyLogin}
-                  className={styles.passkeyButton}
-                >
-                  {intl.formatMessage({
-                    id: 'pages.login.passkey.login',
-                    defaultMessage: 'Sign in with Passkey',
-                  })}
-                </Button>
-              )}
-
-              <OidcLogin options={oidcOptions} loading={submitting} />
             </div>
           )}
 
