@@ -14,8 +14,8 @@ permissions:
   contents: read
 
 jobs:
-  server-management-tests:
-    name: API, access and system update tests
+  tests:
+    name: Unit tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -24,7 +24,7 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
-      - run: npm test -- --runInBand src/access.test.ts src/services/rustdesk-console/server.test.ts src/pages/roles/rbacPresentation.test.ts src/components/HeaderUpdateEntry src/components/UpdateCheckModal src/services/rustdesk-console/systemUpdate.test.ts src/services/rustdesk-console/updateReleaseNotes.test.ts
+      - run: npm test
       - run: node --test scripts/finalize-release.test.mjs
 
   lint:
