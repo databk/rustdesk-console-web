@@ -6,6 +6,12 @@ export default [
     component: './user/login',
   },
   {
+    path: '/user/reset-password',
+    layout: false,
+    name: 'resetPassword',
+    component: './user/reset-password',
+  },
+  {
     path: '/user',
     routes: [
       {

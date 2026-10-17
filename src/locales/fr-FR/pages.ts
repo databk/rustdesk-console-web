@@ -38,8 +38,43 @@ export default {
   'pages.login.password.required': 'Veuillez saisir votre mot de passe !',
   'pages.login.rememberMe': 'Se souvenir de moi',
   'pages.login.forgotPassword': 'Mot de passe oublié ?',
-  'pages.login.forgotPasswordInfo':
-    "Veuillez contacter l'administrateur pour réinitialiser le mot de passe",
+  'pages.login.forgotPassword.title': 'Réinitialiser le mot de passe',
+  'pages.login.forgotPassword.description':
+    "Saisissez votre nom d'utilisateur ou votre adresse e-mail et nous vous enverrons un lien de réinitialisation.",
+  'pages.login.forgotPassword.accountPlaceholder':
+    "Nom d'utilisateur ou e-mail",
+  'pages.login.forgotPassword.accountRequired':
+    "Veuillez saisir votre nom d'utilisateur ou votre e-mail",
+  'pages.login.forgotPassword.send': 'Envoyer le lien',
+  'pages.login.forgotPassword.done': 'Terminé',
+  'pages.login.forgotPassword.sent':
+    "Si le compte existe et dispose d'une adresse e-mail associée, un lien de réinitialisation a été envoyé. Veuillez consulter votre boîte de réception (le lien expire dans 30 minutes).",
+  'pages.login.forgotPassword.failed':
+    "Échec de l'envoi de l'e-mail de réinitialisation",
+  'pages.login.forgotPassword.contactAdmin':
+    "Les comptes sans adresse e-mail associée doivent contacter l'administrateur.",
+  'pages.resetPassword.title': 'Définir un nouveau mot de passe',
+  'pages.resetPassword.subtitle':
+    'Définition d’un nouveau mot de passe pour {account}',
+  'pages.resetPassword.newPassword': 'Nouveau mot de passe',
+  'pages.resetPassword.newPasswordRequired':
+    'Veuillez saisir le nouveau mot de passe',
+  'pages.resetPassword.passwordMinLength':
+    'Le mot de passe doit contenir au moins {count} caractères',
+  'pages.resetPassword.confirmPassword': 'Confirmer le mot de passe',
+  'pages.resetPassword.confirmPasswordRequired':
+    'Veuillez confirmer le nouveau mot de passe',
+  'pages.resetPassword.passwordMismatch':
+    'Les deux mots de passe ne correspondent pas',
+  'pages.resetPassword.submit': 'Réinitialiser le mot de passe',
+  'pages.resetPassword.success':
+    'Le mot de passe a été réinitialisé avec succès. Redirection vers la connexion...',
+  'pages.resetPassword.failed':
+    'Échec de la réinitialisation du mot de passe',
+  'pages.resetPassword.invalid.title': 'Lien invalide ou expiré',
+  'pages.resetPassword.invalid.description':
+    "Ce lien de réinitialisation est invalide, a déjà été utilisé ou a expiré. Veuillez en demander un nouveau.",
+  'pages.resetPassword.backToLogin': 'Retour à la connexion',
   'pages.login.submit': 'Se connecter',
   'pages.login.back': 'Retour',
   'pages.login.emailCheck.title': 'Vérification par e-mail',

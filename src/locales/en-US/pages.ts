@@ -44,8 +44,37 @@ export default {
   'pages.login.password.required': 'Please enter your password!',
   'pages.login.rememberMe': 'Remember me',
   'pages.login.forgotPassword': 'Forgot Password?',
-  'pages.login.forgotPasswordInfo':
-    'Please contact administrator to reset password',
+  'pages.login.forgotPassword.title': 'Reset Password',
+  'pages.login.forgotPassword.description':
+    'Enter your username or email address and we will send you a password reset link.',
+  'pages.login.forgotPassword.accountPlaceholder': 'Username or email',
+  'pages.login.forgotPassword.accountRequired':
+    'Please enter your username or email',
+  'pages.login.forgotPassword.send': 'Send Reset Link',
+  'pages.login.forgotPassword.done': 'Done',
+  'pages.login.forgotPassword.sent':
+    'If the account exists and has a bound email address, a password reset link has been sent. Please check your inbox (the link expires in 30 minutes).',
+  'pages.login.forgotPassword.failed': 'Failed to send the reset email',
+  'pages.login.forgotPassword.contactAdmin':
+    'Accounts without a bound email address need to contact the administrator.',
+  'pages.resetPassword.title': 'Set a New Password',
+  'pages.resetPassword.subtitle': 'Setting a new password for {account}',
+  'pages.resetPassword.newPassword': 'New Password',
+  'pages.resetPassword.newPasswordRequired': 'Please enter the new password',
+  'pages.resetPassword.passwordMinLength':
+    'Password must be at least {count} characters',
+  'pages.resetPassword.confirmPassword': 'Confirm Password',
+  'pages.resetPassword.confirmPasswordRequired':
+    'Please confirm the new password',
+  'pages.resetPassword.passwordMismatch': 'The two passwords do not match',
+  'pages.resetPassword.submit': 'Reset Password',
+  'pages.resetPassword.success':
+    'Password has been reset successfully. Redirecting to login...',
+  'pages.resetPassword.failed': 'Failed to reset the password',
+  'pages.resetPassword.invalid.title': 'Invalid or Expired Link',
+  'pages.resetPassword.invalid.description':
+    'This password reset link is invalid, has already been used, or has expired. Please request a new one.',
+  'pages.resetPassword.backToLogin': 'Back to Login',
   'pages.login.submit': 'Login',
   'pages.login.back': 'Back',
   'pages.login.emailCheck.title': 'Email Verification',

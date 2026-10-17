@@ -46,8 +46,39 @@ export default {
   'pages.login.password.required': 'Пожалуйста, введите пароль!',
   'pages.login.rememberMe': 'Запомнить меня',
   'pages.login.forgotPassword': 'Забыли пароль?',
-  'pages.login.forgotPasswordInfo':
-    'Обратитесь к администратору для сброса пароля',
+  'pages.login.forgotPassword.title': 'Сброс пароля',
+  'pages.login.forgotPassword.description':
+    'Введите имя пользователя или адрес электронной почты, и мы отправим вам ссылку для сброса пароля.',
+  'pages.login.forgotPassword.accountPlaceholder':
+    'Имя пользователя или e-mail',
+  'pages.login.forgotPassword.accountRequired':
+    'Пожалуйста, введите имя пользователя или e-mail',
+  'pages.login.forgotPassword.send': 'Отправить ссылку',
+  'pages.login.forgotPassword.done': 'Готово',
+  'pages.login.forgotPassword.sent':
+    'Если учётная запись существует и к ней привязан адрес электронной почты, ссылка для сброса пароля была отправлена. Проверьте входящие сообщения (ссылка действует 30 минут).',
+  'pages.login.forgotPassword.failed':
+    'Не удалось отправить письмо для сброса пароля',
+  'pages.login.forgotPassword.contactAdmin':
+    'Для учётных записей без привязанного e-mail необходимо обратиться к администратору.',
+  'pages.resetPassword.title': 'Установите новый пароль',
+  'pages.resetPassword.subtitle': 'Установка нового пароля для {account}',
+  'pages.resetPassword.newPassword': 'Новый пароль',
+  'pages.resetPassword.newPasswordRequired': 'Пожалуйста, введите новый пароль',
+  'pages.resetPassword.passwordMinLength':
+    'Пароль должен содержать не менее {count} символов',
+  'pages.resetPassword.confirmPassword': 'Подтвердите пароль',
+  'pages.resetPassword.confirmPasswordRequired':
+    'Пожалуйста, подтвердите новый пароль',
+  'pages.resetPassword.passwordMismatch': 'Пароли не совпадают',
+  'pages.resetPassword.submit': 'Сбросить пароль',
+  'pages.resetPassword.success':
+    'Пароль успешно сброшен. Перенаправление на страницу входа...',
+  'pages.resetPassword.failed': 'Не удалось сбросить пароль',
+  'pages.resetPassword.invalid.title': 'Недействительная или истёкшая ссылка',
+  'pages.resetPassword.invalid.description':
+    'Эта ссылка для сброса пароля недействительна, уже использована или истекла. Запросите новую.',
+  'pages.resetPassword.backToLogin': 'Вернуться ко входу',
   'pages.login.submit': 'Войти',
   'pages.login.back': 'Назад',
   'pages.login.emailCheck.title': 'Подтверждение email',

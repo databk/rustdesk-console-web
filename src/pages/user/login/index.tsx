@@ -31,6 +31,7 @@ import {
 } from '@/utils/webauthn';
 import Settings from '../../../../config/defaultSettings';
 import Lang from './components/Lang';
+import ForgotPasswordModal from './components/ForgotPasswordModal';
 import LoginMessage from './components/LoginMessage';
 import OidcLogin from './components/OidcLogin';
 import PasskeyVerifyStep from './components/PasskeyVerifyStep';
@@ -51,6 +52,7 @@ const Login: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const [oidcOptions, setOidcOptions] = useState<API.OidcLoginInfo[]>([]);
   const [passkeySupported] = useState(() => isWebAuthnSupported());
+  const [forgotPasswordOpen, setForgotPasswordOpen] = useState(false);
   const { initialState, setInitialState } = useModel('@@initialState');
   const webauthnEnabled =
     initialState?.frontendSettings?.webauthnEnabled ?? false;
@@ -428,12 +430,7 @@ const Login: React.FC = () => {
   }, []);
 
   const handleForgotPassword = () => {
-    message.info(
-      intl.formatMessage({
-        id: 'pages.login.forgotPasswordInfo',
-        defaultMessage: 'Please contact administrator to reset password',
-      }),
-    );
+    setForgotPasswordOpen(true);
   };
 
   const verifyStepTitle = useMemo(() => {
@@ -659,6 +656,11 @@ const Login: React.FC = () => {
           )}
         </LoginForm>
       </div>
+      <ForgotPasswordModal
+        open={forgotPasswordOpen}
+        initialUsername={accountForm.getFieldValue('username')}
+        onClose={() => setForgotPasswordOpen(false)}
+      />
       <Footer />
     </div>
   );

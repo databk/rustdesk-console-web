@@ -88,6 +88,11 @@ declare namespace API {
     user?: CurrentUser;
   };
 
+  type ResetTokenInfo = {
+    username: string;
+    display_name: string;
+  };
+
   // ── WebAuthn JSON types (base64url-encoded) ─────────────────────
 
   type PublicKeyCredentialCreationOptionsJSON = {

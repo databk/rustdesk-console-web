@@ -34,6 +34,38 @@ export async function getLoginOptions() {
   });
 }
 
+export async function requestPasswordReset(body: {
+  username_or_email: string;
+}) {
+  return request<{ message: string }>('/api/password-reset/request', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    data: body,
+    skipErrorHandler: true,
+  });
+}
+
+export async function validateResetToken(body: { token: string }) {
+  return request<API.ResetTokenInfo>('/api/password-reset/validate', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    data: body,
+    skipErrorHandler: true,
+  });
+}
+
+export async function confirmPasswordReset(body: {
+  token: string;
+  new_password: string;
+}) {
+  return request<{ message: string }>('/api/password-reset/confirm', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    data: body,
+    skipErrorHandler: true,
+  });
+}
+
 export async function oidcAuth(body: API.OidcAuthParams) {
   return request<API.OidcAuthResponse>('/api/oidc/auth', {
     method: 'POST',
