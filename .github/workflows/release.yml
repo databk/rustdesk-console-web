@@ -258,14 +258,19 @@ jobs:
 
   docker:
     name: Publish Docker Image
-    needs: [prepare, release]
+    needs: [prepare, build]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v7
         with:
           ref: ${{ needs.prepare.outputs.source_commit }}
-          fetch-depth: 0
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: release-dist
+          path: dist/
 
       - name: Determine version
         id: version
@@ -358,42 +363,3 @@ jobs:
           node scripts/finalize-release.mjs --release=release.json --docker=docker-evidence.json --artifacts=release-artifacts --peer-range="$PEER_VERSION_RANGE" --out=update-manifest.json
           gh release upload "$RELEASE_VERSION" update-manifest.json --repo databk/rustdesk-console-web
 
-  deploy:
-    name: Deploy Release
-    needs: [prepare, release]
-    runs-on: ubuntu-latest
-    environment:
-      name: production
-      url: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v7
-        with:
-          ref: ${{ needs.prepare.outputs.source_commit }}
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v7
-        with:
-          node-version-file: .nvmrc
-          cache: npm
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build
-        run: npm run build
-        env:
-          NODE_ENV: production
-          SOURCE_COMMIT: ${{ needs.prepare.outputs.source_commit }}
-          REACT_APP_HISTORY_TYPE: hash
-          REACT_APP_PUBLIC_PATH: /${{ github.event.repository.name }}/
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
-          publish_branch: gh-pages
-          user_name: 'github-actions[bot]'
-          user_email: 'github-actions[bot]@users.noreply.github.com'
-          commit_message: 'release: ${{ github.ref_name }}'

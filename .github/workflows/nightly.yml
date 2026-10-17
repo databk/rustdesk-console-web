@@ -226,11 +226,17 @@ jobs:
 
   docker:
     name: Publish Nightly Docker Image
-    needs: release
+    needs: [build, release]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: nightly-dist
+          path: dist/
 
       - name: Determine nightly version
         id: version

@@ -1,9 +1,9 @@
 name: Build
 
+# Pull requests only: pushes to main are built and deployed by deploy.yml,
+# so the production bundle is not built twice per push.
 on:
   pull_request:
-    branches: [main]
-  push:
     branches: [main]
 
 concurrency:
