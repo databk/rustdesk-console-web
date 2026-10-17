@@ -9,6 +9,7 @@ export async function getServerManagementSettings() {
     '/api/settings/server-management',
     {
       method: 'GET',
+      skipErrorHandler: true,
     },
   );
 }
