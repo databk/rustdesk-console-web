@@ -1265,6 +1265,97 @@ export default {
   'pages.ldap.saveFailed': 'Не удалось сохранить настройки LDAP',
   'pages.ldap.createdAt': 'Дата создания',
   'pages.ldap.updatedAt': 'Дата обновления',
+  'pages.webClientSettings.title': 'Веб-клиент',
+  'pages.webClientSettings.description':
+    'Настройка браузерного клиента удалённого управления, предоставляемого шлюзом консоли',
+  'pages.webClientSettings.enabled': 'Включить веб-клиент',
+  'pages.webClientSettings.enabledHelp':
+    'После включения конфигурация ниже должна быть полной и корректной',
+  'pages.webClientSettings.allowedOrigin': 'Разрешённый источник',
+  'pages.webClientSettings.allowedOriginRequired':
+    'Введите разрешённый источник',
+  'pages.webClientSettings.allowedOriginInvalid':
+    'Должен быть точным HTTPS-источником, напр. https://console.example.com',
+  'pages.webClientSettings.allowedOriginHelp':
+    'Точный HTTPS-источник сайта, которому разрешено открывать веб-клиент, напр. https://console.example.com',
+  'pages.webClientSettings.idServerUrl': 'URL ID-сервера',
+  'pages.webClientSettings.idServerUrlRequired': 'Введите URL ID-сервера',
+  'pages.webClientSettings.idServerUrlInvalid': 'Должен быть URL wss://',
+  'pages.webClientSettings.idServerUrlHelp':
+    'Публичный WebSocket-URL ID-сервера, напр. wss://console.example.com/ws/id',
+  'pages.webClientSettings.relayServerUrl': 'URL relay-сервера',
+  'pages.webClientSettings.relayServerUrlRequired': 'Введите URL relay-сервера',
+  'pages.webClientSettings.relayServerUrlInvalid': 'Должен быть URL wss://',
+  'pages.webClientSettings.relayServerUrlHelp':
+    'Публичный WebSocket-URL relay-сервера, напр. wss://console.example.com/ws/relay',
+  'pages.webClientSettings.serverPublicKey': 'Публичный ключ сервера',
+  'pages.webClientSettings.serverPublicKeyRequired':
+    'Введите публичный ключ сервера',
+  'pages.webClientSettings.serverPublicKeyInvalid':
+    'Должен быть ключ в base64 длиной 32 байта (тот же, что у пары ключей hbbs/hbbr)',
+  'pages.webClientSettings.serverPublicKeyHelp':
+    'Публичный ключ в base64 длиной 32 байта, сгенерированный hbbs/hbbr (содержимое файла id_ed25519.pub)',
+  'pages.webClientSettings.upstreamTitle':
+    'Внутренние апстримы (необязательно)',
+  'pages.webClientSettings.upstreamHelp':
+    'Внутренние WebSocket-адреса, на которые шлюз проксирует трафик. Оставьте пустым для использования значений по умолчанию.',
+  'pages.webClientSettings.idUpstreamUrl': 'URL апстрима ID',
+  'pages.webClientSettings.idUpstreamUrlInvalid':
+    'Должен быть URL ws:// или wss://',
+  'pages.webClientSettings.relayUpstreamUrl': 'URL апстрима relay',
+  'pages.webClientSettings.relayUpstreamUrlInvalid':
+    'Должен быть URL ws:// или wss://',
+  'pages.webClientSettings.saveSuccess':
+    'Конфигурация веб-клиента успешно сохранена',
+  'pages.webClientSettings.saveFailed':
+    'Не удалось сохранить конфигурацию веб-клиента',
+  'pages.webClientSettings.createdAt': 'Дата создания',
+  'pages.webClientSettings.updatedAt': 'Дата обновления',
+  'pages.webClientSettings.validation.idServerUrl':
+    'Недействительный URL ID-сервера',
+  'pages.webClientSettings.validation.relayServerUrl':
+    'Недействительный URL relay-сервера',
+  'pages.webClientSettings.validation.serverPublicKey':
+    'Недействительный публичный ключ сервера',
+  'pages.webClientSettings.validation.allowedOrigin':
+    'Недействительный разрешённый источник',
+  'pages.webClientSettings.validation.idUpstreamUrl':
+    'Недействительный URL апстрима ID',
+  'pages.webClientSettings.validation.relayUpstreamUrl':
+    'Недействительный URL апстрима relay',
+  'pages.serverManagementSettings.title': 'Управление серверами',
+  'pages.serverManagementSettings.description':
+    'Настройка подключения консоли к API управления hbbs/hbbr',
+  'pages.serverManagementSettings.url': 'URL API управления',
+  'pages.serverManagementSettings.urlInvalid':
+    'Должен быть HTTP(S)-источником без пути, напр. http://hbbs:21120',
+  'pages.serverManagementSettings.urlHelp':
+    'HTTP(S)-источник API управления hbbs. Оставьте пустым, чтобы отключить управление серверами.',
+  'pages.serverManagementSettings.token': 'Токен управления',
+  'pages.serverManagementSettings.tokenRequired':
+    'При указании URL требуется токен управления',
+  'pages.serverManagementSettings.tokenTooShort':
+    'Токен должен содержать не менее 32 символов',
+  'pages.serverManagementSettings.tokenHelp':
+    'Общий секрет, настроенный на hbbs/hbbr (RD_MANAGEMENT_TOKEN). Введите ******, чтобы оставить сохранённый токен без изменений.',
+  'pages.serverManagementSettings.nodeId': 'ID узла',
+  'pages.serverManagementSettings.nodeIdRequired': 'Введите ID узла',
+  'pages.serverManagementSettings.nodeIdInvalid':
+    'Только буквы, цифры, дефисы и подчёркивания (макс. 64 символа)',
+  'pages.serverManagementSettings.nodeIdHelp':
+    'Идентификатор этого узла консоли, напр. rustdesk',
+  'pages.serverManagementSettings.nodeName': 'Название узла',
+  'pages.serverManagementSettings.nodeNameRequired': 'Введите название узла',
+  'pages.serverManagementSettings.nodeNameHelp':
+    'Отображаемое название этого узла консоли, напр. RustDesk',
+  'pages.serverManagementSettings.tokenSyncWarning':
+    'После изменения токена обновите SERVER_MANAGEMENT_TOKEN в файле .env для hbbs/hbbr и перезапустите их, чтобы обе стороны использовали один и тот же токен.',
+  'pages.serverManagementSettings.saveSuccess':
+    'Конфигурация управления серверами успешно сохранена',
+  'pages.serverManagementSettings.saveFailed':
+    'Не удалось сохранить конфигурацию управления серверами',
+  'pages.serverManagementSettings.createdAt': 'Дата создания',
+  'pages.serverManagementSettings.updatedAt': 'Дата обновления',
   'pages.nexus.repoRequired': 'Требуется взаимодействие с репозиторием',
   'pages.nexus.repoRequiredDesc':
     'Вам необходимо поставить Star, Fork или Watch на репозиторий databk/rustdesk-console на GitHub перед генерацией пользовательских клиентов. Обновление кеша может занять до 5 минут.',

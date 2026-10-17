@@ -86,6 +86,14 @@ export {
 } from './audit';
 export { getDashboard, getDashboardTrends } from './dashboard';
 export { getSMTPConfig, updateSMTPConfig, testSMTPConfig } from './smtp';
+export {
+  getWebClientSettings,
+  updateWebClientSettings,
+} from './webClientSettings';
+export {
+  getServerManagementSettings,
+  updateServerManagementSettings,
+} from './serverManagementSettings';
 export { getLdapConfig, updateLdapConfig, testLdapConfig } from './ldap';
 export {
   getOidcProviderList,

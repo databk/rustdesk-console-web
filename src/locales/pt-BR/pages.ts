@@ -1262,6 +1262,96 @@ export default {
   'pages.ldap.saveFailed': 'Falha ao salvar configuração LDAP',
   'pages.ldap.createdAt': 'Criado em',
   'pages.ldap.updatedAt': 'Atualizado em',
+  'pages.webClientSettings.title': 'Cliente Web',
+  'pages.webClientSettings.description':
+    'Configure o cliente de controle remoto baseado em navegador exposto pelo gateway do console',
+  'pages.webClientSettings.enabled': 'Ativar Cliente Web',
+  'pages.webClientSettings.enabledHelp':
+    'Quando ativado, a configuração abaixo deve estar completa e válida',
+  'pages.webClientSettings.allowedOrigin': 'Origem Permitida',
+  'pages.webClientSettings.allowedOriginRequired': 'Informe a origem permitida',
+  'pages.webClientSettings.allowedOriginInvalid':
+    'Deve ser uma origem HTTPS exata, ex.: https://console.example.com',
+  'pages.webClientSettings.allowedOriginHelp':
+    'Origem HTTPS exata do site autorizado a abrir o cliente web, ex.: https://console.example.com',
+  'pages.webClientSettings.idServerUrl': 'URL do Servidor ID',
+  'pages.webClientSettings.idServerUrlRequired': 'Informe a URL do servidor ID',
+  'pages.webClientSettings.idServerUrlInvalid': 'Deve ser uma URL wss://',
+  'pages.webClientSettings.idServerUrlHelp':
+    'URL WebSocket pública do servidor ID, ex.: wss://console.example.com/ws/id',
+  'pages.webClientSettings.relayServerUrl': 'URL do Servidor de Relay',
+  'pages.webClientSettings.relayServerUrlRequired':
+    'Informe a URL do servidor de relay',
+  'pages.webClientSettings.relayServerUrlInvalid': 'Deve ser uma URL wss://',
+  'pages.webClientSettings.relayServerUrlHelp':
+    'URL WebSocket pública do servidor de relay, ex.: wss://console.example.com/ws/relay',
+  'pages.webClientSettings.serverPublicKey': 'Chave Pública do Servidor',
+  'pages.webClientSettings.serverPublicKeyRequired':
+    'Informe a chave pública do servidor',
+  'pages.webClientSettings.serverPublicKeyInvalid':
+    'Deve ser uma chave de 32 bytes codificada em base64 (igual ao par de chaves do hbbs/hbbr)',
+  'pages.webClientSettings.serverPublicKeyHelp':
+    'Chave pública de 32 bytes codificada em base64 gerada pelo hbbs/hbbr (conteúdo do arquivo id_ed25519.pub)',
+  'pages.webClientSettings.upstreamTitle': 'Upstreams Internos (Opcional)',
+  'pages.webClientSettings.upstreamHelp':
+    'Endpoints WebSocket internos para os quais o gateway faz proxy. Deixe em branco para usar os padrões do gateway do console.',
+  'pages.webClientSettings.idUpstreamUrl': 'URL de Upstream ID',
+  'pages.webClientSettings.idUpstreamUrlInvalid':
+    'Deve ser uma URL ws:// ou wss://',
+  'pages.webClientSettings.relayUpstreamUrl': 'URL de Upstream de Relay',
+  'pages.webClientSettings.relayUpstreamUrlInvalid':
+    'Deve ser uma URL ws:// ou wss://',
+  'pages.webClientSettings.saveSuccess':
+    'Configuração do cliente web salva com sucesso',
+  'pages.webClientSettings.saveFailed':
+    'Falha ao salvar a configuração do cliente web',
+  'pages.webClientSettings.createdAt': 'Criado em',
+  'pages.webClientSettings.updatedAt': 'Atualizado em',
+  'pages.webClientSettings.validation.idServerUrl':
+    'URL do servidor ID inválida',
+  'pages.webClientSettings.validation.relayServerUrl':
+    'URL do servidor de relay inválida',
+  'pages.webClientSettings.validation.serverPublicKey':
+    'Chave pública do servidor inválida',
+  'pages.webClientSettings.validation.allowedOrigin':
+    'Origem permitida inválida',
+  'pages.webClientSettings.validation.idUpstreamUrl':
+    'URL de upstream ID inválida',
+  'pages.webClientSettings.validation.relayUpstreamUrl':
+    'URL de upstream de relay inválida',
+  'pages.serverManagementSettings.title': 'Gerenciamento de Servidores',
+  'pages.serverManagementSettings.description':
+    'Configure como o console se conecta à API de gerenciamento do hbbs/hbbr',
+  'pages.serverManagementSettings.url': 'URL da API de Gerenciamento',
+  'pages.serverManagementSettings.urlInvalid':
+    'Deve ser uma origem HTTP(S) sem caminho, ex.: http://hbbs:21120',
+  'pages.serverManagementSettings.urlHelp':
+    'Origem HTTP(S) da API de gerenciamento do hbbs. Deixe em branco para desativar o gerenciamento de servidores.',
+  'pages.serverManagementSettings.token': 'Token de Gerenciamento',
+  'pages.serverManagementSettings.tokenRequired':
+    'Um token de gerenciamento é necessário quando uma URL é definida',
+  'pages.serverManagementSettings.tokenTooShort':
+    'O token deve conter pelo menos 32 caracteres',
+  'pages.serverManagementSettings.tokenHelp':
+    'Segredo compartilhado configurado no hbbs/hbbr (RD_MANAGEMENT_TOKEN). Digite ****** para manter o token armazenado inalterado.',
+  'pages.serverManagementSettings.nodeId': 'ID do Nó',
+  'pages.serverManagementSettings.nodeIdRequired': 'Informe um ID de nó',
+  'pages.serverManagementSettings.nodeIdInvalid':
+    'Apenas letras, números, hífens e sublinhados (máx. 64 caracteres)',
+  'pages.serverManagementSettings.nodeIdHelp':
+    'Identificador deste nó do console, ex.: rustdesk',
+  'pages.serverManagementSettings.nodeName': 'Nome do Nó',
+  'pages.serverManagementSettings.nodeNameRequired': 'Informe um nome de nó',
+  'pages.serverManagementSettings.nodeNameHelp':
+    'Nome de exibição deste nó do console, ex.: RustDesk',
+  'pages.serverManagementSettings.tokenSyncWarning':
+    'Após alterar o token, atualize o SERVER_MANAGEMENT_TOKEN no arquivo .env do hbbs/hbbr e reinicie-os para que ambos os lados usem o mesmo token.',
+  'pages.serverManagementSettings.saveSuccess':
+    'Configuração de gerenciamento de servidores salva com sucesso',
+  'pages.serverManagementSettings.saveFailed':
+    'Falha ao salvar a configuração de gerenciamento de servidores',
+  'pages.serverManagementSettings.createdAt': 'Criado em',
+  'pages.serverManagementSettings.updatedAt': 'Atualizado em',
   'pages.nexus.repoRequired': 'Interação com Repositório Necessária',
   'pages.nexus.repoRequiredDesc':
     'Você precisa dar Star, Fork ou Watch no repositório databk/rustdesk-console no GitHub antes de gerar clientes personalizados. Pode levar até 5 minutos para o cache ser atualizado.',

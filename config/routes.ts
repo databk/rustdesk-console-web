@@ -227,6 +227,18 @@ export default [
         path: '/settings/ldap',
         component: './settings/ldap',
       },
+      {
+        name: 'webClient',
+        icon: 'global',
+        path: '/settings/web-client',
+        component: './settings/web-client',
+      },
+      {
+        name: 'serverManagement',
+        icon: 'cloudServer',
+        path: '/settings/server-management',
+        component: './settings/server-management',
+      },
     ],
   },
   {

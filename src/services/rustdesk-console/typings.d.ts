@@ -959,6 +959,54 @@ declare namespace API {
     message: string;
   };
 
+  // ── Web Client Settings ─────────────────────────────────────────
+
+  type WebClientSettings = {
+    enabled: boolean;
+    idServerUrl: string;
+    relayServerUrl: string;
+    serverPublicKey: string;
+    allowedOrigin: string;
+    idUpstreamUrl: string;
+    relayUpstreamUrl: string;
+    createdAt?: string;
+    updatedAt?: string;
+  };
+
+  type UpdateWebClientSettingsParams = {
+    enabled?: boolean;
+    idServerUrl?: string;
+    relayServerUrl?: string;
+    serverPublicKey?: string;
+    allowedOrigin?: string;
+    idUpstreamUrl?: string;
+    relayUpstreamUrl?: string;
+  };
+
+  type WebClientSettingsIssue = {
+    field: string;
+    message: string;
+  };
+
+  // ── Server Management Settings ──────────────────────────────────
+
+  type ServerManagementSettings = {
+    url: string;
+    token: string;
+    nodeId: string;
+    nodeName: string;
+    configured: boolean;
+    createdAt?: string;
+    updatedAt?: string;
+  };
+
+  type UpdateServerManagementSettingsParams = {
+    url?: string;
+    token?: string;
+    nodeId?: string;
+    nodeName?: string;
+  };
+
   // ── OIDC Provider ───────────────────────────────────────────────
 
   type OidcProviderType = 'oidc' | 'oauth2';

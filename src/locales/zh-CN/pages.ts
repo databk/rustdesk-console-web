@@ -1098,6 +1098,80 @@ export default {
   'pages.ldap.saveFailed': 'LDAP 配置保存失败',
   'pages.ldap.createdAt': '创建时间',
   'pages.ldap.updatedAt': '更新时间',
+  'pages.webClientSettings.title': '网页客户端',
+  'pages.webClientSettings.description':
+    '配置控制台网关对外提供的浏览器远控客户端',
+  'pages.webClientSettings.enabled': '启用网页客户端',
+  'pages.webClientSettings.enabledHelp': '启用后，下方配置必须完整且有效',
+  'pages.webClientSettings.allowedOrigin': '允许的来源（Origin）',
+  'pages.webClientSettings.allowedOriginRequired': '请输入允许的来源',
+  'pages.webClientSettings.allowedOriginInvalid':
+    '必须是精确的 HTTPS origin，例如 https://console.example.com',
+  'pages.webClientSettings.allowedOriginHelp':
+    '允许打开网页客户端的站点 HTTPS origin，例如 https://console.example.com',
+  'pages.webClientSettings.idServerUrl': 'ID 服务器地址',
+  'pages.webClientSettings.idServerUrlRequired': '请输入 ID 服务器地址',
+  'pages.webClientSettings.idServerUrlInvalid': '必须是 wss:// 地址',
+  'pages.webClientSettings.idServerUrlHelp':
+    'ID 服务器的公网 WebSocket 地址，例如 wss://console.example.com/ws/id',
+  'pages.webClientSettings.relayServerUrl': '中继服务器地址',
+  'pages.webClientSettings.relayServerUrlRequired': '请输入中继服务器地址',
+  'pages.webClientSettings.relayServerUrlInvalid': '必须是 wss:// 地址',
+  'pages.webClientSettings.relayServerUrlHelp':
+    '中继服务器的公网 WebSocket 地址，例如 wss://console.example.com/ws/relay',
+  'pages.webClientSettings.serverPublicKey': '服务器公钥',
+  'pages.webClientSettings.serverPublicKeyRequired': '请输入服务器公钥',
+  'pages.webClientSettings.serverPublicKeyInvalid':
+    '必须是 base64 编码的 32 字节密钥（与 hbbs/hbbr 密钥对一致）',
+  'pages.webClientSettings.serverPublicKeyHelp':
+    'hbbs/hbbr 生成的 base64 编码 32 字节公钥（id_ed25519.pub 文件内容）',
+  'pages.webClientSettings.upstreamTitle': '内部上游端点（可选）',
+  'pages.webClientSettings.upstreamHelp':
+    '网关代理转发的内部 WebSocket 端点，留空则使用控制台网关默认值。',
+  'pages.webClientSettings.idUpstreamUrl': 'ID 上游地址',
+  'pages.webClientSettings.idUpstreamUrlInvalid': '必须是 ws:// 或 wss:// 地址',
+  'pages.webClientSettings.relayUpstreamUrl': '中继上游地址',
+  'pages.webClientSettings.relayUpstreamUrlInvalid':
+    '必须是 ws:// 或 wss:// 地址',
+  'pages.webClientSettings.saveSuccess': '网页客户端配置保存成功',
+  'pages.webClientSettings.saveFailed': '网页客户端配置保存失败',
+  'pages.webClientSettings.createdAt': '创建时间',
+  'pages.webClientSettings.updatedAt': '更新时间',
+  'pages.webClientSettings.validation.idServerUrl': 'ID 服务器地址无效',
+  'pages.webClientSettings.validation.relayServerUrl': '中继服务器地址无效',
+  'pages.webClientSettings.validation.serverPublicKey': '服务器公钥无效',
+  'pages.webClientSettings.validation.allowedOrigin': '允许的来源无效',
+  'pages.webClientSettings.validation.idUpstreamUrl': 'ID 上游地址无效',
+  'pages.webClientSettings.validation.relayUpstreamUrl': '中继上游地址无效',
+  'pages.serverManagementSettings.title': '服务器管理连接',
+  'pages.serverManagementSettings.description':
+    '配置控制台与 hbbs/hbbr 管理接口的连接方式',
+  'pages.serverManagementSettings.url': '管理接口地址',
+  'pages.serverManagementSettings.urlInvalid':
+    '必须是不带路径的 HTTP(S) origin，例如 http://hbbs:21120',
+  'pages.serverManagementSettings.urlHelp':
+    'hbbs 管理接口的 HTTP(S) origin，留空表示禁用服务器管理。',
+  'pages.serverManagementSettings.token': '管理令牌',
+  'pages.serverManagementSettings.tokenRequired': '设置地址时必须填写管理令牌',
+  'pages.serverManagementSettings.tokenTooShort': '令牌长度至少 32 个字符',
+  'pages.serverManagementSettings.tokenHelp':
+    '与 hbbs/hbbr 一致的共享密钥（RD_MANAGEMENT_TOKEN），输入 ****** 表示保持已存储的令牌不变。',
+  'pages.serverManagementSettings.nodeId': '节点 ID',
+  'pages.serverManagementSettings.nodeIdRequired': '请输入节点 ID',
+  'pages.serverManagementSettings.nodeIdInvalid':
+    '仅允许字母、数字、连字符和下划线（最长 64 个字符）',
+  'pages.serverManagementSettings.nodeIdHelp':
+    '当前控制台节点的标识，例如 rustdesk',
+  'pages.serverManagementSettings.nodeName': '节点名称',
+  'pages.serverManagementSettings.nodeNameRequired': '请输入节点名称',
+  'pages.serverManagementSettings.nodeNameHelp':
+    '当前控制台节点的显示名称，例如 RustDesk',
+  'pages.serverManagementSettings.tokenSyncWarning':
+    '修改令牌后，请同步更新 hbbs/hbbr 的 .env 文件中的 SERVER_MANAGEMENT_TOKEN 并重启服务，确保两侧令牌一致。',
+  'pages.serverManagementSettings.saveSuccess': '服务器管理配置保存成功',
+  'pages.serverManagementSettings.saveFailed': '服务器管理配置保存失败',
+  'pages.serverManagementSettings.createdAt': '创建时间',
+  'pages.serverManagementSettings.updatedAt': '更新时间',
   'pages.nexus.repoRequired': '需要仓库互动',
   'pages.nexus.repoRequiredDesc':
     '您需要对 databk/rustdesk-console GitHub 仓库进行 Star、Fork 或 Watch 操作后才能生成自定义客户端。操作后最长需等待 5 分钟缓存刷新。',
