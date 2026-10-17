@@ -1,6 +1,6 @@
 import { LockOutlined } from '@ant-design/icons';
 import { Helmet, history, useIntl } from '@umijs/max';
-import { App, Button, Form, Input, Typography } from 'antd';
+import { App, Button, Form, Input, Spin, Typography } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
 import { createStyles } from 'antd-style';
 import { Footer } from '@/components';
@@ -86,6 +86,9 @@ const ResetPassword: React.FC = () => {
       return;
     }
     setToken(urlToken);
+    // Remove the one-time token from the address bar so it cannot leak
+    // through the Referer header to third-party hosts loaded by this page.
+    window.history.replaceState(null, '', window.location.pathname);
     (async () => {
       try {
         const info = await validateResetToken({ token: urlToken });
@@ -308,7 +311,13 @@ const ResetPassword: React.FC = () => {
       </Helmet>
       <Lang />
       <div style={{ flex: 1, display: 'flex', alignItems: 'center' }}>
-        {status === 'invalid' ? renderInvalid() : renderReady()}
+        {status === 'validating' ? (
+          <Spin size="large" style={{ margin: 'auto' }} />
+        ) : status === 'invalid' ? (
+          renderInvalid()
+        ) : (
+          renderReady()
+        )}
       </div>
       <Footer />
     </div>

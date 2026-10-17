@@ -87,7 +87,7 @@ const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
       okButtonProps={{ loading: submitting }}
       onOk={sent ? handleClose : handleSubmit}
       onCancel={handleClose}
-      destroyOnClose
+      destroyOnHidden
     >
       {sent ? (
         <Typography.Paragraph>
