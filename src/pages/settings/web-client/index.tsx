@@ -2,6 +2,7 @@ import { GlobalOutlined, SaveOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
 import { useIntl, FormattedMessage } from '@umijs/max';
 import {
+  Alert,
   Button,
   Card,
   Descriptions,
@@ -85,6 +86,7 @@ const WebClientSettings: React.FC = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [loadFailed, setLoadFailed] = useState(false);
   const [configExists, setConfigExists] = useState(false);
   const [configInfo, setConfigInfo] = useState<{
     createdAt?: string;
@@ -99,6 +101,7 @@ const WebClientSettings: React.FC = () => {
     try {
       setLoading(true);
       const config = await getWebClientSettings();
+      setLoadFailed(false);
       setConfigExists(true);
       setConfigInfo({
         createdAt: config.createdAt,
@@ -118,9 +121,10 @@ const WebClientSettings: React.FC = () => {
       if (error?.response?.status === 404) {
         // 404 means no config exists yet, which is normal; no error toast needed
         setConfigExists(false);
+        setLoadFailed(false);
       } else {
-        // Rethrow other errors for the global error handler
-        throw error;
+        // Block saving so a failed load cannot wipe an existing configuration.
+        setLoadFailed(true);
       }
     } finally {
       setLoading(false);
@@ -154,7 +158,7 @@ const WebClientSettings: React.FC = () => {
         return;
       }
       const issues: API.WebClientSettingsIssue[] | undefined =
-        error?.data?.issues;
+        error?.response?.data?.issues;
       if (Array.isArray(issues) && issues.length > 0) {
         form.setFields(
           issues.map((item) => ({
@@ -212,13 +216,39 @@ const WebClientSettings: React.FC = () => {
             type="primary"
             onClick={handleSave}
             loading={saving}
-            disabled={loading}
+            disabled={loading || loadFailed}
           >
             <FormattedMessage id="pages.common.save" defaultMessage="Save" />
           </Button>
         }
       >
         <Spin spinning={loading}>
+          {loadFailed && (
+            <Alert
+              type="error"
+              showIcon
+              message={
+                <FormattedMessage
+                  id="pages.webClientSettings.loadFailed"
+                  defaultMessage="Failed to load the web client configuration"
+                />
+              }
+              action={
+                <Button
+                  size="small"
+                  danger
+                  onClick={fetchConfig}
+                  disabled={loading}
+                >
+                  <FormattedMessage
+                    id="pages.common.retry"
+                    defaultMessage="Retry"
+                  />
+                </Button>
+              }
+              style={{ marginBottom: 24 }}
+            />
+          )}
           <p style={{ color: '#666', marginBottom: 24 }}>
             <FormattedMessage
               id="pages.webClientSettings.description"
@@ -230,6 +260,7 @@ const WebClientSettings: React.FC = () => {
             form={form}
             layout="vertical"
             initialValues={{ enabled: false }}
+            disabled={loadFailed}
           >
             <Form.Item
               name="enabled"

@@ -661,6 +661,7 @@ export default {
   'pages.common.enterDescription': 'Saisir une description',
   'pages.common.rename': 'Renommer',
   'pages.common.save': 'Enregistrer',
+  'pages.common.retry': 'Réessayer',
   'pages.userGroups.enterName': 'Saisir le nom du groupe',
   'pages.users.admin': 'Admin',
   'pages.users.me': 'Moi',
@@ -951,6 +952,8 @@ export default {
     'Configuration du client Web enregistrée avec succès',
   'pages.webClientSettings.saveFailed':
     "Échec de l'enregistrement de la configuration du client Web",
+  'pages.webClientSettings.loadFailed':
+    'Échec du chargement de la configuration du client Web',
   'pages.webClientSettings.createdAt': 'Créé le',
   'pages.webClientSettings.updatedAt': 'Mis à jour le',
   'pages.webClientSettings.validation.idServerUrl':
@@ -998,6 +1001,8 @@ export default {
     'Configuration de la gestion des serveurs enregistrée avec succès',
   'pages.serverManagementSettings.saveFailed':
     "Échec de l'enregistrement de la configuration de la gestion des serveurs",
+  'pages.serverManagementSettings.loadFailed':
+    'Échec du chargement de la configuration de la gestion des serveurs',
   'pages.serverManagementSettings.createdAt': 'Créé le',
   'pages.serverManagementSettings.updatedAt': 'Mis à jour le',
   'pages.nexus.repoRequired': 'Interaction avec le dépôt requise',

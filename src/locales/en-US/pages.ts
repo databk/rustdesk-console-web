@@ -970,6 +970,7 @@ export default {
   'pages.common.enterDescription': 'Enter description',
   'pages.common.rename': 'Rename',
   'pages.common.save': 'Save',
+  'pages.common.retry': 'Retry',
   'pages.common.close': 'Close',
   'pages.common.back': 'Back',
   'pages.userGroups.enterName': 'Enter group name',
@@ -1244,6 +1245,8 @@ export default {
     'Web client configuration saved successfully',
   'pages.webClientSettings.saveFailed':
     'Failed to save web client configuration',
+  'pages.webClientSettings.loadFailed':
+    'Failed to load the web client configuration',
   'pages.webClientSettings.createdAt': 'Created At',
   'pages.webClientSettings.updatedAt': 'Updated At',
   'pages.webClientSettings.validation.idServerUrl': 'Invalid ID server URL',
@@ -1286,6 +1289,8 @@ export default {
     'Server management configuration saved successfully',
   'pages.serverManagementSettings.saveFailed':
     'Failed to save server management configuration',
+  'pages.serverManagementSettings.loadFailed':
+    'Failed to load the server management configuration',
   'pages.serverManagementSettings.createdAt': 'Created At',
   'pages.serverManagementSettings.updatedAt': 'Updated At',
   'pages.nexus.repoRequired': 'Repository Interaction Required',

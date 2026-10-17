@@ -1029,6 +1029,7 @@ export default {
   'pages.common.enterDescription': 'Informe uma descrição',
   'pages.common.rename': 'Renomear',
   'pages.common.save': 'Salvar',
+  'pages.common.retry': 'Tentar novamente',
   'pages.common.close': 'Fechar',
   'pages.common.back': 'Voltar',
   'pages.userGroups.enterName': 'Informe o nome do grupo',
@@ -1305,6 +1306,8 @@ export default {
     'Configuração do cliente web salva com sucesso',
   'pages.webClientSettings.saveFailed':
     'Falha ao salvar a configuração do cliente web',
+  'pages.webClientSettings.loadFailed':
+    'Falha ao carregar a configuração do cliente web',
   'pages.webClientSettings.createdAt': 'Criado em',
   'pages.webClientSettings.updatedAt': 'Atualizado em',
   'pages.webClientSettings.validation.idServerUrl':
@@ -1350,6 +1353,8 @@ export default {
     'Configuração de gerenciamento de servidores salva com sucesso',
   'pages.serverManagementSettings.saveFailed':
     'Falha ao salvar a configuração de gerenciamento de servidores',
+  'pages.serverManagementSettings.loadFailed':
+    'Falha ao carregar a configuração de gerenciamento de servidores',
   'pages.serverManagementSettings.createdAt': 'Criado em',
   'pages.serverManagementSettings.updatedAt': 'Atualizado em',
   'pages.nexus.repoRequired': 'Interação com Repositório Necessária',

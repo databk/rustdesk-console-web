@@ -1024,6 +1024,7 @@ export default {
   'pages.common.enterDescription': 'Введите описание',
   'pages.common.rename': 'Переименовать',
   'pages.common.save': 'Сохранить',
+  'pages.common.retry': 'Повторить',
   'pages.common.close': 'Закрыть',
   'pages.common.back': 'Назад',
   'pages.userGroups.enterName': 'Введите название группы',
@@ -1309,6 +1310,8 @@ export default {
     'Конфигурация веб-клиента успешно сохранена',
   'pages.webClientSettings.saveFailed':
     'Не удалось сохранить конфигурацию веб-клиента',
+  'pages.webClientSettings.loadFailed':
+    'Не удалось загрузить конфигурацию веб-клиента',
   'pages.webClientSettings.createdAt': 'Дата создания',
   'pages.webClientSettings.updatedAt': 'Дата обновления',
   'pages.webClientSettings.validation.idServerUrl':
@@ -1354,6 +1357,8 @@ export default {
     'Конфигурация управления серверами успешно сохранена',
   'pages.serverManagementSettings.saveFailed':
     'Не удалось сохранить конфигурацию управления серверами',
+  'pages.serverManagementSettings.loadFailed':
+    'Не удалось загрузить конфигурацию управления серверами',
   'pages.serverManagementSettings.createdAt': 'Дата создания',
   'pages.serverManagementSettings.updatedAt': 'Дата обновления',
   'pages.nexus.repoRequired': 'Требуется взаимодействие с репозиторием',

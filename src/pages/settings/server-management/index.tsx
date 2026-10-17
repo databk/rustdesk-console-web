@@ -51,6 +51,7 @@ const ServerManagementSettings: React.FC = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [loadFailed, setLoadFailed] = useState(false);
   const [configured, setConfigured] = useState(false);
   const [configInfo, setConfigInfo] = useState<{
     createdAt?: string;
@@ -65,6 +66,7 @@ const ServerManagementSettings: React.FC = () => {
     try {
       setLoading(true);
       const config = await getServerManagementSettings();
+      setLoadFailed(false);
       setConfigured(config.configured);
       setConfigInfo({
         createdAt: config.createdAt,
@@ -78,6 +80,8 @@ const ServerManagementSettings: React.FC = () => {
       });
     } catch (error) {
       console.error('Failed to fetch server management settings:', error);
+      // Block saving so a failed load cannot disable an existing connection.
+      setLoadFailed(true);
     } finally {
       setLoading(false);
     }
@@ -109,7 +113,7 @@ const ServerManagementSettings: React.FC = () => {
         return;
       }
       messageApi.error(
-        error?.data?.message ||
+        error?.response?.data?.message ||
           intl.formatMessage({
             id: 'pages.serverManagementSettings.saveFailed',
             defaultMessage: 'Failed to save server management configuration',
@@ -138,13 +142,39 @@ const ServerManagementSettings: React.FC = () => {
             type="primary"
             onClick={handleSave}
             loading={saving}
-            disabled={loading}
+            disabled={loading || loadFailed}
           >
             <FormattedMessage id="pages.common.save" defaultMessage="Save" />
           </Button>
         }
       >
         <Spin spinning={loading}>
+          {loadFailed && (
+            <Alert
+              type="error"
+              showIcon
+              message={
+                <FormattedMessage
+                  id="pages.serverManagementSettings.loadFailed"
+                  defaultMessage="Failed to load the server management configuration"
+                />
+              }
+              action={
+                <Button
+                  size="small"
+                  danger
+                  onClick={fetchConfig}
+                  disabled={loading}
+                >
+                  <FormattedMessage
+                    id="pages.common.retry"
+                    defaultMessage="Retry"
+                  />
+                </Button>
+              }
+              style={{ marginBottom: 24 }}
+            />
+          )}
           <p style={{ color: '#666', marginBottom: 24 }}>
             <FormattedMessage
               id="pages.serverManagementSettings.description"
@@ -155,6 +185,7 @@ const ServerManagementSettings: React.FC = () => {
           <Form
             form={form}
             layout="vertical"
+            disabled={loadFailed}
             initialValues={{
               url: '',
               token: '',
