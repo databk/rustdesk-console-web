@@ -1,12 +1,6 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { useIntl } from '@umijs/max';
-import {
-  App,
-  Form,
-  Input,
-  Modal,
-  Typography,
-} from 'antd';
+import { App, Form, Input, Modal, Typography } from 'antd';
 import React, { useState } from 'react';
 import { requestPasswordReset } from '@/services/rustdesk-console/auth';
 

@@ -257,8 +257,7 @@ const ResetPassword: React.FC = () => {
                   new Error(
                     intl.formatMessage({
                       id: 'pages.resetPassword.passwordMismatch',
-                      defaultMessage:
-                        'The two passwords do not match',
+                      defaultMessage: 'The two passwords do not match',
                     }),
                   ),
                 );

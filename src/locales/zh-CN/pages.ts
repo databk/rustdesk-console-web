@@ -47,7 +47,8 @@ export default {
   'pages.login.forgotPassword.sent':
     '若该账号存在且绑定了邮箱，密码重置链接已发送，请查收（链接 30 分钟内有效）。',
   'pages.login.forgotPassword.failed': '发送重置邮件失败',
-  'pages.login.forgotPassword.contactAdmin': '未绑定邮箱的账号请联系管理员处理。',
+  'pages.login.forgotPassword.contactAdmin':
+    '未绑定邮箱的账号请联系管理员处理。',
   'pages.resetPassword.title': '设置新密码',
   'pages.resetPassword.subtitle': '正在为 {account} 设置新密码',
   'pages.resetPassword.newPassword': '新密码',

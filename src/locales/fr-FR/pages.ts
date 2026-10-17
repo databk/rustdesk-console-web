@@ -69,11 +69,10 @@ export default {
   'pages.resetPassword.submit': 'Réinitialiser le mot de passe',
   'pages.resetPassword.success':
     'Le mot de passe a été réinitialisé avec succès. Redirection vers la connexion...',
-  'pages.resetPassword.failed':
-    'Échec de la réinitialisation du mot de passe',
+  'pages.resetPassword.failed': 'Échec de la réinitialisation du mot de passe',
   'pages.resetPassword.invalid.title': 'Lien invalide ou expiré',
   'pages.resetPassword.invalid.description':
-    "Ce lien de réinitialisation est invalide, a déjà été utilisé ou a expiré. Veuillez en demander un nouveau.",
+    'Ce lien de réinitialisation est invalide, a déjà été utilisé ou a expiré. Veuillez en demander un nouveau.',
   'pages.resetPassword.backToLogin': 'Retour à la connexion',
   'pages.login.submit': 'Se connecter',
   'pages.login.back': 'Retour',

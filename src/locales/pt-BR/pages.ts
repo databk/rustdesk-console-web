@@ -52,8 +52,7 @@ export default {
   'pages.login.forgotPassword.title': 'Redefinir Senha',
   'pages.login.forgotPassword.description':
     'Informe seu nome de usuário ou endereço de e-mail e enviaremos um link de redefinição de senha.',
-  'pages.login.forgotPassword.accountPlaceholder':
-    'Nome de usuário ou e-mail',
+  'pages.login.forgotPassword.accountPlaceholder': 'Nome de usuário ou e-mail',
   'pages.login.forgotPassword.accountRequired':
     'Por favor, informe seu nome de usuário ou e-mail',
   'pages.login.forgotPassword.send': 'Enviar Link',
