@@ -620,7 +620,6 @@ const Login: React.FC = () => {
                   })}
                 </a>
               </div>
-
             </div>
           )}
 

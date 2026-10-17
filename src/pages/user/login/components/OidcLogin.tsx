@@ -65,7 +65,6 @@ const OidcLogin: React.FC<OidcLoginProps> = ({ options, loading }) => {
 
   return (
     <div className={styles.oidcSection}>
-
       {options.map((item) => {
         return (
           <Button
