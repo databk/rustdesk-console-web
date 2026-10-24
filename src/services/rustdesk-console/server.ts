@@ -13,6 +13,9 @@ export interface ServiceStatus {
     version: string;
     uptime_seconds: number;
     public_key?: string;
+    address?: string | null;
+    sessions_count?: number;
+    last_heartbeat_age_seconds?: number;
   } | null;
 }
 export interface ServerNode {
@@ -20,6 +23,7 @@ export interface ServerNode {
   name: string;
   reachable: boolean;
   local?: boolean;
+  relay?: boolean;
   services: ServiceStatus[];
 }
 export interface ServerPeer {
@@ -33,6 +37,7 @@ export interface ServerPeer {
 }
 export interface RelaySession {
   uuid: string;
+  relay_id?: string;
   target_id: string;
   peer_target_id: string;
   endpoints: string[];
@@ -47,6 +52,7 @@ export interface ServerConfig {
   effective_values: Record<string, string> | null;
   available: boolean;
   pending_restart: boolean;
+  pending_restart_detail?: Record<string, { current: string; pending: string }>;
   schema: {
     name: string;
     default: string;
