@@ -36,6 +36,7 @@ const profile = {
 };
 let mockConfiguration: WebClientConfiguration | undefined = profile;
 let mockAccount: string | undefined;
+let mockSearch = '?id=123456789';
 let mockOwner: { guid: string } | undefined;
 function mockCurrentUser() {
   if (!mockAccount) return undefined;
@@ -82,7 +83,7 @@ jest.mock('@umijs/max', () => ({
       defaultMessage: string;
     }) => mockTranslations[id] ?? defaultMessage,
   }),
-  useLocation: () => ({ search: '?id=123456789' }),
+  useLocation: () => ({ search: mockSearch }),
   useModel: (name: string) =>
     name === '@@initialState'
       ? {
@@ -358,6 +359,7 @@ test('服务端拒绝目标时显示授权错误，不打开原生连接', async
   expect(document.querySelector('[data-session-state="failed"]')).toBeTruthy();
 });
 beforeEach(() => {
+  mockSearch = '?id=123456789';
   mockConfiguration = profile;
   mockAccount = 'fixture-account';
   mockPermissions = ['web_client.connect', 'web_client.file_transfer'];
@@ -385,6 +387,156 @@ beforeEach(() => {
     clearRect: mockClear,
     drawImage: mockDraw,
   } as unknown as CanvasRenderingContext2D);
+});
+
+test('an explicit connect link waits for the worker, then starts exactly once', async () => {
+  mockSearch = '?id=123456789&connect=1';
+  render(React.createElement(WebClientPage));
+  await waitFor(() => expect(worker.onmessage).toBeDefined());
+  expect(mockAuthorize).not.toHaveBeenCalled();
+  worker.emit({
+    type: 'ready',
+    secureContext: true,
+    videoDecoder: true,
+    generation: 0,
+  });
+  await waitFor(() => expect(mockAuthorize).toHaveBeenCalledWith('123456789'));
+  await waitFor(() =>
+    expect(
+      worker.postMessage.mock.calls.some(
+        ([message]) => message.type === 'connect' && message.id === '123456789',
+      ),
+    ).toBe(true),
+  );
+  worker.emit({
+    type: 'ready',
+    secureContext: true,
+    videoDecoder: true,
+    generation: 0,
+  });
+  expect(mockAuthorize).toHaveBeenCalledTimes(1);
+});
+
+test('a plain ID link only prefills the field', async () => {
+  render(React.createElement(WebClientPage));
+  await waitFor(() => expect(worker.onmessage).toBeDefined());
+  worker.emit({
+    type: 'ready',
+    secureContext: true,
+    videoDecoder: true,
+    generation: 0,
+  });
+  await act(async () => {});
+  expect(mockAuthorize).not.toHaveBeenCalled();
+});
+
+test('cancelling automatic authorization consumes the link and disposes a late grant', async () => {
+  mockSearch = '?id=123456789&connect=1';
+  let finish!: (value: ReturnType<typeof mockGrant>) => void;
+  mockAuthorize.mockReturnValueOnce(
+    new Promise((resolve) => {
+      finish = resolve;
+    }),
+  );
+  render(React.createElement(WebClientPage));
+  await waitFor(() => expect(worker.onmessage).toBeDefined());
+  worker.emit({
+    type: 'ready',
+    secureContext: true,
+    videoDecoder: true,
+    generation: 0,
+  });
+  fireEvent.click(
+    await screen.findByRole('button', { name: 'Cancel connection' }),
+  );
+  await act(async () => finish(mockGrant()));
+  expect(mockEnd).toHaveBeenCalledWith('desktop-grant');
+  expect(mockAuthorize).toHaveBeenCalledTimes(1);
+  expect(
+    worker.postMessage.mock.calls.some(
+      ([message]) => message.type === 'connect',
+    ),
+  ).toBe(false);
+});
+
+test('failed automatic connection does not retry when the component rerenders', async () => {
+  mockSearch = '?id=123456789&connect=1';
+  mockAuthorize.mockRejectedValueOnce({ response: { status: 403 } });
+  const view = render(React.createElement(WebClientPage));
+  await waitFor(() => expect(worker.onmessage).toBeDefined());
+  worker.emit({
+    type: 'ready',
+    secureContext: true,
+    videoDecoder: true,
+    generation: 0,
+  });
+  await waitFor(() => expect(mockAuthorize).toHaveBeenCalledTimes(1));
+  await act(async () => {});
+  view.rerender(React.createElement(WebClientPage));
+  expect(mockAuthorize).toHaveBeenCalledTimes(1);
+});
+
+test('a new explicit target link can connect after cancelling the old request', async () => {
+  mockSearch = '?id=123456789&connect=1';
+  const view = render(React.createElement(WebClientPage));
+  await waitFor(() => expect(worker.onmessage).toBeDefined());
+  worker.emit({
+    type: 'ready',
+    secureContext: true,
+    videoDecoder: true,
+    generation: 0,
+  });
+  await waitFor(() => expect(mockAuthorize).toHaveBeenCalledWith('123456789'));
+  mockSearch = '?id=987654321&connect=1';
+  view.rerender(React.createElement(WebClientPage));
+  await waitFor(() =>
+    expect(mockAuthorize).toHaveBeenLastCalledWith('987654321'),
+  );
+  expect(mockAuthorize).toHaveBeenCalledTimes(2);
+});
+
+test('an automatic target is not carried into another account', async () => {
+  mockSearch = '?id=123456789&connect=1';
+  const view = render(React.createElement(WebClientPage));
+  await waitFor(() => expect(worker.onmessage).toBeDefined());
+  mockAccount = 'different-account';
+  view.rerender(React.createElement(WebClientPage));
+  await act(async () => {});
+  worker.emit({
+    type: 'ready',
+    secureContext: true,
+    videoDecoder: true,
+    generation: 0,
+  });
+  expect(mockAuthorize).not.toHaveBeenCalled();
+});
+
+test('automatic connection also waits for the initial account to load', async () => {
+  mockSearch = '?id=123456789&connect=1';
+  mockAccount = undefined;
+  const view = render(React.createElement(WebClientPage));
+  await act(async () => {});
+  expect(mockAuthorize).not.toHaveBeenCalled();
+  mockAccount = 'fixture-account';
+  view.rerender(React.createElement(WebClientPage));
+  await waitFor(() => expect(worker.onmessage).toBeDefined());
+  worker.emit({
+    type: 'ready',
+    secureContext: true,
+    videoDecoder: true,
+    generation: 0,
+  });
+  await waitFor(() => expect(mockAuthorize).toHaveBeenCalledWith('123456789'));
+  expect(mockAuthorize).toHaveBeenCalledTimes(1);
+});
+
+test('the automatic flag does not grant permission or start a worker', async () => {
+  mockSearch = '?id=123456789&connect=1';
+  mockPermissions = ['devices.view'];
+  render(React.createElement(WebClientPage));
+  await act(async () => {});
+  expect(mockCreateWorker).not.toHaveBeenCalled();
+  expect(mockAuthorize).not.toHaveBeenCalled();
 });
 afterEach(() => {
   cleanup();

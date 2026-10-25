@@ -110,6 +110,11 @@ export default function WebClientPage() {
   const account = initialState?.currentUser?.guid;
   const access = createAccess(initialState);
   const canConnect = !!account && access.canWebClientConnect;
+  const automaticConnection = useRef({
+    search: location.search,
+    account,
+    attempted: false,
+  });
   const grant = useRef(new GrantLifecycle(endWebClientSession));
   const grantPending = useRef(false);
   const authorizationContext = useRef({ account, configuration, canConnect });
@@ -355,6 +360,13 @@ export default function WebClientPage() {
   };
 
   useEffect(() => {
+    if (automaticConnection.current.search !== location.search) {
+      automaticConnection.current = {
+        search: location.search,
+        account,
+        attempted: false,
+      };
+    }
     setId(new URLSearchParams(location.search).get('id') || '');
     disconnect();
   }, [location.search]);
@@ -1017,6 +1029,8 @@ export default function WebClientPage() {
     )
       return;
     const context = authorizationContext.current;
+    // Any user-initiated attempt also consumes the pending automatic request.
+    automaticConnection.current.attempted = true;
     let attempt = 0;
     try {
       const target = normalizeTargetId(targetId);
@@ -1111,6 +1125,28 @@ export default function WebClientPage() {
       releaseGrant();
     }
   };
+  useEffect(() => {
+    const request = automaticConnection.current;
+    if (!request.account && account && !request.attempted) request.account = account;
+    // Do not carry an unconsumed link across an account change.
+    if (request.account !== account) request.attempted = true;
+    const query = new URLSearchParams(location.search);
+    const target = query.get('id');
+    if (
+      query.get('connect') !== '1' ||
+      !target?.trim() ||
+      request.attempted ||
+      !ready ||
+      !configuration?.enabled ||
+      !canConnect ||
+      activeSession ||
+      grantPending.current
+    )
+      return;
+    request.attempted = true;
+    void connect(target);
+  }, [location.search, account, ready, configuration, canConnect, activeSession]);
+
   const submit = () => {
     if (!password) return;
     post({ type: 'password', password, remember: rememberPassword });

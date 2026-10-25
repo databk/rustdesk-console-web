@@ -54,7 +54,7 @@ export const usePeerColumns = (
             )}
             {osIcon && <>&nbsp;&nbsp;</>}
             {record.id}
-            <WebClientDeviceLink id={record.id} />
+            <WebClientDeviceLink id={record.id} autoConnect />
           </span>
         );
       },
