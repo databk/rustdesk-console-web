@@ -1,6 +1,6 @@
 import { GlobalOutlined, SaveOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
-import { useIntl, FormattedMessage } from '@umijs/max';
+import { FormattedMessage, useIntl } from '@umijs/max';
 import {
   Alert,
   Button,
@@ -16,15 +16,15 @@ import {
 } from 'antd';
 import React, { useEffect, useState } from 'react';
 import {
-  getWebClientSettings,
-  updateWebClientSettings,
-} from '@/services/rustdesk-console';
-import {
   formatIceServersText,
   loadIceServers,
   parseIceServersText,
   saveIceServers,
 } from '@/features/web-client/core/ice-config';
+import {
+  getWebClientSettings,
+  updateWebClientSettings,
+} from '@/services/rustdesk-console';
 
 const UNSAFE_CHARS = /[\s\\?#]/;
 

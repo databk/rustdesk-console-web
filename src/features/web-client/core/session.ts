@@ -139,7 +139,8 @@ function raceTransports(
   fallbackDelayMs: number,
   webrtcEnabled: boolean,
 ): Promise<TransportRace> {
-  if (!webrtcEnabled) return relay.then((transport) => ({ transport, kind: 'relay' as const }));
+  if (!webrtcEnabled)
+    return relay.then((transport) => ({ transport, kind: 'relay' as const }));
   return new Promise<TransportRace>((resolve, reject) => {
     let settled = false;
     let webrtcResult:
@@ -172,12 +173,7 @@ function raceTransports(
         finish('relay', relayResult.value);
         return;
       }
-      if (
-        webrtcResult &&
-        !webrtcResult.ok &&
-        relayResult &&
-        !relayResult.ok
-      ) {
+      if (webrtcResult && !webrtcResult.ok && relayResult && !relayResult.ok) {
         failAll(webrtcResult.error);
       }
     };

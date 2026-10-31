@@ -2142,18 +2142,15 @@ test('WebRTC offer rides in the punch request and the DataChannel wins over rela
         channel.readyState = 'open';
         channel.onopen?.(new Event('open'));
       }, 0);
-      setTimeout(
-        () => {
-          const encoded = hbb.Message.encode({
-            signedId: { id: signed(box.publicKey, peer.privateKey) },
-          }).finish();
-          const copy = new Uint8Array(encoded);
-          channel.onmessage?.({
-            data: copy.buffer,
-          } as MessageEvent);
-        },
-        0,
-      );
+      setTimeout(() => {
+        const encoded = hbb.Message.encode({
+          signedId: { id: signed(box.publicKey, peer.privateKey) },
+        }).finish();
+        const copy = new Uint8Array(encoded);
+        channel.onmessage?.({
+          data: copy.buffer,
+        } as MessageEvent);
+      }, 0);
     },
     async addIceCandidate() {},
     close() {

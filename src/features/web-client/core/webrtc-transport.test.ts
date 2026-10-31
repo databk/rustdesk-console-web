@@ -97,7 +97,12 @@ function offerer() {
     [{ urls: 'stun:stun.example.test:3478' }],
     { RTCPeerConnection: Ctor },
   );
-  return { get pc() { return pc; }, instance };
+  return {
+    get pc() {
+      return pc;
+    },
+    instance,
+  };
 }
 
 test('createOffer opens a DataChannel and returns the SDP offer', async () => {
@@ -127,7 +132,9 @@ test('remote ICE candidates buffer before the answer and flush after', async () 
   await instance.addRemoteIce('candidate:a');
   await instance.addRemoteIce('candidate:b');
   expect(pc.addedIce).toHaveLength(0);
-  await instance.setRemoteAnswer('v=0\r\nm=application 9 UDP/DTLS/SCTP webrtc\r\n');
+  await instance.setRemoteAnswer(
+    'v=0\r\nm=application 9 UDP/DTLS/SCTP webrtc\r\n',
+  );
   expect(pc.addedIce.map((c) => c.candidate)).toEqual([
     'candidate:a',
     'candidate:b',

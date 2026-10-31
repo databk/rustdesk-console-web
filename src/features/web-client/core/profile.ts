@@ -49,7 +49,8 @@ export function normalizeIceServers(
   servers: IceServer[] | undefined,
 ): IceServer[] | undefined {
   if (!Array.isArray(servers) || servers.length === 0) return undefined;
-  if (servers.length > ICE_LIMITS.count) throw new SessionError('configuration');
+  if (servers.length > ICE_LIMITS.count)
+    throw new SessionError('configuration');
   const normalized: IceServer[] = [];
   for (const server of servers) {
     if (!server || typeof server !== 'object' || !validIceServer(server))

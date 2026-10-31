@@ -169,10 +169,7 @@ class DataChannelSocket implements TransportSocket {
     const fireClose = (code?: number) => {
       if (this.ended) return;
       this.ended = true;
-      this.onclose?.call(
-        this as unknown as WebSocket,
-        { code } as CloseEvent,
-      );
+      this.onclose?.call(this as unknown as WebSocket, { code } as CloseEvent);
     };
     channel.onopen = () =>
       this.onopen?.call(this as unknown as WebSocket, new Event('open'));

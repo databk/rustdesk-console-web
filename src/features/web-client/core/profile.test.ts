@@ -141,8 +141,14 @@ test('ICE servers are optional and validated when present', () => {
     { urls: 'stun: example.test' },
     { urls: 'stun:example.test?q=1' },
     { urls: `stun:${'x'.repeat(ICE_LIMITS.urls)}` },
-    { urls: 'stun:example.test', username: 'x'.repeat(ICE_LIMITS.credential + 1) },
-    { urls: 'stun:example.test', credential: 'x'.repeat(ICE_LIMITS.credential + 1) },
+    {
+      urls: 'stun:example.test',
+      username: 'x'.repeat(ICE_LIMITS.credential + 1),
+    },
+    {
+      urls: 'stun:example.test',
+      credential: 'x'.repeat(ICE_LIMITS.credential + 1),
+    },
     { urls: 123 },
   ]) {
     expect(() => normalizeIceServers([invalid as never])).toThrow(
@@ -150,6 +156,8 @@ test('ICE servers are optional and validated when present', () => {
     );
   }
   expect(() =>
-    normalizeIceServers(Array.from({ length: ICE_LIMITS.count + 1 }, () => stun)),
+    normalizeIceServers(
+      Array.from({ length: ICE_LIMITS.count + 1 }, () => stun),
+    ),
   ).toThrow('configuration');
 });

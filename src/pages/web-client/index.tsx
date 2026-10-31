@@ -18,14 +18,6 @@ import {
 } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import createAccess from '@/access';
-import { GrantLifecycle } from '@/features/web-client/core/grant-lifecycle';
-import {
-  createWebClientSession,
-  endWebClientSession,
-  reportWebClientEvent,
-  webClientHttpStatus,
-  handleWebClientAuthError,
-} from '@/services/rustdesk-console/webClient';
 import { IMAGE_LIMITS } from '@/features/web-client/clipboard/image';
 import {
   RemoteClipboardSync,
@@ -37,8 +29,9 @@ import type {
   DisplayOptions,
   Resolution,
 } from '@/features/web-client/core/display';
-import { normalizeTargetId } from '@/features/web-client/core/profile';
+import { GrantLifecycle } from '@/features/web-client/core/grant-lifecycle';
 import { loadIceServers } from '@/features/web-client/core/ice-config';
+import { normalizeTargetId } from '@/features/web-client/core/profile';
 import type { CredentialStatus } from '@/features/web-client/core/remembered-credentials';
 import type {
   SessionState,
@@ -65,11 +58,11 @@ import {
 } from '@/features/web-client/input/touch';
 import { AudioPlayer } from '@/features/web-client/media/audio-player';
 import { RemoteCursor } from '@/features/web-client/media/cursor';
-import { supportsTrueColor } from '@/features/web-client/media/video-codecs';
 import {
   type QualityReading,
   QualitySampler,
 } from '@/features/web-client/media/quality-metrics';
+import { supportsTrueColor } from '@/features/web-client/media/video-codecs';
 import { hbb } from '@/features/web-client/protocol';
 import type {
   SessionCommand,
@@ -77,14 +70,21 @@ import type {
 } from '@/features/web-client/worker/contract';
 import { createSessionWorker } from '@/features/web-client/worker/create-worker';
 import { shutdownSessionWorker } from '@/features/web-client/worker/shutdown-worker';
+import {
+  createWebClientSession,
+  endWebClientSession,
+  handleWebClientAuthError,
+  reportWebClientEvent,
+  webClientHttpStatus,
+} from '@/services/rustdesk-console/webClient';
 import { AdvancedDialogs, useAdvancedTools } from './advanced-tools';
 import { DevicePicker } from './devices';
 import { CustomQuality, FrameRate, ResolutionOptions } from './display-options';
 import {
   FilePanel,
-  fileErrorMessage,
   type FilePanelHandle,
   type FilePanelStatus,
+  fileErrorMessage,
 } from './files';
 import styles from './index.less';
 import { LegacyEncryptionNotice } from './legacy-notice';

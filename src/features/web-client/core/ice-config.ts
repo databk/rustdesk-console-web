@@ -12,7 +12,8 @@ function parseLine(line: string): IceServer | undefined {
   const trimmed = line.trim();
   if (!trimmed) return undefined;
   const [urls, username, credential] = trimmed.split(/\s+/);
-  if (!urls || !/^(?:stun|stuns|turn|turns):[^\s\\]+$/.test(urls)) return undefined;
+  if (!urls || !/^(?:stun|stuns|turn|turns):[^\s\\]+$/.test(urls))
+    return undefined;
   if (urls.length > MAX_URL) return undefined;
   if (username && username.length > MAX_CREDENTIAL) return undefined;
   if (credential && credential.length > MAX_CREDENTIAL) return undefined;
