@@ -495,6 +495,34 @@ test('a new explicit target link can connect after cancelling the old request', 
   expect(mockAuthorize).toHaveBeenCalledTimes(2);
 });
 
+test('a late grant for the previous target does not connect after navigation', async () => {
+  mockSearch = '?id=123456789&connect=1';
+  let finish!: (value: ReturnType<typeof mockGrant>) => void;
+  mockAuthorize.mockReturnValueOnce(
+    new Promise((resolve) => {
+      finish = resolve;
+    }),
+  );
+  const view = render(React.createElement(WebClientPage));
+  await waitFor(() => expect(worker.onmessage).toBeDefined());
+  worker.emit({
+    type: 'ready',
+    secureContext: true,
+    videoDecoder: true,
+    generation: 0,
+  });
+  await waitFor(() => expect(mockAuthorize).toHaveBeenCalledWith('123456789'));
+  mockSearch = '?id=987654321&connect=1';
+  view.rerender(React.createElement(WebClientPage));
+  await act(async () => finish(mockGrant()));
+  expect(mockEnd).toHaveBeenCalledWith('desktop-grant');
+  expect(
+    worker.postMessage.mock.calls.some(
+      ([message]) => message.type === 'connect' && message.id === '123456789',
+    ),
+  ).toBe(false);
+});
+
 test('an automatic target is not carried into another account', async () => {
   mockSearch = '?id=123456789&connect=1';
   const view = render(React.createElement(WebClientPage));
