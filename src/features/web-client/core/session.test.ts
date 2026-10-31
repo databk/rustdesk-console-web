@@ -298,6 +298,27 @@ test.each([0, 1])(
   },
 );
 
+test.each(['Android', 'Linux', 'Mac OS'])(
+  'non-Windows peer platform %s connects without a protocol error',
+  async (platform) => {
+    const f = fixture({
+      peerInfo: {
+        platform,
+        version: '1.4.9',
+        displays: [{ x: 0, y: 0, width: 1080, height: 1920 }],
+      },
+    });
+    const run = f.connect();
+    await until(() => f.states.at(-1) === 'awaitingApproval');
+    await f.session.submitPassword('synthetic');
+    await until(() => f.states.at(-1) === 'connected');
+    expect(f.authentication).toEqual([true]);
+    expect(f.errors).toEqual([]);
+    f.session.disconnect();
+    await run;
+  },
+);
+
 test.each([0, 1])(
   'complete WSS relay advertisement reaches encrypted authentication with KX %i using the fixed endpoint',
   async (kxVersion) => {
