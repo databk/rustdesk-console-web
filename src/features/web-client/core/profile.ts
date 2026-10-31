@@ -1,10 +1,68 @@
 import { decodeServerKey } from './crypto';
 import { SessionError } from './errors';
 
+export interface IceServer {
+  urls: string;
+  username?: string;
+  credential?: string;
+}
+
 export interface ServerProfile {
   idServerUrl: string;
   relayServerUrl: string;
   serverPublicKey: string;
+  iceServers?: IceServer[];
+}
+
+// Browser ICE servers are administrator-configured; bound to reject runaway input.
+export const ICE_LIMITS = {
+  count: 16,
+  urls: 512,
+  credential: 256,
+};
+
+function validIceServer(server: IceServer): server is IceServer {
+  if (typeof server.urls !== 'string' || server.urls.length > ICE_LIMITS.urls)
+    return false;
+  // RTCIceServer.urls accepts the WebRTC scheme set only.
+  if (
+    !/^(?:stun|stuns|turn|turns):[^\s\\]+$/.test(server.urls) ||
+    /[\s\\?#]/.test(server.urls)
+  )
+    return false;
+  if (
+    server.username !== undefined &&
+    (typeof server.username !== 'string' ||
+      server.username.length > ICE_LIMITS.credential)
+  )
+    return false;
+  if (
+    server.credential !== undefined &&
+    (typeof server.credential !== 'string' ||
+      server.credential.length > ICE_LIMITS.credential)
+  )
+    return false;
+  return true;
+}
+
+export function normalizeIceServers(
+  servers: IceServer[] | undefined,
+): IceServer[] | undefined {
+  if (!Array.isArray(servers) || servers.length === 0) return undefined;
+  if (servers.length > ICE_LIMITS.count) throw new SessionError('configuration');
+  const normalized: IceServer[] = [];
+  for (const server of servers) {
+    if (!server || typeof server !== 'object' || !validIceServer(server))
+      throw new SessionError('configuration');
+    normalized.push({
+      urls: server.urls,
+      ...(server.username !== undefined ? { username: server.username } : {}),
+      ...(server.credential !== undefined
+        ? { credential: server.credential }
+        : {}),
+    });
+  }
+  return normalized;
 }
 
 export function validateProfile(profile: ServerProfile): ServerProfile {
@@ -28,10 +86,12 @@ export function validateProfile(profile: ServerProfile): ServerProfile {
     }
   }
   decodeServerKey(profile.serverPublicKey);
+  const iceServers = normalizeIceServers(profile.iceServers);
   return {
     idServerUrl: profile.idServerUrl,
     relayServerUrl: profile.relayServerUrl,
     serverPublicKey: profile.serverPublicKey,
+    ...(iceServers ? { iceServers } : {}),
   };
 }
 
