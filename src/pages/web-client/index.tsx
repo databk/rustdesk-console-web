@@ -38,6 +38,7 @@ import type {
   Resolution,
 } from '@/features/web-client/core/display';
 import { normalizeTargetId } from '@/features/web-client/core/profile';
+import { loadIceServers } from '@/features/web-client/core/ice-config';
 import type { CredentialStatus } from '@/features/web-client/core/remembered-credentials';
 import type {
   SessionState,
@@ -1103,6 +1104,7 @@ export default function WebClientPage() {
         return;
       }
       grantPending.current = false;
+      const iceServers = loadIceServers();
       post({
         type: 'connect',
         grant: authorized,
@@ -1111,6 +1113,7 @@ export default function WebClientPage() {
           idServerUrl: configuration.idServerUrl,
           relayServerUrl: configuration.relayServerUrl,
           serverPublicKey: configuration.serverPublicKey,
+          ...(iceServers ? { iceServers } : {}),
         },
         id: target,
         ...(account ? { account } : {}),

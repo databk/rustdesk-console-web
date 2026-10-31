@@ -1,6 +1,6 @@
 import { SessionError } from './errors';
 import type { ServerProfile } from './profile';
-import type { SocketFactory } from './transport';
+import type { SocketFactory, TransportSocket } from './transport';
 
 export interface WebClientGrant {
   sessionGuid: string;
@@ -52,7 +52,7 @@ export function gatewaySocketFactory(
     return new GatewaySocket(
       createSocket(endpoint.href),
       ticket,
-    ) as unknown as WebSocket;
+    ) as unknown as TransportSocket;
   };
 }
 
@@ -64,7 +64,7 @@ class GatewaySocket {
   private ready = false;
   private ended = false;
   constructor(
-    private readonly socket: WebSocket,
+    private readonly socket: TransportSocket,
     ticket: string,
   ) {
     socket.binaryType = 'arraybuffer';

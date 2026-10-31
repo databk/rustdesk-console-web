@@ -7,7 +7,20 @@ export const TRANSPORT_LIMITS = {
   queueBytes: 16 * 1024 * 1024,
   queueCount: 64,
 };
-export type SocketFactory = (url: string) => WebSocket;
+// WebSocket and WebRTC DataChannel share this structural subset. WebSocket
+// satisfies it directly; RTCDataChannel is adapted by DataChannelSocket.
+export interface TransportSocket {
+  binaryType: BinaryType;
+  readonly readyState: number;
+  readonly bufferedAmount: number;
+  onopen: WebSocket['onopen'];
+  onmessage: WebSocket['onmessage'];
+  onclose: WebSocket['onclose'];
+  onerror: WebSocket['onerror'];
+  send: WebSocket['send'];
+  close: WebSocket['close'];
+}
+export type SocketFactory = (url: string) => TransportSocket;
 export interface TransportMetrics {
   queuedPackets: number;
   queuedBytes: number;
@@ -29,7 +42,7 @@ type Waiter = {
 };
 
 export class BinaryTransport {
-  private socket?: WebSocket;
+  private socket?: TransportSocket;
   private cipher?: SessionCipher;
   private queue: { bytes: Uint8Array; queuedAt: number }[] = [];
   private queuedBytes = 0;
@@ -41,7 +54,8 @@ export class BinaryTransport {
   private cancelOpen?: (error: SessionError) => void;
 
   constructor(
-    private readonly createSocket: SocketFactory = (url) => new WebSocket(url),
+    private readonly createSocket: SocketFactory = (url) =>
+      new WebSocket(url) as unknown as TransportSocket,
   ) {}
 
   open(url: string, timeout = 12000): Promise<void> {
@@ -109,6 +123,13 @@ export class BinaryTransport {
             );
           }
         };
+        // An adopted WebRTC DataChannel is already open by the time it is
+        // wrapped; WebSocket starts in connecting and fires onopen instead.
+        if (socket.readyState === 1) {
+          clearTimeout(timer);
+          this.cancelOpen = undefined;
+          resolve();
+        }
       } catch (error) {
         this.close(
           error instanceof SessionError ? error : new SessionError('transport'),

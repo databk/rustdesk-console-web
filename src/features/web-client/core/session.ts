@@ -26,6 +26,7 @@ import {
 } from './display';
 import { SessionError, type SessionErrorCode } from './errors';
 import {
+  type IceServer,
   normalizeTargetId,
   type ServerProfile,
   validateAdvertisedRelay,
@@ -36,6 +37,7 @@ import type {
   RememberedCredentials,
 } from './remembered-credentials';
 import { BinaryTransport, type SocketFactory } from './transport';
+import { type RtcFactory, WebRtcOfferer } from './webrtc-transport';
 
 export type SessionState =
   | 'idle'
@@ -95,12 +97,114 @@ function randomSessionId() {
     true,
   ) as NonNullable<hbb.ILoginRequest['sessionId']>;
 }
+function sameIceServers(
+  a: IceServer[] | undefined,
+  b: IceServer[] | undefined,
+) {
+  if (!a && !b) return true;
+  if (!a || !b || a.length !== b.length) return false;
+  return a.every((server, index) => {
+    const other = b[index];
+    return (
+      server.urls === other.urls &&
+      server.username === other.username &&
+      server.credential === other.credential
+    );
+  });
+}
 function sameProfile(a: ServerProfile, b: ServerProfile) {
   return (
     a.idServerUrl === b.idServerUrl &&
     a.relayServerUrl === b.relayServerUrl &&
-    a.serverPublicKey === b.serverPublicKey
+    a.serverPublicKey === b.serverPublicKey &&
+    sameIceServers(a.iceServers, b.iceServers)
   );
+}
+
+// Mirrors the native controller's relay-fallback delay: an already-established
+// relay result is held back this long while a WebRTC attempt is still in flight.
+const RELAY_FALLBACK_DELAY_MS = 2500;
+
+interface TransportRace {
+  transport: BinaryTransport;
+  kind: 'webrtc' | 'relay';
+}
+
+// WebRTC is preferred: a WebRTC success wins immediately, a relay success is
+// held for the fallback delay before it is used. The first leg to settle under
+// these rules wins; both failing rejects with the WebRTC error.
+function raceTransports(
+  webrtc: Promise<BinaryTransport>,
+  relay: Promise<BinaryTransport>,
+  fallbackDelayMs: number,
+  webrtcEnabled: boolean,
+): Promise<TransportRace> {
+  if (!webrtcEnabled) return relay.then((transport) => ({ transport, kind: 'relay' as const }));
+  return new Promise<TransportRace>((resolve, reject) => {
+    let settled = false;
+    let webrtcResult:
+      | { ok: true; value: BinaryTransport }
+      | { ok: false; error: unknown }
+      | undefined;
+    let relayResult:
+      | { ok: true; value: BinaryTransport }
+      | { ok: false; error: unknown }
+      | undefined;
+    let relayTimer: ReturnType<typeof setTimeout> | undefined;
+    const finish = (kind: 'webrtc' | 'relay', value: BinaryTransport) => {
+      if (settled) return;
+      settled = true;
+      if (relayTimer) clearTimeout(relayTimer);
+      resolve({ transport: value, kind });
+    };
+    const failAll = (error: unknown) => {
+      if (settled) return;
+      settled = true;
+      if (relayTimer) clearTimeout(relayTimer);
+      reject(error);
+    };
+    const settle = () => {
+      if (webrtcResult?.ok) {
+        finish('webrtc', webrtcResult.value);
+        return;
+      }
+      if (relayResult?.ok && !relayTimer) {
+        finish('relay', relayResult.value);
+        return;
+      }
+      if (
+        webrtcResult &&
+        !webrtcResult.ok &&
+        relayResult &&
+        !relayResult.ok
+      ) {
+        failAll(webrtcResult.error);
+      }
+    };
+    webrtc.then(
+      (value) => {
+        webrtcResult = { ok: true, value };
+        settle();
+      },
+      (error) => {
+        webrtcResult = { ok: false, error };
+        settle();
+      },
+    );
+    relay.then(
+      (value) => {
+        relayResult = { ok: true, value };
+        relayTimer = setTimeout(() => {
+          relayTimer = undefined;
+          settle();
+        }, fallbackDelayMs);
+      },
+      (error) => {
+        relayResult = { ok: false, error };
+        settle();
+      },
+    );
+  });
 }
 
 export class RemoteSession {
@@ -168,6 +272,7 @@ export class RemoteSession {
     >,
     // 调用者明确选择视频反馈；保留解码后ACK作为同条件对照与兼容回退。
     private readonly videoFlow: VideoFlowMode = 'decoded-ack',
+    private readonly rtcFactory?: RtcFactory,
   ) {}
 
   private transition(state: SessionState) {
@@ -211,6 +316,19 @@ export class RemoteSession {
         this.clearReuse();
       }
       this.sessionId = this.reuse?.sessionId ?? randomSessionId();
+      // WebRTC offerer: browser P2P over ICE, optional and best-effort.
+      let offerer: WebRtcOfferer | undefined;
+      let webrtcSdpOffer = '';
+      if (profile.iceServers?.length) {
+        try {
+          offerer = new WebRtcOfferer(profile.iceServers, this.rtcFactory);
+          webrtcSdpOffer = await offerer.createOffer();
+        } catch {
+          offerer?.close();
+          offerer = undefined;
+          webrtcSdpOffer = '';
+        }
+      }
       const rendezvous = new BinaryTransport(this.socketFactory);
       this.transport = rendezvous;
       await rendezvous.open(profile.idServerUrl);
@@ -227,6 +345,7 @@ export class RemoteSession {
             natType: hbb.NatType.SYMMETRIC,
             forceRelay: true,
             version: '1.4.9',
+            webrtcSdpOffer,
           },
         }).finish(),
       );
@@ -257,25 +376,99 @@ export class RemoteSession {
       this.peerKey = Array.from(peerIdentity.publicKey, (value) =>
         value.toString(16).padStart(2, '0'),
       ).join('');
-      rendezvous.close();
       this.transition('securing');
-      const transport = new BinaryTransport(this.socketFactory);
+      const webrtcAnswer = relay.webrtcSdpAnswer || '';
+      const rtc = offerer && webrtcAnswer ? offerer : undefined;
+      const webrtcViable = rtc !== undefined;
+      // Trickle ICE candidates ride the rendezvous socket until the DataChannel
+      // opens or the relay wins and signaling is torn down.
+      if (rtc) {
+        rtc.onLocalIce((candidate) => {
+          if (generation !== this.generation || rendezvous !== this.transport)
+            return;
+          try {
+            rendezvous.send(
+              hbb.RendezvousMessage.encode({
+                iceCandidate: { candidate },
+              }).finish(),
+            );
+          } catch {
+            // signaling socket closed; the WebRTC leg fails on its own.
+          }
+        });
+      }
+      const iceBridgePromise = rtc
+        ? (async () => {
+            try {
+              while (generation === this.generation) {
+                const bytes = await rendezvous.receive();
+                if (generation !== this.generation) return;
+                const message = hbb.RendezvousMessage.decode(bytes);
+                if (message.iceCandidate?.candidate)
+                  await rtc.addRemoteIce(message.iceCandidate.candidate);
+              }
+            } catch {
+              // rendezvous closed; the WebRTC leg fails on its own.
+            }
+          })()
+        : undefined;
+      void iceBridgePromise?.catch(() => {});
+      let relayTransport: BinaryTransport | undefined;
+      const relayLeg = (async (): Promise<BinaryTransport> => {
+        const transport = new BinaryTransport(this.socketFactory);
+        relayTransport = transport;
+        await transport.open(profile.relayServerUrl);
+        this.current(generation);
+        transport.send(
+          hbb.RendezvousMessage.encode({
+            requestRelay: {
+              connType:
+                this.kind === 'file'
+                  ? hbb.ConnType.FILE_TRANSFER
+                  : hbb.ConnType.DEFAULT_CONN,
+              id: this.targetId,
+              uuid: relay.uuid,
+              licenceKey: profile.serverPublicKey,
+            },
+          }).finish(),
+        );
+        return transport;
+      })();
+      const webrtcLeg = rtc
+        ? (async (): Promise<BinaryTransport> => {
+            await rtc.setRemoteAnswer(webrtcAnswer);
+            await rtc.whenOpen();
+            const transport = new BinaryTransport(() => rtc.asSocket());
+            await transport.open('webrtc');
+            this.current(generation);
+            return transport;
+          })()
+        : new Promise<BinaryTransport>(() => {});
+      let transport: BinaryTransport;
+      try {
+        const winner = await raceTransports(
+          webrtcLeg,
+          relayLeg,
+          RELAY_FALLBACK_DELAY_MS,
+          webrtcViable,
+        );
+        transport = winner.transport;
+        if (winner.kind === 'webrtc') {
+          relayTransport?.close();
+          relayTransport = undefined;
+        } else {
+          offerer?.close();
+          offerer = undefined;
+        }
+        // Either way the signaling socket is no longer needed.
+        rendezvous.close();
+      } catch (error) {
+        offerer?.close();
+        relayTransport?.close();
+        rendezvous.close();
+        throw error;
+      }
       this.transport = transport;
-      await transport.open(profile.relayServerUrl);
-      this.current(generation);
-      transport.send(
-        hbb.RendezvousMessage.encode({
-          requestRelay: {
-            connType:
-              this.kind === 'file'
-                ? hbb.ConnType.FILE_TRANSFER
-                : hbb.ConnType.DEFAULT_CONN,
-            id: this.targetId,
-            uuid: relay.uuid,
-            licenceKey: profile.serverPublicKey,
-          },
-        }).finish(),
-      );
       const signed = hbb.Message.decode(await transport.receive()).signedId?.id;
       this.current(generation);
       if (!signed) throw new SessionError('identity');
@@ -564,6 +757,7 @@ export class RemoteSession {
       }
     } catch (error) {
       if (generation !== this.generation) return;
+
       this.fail(error instanceof SessionError ? error.code : 'protocol');
     }
   }

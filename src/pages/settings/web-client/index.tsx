@@ -19,6 +19,12 @@ import {
   getWebClientSettings,
   updateWebClientSettings,
 } from '@/services/rustdesk-console';
+import {
+  formatIceServersText,
+  loadIceServers,
+  parseIceServersText,
+  saveIceServers,
+} from '@/features/web-client/core/ice-config';
 
 const UNSAFE_CHARS = /[\s\\?#]/;
 
@@ -115,6 +121,7 @@ const WebClientSettings: React.FC = () => {
         serverPublicKey: config.serverPublicKey || '',
         idUpstreamUrl: config.idUpstreamUrl || '',
         relayUpstreamUrl: config.relayUpstreamUrl || '',
+        iceServers: formatIceServersText(loadIceServers()),
       });
     } catch (error: any) {
       console.error('Failed to fetch web client settings:', error);
@@ -144,6 +151,7 @@ const WebClientSettings: React.FC = () => {
         idUpstreamUrl: (values.idUpstreamUrl ?? '').trim(),
         relayUpstreamUrl: (values.relayUpstreamUrl ?? '').trim(),
       });
+      saveIceServers(parseIceServersText(values.iceServers ?? ''));
       messageApi.success(
         intl.formatMessage({
           id: 'pages.webClientSettings.saveSuccess',
@@ -433,6 +441,36 @@ const WebClientSettings: React.FC = () => {
               }
             >
               <Input.TextArea rows={2} />
+            </Form.Item>
+
+            <Divider>
+              <FormattedMessage
+                id="pages.webClientSettings.iceTitle"
+                defaultMessage="WebRTC ICE Servers (Optional)"
+              />
+            </Divider>
+
+            <Form.Item
+              name="iceServers"
+              label={
+                <FormattedMessage
+                  id="pages.webClientSettings.iceServers"
+                  defaultMessage="ICE Servers"
+                />
+              }
+              extra={
+                <FormattedMessage
+                  id="pages.webClientSettings.iceServersHelp"
+                  defaultMessage="One per line. STUN/TURN servers for browser WebRTC P2P, e.g. 'stun:stun.example.com:3478' or 'turn:turn.example.com:3478 user credential'. Stored in this browser only."
+                />
+              }
+            >
+              <Input.TextArea
+                rows={3}
+                placeholder={
+                  'stun:stun.example.com:3478\nturn:turn.example.com:3478 user credential'
+                }
+              />
             </Form.Item>
 
             <Divider>
