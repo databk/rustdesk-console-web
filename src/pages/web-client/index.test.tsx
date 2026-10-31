@@ -9,9 +9,10 @@ import {
   waitFor,
 } from '@testing-library/react';
 import React from 'react';
-import { hbb } from '@/features/web-client/protocol';
+import { DEFAULT_ICE_SERVERS } from '@/features/web-client/core/ice-config';
 import { AudioPlayer } from '@/features/web-client/media/audio-player';
 import { Microphone } from '@/features/web-client/media/microphone';
+import { hbb } from '@/features/web-client/protocol';
 
 type WebClientConfiguration =
   import('@/services/rustdesk-console/webClient').WebClientConfiguration;
@@ -1888,6 +1889,7 @@ test('worker connection receives only the public profile, never future API extra
     idServerUrl: profile.idServerUrl,
     relayServerUrl: profile.relayServerUrl,
     serverPublicKey: profile.serverPublicKey,
+    iceServers: DEFAULT_ICE_SERVERS,
   });
 });
 
