@@ -380,7 +380,6 @@ export class RemoteSession {
           } else if (response.peerInfo) {
             const selected = response.peerInfo.currentDisplay ?? 0;
             if (
-
               (this.kind === 'desktop' &&
                 !response.peerInfo.displays?.length) ||
               (response.peerInfo.displays?.length || 0) >
