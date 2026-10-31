@@ -1113,7 +1113,7 @@ export default function WebClientPage() {
           idServerUrl: configuration.idServerUrl,
           relayServerUrl: configuration.relayServerUrl,
           serverPublicKey: configuration.serverPublicKey,
-          ...(iceServers ? { iceServers } : {}),
+          iceServers,
         },
         id: target,
         ...(account ? { account } : {}),

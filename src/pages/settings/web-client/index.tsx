@@ -16,8 +16,7 @@ import {
 } from 'antd';
 import React, { useEffect, useState } from 'react';
 import {
-  formatIceServersText,
-  loadIceServers,
+  loadIceServersText,
   parseIceServersText,
   saveIceServers,
 } from '@/features/web-client/core/ice-config';
@@ -121,7 +120,7 @@ const WebClientSettings: React.FC = () => {
         serverPublicKey: config.serverPublicKey || '',
         idUpstreamUrl: config.idUpstreamUrl || '',
         relayUpstreamUrl: config.relayUpstreamUrl || '',
-        iceServers: formatIceServersText(loadIceServers()),
+        iceServers: loadIceServersText(),
       });
     } catch (error: any) {
       console.error('Failed to fetch web client settings:', error);
@@ -461,14 +460,14 @@ const WebClientSettings: React.FC = () => {
               extra={
                 <FormattedMessage
                   id="pages.webClientSettings.iceServersHelp"
-                  defaultMessage="One per line. STUN/TURN servers for browser WebRTC P2P, e.g. 'stun:stun.example.com:3478' or 'turn:turn.example.com:3478 user credential'. Stored in this browser only."
+                  defaultMessage="One per line. STUN/TURN servers for browser WebRTC P2P, e.g. 'stun:stun.example.com:3478' or 'turn:turn.example.com:3478 user credential'. Leave empty to use built-in defaults. Stored in this browser only."
                 />
               }
             >
               <Input.TextArea
                 rows={3}
                 placeholder={
-                  'stun:stun.example.com:3478\nturn:turn.example.com:3478 user credential'
+                  'stun:stun.cloudflare.com:3478\nstun:stun.l.google.com:19302'
                 }
               />
             </Form.Item>

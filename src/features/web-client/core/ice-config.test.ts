@@ -1,6 +1,7 @@
 /** @jest-environment jsdom */
 import { afterEach, beforeEach, expect, jest, test } from '@jest/globals';
 import {
+  DEFAULT_ICE_SERVERS,
   formatIceServersText,
   loadIceServers,
   parseIceServersText,
@@ -62,10 +63,15 @@ test('round-trips through format and parse', () => {
   expect(parseIceServersText(formatIceServersText(servers))).toEqual(servers);
 });
 
+test('returns default STUN servers when no config is stored', () => {
+  expect(loadIceServers()).toEqual(DEFAULT_ICE_SERVERS);
+  expect(DEFAULT_ICE_SERVERS).toHaveLength(4);
+  expect(DEFAULT_ICE_SERVERS[0].urls).toBe('stun:stun.cloudflare.com:3478');
+});
+
 test('load and save persist across calls', () => {
-  expect(loadIceServers()).toBeUndefined();
   saveIceServers([{ urls: 'stun:stun.example.test:3478' }]);
   expect(loadIceServers()).toEqual([{ urls: 'stun:stun.example.test:3478' }]);
   saveIceServers(undefined);
-  expect(loadIceServers()).toBeUndefined();
+  expect(loadIceServers()).toEqual(DEFAULT_ICE_SERVERS);
 });

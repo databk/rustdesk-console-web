@@ -1238,7 +1238,7 @@ export default {
   'pages.webClientSettings.iceTitle': 'WebRTC ICE Servers (Optional)',
   'pages.webClientSettings.iceServers': 'ICE Servers',
   'pages.webClientSettings.iceServersHelp':
-    "One per line. STUN/TURN servers for browser WebRTC P2P, e.g. 'stun:stun.example.com:3478' or 'turn:turn.example.com:3478 user credential'. Stored in this browser only.",
+    "One per line. STUN/TURN servers for browser WebRTC P2P, e.g. 'stun:stun.example.com:3478' or 'turn:turn.example.com:3478 user credential'. Leave empty to use built-in defaults. Stored in this browser only.",
   'pages.webClientSettings.idUpstreamUrl': 'ID Upstream URL',
   'pages.webClientSettings.idUpstreamUrlInvalid':
     'Must be a ws:// or wss:// URL',

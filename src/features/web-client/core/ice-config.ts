@@ -8,6 +8,17 @@ const MAX_SERVERS = 16;
 const MAX_URL = 512;
 const MAX_CREDENTIAL = 256;
 
+// Mirrors rustdesk's hbb_common::webrtc::DEFAULT_ICE_SERVERS.  Four networks,
+// not four names: webrtc-ice queries each URL from its own socket, so entries
+// sharing a host buy no redundancy.  Two anycast, two unicast; the 443 entry
+// is for networks that pass no other UDP port.
+export const DEFAULT_ICE_SERVERS: IceServer[] = [
+  { urls: 'stun:stun.cloudflare.com:3478' },
+  { urls: 'stun:stun.l.google.com:19302' },
+  { urls: 'stun:stun.antisip.com:3478' },
+  { urls: 'stun:stun.nextcloud.com:443' },
+];
+
 function parseLine(line: string): IceServer | undefined {
   const trimmed = line.trim();
   if (!trimmed) return undefined;
@@ -46,14 +57,22 @@ export function formatIceServersText(servers: IceServer[] | undefined): string {
     .join('\n');
 }
 
-export function loadIceServers(): IceServer[] | undefined {
+export function loadIceServers(): IceServer[] {
   try {
     const text = localStorage.getItem(STORAGE_KEY);
-    if (!text) return undefined;
+    if (!text) return DEFAULT_ICE_SERVERS;
     const servers = parseIceServersText(text);
-    return servers.length > 0 ? servers : undefined;
+    return servers.length > 0 ? servers : DEFAULT_ICE_SERVERS;
   } catch {
-    return undefined;
+    return DEFAULT_ICE_SERVERS;
+  }
+}
+
+export function loadIceServersText(): string {
+  try {
+    return localStorage.getItem(STORAGE_KEY) ?? '';
+  } catch {
+    return '';
   }
 }
 
