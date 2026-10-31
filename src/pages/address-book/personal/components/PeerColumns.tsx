@@ -3,6 +3,7 @@ import { FormattedMessage, useIntl } from '@umijs/max';
 import { Button, Divider, Popconfirm, Space, Tag, Tooltip } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import React from 'react';
+import WebClientDeviceLink from '@/components/WebClientDeviceLink';
 import { argbToHex, getOSIcon } from '../utils';
 
 interface PeerColumnsOptions {
@@ -53,6 +54,7 @@ export const usePeerColumns = (
             )}
             {osIcon && <>&nbsp;&nbsp;</>}
             {record.id}
+            <WebClientDeviceLink id={record.id} autoConnect />
           </span>
         );
       },
