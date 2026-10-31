@@ -169,7 +169,9 @@ function raceTransports(
         finish('webrtc', webrtcResult.value);
         return;
       }
-      if (relayResult?.ok && !relayTimer) {
+      // If WebRTC has already failed, resolve relay immediately without
+      // waiting for the fallback delay.
+      if (relayResult?.ok && (!relayTimer || webrtcResult?.ok === false)) {
         finish('relay', relayResult.value);
         return;
       }
@@ -190,6 +192,10 @@ function raceTransports(
     relay.then(
       (value) => {
         relayResult = { ok: true, value };
+        if (webrtcResult && !webrtcResult.ok) {
+          settle();
+          return;
+        }
         relayTimer = setTimeout(() => {
           relayTimer = undefined;
           settle();
@@ -207,6 +213,7 @@ export class RemoteSession {
   private generation = 0;
   private state: SessionState = 'idle';
   private transport?: BinaryTransport;
+  private offerer?: WebRtcOfferer;
   private challenge?: { salt: string; challenge: string };
   private targetId = '';
   private profile?: ServerProfile;
@@ -318,10 +325,12 @@ export class RemoteSession {
       if (profile.iceServers?.length) {
         try {
           offerer = new WebRtcOfferer(profile.iceServers, this.rtcFactory);
+          this.offerer = offerer;
           webrtcSdpOffer = await offerer.createOffer();
         } catch {
           offerer?.close();
           offerer = undefined;
+          this.offerer = undefined;
           webrtcSdpOffer = '';
         }
       }
@@ -448,18 +457,21 @@ export class RemoteSession {
           RELAY_FALLBACK_DELAY_MS,
           webrtcViable,
         );
+        // The user may have cancelled while the race was pending.
+        this.current(generation);
         transport = winner.transport;
         if (winner.kind === 'webrtc') {
           relayTransport?.close();
           relayTransport = undefined;
         } else {
           offerer?.close();
-          offerer = undefined;
         }
+        this.offerer = undefined;
         // Either way the signaling socket is no longer needed.
         rendezvous.close();
       } catch (error) {
         offerer?.close();
+        this.offerer = undefined;
         relayTransport?.close();
         rendezvous.close();
         throw error;
@@ -1412,6 +1424,8 @@ export class RemoteSession {
     }
     this.transport?.close();
     this.transport = undefined;
+    this.offerer?.close();
+    this.offerer = undefined;
     this.challenge = undefined;
     this.clearPassword();
     this.clearReuse();

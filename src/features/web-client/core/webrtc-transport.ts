@@ -131,7 +131,10 @@ export class WebRtcOfferer {
 
   asSocket(): TransportSocket {
     if (!this.channel) throw new SessionError('protocol');
-    return new DataChannelSocket(this.channel, () => this.close());
+    const maxMessageSize = this.pc.sctp?.maxMessageSize ?? Infinity;
+    return new DataChannelSocket(this.channel, maxMessageSize, () =>
+      this.close(),
+    );
   }
 
   close() {
@@ -163,6 +166,7 @@ class DataChannelSocket implements TransportSocket {
 
   constructor(
     private readonly channel: RTCDataChannel,
+    private readonly maxMessageSize: number,
     private readonly onClose: () => void,
   ) {
     channel.binaryType = 'arraybuffer';
@@ -201,6 +205,8 @@ class DataChannelSocket implements TransportSocket {
 
   send(data: ArrayBuffer) {
     if (this.ended || this.channel.readyState !== 'open')
+      throw new SessionError('transport');
+    if (data.byteLength > this.maxMessageSize)
       throw new SessionError('transport');
     this.channel.send(data);
   }

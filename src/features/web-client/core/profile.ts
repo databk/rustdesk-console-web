@@ -21,15 +21,15 @@ export const ICE_LIMITS = {
   credential: 256,
 };
 
-function validIceServer(server: IceServer): server is IceServer {
+// RTCIceServer.urls accepts the WebRTC scheme set only.  TURN/TURNs URLs may
+// carry a ?transport=udp|tcp query per RFC 7065; STUN/STUNS URLs must not.
+const ICE_URL =
+  /^(?:stun|stuns):[^\s\\?#]+$|^(?:turn|turns):[^\s\\?#]+(?:\?transport=(?:udp|tcp))?$/;
+
+export function validIceServer(server: IceServer): server is IceServer {
   if (typeof server.urls !== 'string' || server.urls.length > ICE_LIMITS.urls)
     return false;
-  // RTCIceServer.urls accepts the WebRTC scheme set only.
-  if (
-    !/^(?:stun|stuns|turn|turns):[^\s\\]+$/.test(server.urls) ||
-    /[\s\\?#]/.test(server.urls)
-  )
-    return false;
+  if (!ICE_URL.test(server.urls)) return false;
   if (
     server.username !== undefined &&
     (typeof server.username !== 'string' ||

@@ -1,12 +1,9 @@
-import type { IceServer } from './profile';
+import { ICE_LIMITS, type IceServer, validIceServer } from './profile';
 
 // ICE servers are a front-of-browser concern (STUN/TURN for WebRTC) and are not
 // part of the server-persisted web client configuration, so they live in
 // localStorage and are edited in the web client settings page.
 const STORAGE_KEY = 'webClient.iceServers';
-const MAX_SERVERS = 16;
-const MAX_URL = 512;
-const MAX_CREDENTIAL = 256;
 
 // Mirrors rustdesk's hbb_common::webrtc::DEFAULT_ICE_SERVERS.  Four networks,
 // not four names: webrtc-ice queries each URL from its own socket, so entries
@@ -23,15 +20,11 @@ function parseLine(line: string): IceServer | undefined {
   const trimmed = line.trim();
   if (!trimmed) return undefined;
   const [urls, username, credential] = trimmed.split(/\s+/);
-  if (!urls || !/^(?:stun|stuns|turn|turns):[^\s\\]+$/.test(urls))
-    return undefined;
-  if (urls.length > MAX_URL) return undefined;
-  if (username && username.length > MAX_CREDENTIAL) return undefined;
-  if (credential && credential.length > MAX_CREDENTIAL) return undefined;
+  if (!urls) return undefined;
   const server: IceServer = { urls };
   if (username) server.username = username;
   if (credential) server.credential = credential;
-  return server;
+  return validIceServer(server) ? server : undefined;
 }
 
 export function parseIceServersText(text: string): IceServer[] {
@@ -40,7 +33,7 @@ export function parseIceServersText(text: string): IceServer[] {
     const server = parseLine(line);
     if (server) {
       servers.push(server);
-      if (servers.length >= MAX_SERVERS) break;
+      if (servers.length >= ICE_LIMITS.count) break;
     }
   }
   return servers;

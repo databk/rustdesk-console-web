@@ -1,4 +1,4 @@
-/** @jest-environment jsdom */
+/** @jest-environment node */
 import { afterEach, beforeEach, expect, jest, test } from '@jest/globals';
 import {
   DEFAULT_ICE_SERVERS,
@@ -9,7 +9,7 @@ import {
 } from './ice-config';
 
 const store = new Map<string, string>();
-const mockStorage: Storage = {
+const mockStorage = {
   getItem: (key: string) => store.get(key) ?? null,
   setItem: (key: string, value: string) => void store.set(key, value),
   removeItem: (key: string) => void store.delete(key),
@@ -21,7 +21,11 @@ const mockStorage: Storage = {
 };
 beforeEach(() => {
   store.clear();
-  jest.spyOn(globalThis, 'localStorage', 'get').mockReturnValue(mockStorage);
+  Object.defineProperty(globalThis, 'localStorage', {
+    value: mockStorage,
+    writable: true,
+    configurable: true,
+  });
 });
 afterEach(() => {
   jest.restoreAllMocks();
@@ -49,6 +53,21 @@ test('ignores blank lines and invalid schemes', () => {
   expect(
     parseIceServersText('\n  \nhttp://evil.test\nstun:good.test:3478'),
   ).toEqual([{ urls: 'stun:good.test:3478' }]);
+});
+
+test('allows TURN transport query per RFC 7065', () => {
+  expect(
+    parseIceServersText(
+      'turn:turn.example.test:3478?transport=tcp user secret',
+    ),
+  ).toEqual([
+    {
+      urls: 'turn:turn.example.test:3478?transport=tcp',
+      username: 'user',
+      credential: 'secret',
+    },
+  ]);
+  expect(parseIceServersText('stun:stun.example.test:3478?x=1')).toEqual([]);
 });
 
 test('round-trips through format and parse', () => {
