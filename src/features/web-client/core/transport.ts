@@ -13,6 +13,7 @@ export interface TransportSocket {
   binaryType: BinaryType;
   readonly readyState: number;
   readonly bufferedAmount: number;
+  readonly maxMessageSize?: number;
   onopen: WebSocket['onopen'];
   onmessage: WebSocket['onmessage'];
   onclose: WebSocket['onclose'];
@@ -157,6 +158,12 @@ export class BinaryTransport {
       this.close(new SessionError('overload'));
       throw this.end;
     }
+    // WebRTC DataChannel has a negotiated SCTP maxMessageSize (typically
+    // 64–256 KiB).  Reject the packet without closing the transport so the
+    // caller can fragment or drop the frame and the session survives.
+    const max = this.socket.maxMessageSize;
+    if (max !== undefined && packetBytes > max)
+      throw new SessionError('overload');
     try {
       const packet = this.cipher ? this.cipher.encrypt(bytes) : bytes;
       this.socket.send(new Uint8Array(packet).buffer);

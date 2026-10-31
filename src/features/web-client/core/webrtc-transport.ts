@@ -166,7 +166,7 @@ class DataChannelSocket implements TransportSocket {
 
   constructor(
     private readonly channel: RTCDataChannel,
-    private readonly maxMessageSize: number,
+    private readonly _maxMessageSize: number,
     private readonly onClose: () => void,
   ) {
     channel.binaryType = 'arraybuffer';
@@ -203,10 +203,12 @@ class DataChannelSocket implements TransportSocket {
     return this.channel.bufferedAmount;
   }
 
+  get maxMessageSize(): number {
+    return this._maxMessageSize;
+  }
+
   send(data: ArrayBuffer) {
     if (this.ended || this.channel.readyState !== 'open')
-      throw new SessionError('transport');
-    if (data.byteLength > this.maxMessageSize)
       throw new SessionError('transport');
     this.channel.send(data);
   }

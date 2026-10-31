@@ -1,13 +1,15 @@
 /** @jest-environment node */
 import { afterEach, beforeAll, expect, jest, test } from '@jest/globals';
-import { BinaryTransport, TRANSPORT_LIMITS } from './transport';
 import { cryptoReady, SessionCipher } from './crypto';
+import { BinaryTransport, TRANSPORT_LIMITS } from './transport';
+
 beforeAll(cryptoReady);
 
 class Socket {
   binaryType = '';
   readyState = 0;
   bufferedAmount = 0;
+  maxMessageSize?: number;
   onopen: (() => void) | null = null;
   onclose: (() => void) | null = null;
   onerror: (() => void) | null = null;
@@ -286,4 +288,24 @@ test('文件背压等待发送缓冲下降，断开立即使后续发送失效',
   await jest.advanceTimersByTimeAsync(10);
   await rejected;
   expect(jest.getTimerCount()).toBe(0);
+});
+
+test('maxMessageSize rejects oversized packets without closing the transport', async () => {
+  const socket = new Socket();
+  socket.maxMessageSize = 256;
+  const transport = new BinaryTransport(() => socket as unknown as WebSocket);
+  const open = transport.open('wss://example.test');
+  socket.opened();
+  await open;
+  // An oversized packet should throw overload, not close the transport.
+  const oversized = new Uint8Array(512);
+  expect(() => transport.send(oversized)).toThrow('overload');
+
+  expect(socket.readyState).toBe(1);
+  // A valid packet on the same transport should still succeed.
+  const valid = new Uint8Array(64);
+  transport.send(valid);
+  expect(socket.sent).toHaveLength(1);
+  expect(socket.sent[0].byteLength).toBe(64);
+  transport.close();
 });
