@@ -38,6 +38,7 @@ export type SessionCommand =
       account?: string;
       grant: WebClientGrant;
       origin: string;
+      mode?: 'desktop' | 'camera';
     }
   | { type: 'password'; password: string; remember?: boolean }
   | { type: 'forget-password' }

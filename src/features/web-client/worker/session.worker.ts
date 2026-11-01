@@ -954,7 +954,7 @@ globalThis.onmessage = (event: MessageEvent<Command>) => {
       post({ type: 'error', code: 'configuration' });
       return;
     }
-    void session.connect(command.profile, command.id);
+    void session.connect(command.profile, command.id, undefined, command.mode);
   } else if (command.type === 'change-resolution') {
     if (
       !Number.isSafeInteger(command.request) ||

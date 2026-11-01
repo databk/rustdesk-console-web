@@ -264,6 +264,7 @@ export class RemoteSession {
   // Track accepted wire input separately from the DOM's focus/key state.
   private heldKeys = new Map<string, hbb.IKeyEvent>();
   private heldButtons = new Set<number>();
+  private mode: 'desktop' | 'camera' = 'desktop';
 
   constructor(
     private readonly events: SessionEvents,
@@ -290,9 +291,11 @@ export class RemoteSession {
     input: ServerProfile,
     rawId: string,
     reuse?: FileAuthentication,
+    mode?: 'desktop' | 'camera',
   ) {
     this.dispose();
     this.reuse = reuse;
+    this.mode = mode ?? 'desktop';
     const generation = this.generation;
     this.transition('connecting');
     this.permissions = {
@@ -346,7 +349,9 @@ export class RemoteSession {
             connType:
               this.kind === 'file'
                 ? hbb.ConnType.FILE_TRANSFER
-                : hbb.ConnType.DEFAULT_CONN,
+                : this.mode === 'camera'
+                  ? hbb.ConnType.VIEW_CAMERA
+                  : hbb.ConnType.DEFAULT_CONN,
             natType: hbb.NatType.SYMMETRIC,
             forceRelay: true,
             version: '1.4.9',
@@ -430,7 +435,9 @@ export class RemoteSession {
               connType:
                 this.kind === 'file'
                   ? hbb.ConnType.FILE_TRANSFER
-                  : hbb.ConnType.DEFAULT_CONN,
+                  : this.mode === 'camera'
+                    ? hbb.ConnType.VIEW_CAMERA
+                    : hbb.ConnType.DEFAULT_CONN,
               id: this.targetId,
               uuid: relay.uuid,
               licenceKey: profile.serverPublicKey,
@@ -877,6 +884,7 @@ export class RemoteSession {
             this.kind === 'desktop' && this.videoFlow === 'decoded-ack',
           fileTransfer:
             this.kind === 'file' ? { dir: '', showHidden: false } : undefined,
+          viewCamera: this.mode === 'camera' ? {} : undefined,
           option:
             this.kind === 'file'
               ? undefined
@@ -887,7 +895,10 @@ export class RemoteSession {
                     : hbb.OptionMessage.BoolOption.Yes,
                   enableFileTransfer: hbb.OptionMessage.BoolOption.No,
                   imageQuality: hbb.ImageQuality.Balanced,
-                  showRemoteCursor: hbb.OptionMessage.BoolOption.Yes,
+                  showRemoteCursor:
+                    this.mode === 'camera'
+                      ? hbb.OptionMessage.BoolOption.No
+                      : hbb.OptionMessage.BoolOption.Yes,
                   customFps: 30,
                   supportedDecoding: decodingOptions(
                     this.capabilities,
@@ -1343,9 +1354,10 @@ export class RemoteSession {
             ? { customImageQuality: (options.customQuality ?? 50) << 8 }
             : {}),
           customFps: options.fps,
-          showRemoteCursor: options.remoteCursor
-            ? hbb.OptionMessage.BoolOption.Yes
-            : hbb.OptionMessage.BoolOption.No,
+          showRemoteCursor:
+            this.mode !== 'camera' && options.remoteCursor
+              ? hbb.OptionMessage.BoolOption.Yes
+              : hbb.OptionMessage.BoolOption.No,
         },
       },
     });
