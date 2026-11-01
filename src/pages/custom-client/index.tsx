@@ -1,160 +1,63 @@
 import type { ActionType } from '@ant-design/pro-components';
 import { PageContainer } from '@ant-design/pro-components';
 import { useIntl } from '@umijs/max';
-import { App, Space, Tag } from 'antd';
-import { LoadingOutlined } from '@ant-design/icons';
+import { App, Button, Result, Space, Tag } from 'antd';
+import { LoadingOutlined, SettingOutlined } from '@ant-design/icons';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
-  createNexusLogin,
   getBuildList,
-  getNexusBindStatus,
-  pollNexusLoginStatus,
+  getCustomClientSettings,
   submitBuild,
-  unbindNexus,
-} from '@/services/rustdesk-console/nexus';
-import { SERVER_FIELDS, type PageState } from './constants';
-import BindPrompt from './components/BindPrompt';
-import TokenExpiredPrompt from './components/TokenExpiredPrompt';
-import RepoRequiredPrompt from './components/RepoRequiredPrompt';
+} from '@/services/rustdesk-console/custom-client';
+import { SERVER_FIELDS } from './constants';
 import BuildList from './components/BuildList';
 import CreateBuildModal from './components/CreateBuildModal';
+import ProgressModal from './components/ProgressModal';
+import SettingsModal from './components/SettingsModal';
+
+type PageState = 'loading' | 'settingsRequired' | 'loadFailed' | 'ready';
 
 const CustomClientPage: React.FC = () => {
   const intl = useIntl();
-  const { message: msgApi, modal } = App.useApp();
+  const { message: msgApi } = App.useApp();
 
   const [pageState, setPageState] = useState<PageState>('loading');
-  const [bindStatus, setBindStatus] = useState<API.NexusBindStatus | null>(
-    null,
-  );
-  const [loginLoading, setLoginLoading] = useState(false);
   const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [settingsModalOpen, setSettingsModalOpen] = useState(false);
   const [buildLoading, setBuildLoading] = useState(false);
-  const [buildAgainLoading, setBuildAgainLoading] = useState(false);
-  const [pendingBuildConfig, setPendingBuildConfig] = useState<Record<
-    string,
-    any
-  > | null>(null);
+  const [progressUuid, setProgressUuid] = useState<string | null>(null);
 
-  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const buildListActionRef = useRef<ActionType | null>(null);
 
-  const fetchBindStatus = useCallback(async () => {
+  const checkSettings = useCallback(async () => {
+    setPageState('loading');
+    let settings: API.CustomClientSettings;
     try {
-      setPageState('loading');
-      const status = await getNexusBindStatus();
-      setBindStatus(status);
-      if (!status.bound) {
-        setPageState('bind');
-      } else if (status.expired) {
-        setPageState('tokenExpired');
-      } else {
-        try {
-          await getBuildList();
-          setPageState('ready');
-        } catch (error: any) {
-          if (error?.response?.status === 403) {
-            setPageState('repoRequired');
-          } else {
-            setPageState('ready');
-          }
-        }
-      }
+      settings = await getCustomClientSettings();
     } catch {
-      setPageState('bind');
+      setPageState('settingsRequired');
+      return;
+    }
+    if (!settings.githubToken) {
+      setPageState('settingsRequired');
+      return;
+    }
+    try {
+      await getBuildList();
+      setPageState('ready');
+    } catch {
+      setPageState('loadFailed');
     }
   }, []);
 
   useEffect(() => {
-    fetchBindStatus();
-    return () => {
-      if (pollRef.current) clearInterval(pollRef.current);
-    };
-  }, [fetchBindStatus]);
-
-  const handleLogin = async () => {
-    try {
-      setLoginLoading(true);
-      const result = await createNexusLogin();
-      window.open(result.auth_url, '_blank');
-
-      pollRef.current = setInterval(async () => {
-        try {
-          const status = await pollNexusLoginStatus(result.login_id);
-          if (status.state === 'completed') {
-            if (pollRef.current) clearInterval(pollRef.current);
-            setLoginLoading(false);
-            msgApi.success(
-              intl.formatMessage({
-                id: 'pages.nexus.bindSuccess',
-                defaultMessage: 'Nexus account bound successfully',
-              }),
-            );
-            await fetchBindStatus();
-          } else if (status.state === 'failed') {
-            if (pollRef.current) clearInterval(pollRef.current);
-            setLoginLoading(false);
-            msgApi.error(
-              status.error ||
-                intl.formatMessage({
-                  id: 'pages.nexus.bindFailed',
-                  defaultMessage: 'Failed to bind Nexus account',
-                }),
-            );
-          }
-        } catch {
-          if (pollRef.current) clearInterval(pollRef.current);
-          setLoginLoading(false);
-        }
-      }, 3000);
-    } catch {
-      msgApi.error(
-        intl.formatMessage({
-          id: 'pages.nexus.createLoginFailed',
-          defaultMessage: 'Failed to create login session',
-        }),
-      );
-      setLoginLoading(false);
-    }
-  };
-
-  const handleUnbind = () => {
-    modal.confirm({
-      title: intl.formatMessage({
-        id: 'pages.nexus.unbindConfirm',
-        defaultMessage: 'Unbind Nexus Account',
-      }),
-      content: intl.formatMessage({
-        id: 'pages.nexus.unbindConfirmContent',
-        defaultMessage:
-          'Are you sure you want to unbind your Nexus account? You will need to re-bind to generate custom clients.',
-      }),
-      onOk: async () => {
-        try {
-          await unbindNexus();
-          msgApi.success(
-            intl.formatMessage({
-              id: 'pages.nexus.unbindSuccess',
-              defaultMessage: 'Nexus account unbound',
-            }),
-          );
-          await fetchBindStatus();
-        } catch {
-          msgApi.error(
-            intl.formatMessage({
-              id: 'pages.nexus.unbindFailed',
-              defaultMessage: 'Failed to unbind Nexus account',
-            }),
-          );
-        }
-      },
-    });
-  };
+    checkSettings();
+  }, [checkSettings]);
 
   const buildCustomConfig = (
     values: Record<string, any>,
-  ): API.BuildCustomConfig => {
-    const custom: API.BuildCustomConfig = {};
+  ): API.CustomClientBuildCustom => {
+    const custom: API.CustomClientBuildCustom = {};
 
     if (values.password) custom.password = values.password;
     if (values.salt) custom.salt = values.salt;
@@ -196,156 +99,51 @@ const CustomClientPage: React.FC = () => {
     return custom;
   };
 
-  const isRepoRequiredError = (error: any): boolean => {
-    const errMsg = error?.data?.message || error?.message || '';
-    return (
-      errMsg.includes('Star') ||
-      errMsg.includes('Fork') ||
-      errMsg.includes('Watch') ||
-      error?.response?.status === 403
-    );
-  };
-
   const handleCreate = async (values: Record<string, any>) => {
     try {
       setBuildLoading(true);
-
       const custom = buildCustomConfig(values);
       const result = await submitBuild({
-        os: 'windows',
-        arch: values.arch,
+        os: values.os,
+        arch: values.os === 'all' ? undefined : values.arch,
         custom,
       });
-
       msgApi.success(result.message || 'Build request submitted');
-
       setCreateModalOpen(false);
-      setPendingBuildConfig(null);
       setPageState('ready');
       buildListActionRef.current?.reload();
     } catch (error: any) {
-      if (isRepoRequiredError(error)) {
-        setCreateModalOpen(false);
-        setPendingBuildConfig(values);
-        setPageState('repoRequired');
-      } else if (
-        error?.data?.message?.includes('in progress') ||
-        error?.data?.message?.includes('ongoing') ||
-        error?.response?.status === 409
-      ) {
-        msgApi.error(
+      msgApi.error(
+        error?.data?.message ||
           intl.formatMessage({
-            id: 'pages.nexus.buildAlreadyRunning',
-            defaultMessage: 'You already have a build in progress',
-          }),
-        );
-      } else {
-        msgApi.error(
-          intl.formatMessage({
-            id: 'pages.nexus.generateFailed',
+            id: 'pages.customClient.generateFailed',
             defaultMessage: 'Failed to submit build request',
           }),
-        );
-      }
+      );
     } finally {
       setBuildLoading(false);
     }
   };
 
-  const handleBuildAgain = async () => {
-    if (pendingBuildConfig) {
-      try {
-        setBuildAgainLoading(true);
-
-        const custom = buildCustomConfig(pendingBuildConfig);
-        const result = await submitBuild({
-          os: 'windows',
-          arch: pendingBuildConfig.arch,
-          custom,
-        });
-
-        msgApi.success(result.message || 'Build request submitted');
-        setPendingBuildConfig(null);
-        setPageState('ready');
-        buildListActionRef.current?.reload();
-      } catch (error: any) {
-        if (isRepoRequiredError(error)) {
-          msgApi.warning(
-            intl.formatMessage({
-              id: 'pages.nexus.repoInteractionRequired',
-              defaultMessage:
-                'Please Star, Fork or Watch the databk/rustdesk-console repository on GitHub first. It may take up to 5 minutes for the cache to refresh.',
-            }),
-          );
-        } else if (
-          error?.data?.message?.includes('in progress') ||
-          error?.data?.message?.includes('ongoing') ||
-          error?.response?.status === 409
-        ) {
-          msgApi.error(
-            intl.formatMessage({
-              id: 'pages.nexus.buildAlreadyRunning',
-              defaultMessage: 'You already have a build in progress',
-            }),
-          );
-          setPendingBuildConfig(null);
-          setPageState('ready');
-        } else {
-          msgApi.error(
-            intl.formatMessage({
-              id: 'pages.nexus.generateFailed',
-              defaultMessage: 'Failed to submit build request',
-            }),
-          );
-          setPendingBuildConfig(null);
-          setPageState('ready');
-        }
-      } finally {
-        setBuildAgainLoading(false);
-      }
-    } else {
-      await fetchBindStatus();
-    }
-  };
-
-  const handleRetry = async (record: API.BuildRecord) => {
+  const handleRetry = async (record: API.CustomClientBuild) => {
     try {
       const custom = record.custom ? JSON.parse(record.custom) : {};
       const result = await submitBuild({
-        os: record.os as 'windows',
-        arch: record.arch as 'x86_64' | 'aarch64' | 'x86',
+        os: record.os as any,
+        arch: record.arch ? (record.arch as any) : undefined,
         custom,
       });
       msgApi.success(result.message || 'Build request submitted');
       buildListActionRef.current?.reload();
     } catch (error: any) {
-      if (isRepoRequiredError(error)) {
-        setPageState('repoRequired');
-      } else if (
-        error?.data?.message?.includes('in progress') ||
-        error?.data?.message?.includes('ongoing') ||
-        error?.response?.status === 409
-      ) {
-        msgApi.error(
+      msgApi.error(
+        error?.data?.message ||
           intl.formatMessage({
-            id: 'pages.nexus.buildAlreadyRunning',
-            defaultMessage: 'You already have a build in progress',
-          }),
-        );
-      } else {
-        msgApi.error(
-          intl.formatMessage({
-            id: 'pages.nexus.retryBuildFailed',
+            id: 'pages.customClient.retryBuildFailed',
             defaultMessage: 'Failed to retry build',
           }),
-        );
-      }
+      );
     }
-  };
-
-  const handleCancelCreate = () => {
-    setCreateModalOpen(false);
-    setPendingBuildConfig(null);
   };
 
   const pageTitle = (
@@ -369,38 +167,83 @@ const CustomClientPage: React.FC = () => {
   }
 
   return (
-    <PageContainer title={pageTitle}>
-      {pageState === 'bind' && (
-        <BindPrompt loginLoading={loginLoading} onLogin={handleLogin} />
-      )}
-      {pageState === 'tokenExpired' && (
-        <TokenExpiredPrompt
-          username={bindStatus?.nexus_username}
-          loginLoading={loginLoading}
-          onLogin={handleLogin}
+    <PageContainer
+      title={pageTitle}
+      extra={[
+        <Button
+          key="settings"
+          icon={<SettingOutlined />}
+          onClick={() => setSettingsModalOpen(true)}
+        >
+          {intl.formatMessage({
+            id: 'pages.customClient.settings',
+            defaultMessage: 'Settings',
+          })}
+        </Button>,
+      ]}
+    >
+      {pageState === 'settingsRequired' && (
+        <Result
+          status="warning"
+          title={intl.formatMessage({
+            id: 'pages.customClient.settingsRequired',
+            defaultMessage: 'GitHub token not configured',
+          })}
+          subTitle={intl.formatMessage({
+            id: 'pages.customClient.settingsRequiredDesc',
+            defaultMessage:
+              'Configure the GitHub token and generator repository in settings to enable custom client builds.',
+          })}
+          extra={
+            <Button type="primary" onClick={() => setSettingsModalOpen(true)}>
+              {intl.formatMessage({
+                id: 'pages.customClient.openSettings',
+                defaultMessage: 'Open Settings',
+              })}
+            </Button>
+          }
         />
       )}
-      {pageState === 'repoRequired' && (
-        <RepoRequiredPrompt
-          buildAgainLoading={buildAgainLoading}
-          onBuildAgain={handleBuildAgain}
+      {pageState === 'loadFailed' && (
+        <Result
+          status="error"
+          title={intl.formatMessage({
+            id: 'pages.customClient.loadFailed',
+            defaultMessage: 'Failed to load builds',
+          })}
+          extra={
+            <Button type="primary" onClick={checkSettings}>
+              {intl.formatMessage({
+                id: 'pages.customClient.retry',
+                defaultMessage: 'Retry',
+              })}
+            </Button>
+          }
         />
       )}
       {pageState === 'ready' && (
         <BuildList
           actionRef={buildListActionRef}
-          bindStatus={bindStatus}
-          onUnbind={handleUnbind}
           onCreate={() => setCreateModalOpen(true)}
-          onRepoRequired={() => setPageState('repoRequired')}
           onRetry={handleRetry}
+          onProgress={(uuid) => setProgressUuid(uuid)}
         />
       )}
       <CreateBuildModal
         open={createModalOpen}
         loading={buildLoading}
-        onCancel={handleCancelCreate}
+        onCancel={() => setCreateModalOpen(false)}
         onSubmit={handleCreate}
+      />
+      <ProgressModal
+        uuid={progressUuid || ''}
+        open={progressUuid !== null}
+        onClose={() => setProgressUuid(null)}
+      />
+      <SettingsModal
+        open={settingsModalOpen}
+        onClose={() => setSettingsModalOpen(false)}
+        onSaved={checkSettings}
       />
     </PageContainer>
   );
