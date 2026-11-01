@@ -2,6 +2,8 @@
 import { beforeAll, expect, test } from '@jest/globals';
 import { cryptoReady } from './crypto';
 import {
+  ICE_LIMITS,
+  normalizeIceServers,
   normalizeTargetId,
   validateAdvertisedRelay,
   validateProfile,
@@ -117,4 +119,45 @@ test('complete WSS relay advertisements must match the fixed configured endpoint
       'configuration',
     );
   }
+});
+
+test('ICE servers are optional and validated when present', () => {
+  expect(validateProfile(profile)).toEqual(profile);
+  const stun = { urls: 'stun:stun.example.test:3478' };
+  const turn = {
+    urls: 'turn:turn.example.test:3478',
+    username: 'user',
+    credential: 'secret',
+  };
+  expect(validateProfile({ ...profile, iceServers: [stun, turn] })).toEqual({
+    ...profile,
+    iceServers: [stun, turn],
+  });
+  expect(normalizeIceServers(undefined)).toBeUndefined();
+  expect(normalizeIceServers([])).toBeUndefined();
+  expect(normalizeIceServers([stun])).toEqual([stun]);
+  for (const invalid of [
+    { urls: 'http://example.test' },
+    { urls: 'stun: example.test' },
+    { urls: 'stun:example.test?q=1' },
+    { urls: `stun:${'x'.repeat(ICE_LIMITS.urls)}` },
+    {
+      urls: 'stun:example.test',
+      username: 'x'.repeat(ICE_LIMITS.credential + 1),
+    },
+    {
+      urls: 'stun:example.test',
+      credential: 'x'.repeat(ICE_LIMITS.credential + 1),
+    },
+    { urls: 123 },
+  ]) {
+    expect(() => normalizeIceServers([invalid as never])).toThrow(
+      'configuration',
+    );
+  }
+  expect(() =>
+    normalizeIceServers(
+      Array.from({ length: ICE_LIMITS.count + 1 }, () => stun),
+    ),
+  ).toThrow('configuration');
 });

@@ -2086,3 +2086,140 @@ test('仅远端批准或忘记之后不能保存此前认证候选', async () =>
   f.session.disconnect();
   await run;
 });
+
+test('WebRTC offer rides in the punch request and the DataChannel wins over relay', async () => {
+  const server = sodium.crypto_sign_keypair();
+  const peer = sodium.crypto_sign_keypair();
+  const box = sodium.crypto_box_keypair();
+  const id = '123456789';
+  const states: SessionState[] = [];
+  const errors: string[] = [];
+  const openedUrls: string[] = [];
+  let capturedOffer = '';
+  const signed = (key: Uint8Array, signing: Uint8Array, value = id) =>
+    sodium.crypto_sign(
+      hbb.IdPk.encode({ id: value, pk: key, kxVersion: 0 }).finish(),
+      signing,
+    );
+  const channel = {
+    label: 'rustdesk',
+    binaryType: 'blob' as BinaryType,
+    readyState: 'connecting' as RTCDataChannelState,
+    bufferedAmount: 0,
+    onopen: null as ((ev: Event) => void) | null,
+    onmessage: null as ((ev: MessageEvent) => void) | null,
+    onclose: null as (() => void) | null,
+    onerror: null as ((ev: Event) => void) | null,
+    sent: [] as ArrayBuffer[],
+    send(data: ArrayBuffer) {
+      this.sent.push(data);
+    },
+    close() {
+      this.readyState = 'closed';
+      this.onclose?.();
+    },
+  };
+  const pc = {
+    onicecandidate: null as ((ev: RTCPeerConnectionIceEvent) => void) | null,
+    onconnectionstatechange: null as (() => void) | null,
+    connectionState: 'new' as RTCPeerConnectionState,
+    localDescription: null as RTCSessionDescriptionInit | null,
+    remoteDescription: null as RTCSessionDescriptionInit | null,
+    closed: false,
+    createDataChannel(label: string) {
+      channel.label = label;
+      return channel as unknown as RTCDataChannel;
+    },
+    async createOffer() {
+      return { type: 'offer' as RTCSdpType, sdp: 'v=0\r\nm=application\r\n' };
+    },
+    async setLocalDescription(desc: RTCSessionDescriptionInit) {
+      this.localDescription = desc;
+    },
+    async setRemoteDescription(desc: RTCSessionDescriptionInit) {
+      this.remoteDescription = desc;
+      setTimeout(() => {
+        channel.readyState = 'open';
+        channel.onopen?.(new Event('open'));
+      }, 0);
+      setTimeout(() => {
+        const encoded = hbb.Message.encode({
+          signedId: { id: signed(box.publicKey, peer.privateKey) },
+        }).finish();
+        const copy = new Uint8Array(encoded);
+        channel.onmessage?.({
+          data: copy.buffer,
+        } as MessageEvent);
+      }, 0);
+    },
+    async addIceCandidate() {},
+    close() {
+      this.closed = true;
+    },
+  };
+  const socketFactory = (url: string) => {
+    openedUrls.push(url);
+    if (url.endsWith('/id')) {
+      const socket = new Socket((bytes) => {
+        const message = hbb.RendezvousMessage.decode(bytes);
+        if (message.punchHoleRequest)
+          capturedOffer = message.punchHoleRequest.webrtcSdpOffer ?? '';
+        socket.receive(
+          hbb.RendezvousMessage.encode({
+            relayResponse: {
+              uuid: 'synthetic-uuid',
+              version: '1.4.9',
+              relayServer: 'example.test:21117',
+              pk: signed(peer.publicKey, server.privateKey),
+              webrtcSdpAnswer: 'answer-sdp',
+            },
+          }).finish(),
+        );
+      });
+      return socket as unknown as WebSocket;
+    }
+    // Relay leg fails so the WebRTC leg wins the race deterministically.
+    const socket = new Socket(() => {
+      throw new Error('relay must not be used');
+    });
+    socket.readyState = 3;
+    queueMicrotask(() => socket.onclose?.());
+    return socket as unknown as WebSocket;
+  };
+  const session = new RemoteSession(
+    {
+      authentication: () => {},
+      security: () => {},
+      state: (s) => states.push(s),
+      error: (e) => errors.push(e),
+      message: () => {},
+      permissions: () => {},
+    },
+    socketFactory,
+    'desktop',
+    undefined,
+    'decoded-ack',
+    {
+      RTCPeerConnection: function (this: unknown) {
+        return pc as unknown as RTCPeerConnection;
+      } as unknown as typeof RTCPeerConnection,
+    },
+  );
+  active.push(session);
+  const profile = {
+    idServerUrl: 'wss://example.test/id',
+    relayServerUrl: 'wss://example.test/relay',
+    serverPublicKey: sodium.to_base64(
+      server.publicKey,
+      sodium.base64_variants.ORIGINAL,
+    ),
+    iceServers: [{ urls: 'stun:stun.example.test:3478' }],
+  };
+  const run = session.connect(profile, id);
+
+  await until(() => states.includes('authenticating'));
+  expect(capturedOffer).toContain('m=application');
+  expect(openedUrls).toContain('wss://example.test/id');
+  session.disconnect();
+  await run;
+});

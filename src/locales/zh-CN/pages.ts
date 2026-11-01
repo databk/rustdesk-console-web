@@ -1129,6 +1129,10 @@ export default {
   'pages.webClientSettings.upstreamTitle': '内部上游端点（可选）',
   'pages.webClientSettings.upstreamHelp':
     '网关代理转发的内部 WebSocket 端点，留空则使用控制台网关默认值。',
+  'pages.webClientSettings.iceTitle': 'WebRTC ICE 服务器（可选）',
+  'pages.webClientSettings.iceServers': 'ICE 服务器',
+  'pages.webClientSettings.iceServersHelp':
+    '每行一个，用于浏览器 WebRTC P2P 的 STUN/TURN 服务器，例如 "stun:stun.example.com:3478" 或 "turn:turn.example.com:3478 用户名 凭据"。留空则使用内置默认值。仅保存在当前浏览器中。',
   'pages.webClientSettings.idUpstreamUrl': 'ID 上游地址',
   'pages.webClientSettings.idUpstreamUrlInvalid': '必须是 ws:// 或 wss:// 地址',
   'pages.webClientSettings.relayUpstreamUrl': '中继上游地址',

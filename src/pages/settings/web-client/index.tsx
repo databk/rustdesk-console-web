@@ -1,6 +1,6 @@
 import { GlobalOutlined, SaveOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
-import { useIntl, FormattedMessage } from '@umijs/max';
+import { FormattedMessage, useIntl } from '@umijs/max';
 import {
   Alert,
   Button,
@@ -15,6 +15,11 @@ import {
   Switch,
 } from 'antd';
 import React, { useEffect, useState } from 'react';
+import {
+  loadIceServersText,
+  parseIceServersText,
+  saveIceServers,
+} from '@/features/web-client/core/ice-config';
 import {
   getWebClientSettings,
   updateWebClientSettings,
@@ -115,6 +120,7 @@ const WebClientSettings: React.FC = () => {
         serverPublicKey: config.serverPublicKey || '',
         idUpstreamUrl: config.idUpstreamUrl || '',
         relayUpstreamUrl: config.relayUpstreamUrl || '',
+        iceServers: loadIceServersText(),
       });
     } catch (error: any) {
       console.error('Failed to fetch web client settings:', error);
@@ -144,6 +150,7 @@ const WebClientSettings: React.FC = () => {
         idUpstreamUrl: (values.idUpstreamUrl ?? '').trim(),
         relayUpstreamUrl: (values.relayUpstreamUrl ?? '').trim(),
       });
+      saveIceServers(parseIceServersText(values.iceServers ?? ''));
       messageApi.success(
         intl.formatMessage({
           id: 'pages.webClientSettings.saveSuccess',
@@ -433,6 +440,36 @@ const WebClientSettings: React.FC = () => {
               }
             >
               <Input.TextArea rows={2} />
+            </Form.Item>
+
+            <Divider>
+              <FormattedMessage
+                id="pages.webClientSettings.iceTitle"
+                defaultMessage="WebRTC ICE Servers (Optional)"
+              />
+            </Divider>
+
+            <Form.Item
+              name="iceServers"
+              label={
+                <FormattedMessage
+                  id="pages.webClientSettings.iceServers"
+                  defaultMessage="ICE Servers"
+                />
+              }
+              extra={
+                <FormattedMessage
+                  id="pages.webClientSettings.iceServersHelp"
+                  defaultMessage="One per line. STUN/TURN servers for browser WebRTC P2P, e.g. 'stun:stun.example.com:3478' or 'turn:turn.example.com:3478 user credential'. Leave empty to use built-in defaults. Stored in this browser only."
+                />
+              }
+            >
+              <Input.TextArea
+                rows={3}
+                placeholder={
+                  'stun:stun.cloudflare.com:3478\nstun:stun.l.google.com:19302'
+                }
+              />
             </Form.Item>
 
             <Divider>
