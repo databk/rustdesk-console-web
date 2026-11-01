@@ -884,8 +884,7 @@ export class RemoteSession {
             this.kind === 'desktop' && this.videoFlow === 'decoded-ack',
           fileTransfer:
             this.kind === 'file' ? { dir: '', showHidden: false } : undefined,
-          viewCamera:
-            this.mode === 'camera' ? {} : undefined,
+          viewCamera: this.mode === 'camera' ? {} : undefined,
           option:
             this.kind === 'file'
               ? undefined

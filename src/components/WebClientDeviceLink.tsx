@@ -17,11 +17,8 @@ export default function WebClientDeviceLink({
   if (!configuration?.enabled || !access.canWebClientConnect) return null;
   const label = intl.formatMessage({
     id:
-      mode === 'camera'
-        ? 'pages.devices.connectViewCamera'
-        : 'webClient.open',
-    defaultMessage:
-      mode === 'camera' ? 'View Camera' : 'Connect in browser',
+      mode === 'camera' ? 'pages.devices.connectViewCamera' : 'webClient.open',
+    defaultMessage: mode === 'camera' ? 'View Camera' : 'Connect in browser',
   });
   const query = `id=${encodeURIComponent(id)}${autoConnect ? '&connect=1' : ''}${mode === 'camera' ? '&mode=camera' : ''}`;
   return (

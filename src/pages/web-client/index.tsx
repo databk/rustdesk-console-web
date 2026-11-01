@@ -150,7 +150,8 @@ export default function WebClientPage() {
   const [id, setId] = useState(
     () => new URLSearchParams(location.search).get('id') || '',
   );
-  const cameraMode = new URLSearchParams(location.search).get('mode') === 'camera';
+  const cameraMode =
+    new URLSearchParams(location.search).get('mode') === 'camera';
   const [state, setState] = useState<SessionState>('idle');
   const [kxVersion, setKxVersion] = useState<KxVersion>();
   const [audioSupported, setAudioSupported] = useState(false);
@@ -746,7 +747,9 @@ export default function WebClientPage() {
     const handler = new RemoteInput(
       canvas.current,
       display,
-      (value) => { if (!cameraMode) post({ type: 'input', input: value }); },
+      (value) => {
+        if (!cameraMode) post({ type: 'input', input: value });
+      },
       () => cursorRenderer.current?.localActivity(),
     );
     input.current = handler;
@@ -965,7 +968,9 @@ export default function WebClientPage() {
     const handler = new RemoteTouch(
       canvas.current,
       display,
-      (value) => { if (!cameraMode) post({ type: 'input', input: value }); },
+      (value) => {
+        if (!cameraMode) post({ type: 'input', input: value });
+      },
       touchMode,
       viewportRef.current,
       setViewport,
