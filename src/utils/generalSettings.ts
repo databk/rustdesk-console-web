@@ -3,6 +3,7 @@ export const DEFAULT_GENERAL_SETTINGS: API.GeneralSettings = {
   defaultLanguage: 'en-US',
   jwtExpiryDays: 30,
   auditRetentionDays: 0,
+  deviceCloneIsolation: false,
   site: {
     frontendUrl: '',
     backendUrl: '',

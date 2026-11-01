@@ -552,6 +552,12 @@ export default {
     'Number of days to keep audit logs before automatic cleanup. Set to 0 to disable auto-cleanup.',
   'pages.settings.generalSection.auditRetentionDaysRequired':
     'Please enter a non-negative integer',
+  'pages.settings.generalSection.deviceCloneIsolation':
+    'Device Clone Isolation',
+  'pages.settings.generalSection.deviceCloneIsolationWarning':
+    'Do not toggle this off casually after enabling. Legacy mode cannot resolve the derived records and may create duplicate or merged devices. Back up the database before enabling. See docs/clone-isolation.md.',
+  'pages.settings.generalSection.deviceCloneIsolationExtra':
+    'Separate cloned clients that share a UUID but have different RustDesk IDs. Off by default.',
   'pages.strategies.list': 'Strategy List',
   'pages.strategies.name': 'Strategy Name',
   'pages.strategies.note': 'Note',

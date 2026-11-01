@@ -30,6 +30,7 @@ test('uses the admin general-settings API contract', async () => {
     defaultLanguage: 'en-US',
     jwtExpiryDays: 30,
     auditRetentionDays: 0,
+    deviceCloneIsolation: false,
     site: { frontendUrl: 'https://console.example.com', backendUrl: '' },
     webauthn: { enabled: true, rpName: 'RustDesk Console' },
   };

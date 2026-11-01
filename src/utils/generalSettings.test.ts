@@ -19,6 +19,7 @@ test('maps general settings to frontend settings', () => {
     defaultLanguage: 'en-US',
     jwtExpiryDays: 30,
     auditRetentionDays: 0,
+    deviceCloneIsolation: false,
     site: {
       frontendUrl: 'https://a.example.com',
       backendUrl: 'https://b.example.com',

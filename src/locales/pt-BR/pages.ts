@@ -581,6 +581,12 @@ export default {
     'Número de dias para manter os logs de auditoria antes da limpeza automática. Defina como 0 para desativar.',
   'pages.settings.generalSection.auditRetentionDaysRequired':
     'Informe um número inteiro não negativo',
+  'pages.settings.generalSection.deviceCloneIsolation':
+    'Isolamento de Clones de Dispositivos',
+  'pages.settings.generalSection.deviceCloneIsolationWarning':
+    'Não desative casualmente após habilitar. O modo legado não consegue resolver os registros derivados e pode criar dispositivos duplicados ou mesclados. Faça backup do banco de dados antes de habilitar. Veja docs/clone-isolation.md.',
+  'pages.settings.generalSection.deviceCloneIsolationExtra':
+    'Separar clientes clonados que compartilham um UUID mas têm diferentes IDs RustDesk. Desativado por padrão.',
   'pages.strategies.list': 'Lista de Estratégias',
   'pages.strategies.name': 'Nome da Estratégia',
   'pages.strategies.note': 'Observação',
