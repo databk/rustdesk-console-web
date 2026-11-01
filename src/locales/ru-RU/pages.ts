@@ -577,6 +577,12 @@ export default {
     'Количество дней хранения журналов аудита перед автоматической очисткой. Установите 0 для отключения.',
   'pages.settings.generalSection.auditRetentionDaysRequired':
     'Введите неотрицательное целое число',
+  'pages.settings.generalSection.deviceCloneIsolation':
+    'Изоляция клонов устройств',
+  'pages.settings.generalSection.deviceCloneIsolationWarning':
+    'Не отключайте случайно после включения. Устаревший режим не может разрешить производные записи и может создать дубликаты или объединённые устройства. Сделайте резервную копию базы данных перед включением. См. docs/clone-isolation.md.',
+  'pages.settings.generalSection.deviceCloneIsolationExtra':
+    'Разделять клонированные клиенты с общим UUID, но разными ID RustDesk. Выключено по умолчанию.',
   'pages.strategies.list': 'Список стратегий',
   'pages.strategies.name': 'Название стратегии',
   'pages.strategies.note': 'Примечание',

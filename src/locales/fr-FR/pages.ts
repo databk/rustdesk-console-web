@@ -469,6 +469,12 @@ export default {
     "Nombre de jours de conservation des journaux d'audit avant nettoyage automatique. Définir à 0 pour désactiver.",
   'pages.settings.generalSection.auditRetentionDaysRequired':
     'Veuillez saisir un entier non négatif',
+  'pages.settings.generalSection.deviceCloneIsolation':
+    "Isolation des clones d'appareils",
+  'pages.settings.generalSection.deviceCloneIsolationWarning':
+    "Ne désactivez pas sans précaution après l'activation. Le mode hérité ne peut pas résoudre les enregistrements dérivés et peut créer des appareils dupliqués ou fusionnés. Sauvegardez la base de données avant l'activation. Voir docs/clone-isolation.md.",
+  'pages.settings.generalSection.deviceCloneIsolationExtra':
+    'Séparer les clients clonés partageant un UUID mais ayant des ID RustDesk différents. Désactivé par défaut.',
   'pages.strategies.list': 'Liste des stratégies',
   'pages.strategies.name': 'Nom de la stratégie',
   'pages.strategies.note': 'Note',

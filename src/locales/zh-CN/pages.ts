@@ -507,6 +507,11 @@ export default {
   'pages.settings.generalSection.auditRetentionDaysExtra':
     '审计日志保留天数，到期后自动清理。设为 0 表示不自动清理。',
   'pages.settings.generalSection.auditRetentionDaysRequired': '请输入非负整数',
+  'pages.settings.generalSection.deviceCloneIsolation': '设备克隆隔离',
+  'pages.settings.generalSection.deviceCloneIsolationWarning':
+    '启用后请勿随意关闭。旧模式无法解析派生记录，可能导致设备重复或合并。启用前请备份数据库。详见 docs/clone-isolation.md。',
+  'pages.settings.generalSection.deviceCloneIsolationExtra':
+    '隔离共享 UUID 但具有不同 RustDesk ID 的克隆客户端。默认关闭。',
   'pages.strategies.list': '策略列表',
   'pages.strategies.name': '策略名称',
   'pages.strategies.note': '备注',
