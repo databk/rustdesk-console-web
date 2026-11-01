@@ -2,7 +2,6 @@ import {
   CheckCircleOutlined,
   CloudDownloadOutlined,
   DeleteOutlined,
-  GithubOutlined,
   LoadingOutlined,
   PlusOutlined,
   RedoOutlined,
@@ -17,17 +16,15 @@ import {
   deleteBuild,
   downloadBuildFile,
   getBuildList,
-} from '@/services/rustdesk-console/nexus';
+} from '@/services/rustdesk-console/custom-client';
 
-const { Text, Title } = Typography;
+const { Title } = Typography;
 
 interface BuildListProps {
   actionRef: React.MutableRefObject<ActionType | null>;
-  bindStatus: API.NexusBindStatus | null;
-  onUnbind: () => void;
   onCreate: () => void;
-  onRepoRequired: () => void;
-  onRetry: (record: API.BuildRecord) => void;
+  onRetry: (record: API.CustomClientBuild) => void;
+  onProgress: (uuid: string) => void;
 }
 
 const statusConfig: Record<string, { color: string; icon: React.ReactNode }> = {
@@ -40,11 +37,9 @@ const statusConfig: Record<string, { color: string; icon: React.ReactNode }> = {
 
 const BuildList: React.FC<BuildListProps> = ({
   actionRef,
-  bindStatus,
-  onUnbind,
   onCreate,
-  onRepoRequired,
   onRetry,
+  onProgress,
 }) => {
   const intl = useIntl();
   const { message: msgApi } = App.useApp();
@@ -56,30 +51,30 @@ const BuildList: React.FC<BuildListProps> = ({
   const statusLabel = (status: string) => {
     const map: Record<string, string> = {
       pending: intl.formatMessage({
-        id: 'pages.nexus.statusPending',
+        id: 'pages.customClient.statusPending',
         defaultMessage: 'Build Pending',
       }),
       building: intl.formatMessage({
-        id: 'pages.nexus.statusBuilding',
+        id: 'pages.customClient.statusBuilding',
         defaultMessage: 'Building',
       }),
       completed: intl.formatMessage({
-        id: 'pages.nexus.statusCompleted',
+        id: 'pages.customClient.statusCompleted',
         defaultMessage: 'Build Completed',
       }),
       failed: intl.formatMessage({
-        id: 'pages.nexus.statusFailed',
+        id: 'pages.customClient.statusFailed',
         defaultMessage: 'Build Failed',
       }),
       cancelled: intl.formatMessage({
-        id: 'pages.nexus.statusCancelled',
+        id: 'pages.customClient.statusCancelled',
         defaultMessage: 'Build Cancelled',
       }),
     };
     return map[status] || status;
   };
 
-  const managePolling = (records: API.BuildRecord[]) => {
+  const managePolling = (records: API.CustomClientBuild[]) => {
     const hasPending = records.some(
       (r) => r.status === 'pending' || r.status === 'building',
     );
@@ -104,7 +99,7 @@ const BuildList: React.FC<BuildListProps> = ({
       await deleteBuild(uuid);
       msgApi.success(
         intl.formatMessage({
-          id: 'pages.nexus.deleteSuccess',
+          id: 'pages.customClient.deleteSuccess',
           defaultMessage: 'Build record deleted',
         }),
       );
@@ -112,7 +107,7 @@ const BuildList: React.FC<BuildListProps> = ({
     } catch {
       msgApi.error(
         intl.formatMessage({
-          id: 'pages.nexus.deleteFailed',
+          id: 'pages.customClient.deleteFailed',
           defaultMessage: 'Failed to delete build record',
         }),
       );
@@ -134,7 +129,7 @@ const BuildList: React.FC<BuildListProps> = ({
     } catch {
       msgApi.error(
         intl.formatMessage({
-          id: 'pages.nexus.downloadFailed',
+          id: 'pages.customClient.downloadFailed',
           defaultMessage: 'Failed to download custom client',
         }),
       );
@@ -147,10 +142,10 @@ const BuildList: React.FC<BuildListProps> = ({
     }
   };
 
-  const columns: ProColumns<API.BuildRecord>[] = [
+  const columns: ProColumns<API.CustomClientBuild>[] = [
     {
       title: intl.formatMessage({
-        id: 'pages.nexus.uuid',
+        id: 'pages.customClient.uuid',
         defaultMessage: 'UUID',
       }),
       dataIndex: 'uuid',
@@ -159,38 +154,33 @@ const BuildList: React.FC<BuildListProps> = ({
     },
     {
       title: intl.formatMessage({
-        id: 'pages.nexus.appName',
-        defaultMessage: 'Application Name',
+        id: 'pages.customClient.os',
+        defaultMessage: 'OS',
       }),
-      dataIndex: 'appName',
-      key: 'appName',
-      ellipsis: true,
-      render: (dom: React.ReactNode) => dom || '-',
-    },
-    {
-      title: intl.formatMessage({ id: 'pages.nexus.os', defaultMessage: 'OS' }),
       dataIndex: 'os',
       key: 'os',
-      width: 80,
+      width: 100,
     },
     {
       title: intl.formatMessage({
-        id: 'pages.nexus.arch',
+        id: 'pages.customClient.arch',
         defaultMessage: 'Arch',
       }),
       dataIndex: 'arch',
       key: 'arch',
       width: 90,
+      render: (_: React.ReactNode, record: API.CustomClientBuild) =>
+        record.arch || '-',
     },
     {
       title: intl.formatMessage({
-        id: 'pages.nexus.status',
+        id: 'pages.customClient.status',
         defaultMessage: 'Status',
       }),
       dataIndex: 'status',
       key: 'status',
       width: 140,
-      render: (_: React.ReactNode, record: API.BuildRecord) => {
+      render: (_: React.ReactNode, record: API.CustomClientBuild) => {
         const config = statusConfig[record.status] || {
           color: 'default',
           icon: null,
@@ -204,13 +194,13 @@ const BuildList: React.FC<BuildListProps> = ({
     },
     {
       title: intl.formatMessage({
-        id: 'pages.customClients.createdAt',
+        id: 'pages.customClient.createdAt',
         defaultMessage: 'Created At',
       }),
       dataIndex: 'createdAt',
       key: 'createdAt',
       ellipsis: true,
-      render: (_: React.ReactNode, record: API.BuildRecord) =>
+      render: (_: React.ReactNode, record: API.CustomClientBuild) =>
         record.createdAt ? new Date(record.createdAt).toLocaleString() : '-',
     },
     {
@@ -219,17 +209,35 @@ const BuildList: React.FC<BuildListProps> = ({
         defaultMessage: 'Action',
       }),
       key: 'action',
-      width: 200,
+      width: 240,
       search: false,
-      render: (_: any, record: API.BuildRecord) => {
+      render: (_: any, record: API.CustomClientBuild) => {
         const isDownloading = downloadLoading.has(record.uuid);
         const files: string[] = record.files ? JSON.parse(record.files) : [];
+        const isInProgress =
+          record.status === 'pending' || record.status === 'building';
+        const isTerminal =
+          record.status === 'failed' ||
+          record.status === 'cancelled' ||
+          record.status === 'completed';
 
         return (
           <Space
             size={0}
             separator={<span style={{ color: '#d9d9d9' }}>|</span>}
           >
+            {isInProgress && (
+              <Button
+                type="link"
+                size="small"
+                onClick={() => onProgress(record.uuid)}
+              >
+                <FormattedMessage
+                  id="pages.customClient.viewProgress"
+                  defaultMessage="Progress"
+                />
+              </Button>
+            )}
             {record.status === 'failed' && (
               <Button
                 type="link"
@@ -238,7 +246,7 @@ const BuildList: React.FC<BuildListProps> = ({
                 onClick={() => onRetry(record)}
               >
                 <FormattedMessage
-                  id="pages.nexus.retryBuild"
+                  id="pages.customClient.retryBuild"
                   defaultMessage="Retry"
                 />
               </Button>
@@ -262,12 +270,10 @@ const BuildList: React.FC<BuildListProps> = ({
                   {file}
                 </Button>
               ))}
-            {(record.status === 'failed' ||
-              record.status === 'cancelled' ||
-              record.status === 'completed') && (
+            {isTerminal && (
               <Popconfirm
                 title={intl.formatMessage({
-                  id: 'pages.nexus.deleteBuildConfirm',
+                  id: 'pages.customClient.deleteBuildConfirm',
                   defaultMessage:
                     'Are you sure you want to delete this build record?',
                 })}
@@ -301,25 +307,18 @@ const BuildList: React.FC<BuildListProps> = ({
   ];
 
   return (
-    <ProTable<API.BuildRecord>
+    <ProTable<API.CustomClientBuild>
       headerTitle={
-        <Space>
-          <Title level={5} style={{ margin: 0 }}>
-            <FormattedMessage
-              id="pages.nexus.buildList"
-              defaultMessage="Build History"
-            />
-          </Title>
-          {bindStatus?.bound && (
-            <Text type="secondary">
-              <GithubOutlined /> {bindStatus.nexus_username}
-            </Text>
-          )}
-        </Space>
+        <Title level={5} style={{ margin: 0 }}>
+          <FormattedMessage
+            id="pages.customClient.buildList"
+            defaultMessage="Build History"
+          />
+        </Title>
       }
       columnsState={{
         persistenceType: 'localStorage',
-        persistenceKey: 'build_list_columns_state',
+        persistenceKey: 'custom_client_build_list_columns_state',
       }}
       actionRef={actionRef}
       rowKey="uuid"
@@ -338,9 +337,6 @@ const BuildList: React.FC<BuildListProps> = ({
         reload: true,
       }}
       toolBarRender={() => [
-        <Button key="unbind" size="small" danger onClick={onUnbind}>
-          <FormattedMessage id="pages.nexus.unbind" defaultMessage="Unbind" />
-        </Button>,
         <Button
           key="create"
           type="primary"
@@ -348,7 +344,7 @@ const BuildList: React.FC<BuildListProps> = ({
           onClick={onCreate}
         >
           <FormattedMessage
-            id="pages.nexus.createBuild"
+            id="pages.customClient.createBuild"
             defaultMessage="Create New Client"
           />
         </Button>,
@@ -361,10 +357,7 @@ const BuildList: React.FC<BuildListProps> = ({
             data: records,
             success: true,
           };
-        } catch (error: any) {
-          if (error?.response?.status === 403) {
-            onRepoRequired();
-          }
+        } catch {
           return {
             data: [],
             success: false,

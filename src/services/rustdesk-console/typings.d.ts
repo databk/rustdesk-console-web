@@ -1182,28 +1182,9 @@ declare namespace API {
     }>;
   };
 
-  // ── Nexus ───────────────────────────────────────────────────────
+  // ── Custom Client ───────────────────────────────────────────────
 
-  type NexusLoginResult = {
-    login_id: string;
-    auth_url: string;
-    expires_in: number;
-  };
-
-  type NexusLoginStatus = {
-    state: 'pending' | 'completed' | 'failed';
-    nexus_username?: string;
-    expires_in?: number;
-    error?: string;
-  };
-
-  type NexusBindStatus = {
-    bound: boolean;
-    nexus_username?: string;
-    expired?: boolean;
-  };
-
-  type BuildCustomConfig = {
+  type CustomClientBuildCustom = {
     password?: string;
     salt?: string;
     'conn-type'?: 'incoming' | 'outgoing' | 'both';
@@ -1217,29 +1198,62 @@ declare namespace API {
     'default-settings'?: Record<string, unknown>;
   };
 
-  type SubmitBuildParams = {
-    os: 'windows';
-    arch: 'x86_64' | 'aarch64' | 'x86';
-    custom: BuildCustomConfig;
+  type SubmitCustomClientBuildParams = {
+    os: 'windows' | 'linux' | 'macos' | 'android' | 'ios' | 'all';
+    arch?: 'x86_64' | 'aarch64' | 'x86' | 'armv7';
+    custom?: CustomClientBuildCustom;
   };
 
-  type SubmitBuildResult = {
+  type SubmitCustomClientBuildResult = {
     uuid: string;
-    status: 'pending';
+    status: string;
     message: string;
   };
 
-  type BuildRecord = {
+  type CustomClientBuild = {
     uuid: string;
     userGuid: string;
     os: string;
     arch: string;
-    appName: string;
     custom: string | null;
     status: BuildStatus;
-    files: string | null;
     message: string | null;
+    files: string | null;
+    callbackToken: string;
+    githubRunId: string | null;
     createdAt: string;
     updatedAt: string;
+  };
+
+  type CustomClientBuildStep = {
+    name: string;
+    status: string;
+    conclusion: string | null;
+  };
+
+  type CustomClientBuildJob = {
+    name: string;
+    status: string;
+    conclusion: string | null;
+    steps: CustomClientBuildStep[];
+  };
+
+  type CustomClientBuildProgress = {
+    runId: string | null;
+    runStatus: string;
+    runConclusion: string | null;
+    jobs: CustomClientBuildJob[];
+  };
+
+  type CustomClientSettings = {
+    githubToken: string;
+    generatorRepo: string;
+    generatorRef: string;
+  };
+
+  type UpdateCustomClientSettingsParams = {
+    githubToken?: string;
+    generatorRepo?: string;
+    generatorRef?: string;
   };
 }
