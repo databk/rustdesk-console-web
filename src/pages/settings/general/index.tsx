@@ -1,5 +1,6 @@
 import {
   FieldTimeOutlined,
+  ForkOutlined,
   GlobalOutlined,
   HighlightOutlined,
   LinkOutlined,
@@ -399,12 +400,61 @@ const GeneralSettings: React.FC = () => {
     </Card>
   );
 
+  const cloneIsolationCard = (
+    <Card
+      title={
+        <Space>
+          <ForkOutlined />
+          <FormattedMessage
+            id="pages.settings.generalSection.deviceCloneIsolation"
+            defaultMessage="Device Clone Isolation"
+          />
+        </Space>
+      }
+    >
+      <Alert
+        type="warning"
+        showIcon
+        style={{ marginBottom: 16 }}
+        message={
+          <FormattedMessage
+            id="pages.settings.generalSection.deviceCloneIsolationWarning"
+            defaultMessage="Do not toggle this off casually after enabling. Legacy mode cannot resolve the derived records and may create duplicate or merged devices. Back up the database before enabling. See docs/clone-isolation.md."
+          />
+        }
+      />
+      <Form.Item
+        name="deviceCloneIsolation"
+        label={
+          <FormattedMessage
+            id="pages.settings.generalSection.deviceCloneIsolation"
+            defaultMessage="Device Clone Isolation"
+          />
+        }
+        valuePropName="checked"
+        extra={
+          <FormattedMessage
+            id="pages.settings.generalSection.deviceCloneIsolationExtra"
+            defaultMessage="Separate cloned clients that share a UUID but have different RustDesk IDs. Off by default."
+          />
+        }
+      >
+        <Switch />
+      </Form.Item>
+    </Card>
+  );
+
   const masonryItems = [
     { key: 'watermark', data: 'watermark', children: watermarkCard },
     { key: 'language', data: 'language', children: languageCard },
     { key: 'site', data: 'site', children: siteCard },
     { key: 'webauthn', data: 'webauthn', children: webauthnCard },
     { key: 'security', data: 'security', children: securityCard },
+    {
+      key: 'cloneIsolation',
+      data: 'cloneIsolation',
+      children: cloneIsolationCard,
+    },
   ];
 
   return (

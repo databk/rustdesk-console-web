@@ -905,6 +905,7 @@ declare namespace API {
     defaultLanguage: string;
     jwtExpiryDays: number;
     auditRetentionDays: number;
+    deviceCloneIsolation: boolean;
     site: {
       frontendUrl: string;
       backendUrl: string;
