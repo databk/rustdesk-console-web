@@ -252,7 +252,7 @@ export const getDeviceColumns = (options?: {
               </Button>
             </Dropdown>
             <WebClientDeviceLink id={record.id} />
-            <WebClientDeviceLink id={record.id} mode="camera" />
+            <WebClientDeviceLink id={record.id} mode="camera" autoConnect />
           </span>
         );
       },
