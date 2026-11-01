@@ -1354,9 +1354,10 @@ export class RemoteSession {
             ? { customImageQuality: (options.customQuality ?? 50) << 8 }
             : {}),
           customFps: options.fps,
-          showRemoteCursor: options.remoteCursor
-            ? hbb.OptionMessage.BoolOption.Yes
-            : hbb.OptionMessage.BoolOption.No,
+          showRemoteCursor:
+            this.mode !== 'camera' && options.remoteCursor
+              ? hbb.OptionMessage.BoolOption.Yes
+              : hbb.OptionMessage.BoolOption.No,
         },
       },
     });
