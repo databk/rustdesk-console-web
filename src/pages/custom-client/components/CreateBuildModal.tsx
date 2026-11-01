@@ -13,7 +13,12 @@ import {
   Switch,
 } from 'antd';
 import React from 'react';
-import { ARCH_OPTIONS, CONN_TYPE_OPTIONS, OS_OPTIONS, SERVER_FIELDS } from '../constants';
+import {
+  ARCH_OPTIONS,
+  CONN_TYPE_OPTIONS,
+  OS_OPTIONS,
+  SERVER_FIELDS,
+} from '../constants';
 
 const DISABLE_FIELDS = [
   {

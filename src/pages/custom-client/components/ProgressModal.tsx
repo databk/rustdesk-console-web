@@ -38,6 +38,11 @@ const jobColor = (status: string, conclusion: string | null): string => {
   return 'warning';
 };
 
+const isTerminal = (data: API.CustomClientBuildProgress): boolean =>
+  data.runStatus === 'completed' ||
+  data.runConclusion === 'failure' ||
+  data.runConclusion === 'success';
+
 const ProgressModal: React.FC<ProgressModalProps> = ({
   uuid,
   open,
@@ -49,40 +54,38 @@ const ProgressModal: React.FC<ProgressModalProps> = ({
   const [error, setError] = React.useState<string | null>(null);
   const pollRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const fetchProgress = React.useCallback(async () => {
-    try {
-      const data = await getBuildProgress(uuid);
-      setProgress(data);
-      setError(null);
-    } catch {
-      setError('Failed to fetch build progress');
-    }
-  }, [uuid]);
-
   React.useEffect(() => {
-    if (open) {
-      fetchProgress();
-      pollRef.current = setInterval(fetchProgress, 5000);
-    }
-    return () => {
+    if (!open) return;
+    let cancelled = false;
+    setProgress(null);
+    setError(null);
+
+    const stop = () => {
       if (pollRef.current) {
         clearInterval(pollRef.current);
         pollRef.current = null;
       }
     };
-  }, [open, fetchProgress]);
 
-  const isDone =
-    progress?.runStatus === 'completed' ||
-    progress?.runConclusion === 'failure' ||
-    progress?.runConclusion === 'success';
+    const fetchProgress = async () => {
+      try {
+        const data = await getBuildProgress(uuid);
+        if (cancelled) return;
+        setProgress(data);
+        setError(null);
+        if (isTerminal(data)) stop();
+      } catch {
+        if (!cancelled) setError('Failed to fetch build progress');
+      }
+    };
 
-  React.useEffect(() => {
-    if (isDone && pollRef.current) {
-      clearInterval(pollRef.current);
-      pollRef.current = null;
-    }
-  }, [isDone]);
+    fetchProgress();
+    pollRef.current = setInterval(fetchProgress, 5000);
+    return () => {
+      cancelled = true;
+      stop();
+    };
+  }, [open, uuid]);
 
   return (
     <Modal
@@ -100,14 +103,10 @@ const ProgressModal: React.FC<ProgressModalProps> = ({
       {progress && (
         <>
           <div style={{ marginBottom: 16 }}>
-            <Tag
-              color={jobColor(progress.runStatus, progress.runConclusion)}
-            >
+            <Tag color={jobColor(progress.runStatus, progress.runConclusion)}>
               {progress.runStatus}
             </Tag>
-            {progress.runConclusion && (
-              <Tag>{progress.runConclusion}</Tag>
-            )}
+            {progress.runConclusion && <Tag>{progress.runConclusion}</Tag>}
           </div>
           <Collapse
             items={progress.jobs.map((job, idx) => ({
@@ -127,10 +126,7 @@ const ProgressModal: React.FC<ProgressModalProps> = ({
                       <span>
                         {step.name}
                         {step.status === 'in_progress' && (
-                          <Tag
-                            color="processing"
-                            style={{ marginLeft: 8 }}
-                          >
+                          <Tag color="processing" style={{ marginLeft: 8 }}>
                             running
                           </Tag>
                         )}

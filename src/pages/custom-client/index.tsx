@@ -15,7 +15,7 @@ import CreateBuildModal from './components/CreateBuildModal';
 import ProgressModal from './components/ProgressModal';
 import SettingsModal from './components/SettingsModal';
 
-type PageState = 'loading' | 'settingsRequired' | 'ready';
+type PageState = 'loading' | 'settingsRequired' | 'loadFailed' | 'ready';
 
 const CustomClientPage: React.FC = () => {
   const intl = useIntl();
@@ -30,17 +30,23 @@ const CustomClientPage: React.FC = () => {
   const buildListActionRef = useRef<ActionType | null>(null);
 
   const checkSettings = useCallback(async () => {
+    setPageState('loading');
+    let settings: API.CustomClientSettings;
     try {
-      setPageState('loading');
-      const settings = await getCustomClientSettings();
-      if (!settings.githubToken) {
-        setPageState('settingsRequired');
-        return;
-      }
+      settings = await getCustomClientSettings();
+    } catch {
+      setPageState('settingsRequired');
+      return;
+    }
+    if (!settings.githubToken) {
+      setPageState('settingsRequired');
+      return;
+    }
+    try {
       await getBuildList();
       setPageState('ready');
     } catch {
-      setPageState('settingsRequired');
+      setPageState('loadFailed');
     }
   }, []);
 
@@ -189,13 +195,27 @@ const CustomClientPage: React.FC = () => {
               'Configure the GitHub token and generator repository in settings to enable custom client builds.',
           })}
           extra={
-            <Button
-              type="primary"
-              onClick={() => setSettingsModalOpen(true)}
-            >
+            <Button type="primary" onClick={() => setSettingsModalOpen(true)}>
               {intl.formatMessage({
                 id: 'pages.customClient.openSettings',
                 defaultMessage: 'Open Settings',
+              })}
+            </Button>
+          }
+        />
+      )}
+      {pageState === 'loadFailed' && (
+        <Result
+          status="error"
+          title={intl.formatMessage({
+            id: 'pages.customClient.loadFailed',
+            defaultMessage: 'Failed to load builds',
+          })}
+          extra={
+            <Button type="primary" onClick={checkSettings}>
+              {intl.formatMessage({
+                id: 'pages.customClient.retry',
+                defaultMessage: 'Retry',
               })}
             </Button>
           }

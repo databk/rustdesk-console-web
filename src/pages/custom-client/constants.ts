@@ -21,7 +21,10 @@ export const CONN_TYPE_OPTIONS = [
 ];
 
 export const SERVER_FIELDS = [
-  { key: 'custom-rendezvous-server', labelKey: 'pages.customClient.rendezvousServer' },
+  {
+    key: 'custom-rendezvous-server',
+    labelKey: 'pages.customClient.rendezvousServer',
+  },
   { key: 'relay-server', labelKey: 'pages.customClient.relayServer' },
   { key: 'key', labelKey: 'pages.customClient.key' },
   { key: 'api-server', labelKey: 'pages.customClient.apiServer' },
