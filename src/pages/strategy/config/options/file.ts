@@ -8,6 +8,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
+    strategySupported: false,
   },
   {
     key: 'disable_clipboard',
@@ -16,6 +17,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
+    strategySupported: false,
   },
   {
     key: 'sync-init-clipboard',
@@ -24,5 +26,6 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
+    strategySupported: false,
   },
 ];

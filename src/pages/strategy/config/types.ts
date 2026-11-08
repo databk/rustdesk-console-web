@@ -10,6 +10,7 @@ export type ConfigOption = {
   min?: number;
   max?: number;
   description?: string;
+  strategySupported?: boolean;
 };
 
 export type ConfigCategory = {

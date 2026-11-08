@@ -17,9 +17,9 @@ import {
 } from '../config/i18n';
 import {
   type ConfigOption,
-  configCategories,
   configOptionsMap,
-  getOptionsByCategory,
+  getStrategyCategories,
+  getStrategyOptionsByCategory,
 } from '../configOptions';
 
 interface ConfigOptionsFormProps {
@@ -268,8 +268,9 @@ const ConfigOptionsForm: React.FC<ConfigOptionsFormProps> = ({
     return localValue[key] !== opt.defaultValue;
   }).length;
 
-  const tabItems = configCategories.map((cat) => {
-    const options = getOptionsByCategory(cat.key);
+  const strategyCategories = getStrategyCategories();
+  const tabItems = strategyCategories.map((cat) => {
+    const options = getStrategyOptionsByCategory(cat.key);
     return {
       key: cat.key,
       label: (

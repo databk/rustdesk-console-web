@@ -52,6 +52,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
+    strategySupported: false,
   },
   {
     key: 'allow-remote-cm-modification',
@@ -60,6 +61,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
+    strategySupported: false,
   },
   {
     key: 'enable-trusted-devices',

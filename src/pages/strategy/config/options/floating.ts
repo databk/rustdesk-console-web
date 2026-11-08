@@ -8,6 +8,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
+    strategySupported: false,
   },
   {
     key: 'floating-window-size',
@@ -17,6 +18,7 @@ export const options: ConfigOption[] = [
     defaultValue: '120',
     min: 32,
     max: 320,
+    strategySupported: false,
   },
   {
     key: 'floating-window-untouchable',
@@ -25,6 +27,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
+    strategySupported: false,
   },
   {
     key: 'floating-window-transparency',
@@ -34,5 +37,6 @@ export const options: ConfigOption[] = [
     defaultValue: '10',
     min: 0,
     max: 10,
+    strategySupported: false,
   },
 ];
