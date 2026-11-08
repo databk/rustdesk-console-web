@@ -176,6 +176,14 @@ export default {
   'pages.devices.exportCsv': 'Export CSV',
   'pages.devices.exportCsvSuccess': 'Exported {count} device(s) to CSV',
   'pages.devices.exportCsvFailed': 'Failed to export CSV',
+  'pages.devices.heartbeatHealth.mismatchTitle':
+    'Devices may be using the wrong API address',
+  'pages.devices.heartbeatHealth.mismatchDescription':
+    'The console is served over HTTPS, but clients may still use the default http://<id-server>:21114 API address. Set the API server in each client to {apiServer}, or build a custom client with this address embedded.',
+  'pages.devices.heartbeatHealth.staleTitle':
+    'No device heartbeats received recently',
+  'pages.devices.heartbeatHealth.staleDescription':
+    'Heartbeats have not reached the console for more than {seconds} seconds. Check the client API server, firewall rules, and the heartbeat endpoint.',
   'pages.addressBook.name': 'Name',
   'pages.addressBook.note': 'Note',
   'pages.addressBook.shared': 'Shared Address Books',

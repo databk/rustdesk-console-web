@@ -154,6 +154,13 @@ export default {
   'pages.devices.exportCsv': '导出 CSV',
   'pages.devices.exportCsvSuccess': '已导出 {count} 台设备到 CSV',
   'pages.devices.exportCsvFailed': '导出 CSV 失败',
+  'pages.devices.heartbeatHealth.mismatchTitle':
+    '设备可能使用了错误的 API 地址',
+  'pages.devices.heartbeatHealth.mismatchDescription':
+    '控制台已通过 HTTPS 提供服务，但客户端可能仍在使用默认的 http://<ID服务器>:21114 API 地址。请把每个客户端的 API 服务器改为 {apiServer}，或使用内置该地址的自定义客户端。',
+  'pages.devices.heartbeatHealth.staleTitle': '最近没有收到设备心跳',
+  'pages.devices.heartbeatHealth.staleDescription':
+    '超过 {seconds} 秒没有收到任何设备心跳。请检查客户端的 API 服务器、防火墙规则以及心跳接口是否可达。',
   'pages.addressBook.name': '名称',
   'pages.addressBook.note': '备注',
   'pages.addressBook.shared': '共享地址簿',

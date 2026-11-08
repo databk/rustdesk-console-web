@@ -22,6 +22,12 @@ export async function getAdminDeviceList(
   });
 }
 
+export async function getHeartbeatHealth() {
+  return request<API.HeartbeatHealth>('/api/heartbeat/health', {
+    method: 'GET',
+  });
+}
+
 export async function batchUpdateDeviceStatus(params: {
   guids: string[];
   status: 'enabled' | 'disabled';

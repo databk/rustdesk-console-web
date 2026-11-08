@@ -383,6 +383,34 @@ declare namespace API {
     device_group_guid?: string;
   };
 
+  type HeartbeatHealthStatus =
+    | 'ok'
+    | 'heartbeat_stale'
+    | 'suspected_api_scheme_mismatch';
+
+  type HeartbeatHealth = {
+    status: HeartbeatHealthStatus;
+    heartbeat: {
+      lastReceivedAt: string | null;
+      secondsSinceLastReceived: number | null;
+      degraded: boolean;
+      degradedAfterSeconds: number;
+    };
+    devices: {
+      total: number;
+      online: number;
+      stale: number;
+    };
+    site: {
+      frontendUrl: string;
+      effectiveOrigin: string | null;
+      exposedOverHttps: boolean;
+      usesHttpsOn21114: boolean;
+    };
+    suggestedApiServer: string | null;
+    likelyApiServerSchemeMismatch: boolean;
+  };
+
   type UpdateDeviceParams = {
     userName?: string | null;
     deviceGroupName?: string | null;

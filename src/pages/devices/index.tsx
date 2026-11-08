@@ -21,6 +21,7 @@ import { getDeviceColumns } from '@/components/DeviceSelectTable/columns';
 import { getActionColumn } from './columns';
 import EditDeviceModal from './components/EditDeviceModal';
 import ImportDevicesModal from './components/ImportDevicesModal';
+import HeartbeatHealthAlert from './components/HeartbeatHealthAlert';
 import { buildCsv, downloadCsv } from '@/utils/csv';
 import { DEFAULT_PAGINATION, toTableResult } from '@/utils/pagination';
 
@@ -455,6 +456,8 @@ const DeviceList: React.FC<DeviceListProps> = ({
       }
       onBack={onBack}
     >
+      {access.isSuperAdmin && <HeartbeatHealthAlert />}
+
       <ProTable<API.DeviceItem>
         headerTitle={
           <FormattedMessage
