@@ -114,6 +114,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
+    strategySupported: false,
   },
   {
     key: 'terminal-persistent',
@@ -122,6 +123,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
+    strategySupported: false,
   },
   {
     key: 'allow-ask-for-note',
@@ -130,5 +132,6 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
+    strategySupported: false,
   },
 ];

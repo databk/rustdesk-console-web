@@ -24,6 +24,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
+    strategySupported: false,
   },
   {
     key: 'privacy_mode',
@@ -32,5 +33,6 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
+    strategySupported: false,
   },
 ];

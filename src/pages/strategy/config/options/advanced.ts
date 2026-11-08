@@ -40,6 +40,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
+    strategySupported: false,
   },
   {
     key: 'sync-ab-tags',
@@ -48,6 +49,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
+    strategySupported: false,
   },
   {
     key: 'filter-ab-by-intersection',
@@ -56,6 +58,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
+    strategySupported: false,
   },
   {
     key: 'enable-udp-punch',
@@ -64,6 +67,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'Y',
     options: ['Y', 'N'],
+    strategySupported: false,
   },
   {
     key: 'enable-ipv6-punch',
@@ -73,6 +77,7 @@ export const options: ConfigOption[] = [
     defaultValue: 'N',
     options: ['Y', 'N'],
     description: 'Self-hosted: N, others: Y',
+    strategySupported: false,
   },
   {
     key: 'pre-elevate-service',
@@ -81,6 +86,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
+    strategySupported: false,
   },
   {
     key: 'keep-awake-during-incoming-sessions',
@@ -97,6 +103,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'Y',
     options: ['Y', 'N'],
+    strategySupported: false,
   },
   {
     key: 'disable-udp',
