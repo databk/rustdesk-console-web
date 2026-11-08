@@ -10,8 +10,8 @@ export const options: ConfigOption[] = [
     options: ['Y', 'N'],
   },
   {
-    key: 'disable-clipboard',
-    label: 'disable-clipboard',
+    key: 'disable_clipboard',
+    label: 'disable_clipboard',
     category: 'file',
     type: 'switch',
     defaultValue: 'N',

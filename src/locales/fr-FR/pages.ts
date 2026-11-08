@@ -1232,8 +1232,6 @@ export default {
   'pages.strategies.option.allow-d3d-render.label': 'Autoriser le rendu D3D',
   'pages.strategies.option.allow-insecure-tls-fallback.label':
     'Autoriser le repli TLS non sécurisé',
-  'pages.strategies.option.allow-linux-headless.label':
-    'Autoriser le mode Linux headless',
   'pages.strategies.option.allow-numeric-one-time-password.label':
     'Autoriser le mot de passe à usage unique numérique',
   'pages.strategies.option.allow-only-conn-window-open.label':
@@ -1254,13 +1252,13 @@ export default {
     "Délai d'attente en minutes",
   'pages.strategies.option.auto-disconnect-timeout.label':
     'Délai de déconnexion automatique',
-  'pages.strategies.option.collapse-toolbar.label': "Réduire la barre d'outils",
+  'pages.strategies.option.collapse_toolbar.label': "Réduire la barre d'outils",
   'pages.strategies.option.custom-fps.label': 'FPS personnalisé',
-  'pages.strategies.option.custom-image-quality.label':
+  'pages.strategies.option.custom_image_quality.label':
     "Qualité d'image personnalisée",
   'pages.strategies.option.direct-server.label': 'Serveur direct',
-  'pages.strategies.option.disable-audio.label': "Désactiver l'audio",
-  'pages.strategies.option.disable-clipboard.label':
+  'pages.strategies.option.disable_audio.label': "Désactiver l'audio",
+  'pages.strategies.option.disable_clipboard.label':
     'Désactiver le presse-papiers',
   'pages.strategies.option.disable-discovery-panel.label':
     'Désactiver le panneau de découverte',
@@ -1269,7 +1267,7 @@ export default {
   'pages.strategies.option.disable-group-panel.label':
     'Désactiver le panneau de groupe',
   'pages.strategies.option.disable-udp.label': 'Désactiver UDP',
-  'pages.strategies.option.displays-as-individual-windows.label':
+  'pages.strategies.option.displays_as_individual_windows.label':
     'Affichages en fenêtres individuelles',
   'pages.strategies.option.edge-scroll-edge-thickness.label':
     'Épaisseur du défilement de bord',
@@ -1320,16 +1318,16 @@ export default {
     'Transparence de la fenêtre flottante',
   'pages.strategies.option.floating-window-untouchable.label':
     'Fenêtre flottante non tactile',
-  'pages.strategies.option.follow-remote-cursor.label':
+  'pages.strategies.option.follow_remote_cursor.label':
     'Suivre le curseur distant',
-  'pages.strategies.option.follow-remote-window.label':
+  'pages.strategies.option.follow_remote_window.label':
     'Suivre la fenêtre distante',
   'pages.strategies.option.i444.label': 'Format de couleur I444',
-  'pages.strategies.option.image-quality.label': "Qualité d'image",
-  'pages.strategies.option.image-quality.value.balanced': 'Équilibrée',
-  'pages.strategies.option.image-quality.value.best': 'Meilleure',
-  'pages.strategies.option.image-quality.value.custom': 'Personnalisée',
-  'pages.strategies.option.image-quality.value.low': 'Basse',
+  'pages.strategies.option.image_quality.label': "Qualité d'image",
+  'pages.strategies.option.image_quality.value.balanced': 'Équilibrée',
+  'pages.strategies.option.image_quality.value.best': 'Meilleure',
+  'pages.strategies.option.image_quality.value.custom': 'Personnalisée',
+  'pages.strategies.option.image_quality.value.low': 'Basse',
   'pages.strategies.option.keep-awake-during-incoming-sessions.label':
     'Maintenir éveillé pendant les sessions entrantes',
   'pages.strategies.option.keep-awake-during-outgoing-sessions.label':
@@ -1341,7 +1339,7 @@ export default {
   'pages.strategies.option.keep-screen-on.value.service-on': 'Service actif',
   'pages.strategies.option.lang.description': 'Code de langue',
   'pages.strategies.option.lang.label': 'Langue',
-  'pages.strategies.option.lock-after-session-end.label':
+  'pages.strategies.option.lock_after_session_end.label':
     'Verrouiller après la fin de la session',
   'pages.strategies.option.peer-card-ui-type.label':
     "Type d'UI de la carte de pair",
@@ -1353,18 +1351,18 @@ export default {
   'pages.strategies.option.peer-sorting.value.remote-id': 'ID distant',
   'pages.strategies.option.peer-sorting.value.username': "Nom d'utilisateur",
   'pages.strategies.option.pre-elevate-service.label': 'Pré-élever le service',
-  'pages.strategies.option.privacy-mode.label': 'Mode de confidentialité',
-  'pages.strategies.option.reverse-mouse-wheel.label':
+  'pages.strategies.option.privacy_mode.label': 'Mode de confidentialité',
+  'pages.strategies.option.reverse_mouse_wheel.label':
     'Inverser la molette de la souris',
-  'pages.strategies.option.scroll-style.label': 'Style de défilement',
-  'pages.strategies.option.scroll-style.value.scrollauto': 'Auto',
-  'pages.strategies.option.scroll-style.value.scrollbar': 'Barre de défilement',
-  'pages.strategies.option.scroll-style.value.scrolledge': 'Défilement de bord',
-  'pages.strategies.option.show-monitors-toolbar.label':
+  'pages.strategies.option.scroll_style.label': 'Style de défilement',
+  'pages.strategies.option.scroll_style.value.scrollauto': 'Auto',
+  'pages.strategies.option.scroll_style.value.scrollbar': 'Barre de défilement',
+  'pages.strategies.option.scroll_style.value.scrolledge': 'Défilement de bord',
+  'pages.strategies.option.show_monitors_toolbar.label':
     "Afficher la barre d'outils des moniteurs",
-  'pages.strategies.option.show-quality-monitor.label':
+  'pages.strategies.option.show_quality_monitor.label':
     'Afficher le moniteur de qualité',
-  'pages.strategies.option.show-remote-cursor.label':
+  'pages.strategies.option.show_remote_cursor.label':
     'Afficher le curseur distant',
   'pages.strategies.option.show-virtual-joystick.label':
     'Afficher le joystick virtuel',
@@ -1390,7 +1388,7 @@ export default {
   'pages.strategies.option.theme.value.system': 'Système',
   'pages.strategies.option.touch-mode.label': 'Mode tactile',
   'pages.strategies.option.trackpad-speed.label': 'Vitesse du trackpad',
-  'pages.strategies.option.use-all-my-displays-for-the-remote-session.label':
+  'pages.strategies.option.use_all_my_displays_for_the_remote_session.label':
     'Utiliser tous mes affichages pour la session distante',
   'pages.strategies.option.use-texture-render.description':
     'Dépendant de la plateforme',
@@ -1404,10 +1402,10 @@ export default {
     'Mot de passe permanent',
   'pages.strategies.option.verification-method.value.use-temporary-password':
     'Mot de passe temporaire',
-  'pages.strategies.option.view-only.label': 'Vue uniquement',
-  'pages.strategies.option.view-style.label': "Style d'affichage",
-  'pages.strategies.option.view-style.value.adaptive': 'Adaptatif',
-  'pages.strategies.option.view-style.value.original': 'Original',
+  'pages.strategies.option.view_only.label': 'Vue uniquement',
+  'pages.strategies.option.view_style.label': "Style d'affichage",
+  'pages.strategies.option.view_style.value.adaptive': 'Adaptatif',
+  'pages.strategies.option.view_style.value.original': 'Original',
   'pages.strategies.option.whitelist.description':
     "Liste d'IP séparées par des virgules",
   'pages.strategies.option.whitelist.label': "Liste blanche d'IP",

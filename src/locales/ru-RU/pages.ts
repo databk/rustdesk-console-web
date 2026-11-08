@@ -654,7 +654,7 @@ export default {
     'Тайм-аут автоматического отключения',
   'pages.strategies.option.allow-only-conn-window-open.label':
     'Разрешать только открытое окно подключения',
-  'pages.strategies.option.view-only.label': 'Только просмотр',
+  'pages.strategies.option.view_only.label': 'Только просмотр',
   'pages.strategies.option.terminal-persistent.label': 'Постоянный терминал',
   'pages.strategies.option.allow-ask-for-note.label':
     'Запрашивать примечание к подключению',
@@ -665,7 +665,7 @@ export default {
   'pages.strategies.option.verification-method.label': 'Способ проверки',
   'pages.strategies.option.temporary-password-length.label':
     'Длина временного пароля',
-  'pages.strategies.option.lock-after-session-end.label':
+  'pages.strategies.option.lock_after_session_end.label':
     'Блокировать после завершения сеанса',
   'pages.strategies.option.allow-remote-cm-modification.label':
     'Разрешить удалённое изменение клиента',
@@ -685,29 +685,29 @@ export default {
     'Открывать новые подключения во вкладках',
   'pages.strategies.option.peer-card-ui-type.label': 'Тип карточки устройства',
   'pages.strategies.option.peer-sorting.label': 'Сортировка устройств',
-  'pages.strategies.option.show-monitors-toolbar.label':
+  'pages.strategies.option.show_monitors_toolbar.label':
     'Показывать панель мониторов',
-  'pages.strategies.option.collapse-toolbar.label':
+  'pages.strategies.option.collapse_toolbar.label':
     'Сворачивать панель инструментов',
-  'pages.strategies.option.show-remote-cursor.label':
+  'pages.strategies.option.show_remote_cursor.label':
     'Показывать удалённый курсор',
-  'pages.strategies.option.follow-remote-cursor.label':
+  'pages.strategies.option.follow_remote_cursor.label':
     'Следовать за удалённым курсором',
-  'pages.strategies.option.follow-remote-window.label':
+  'pages.strategies.option.follow_remote_window.label':
     'Следовать за удалённым окном',
   'pages.strategies.option.zoom-cursor.label': 'Увеличивать курсор',
-  'pages.strategies.option.show-quality-monitor.label':
+  'pages.strategies.option.show_quality_monitor.label':
     'Показывать монитор качества',
-  'pages.strategies.option.reverse-mouse-wheel.label':
+  'pages.strategies.option.reverse_mouse_wheel.label':
     'Инвертировать колесо мыши',
   'pages.strategies.option.swap-left-right-mouse.label':
     'Поменять левую и правую кнопки мыши',
-  'pages.strategies.option.displays-as-individual-windows.label':
+  'pages.strategies.option.displays_as_individual_windows.label':
     'Показывать мониторы отдельными окнами',
-  'pages.strategies.option.use-all-my-displays-for-the-remote-session.label':
+  'pages.strategies.option.use_all_my_displays_for_the_remote_session.label':
     'Использовать все мониторы в удалённом сеансе',
-  'pages.strategies.option.view-style.label': 'Стиль просмотра',
-  'pages.strategies.option.scroll-style.label': 'Стиль прокрутки',
+  'pages.strategies.option.view_style.label': 'Стиль просмотра',
+  'pages.strategies.option.scroll_style.label': 'Стиль прокрутки',
   'pages.strategies.option.edge-scroll-edge-thickness.label':
     'Толщина прокрутки у края',
   'pages.strategies.option.trackpad-speed.label': 'Скорость трекпада',
@@ -726,10 +726,10 @@ export default {
   'pages.strategies.option.enable-hwcodec.label': 'Включить аппаратный кодек',
   'pages.strategies.option.use-texture-render.label':
     'Использовать текстурный рендеринг',
-  'pages.strategies.option.disable-audio.label': 'Отключить звук',
+  'pages.strategies.option.disable_audio.label': 'Отключить звук',
   'pages.strategies.option.i444.label': 'Цветовой формат I444',
-  'pages.strategies.option.image-quality.label': 'Качество изображения',
-  'pages.strategies.option.custom-image-quality.label':
+  'pages.strategies.option.image_quality.label': 'Качество изображения',
+  'pages.strategies.option.custom_image_quality.label':
     'Пользовательское качество изображения',
   'pages.strategies.option.custom-fps.label': 'Пользовательская частота кадров',
   'pages.strategies.option.enable-directx-capture.label':
@@ -739,7 +739,7 @@ export default {
   'pages.strategies.option.allow-d3d-render.label': 'Разрешить рендеринг D3D',
   'pages.strategies.option.enable-file-copy-paste.label':
     'Включить копирование и вставку файлов',
-  'pages.strategies.option.disable-clipboard.label': 'Отключить буфер обмена',
+  'pages.strategies.option.disable_clipboard.label': 'Отключить буфер обмена',
   'pages.strategies.option.sync-init-clipboard.label':
     'Синхронизировать исходный буфер обмена',
   'pages.strategies.option.enable-lan-discovery.label':
@@ -748,8 +748,6 @@ export default {
   'pages.strategies.option.allow-auto-update.label':
     'Разрешить автоматические обновления',
   'pages.strategies.option.enable-abr.label': 'Включить адаптивный битрейт',
-  'pages.strategies.option.allow-linux-headless.label':
-    'Разрешить безголовый режим Linux',
   'pages.strategies.option.sync-ab-with-recent-sessions.label':
     'Синхронизировать адресную книгу с последними сеансами',
   'pages.strategies.option.sync-ab-tags.label':
@@ -780,7 +778,7 @@ export default {
     'Разрешить автоматическую запись входящих сеансов',
   'pages.strategies.option.allow-auto-record-outgoing.label':
     'Разрешить автоматическую запись исходящих сеансов',
-  'pages.strategies.option.privacy-mode.label': 'Режим конфиденциальности',
+  'pages.strategies.option.privacy_mode.label': 'Режим конфиденциальности',
   'pages.strategies.option.auto-disconnect-timeout.description':
     'Тайм-аут в минутах',
   'pages.strategies.option.lang.description': 'Код языка',
@@ -789,10 +787,10 @@ export default {
   'pages.strategies.option.use-texture-render.description':
     'Зависит от платформы',
   'pages.strategies.option.whitelist.description': 'Список IP через запятую',
-  'pages.strategies.option.image-quality.value.best': 'Лучшее',
-  'pages.strategies.option.image-quality.value.balanced': 'Сбалансированное',
-  'pages.strategies.option.image-quality.value.low': 'Низкое',
-  'pages.strategies.option.image-quality.value.custom': 'Пользовательское',
+  'pages.strategies.option.image_quality.value.best': 'Лучшее',
+  'pages.strategies.option.image_quality.value.balanced': 'Сбалансированное',
+  'pages.strategies.option.image_quality.value.low': 'Низкое',
+  'pages.strategies.option.image_quality.value.custom': 'Пользовательское',
   'pages.strategies.option.access-mode.value.custom': 'Пользовательский',
   'pages.strategies.option.access-mode.value.full': 'Полный доступ',
   'pages.strategies.option.access-mode.value.view': 'Только просмотр',
@@ -805,11 +803,11 @@ export default {
   'pages.strategies.option.peer-sorting.value.remote-id': 'Удалённый ID',
   'pages.strategies.option.peer-sorting.value.remote-host': 'Удалённый хост',
   'pages.strategies.option.peer-sorting.value.username': 'Имя пользователя',
-  'pages.strategies.option.view-style.value.original': 'Исходный',
-  'pages.strategies.option.view-style.value.adaptive': 'Адаптивный',
-  'pages.strategies.option.scroll-style.value.scrollauto': 'Автоматический',
-  'pages.strategies.option.scroll-style.value.scrollbar': 'Полоса прокрутки',
-  'pages.strategies.option.scroll-style.value.scrolledge': 'Прокрутка у края',
+  'pages.strategies.option.view_style.value.original': 'Исходный',
+  'pages.strategies.option.view_style.value.adaptive': 'Адаптивный',
+  'pages.strategies.option.scroll_style.value.scrollauto': 'Автоматический',
+  'pages.strategies.option.scroll_style.value.scrollbar': 'Полоса прокрутки',
+  'pages.strategies.option.scroll_style.value.scrolledge': 'Прокрутка у края',
   'pages.strategies.option.keep-screen-on.value.never': 'Никогда',
   'pages.strategies.option.keep-screen-on.value.during-controlled':
     'Во время управляемого сеанса',

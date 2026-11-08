@@ -46,8 +46,8 @@ export const options: ConfigOption[] = [
     options: ['6', '8', '10'],
   },
   {
-    key: 'lock-after-session-end',
-    label: 'lock-after-session-end',
+    key: 'lock_after_session_end',
+    label: 'lock_after_session_end',
     category: 'security',
     type: 'switch',
     defaultValue: 'N',
