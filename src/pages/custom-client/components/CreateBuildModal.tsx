@@ -16,6 +16,7 @@ import React from 'react';
 import {
   ARCH_OPTIONS,
   CONN_TYPE_OPTIONS,
+  OS_ARCH_MAP,
   OS_OPTIONS,
   SERVER_FIELDS,
 } from '../constants';
@@ -67,6 +68,10 @@ const CreateBuildModal: React.FC<CreateBuildModalProps> = ({
   const [form] = Form.useForm();
   const osValue = Form.useWatch('os', form);
   const isAllOs = osValue === 'all';
+  const availableArchs =
+    osValue && OS_ARCH_MAP[osValue]
+      ? ARCH_OPTIONS.filter((opt) => OS_ARCH_MAP[osValue].includes(opt.value))
+      : ARCH_OPTIONS;
 
   React.useEffect(() => {
     if (open) {
@@ -81,6 +86,18 @@ const CreateBuildModal: React.FC<CreateBuildModalProps> = ({
       form.resetFields();
     }
   }, [open, initialValues, form]);
+
+  React.useEffect(() => {
+    if (isAllOs) return;
+    const currentArch = form.getFieldValue('arch');
+    if (
+      currentArch &&
+      availableArchs.length > 0 &&
+      !availableArchs.some((a) => a.value === currentArch)
+    ) {
+      form.setFieldValue('arch', availableArchs[0].value);
+    }
+  }, [osValue, availableArchs, isAllOs, form]);
 
   const renderDisableField = (field: (typeof DISABLE_FIELDS)[number]) => (
     <Col key={field.name} span={12}>
@@ -161,7 +178,7 @@ const CreateBuildModal: React.FC<CreateBuildModalProps> = ({
                 })}
                 rules={[{ required: true }]}
               >
-                <Segmented options={ARCH_OPTIONS} block />
+                <Segmented options={availableArchs} block />
               </Form.Item>
             )}
           </Col>

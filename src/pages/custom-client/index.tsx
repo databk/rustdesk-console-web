@@ -1,19 +1,19 @@
+import { LoadingOutlined, SettingOutlined } from '@ant-design/icons';
 import type { ActionType } from '@ant-design/pro-components';
 import { PageContainer } from '@ant-design/pro-components';
 import { useIntl } from '@umijs/max';
 import { App, Button, Result, Space, Tag } from 'antd';
-import { LoadingOutlined, SettingOutlined } from '@ant-design/icons';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   getBuildList,
   getCustomClientSettings,
   submitBuild,
 } from '@/services/rustdesk-console/custom-client';
-import { SERVER_FIELDS } from './constants';
 import BuildList from './components/BuildList';
 import CreateBuildModal from './components/CreateBuildModal';
 import ProgressModal from './components/ProgressModal';
 import SettingsModal from './components/SettingsModal';
+import { SERVER_FIELDS } from './constants';
 
 type PageState = 'loading' | 'settingsRequired' | 'loadFailed' | 'ready';
 

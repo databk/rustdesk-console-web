@@ -12,7 +12,16 @@ export const ARCH_OPTIONS = [
   { value: 'aarch64', label: 'aarch64' },
   { value: 'x86', label: 'x86 (sciter)' },
   { value: 'armv7', label: 'armv7' },
+  { value: 'universal', label: 'universal' },
 ];
+
+export const OS_ARCH_MAP: Record<string, string[]> = {
+  windows: ['x86_64', 'x86', 'aarch64'],
+  linux: ['x86_64', 'aarch64', 'armv7'],
+  macos: ['x86_64', 'aarch64'],
+  android: ['aarch64', 'armv7', 'x86_64', 'universal'],
+  ios: ['aarch64'],
+};
 
 export const CONN_TYPE_OPTIONS = [
   { value: 'both', label: 'Both' },

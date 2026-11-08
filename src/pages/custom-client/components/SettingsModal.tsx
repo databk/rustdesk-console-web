@@ -1,6 +1,6 @@
 import { SettingOutlined } from '@ant-design/icons';
 import { useIntl } from '@umijs/max';
-import { App, Form, Input, Modal } from 'antd';
+import { App, Divider, Form, Input, Modal } from 'antd';
 import React from 'react';
 import {
   getCustomClientSettings,
@@ -105,6 +105,45 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
           })}
         >
           <Input placeholder="main" />
+        </Form.Item>
+
+        <Divider titlePlacement="left" plain>
+          {intl.formatMessage({
+            id: 'pages.customClient.signingKeys',
+            defaultMessage: 'Signing Keys',
+          })}
+        </Divider>
+
+        <Form.Item
+          name="signingPublicKey"
+          label={intl.formatMessage({
+            id: 'pages.customClient.signingPublicKey',
+            defaultMessage: 'Signing Public Key',
+          })}
+          tooltip={intl.formatMessage({
+            id: 'pages.customClient.signingPublicKeyTip',
+            defaultMessage:
+              'Ed25519 public key in base64 (44 chars ending with =)',
+          })}
+        >
+          <Input placeholder="base64 encoded public key" />
+        </Form.Item>
+        <Form.Item
+          name="signingPrivateKey"
+          label={intl.formatMessage({
+            id: 'pages.customClient.signingPrivateKey',
+            defaultMessage: 'Signing Private Key',
+          })}
+          tooltip={intl.formatMessage({
+            id: 'pages.customClient.signingPrivateKeyTip',
+            defaultMessage:
+              'Ed25519 private key in base64. Leave as ****** to keep existing key.',
+          })}
+        >
+          <Input.Password
+            placeholder={TOKEN_MASK}
+            autoComplete="new-password"
+          />
         </Form.Item>
       </Form>
     </Modal>

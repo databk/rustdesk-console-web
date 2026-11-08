@@ -127,6 +127,9 @@ export {
   getBuildProgress,
   getCustomClientSettings,
   updateCustomClientSettings,
+  getLogoList,
+  uploadLogo,
+  deleteLogo,
 } from './custom-client';
 export {
   passkeyRegisterBegin,

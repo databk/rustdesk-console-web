@@ -1200,7 +1200,7 @@ declare namespace API {
 
   type SubmitCustomClientBuildParams = {
     os: 'windows' | 'linux' | 'macos' | 'android' | 'ios' | 'all';
-    arch?: 'x86_64' | 'aarch64' | 'x86' | 'armv7';
+    arch?: 'x86_64' | 'aarch64' | 'x86' | 'armv7' | 'universal';
     custom?: CustomClientBuildCustom;
   };
 
@@ -1249,11 +1249,15 @@ declare namespace API {
     githubToken: string;
     generatorRepo: string;
     generatorRef: string;
+    signingPublicKey: string;
+    signingPrivateKey: string;
   };
 
   type UpdateCustomClientSettingsParams = {
     githubToken?: string;
     generatorRepo?: string;
     generatorRef?: string;
+    signingPublicKey?: string;
+    signingPrivateKey?: string;
   };
 }

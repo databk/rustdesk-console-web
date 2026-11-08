@@ -73,3 +73,32 @@ export async function updateCustomClientSettings(
     skipErrorHandler: true,
   });
 }
+
+// Logo APIs (admin only)
+
+export async function getLogoList() {
+  return request<string[]>('/api/custom-client/logos', {
+    method: 'GET',
+    skipErrorHandler: true,
+  });
+}
+
+export async function uploadLogo(filename: string, file: File) {
+  const formData = new FormData();
+  formData.append('file', file);
+  return request<{ message: string; filename: string }>(
+    `/api/custom-client/logos/${encodeURIComponent(filename)}`,
+    {
+      method: 'POST',
+      data: formData,
+      skipErrorHandler: true,
+    },
+  );
+}
+
+export async function deleteLogo(filename: string) {
+  return request(`/api/custom-client/logos/${encodeURIComponent(filename)}`, {
+    method: 'DELETE',
+    skipErrorHandler: true,
+  });
+}
