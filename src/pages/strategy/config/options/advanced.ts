@@ -34,14 +34,6 @@ export const options: ConfigOption[] = [
     options: ['Y', 'N'],
   },
   {
-    key: 'allow-linux-headless',
-    label: 'allow-linux-headless',
-    category: 'advanced',
-    type: 'switch',
-    defaultValue: 'N',
-    options: ['Y', 'N'],
-  },
-  {
     key: 'sync-ab-with-recent-sessions',
     label: 'sync-ab-with-recent-sessions',
     category: 'advanced',

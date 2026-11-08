@@ -26,8 +26,8 @@ export const options: ConfigOption[] = [
     options: ['Y', 'N'],
   },
   {
-    key: 'privacy-mode',
-    label: 'privacy-mode',
+    key: 'privacy_mode',
+    label: 'privacy_mode',
     category: 'privacy',
     type: 'switch',
     defaultValue: 'N',

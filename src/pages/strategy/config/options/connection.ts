@@ -108,8 +108,8 @@ export const options: ConfigOption[] = [
     options: ['Y', 'N'],
   },
   {
-    key: 'view-only',
-    label: 'view-only',
+    key: 'view_only',
+    label: 'view_only',
     category: 'connection',
     type: 'switch',
     defaultValue: 'N',

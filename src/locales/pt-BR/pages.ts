@@ -660,7 +660,7 @@ export default {
     'Tempo para Desconexão Automática',
   'pages.strategies.option.allow-only-conn-window-open.label':
     'Permitir Apenas a Janela de Conexão Aberta',
-  'pages.strategies.option.view-only.label': 'Somente Visualização',
+  'pages.strategies.option.view_only.label': 'Somente Visualização',
   'pages.strategies.option.terminal-persistent.label': 'Terminal Persistente',
   'pages.strategies.option.allow-ask-for-note.label':
     'Solicitar Observação da Conexão',
@@ -671,7 +671,7 @@ export default {
   'pages.strategies.option.verification-method.label': 'Método de Verificação',
   'pages.strategies.option.temporary-password-length.label':
     'Tamanho da Senha Temporária',
-  'pages.strategies.option.lock-after-session-end.label':
+  'pages.strategies.option.lock_after_session_end.label':
     'Bloquear Após o Fim da Sessão',
   'pages.strategies.option.allow-remote-cm-modification.label':
     'Permitir Modificação Remota do Cliente',
@@ -692,25 +692,25 @@ export default {
   'pages.strategies.option.peer-card-ui-type.label':
     'Tipo de Cartão do Dispositivo',
   'pages.strategies.option.peer-sorting.label': 'Ordenação de Dispositivos',
-  'pages.strategies.option.show-monitors-toolbar.label':
+  'pages.strategies.option.show_monitors_toolbar.label':
     'Mostrar Barra de Monitores',
-  'pages.strategies.option.collapse-toolbar.label':
+  'pages.strategies.option.collapse_toolbar.label':
     'Recolher Barra de Ferramentas',
-  'pages.strategies.option.show-remote-cursor.label': 'Mostrar Cursor Remoto',
-  'pages.strategies.option.follow-remote-cursor.label': 'Seguir Cursor Remoto',
-  'pages.strategies.option.follow-remote-window.label': 'Seguir Janela Remota',
+  'pages.strategies.option.show_remote_cursor.label': 'Mostrar Cursor Remoto',
+  'pages.strategies.option.follow_remote_cursor.label': 'Seguir Cursor Remoto',
+  'pages.strategies.option.follow_remote_window.label': 'Seguir Janela Remota',
   'pages.strategies.option.zoom-cursor.label': 'Ampliar Cursor',
-  'pages.strategies.option.show-quality-monitor.label':
+  'pages.strategies.option.show_quality_monitor.label':
     'Mostrar Monitor de Qualidade',
-  'pages.strategies.option.reverse-mouse-wheel.label': 'Inverter Roda do Mouse',
+  'pages.strategies.option.reverse_mouse_wheel.label': 'Inverter Roda do Mouse',
   'pages.strategies.option.swap-left-right-mouse.label':
     'Trocar Botões Esquerdo e Direito',
-  'pages.strategies.option.displays-as-individual-windows.label':
+  'pages.strategies.option.displays_as_individual_windows.label':
     'Exibir Monitores como Janelas Individuais',
-  'pages.strategies.option.use-all-my-displays-for-the-remote-session.label':
+  'pages.strategies.option.use_all_my_displays_for_the_remote_session.label':
     'Usar Todos os Monitores na Sessão Remota',
-  'pages.strategies.option.view-style.label': 'Estilo de Visualização',
-  'pages.strategies.option.scroll-style.label': 'Estilo de Rolagem',
+  'pages.strategies.option.view_style.label': 'Estilo de Visualização',
+  'pages.strategies.option.scroll_style.label': 'Estilo de Rolagem',
   'pages.strategies.option.edge-scroll-edge-thickness.label':
     'Espessura da Rolagem de Borda',
   'pages.strategies.option.trackpad-speed.label': 'Velocidade do Trackpad',
@@ -729,10 +729,10 @@ export default {
   'pages.strategies.option.enable-hwcodec.label': 'Ativar Codec de Hardware',
   'pages.strategies.option.use-texture-render.label':
     'Usar Renderização por Textura',
-  'pages.strategies.option.disable-audio.label': 'Desativar Áudio',
+  'pages.strategies.option.disable_audio.label': 'Desativar Áudio',
   'pages.strategies.option.i444.label': 'Formato de Cor I444',
-  'pages.strategies.option.image-quality.label': 'Qualidade da Imagem',
-  'pages.strategies.option.custom-image-quality.label':
+  'pages.strategies.option.image_quality.label': 'Qualidade da Imagem',
+  'pages.strategies.option.custom_image_quality.label':
     'Qualidade de Imagem Personalizada',
   'pages.strategies.option.custom-fps.label': 'FPS Personalizado',
   'pages.strategies.option.enable-directx-capture.label':
@@ -742,7 +742,7 @@ export default {
   'pages.strategies.option.allow-d3d-render.label': 'Permitir Renderização D3D',
   'pages.strategies.option.enable-file-copy-paste.label':
     'Ativar Cópia e Colagem de Arquivos',
-  'pages.strategies.option.disable-clipboard.label':
+  'pages.strategies.option.disable_clipboard.label':
     'Desativar Área de Transferência',
   'pages.strategies.option.sync-init-clipboard.label':
     'Sincronizar Área de Transferência Inicial',
@@ -752,7 +752,6 @@ export default {
   'pages.strategies.option.allow-auto-update.label':
     'Permitir Atualizações Automáticas',
   'pages.strategies.option.enable-abr.label': 'Ativar Bitrate Adaptativo',
-  'pages.strategies.option.allow-linux-headless.label':
     'Permitir Modo Headless no Linux',
   'pages.strategies.option.sync-ab-with-recent-sessions.label':
     'Sincronizar Catálogo de Endereços com Sessões Recentes',
@@ -784,7 +783,7 @@ export default {
     'Permitir Gravação Automática de Sessões de Entrada',
   'pages.strategies.option.allow-auto-record-outgoing.label':
     'Permitir Gravação Automática de Sessões de Saída',
-  'pages.strategies.option.privacy-mode.label': 'Modo de Privacidade',
+  'pages.strategies.option.privacy_mode.label': 'Modo de Privacidade',
   'pages.strategies.option.auto-disconnect-timeout.description':
     'Tempo limite em minutos',
   'pages.strategies.option.lang.description': 'Código do idioma',
@@ -794,10 +793,10 @@ export default {
     'Depende da plataforma',
   'pages.strategies.option.whitelist.description':
     'Lista de IPs separada por vírgulas',
-  'pages.strategies.option.image-quality.value.best': 'Melhor',
-  'pages.strategies.option.image-quality.value.balanced': 'Balanceado',
-  'pages.strategies.option.image-quality.value.low': 'Baixa',
-  'pages.strategies.option.image-quality.value.custom': 'Personalizado',
+  'pages.strategies.option.image_quality.value.best': 'Melhor',
+  'pages.strategies.option.image_quality.value.balanced': 'Balanceado',
+  'pages.strategies.option.image_quality.value.low': 'Baixa',
+  'pages.strategies.option.image_quality.value.custom': 'Personalizado',
   'pages.strategies.option.access-mode.value.custom': 'Personalizado',
   'pages.strategies.option.access-mode.value.full': 'Acesso Total',
   'pages.strategies.option.access-mode.value.view': 'Somente Visualização',
@@ -810,11 +809,11 @@ export default {
   'pages.strategies.option.peer-sorting.value.remote-id': 'ID Remoto',
   'pages.strategies.option.peer-sorting.value.remote-host': 'Host Remoto',
   'pages.strategies.option.peer-sorting.value.username': 'Nome de Usuário',
-  'pages.strategies.option.view-style.value.original': 'Original',
-  'pages.strategies.option.view-style.value.adaptive': 'Adaptável',
-  'pages.strategies.option.scroll-style.value.scrollauto': 'Automático',
-  'pages.strategies.option.scroll-style.value.scrollbar': 'Barra de Rolagem',
-  'pages.strategies.option.scroll-style.value.scrolledge':
+  'pages.strategies.option.view_style.value.original': 'Original',
+  'pages.strategies.option.view_style.value.adaptive': 'Adaptável',
+  'pages.strategies.option.scroll_style.value.scrollauto': 'Automático',
+  'pages.strategies.option.scroll_style.value.scrollbar': 'Barra de Rolagem',
+  'pages.strategies.option.scroll_style.value.scrolledge':
     'Rolagem pelas Bordas',
   'pages.strategies.option.keep-screen-on.value.never': 'Nunca',
   'pages.strategies.option.keep-screen-on.value.during-controlled':

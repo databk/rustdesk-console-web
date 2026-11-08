@@ -626,7 +626,7 @@ export default {
     'Auto Disconnect Timeout',
   'pages.strategies.option.allow-only-conn-window-open.label':
     'Only Allow Connection Window Open',
-  'pages.strategies.option.view-only.label': 'View Only',
+  'pages.strategies.option.view_only.label': 'View Only',
   'pages.strategies.option.terminal-persistent.label': 'Persistent Terminal',
   'pages.strategies.option.allow-ask-for-note.label': 'Ask for Connection Note',
   'pages.strategies.option.allow-remote-config-modification.label':
@@ -636,7 +636,7 @@ export default {
   'pages.strategies.option.verification-method.label': 'Verification Method',
   'pages.strategies.option.temporary-password-length.label':
     'Temporary Password Length',
-  'pages.strategies.option.lock-after-session-end.label':
+  'pages.strategies.option.lock_after_session_end.label':
     'Lock After Session End',
   'pages.strategies.option.allow-remote-cm-modification.label':
     'Allow Remote Client Modification',
@@ -656,23 +656,23 @@ export default {
     'Open New Connections in Tabs',
   'pages.strategies.option.peer-card-ui-type.label': 'Peer Card UI Type',
   'pages.strategies.option.peer-sorting.label': 'Peer Sorting',
-  'pages.strategies.option.show-monitors-toolbar.label':
+  'pages.strategies.option.show_monitors_toolbar.label':
     'Show Monitors Toolbar',
-  'pages.strategies.option.collapse-toolbar.label': 'Collapse Toolbar',
-  'pages.strategies.option.show-remote-cursor.label': 'Show Remote Cursor',
-  'pages.strategies.option.follow-remote-cursor.label': 'Follow Remote Cursor',
-  'pages.strategies.option.follow-remote-window.label': 'Follow Remote Window',
+  'pages.strategies.option.collapse_toolbar.label': 'Collapse Toolbar',
+  'pages.strategies.option.show_remote_cursor.label': 'Show Remote Cursor',
+  'pages.strategies.option.follow_remote_cursor.label': 'Follow Remote Cursor',
+  'pages.strategies.option.follow_remote_window.label': 'Follow Remote Window',
   'pages.strategies.option.zoom-cursor.label': 'Zoom Cursor',
-  'pages.strategies.option.show-quality-monitor.label': 'Show Quality Monitor',
-  'pages.strategies.option.reverse-mouse-wheel.label': 'Reverse Mouse Wheel',
+  'pages.strategies.option.show_quality_monitor.label': 'Show Quality Monitor',
+  'pages.strategies.option.reverse_mouse_wheel.label': 'Reverse Mouse Wheel',
   'pages.strategies.option.swap-left-right-mouse.label':
     'Swap Left and Right Mouse Buttons',
-  'pages.strategies.option.displays-as-individual-windows.label':
+  'pages.strategies.option.displays_as_individual_windows.label':
     'Displays as Individual Windows',
-  'pages.strategies.option.use-all-my-displays-for-the-remote-session.label':
+  'pages.strategies.option.use_all_my_displays_for_the_remote_session.label':
     'Use All Displays for Remote Session',
-  'pages.strategies.option.view-style.label': 'View Style',
-  'pages.strategies.option.scroll-style.label': 'Scroll Style',
+  'pages.strategies.option.view_style.label': 'View Style',
+  'pages.strategies.option.scroll_style.label': 'Scroll Style',
   'pages.strategies.option.edge-scroll-edge-thickness.label':
     'Edge Scroll Thickness',
   'pages.strategies.option.trackpad-speed.label': 'Trackpad Speed',
@@ -689,10 +689,10 @@ export default {
     'Always Use Software Rendering',
   'pages.strategies.option.enable-hwcodec.label': 'Enable Hardware Codec',
   'pages.strategies.option.use-texture-render.label': 'Use Texture Rendering',
-  'pages.strategies.option.disable-audio.label': 'Disable Audio',
+  'pages.strategies.option.disable_audio.label': 'Disable Audio',
   'pages.strategies.option.i444.label': 'I444 Color Format',
-  'pages.strategies.option.image-quality.label': 'Image Quality',
-  'pages.strategies.option.custom-image-quality.label': 'Custom Image Quality',
+  'pages.strategies.option.image_quality.label': 'Image Quality',
+  'pages.strategies.option.custom_image_quality.label': 'Custom Image Quality',
   'pages.strategies.option.custom-fps.label': 'Custom FPS',
   'pages.strategies.option.enable-directx-capture.label':
     'Enable DirectX Capture',
@@ -701,13 +701,12 @@ export default {
   'pages.strategies.option.allow-d3d-render.label': 'Allow D3D Rendering',
   'pages.strategies.option.enable-file-copy-paste.label':
     'Enable File Copy and Paste',
-  'pages.strategies.option.disable-clipboard.label': 'Disable Clipboard',
+  'pages.strategies.option.disable_clipboard.label': 'Disable Clipboard',
   'pages.strategies.option.sync-init-clipboard.label': 'Sync Initial Clipboard',
   'pages.strategies.option.enable-lan-discovery.label': 'Enable LAN Discovery',
   'pages.strategies.option.direct-server.label': 'Direct Server',
   'pages.strategies.option.allow-auto-update.label': 'Allow Automatic Updates',
   'pages.strategies.option.enable-abr.label': 'Enable Adaptive Bitrate',
-  'pages.strategies.option.allow-linux-headless.label':
     'Allow Linux Headless Mode',
   'pages.strategies.option.sync-ab-with-recent-sessions.label':
     'Sync Address Book with Recent Sessions',
@@ -737,7 +736,7 @@ export default {
     'Allow Automatic Recording for Incoming Sessions',
   'pages.strategies.option.allow-auto-record-outgoing.label':
     'Allow Automatic Recording for Outgoing Sessions',
-  'pages.strategies.option.privacy-mode.label': 'Privacy Mode',
+  'pages.strategies.option.privacy_mode.label': 'Privacy Mode',
   'pages.strategies.option.auto-disconnect-timeout.description':
     'Timeout in minutes',
   'pages.strategies.option.lang.description': 'Language code',
@@ -746,10 +745,10 @@ export default {
   'pages.strategies.option.use-texture-render.description':
     'Platform dependent',
   'pages.strategies.option.whitelist.description': 'Comma-separated IP list',
-  'pages.strategies.option.image-quality.value.best': 'Best',
-  'pages.strategies.option.image-quality.value.balanced': 'Balanced',
-  'pages.strategies.option.image-quality.value.low': 'Low',
-  'pages.strategies.option.image-quality.value.custom': 'Custom',
+  'pages.strategies.option.image_quality.value.best': 'Best',
+  'pages.strategies.option.image_quality.value.balanced': 'Balanced',
+  'pages.strategies.option.image_quality.value.low': 'Low',
+  'pages.strategies.option.image_quality.value.custom': 'Custom',
   'pages.strategies.option.access-mode.value.custom': 'Custom',
   'pages.strategies.option.access-mode.value.full': 'Full Access',
   'pages.strategies.option.access-mode.value.view': 'View Only',
@@ -762,11 +761,11 @@ export default {
   'pages.strategies.option.peer-sorting.value.remote-id': 'Remote ID',
   'pages.strategies.option.peer-sorting.value.remote-host': 'Remote Host',
   'pages.strategies.option.peer-sorting.value.username': 'Username',
-  'pages.strategies.option.view-style.value.original': 'Original',
-  'pages.strategies.option.view-style.value.adaptive': 'Adaptive',
-  'pages.strategies.option.scroll-style.value.scrollauto': 'Auto',
-  'pages.strategies.option.scroll-style.value.scrollbar': 'Scrollbar',
-  'pages.strategies.option.scroll-style.value.scrolledge': 'Edge Scrolling',
+  'pages.strategies.option.view_style.value.original': 'Original',
+  'pages.strategies.option.view_style.value.adaptive': 'Adaptive',
+  'pages.strategies.option.scroll_style.value.scrollauto': 'Auto',
+  'pages.strategies.option.scroll_style.value.scrollbar': 'Scrollbar',
+  'pages.strategies.option.scroll_style.value.scrolledge': 'Edge Scrolling',
   'pages.strategies.option.keep-screen-on.value.never': 'Never',
   'pages.strategies.option.keep-screen-on.value.during-controlled':
     'During Controlled Session',
