@@ -66,11 +66,24 @@ const CreateBuildModal: React.FC<CreateBuildModalProps> = ({
 
   React.useEffect(() => {
     if (open) {
+      const base = initialValues || {
+        arch: 'x86_64',
+        'conn-type': 'both',
+      };
+      const hasApiServer =
+        typeof base['api-server'] === 'string' &&
+        base['api-server'].trim() !== '';
+      // Seed the API server with the console origin. The official client
+      // otherwise derives http://<id-server>:21114, which fails behind an
+      // HTTPS-only reverse proxy. "default" keeps the value editable.
       form.setFieldsValue(
-        initialValues || {
-          arch: 'x86_64',
-          'conn-type': 'both',
-        },
+        hasApiServer
+          ? base
+          : {
+              ...base,
+              'api-server': window.location.origin,
+              'api-server_type': base['api-server_type'] ?? 'default',
+            },
       );
     } else {
       form.resetFields();
