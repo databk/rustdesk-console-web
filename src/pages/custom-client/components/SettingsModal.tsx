@@ -6,6 +6,7 @@ import {
   getCustomClientSettings,
   updateCustomClientSettings,
 } from '@/services/rustdesk-console/custom-client';
+import LogoManager from './LogoManager';
 
 const TOKEN_MASK = '******';
 
@@ -145,6 +146,15 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
             autoComplete="new-password"
           />
         </Form.Item>
+
+        <Divider titlePlacement="left" plain>
+          {intl.formatMessage({
+            id: 'pages.customClient.logoManagement',
+            defaultMessage: 'Logo Management',
+          })}
+        </Divider>
+
+        <LogoManager open={open} />
       </Form>
     </Modal>
   );
