@@ -1232,7 +1232,6 @@ export default {
   'pages.strategies.option.allow-d3d-render.label': 'Autoriser le rendu D3D',
   'pages.strategies.option.allow-insecure-tls-fallback.label':
     'Autoriser le repli TLS non sécurisé',
-    'Autoriser le mode Linux headless',
   'pages.strategies.option.allow-numeric-one-time-password.label':
     'Autoriser le mot de passe à usage unique numérique',
   'pages.strategies.option.allow-only-conn-window-open.label':

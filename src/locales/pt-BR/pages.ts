@@ -752,7 +752,6 @@ export default {
   'pages.strategies.option.allow-auto-update.label':
     'Permitir Atualizações Automáticas',
   'pages.strategies.option.enable-abr.label': 'Ativar Bitrate Adaptativo',
-    'Permitir Modo Headless no Linux',
   'pages.strategies.option.sync-ab-with-recent-sessions.label':
     'Sincronizar Catálogo de Endereços com Sessões Recentes',
   'pages.strategies.option.sync-ab-tags.label':

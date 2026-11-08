@@ -748,7 +748,6 @@ export default {
   'pages.strategies.option.allow-auto-update.label':
     'Разрешить автоматические обновления',
   'pages.strategies.option.enable-abr.label': 'Включить адаптивный битрейт',
-    'Разрешить безголовый режим Linux',
   'pages.strategies.option.sync-ab-with-recent-sessions.label':
     'Синхронизировать адресную книгу с последними сеансами',
   'pages.strategies.option.sync-ab-tags.label':

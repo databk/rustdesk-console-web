@@ -707,7 +707,6 @@ export default {
   'pages.strategies.option.direct-server.label': 'Direct Server',
   'pages.strategies.option.allow-auto-update.label': 'Allow Automatic Updates',
   'pages.strategies.option.enable-abr.label': 'Enable Adaptive Bitrate',
-    'Allow Linux Headless Mode',
   'pages.strategies.option.sync-ab-with-recent-sessions.label':
     'Sync Address Book with Recent Sessions',
   'pages.strategies.option.sync-ab-tags.label': 'Sync Address Book Tags',
