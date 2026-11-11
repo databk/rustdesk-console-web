@@ -784,21 +784,29 @@ export default {
   'pages.strategies.option.allow-auto-record-outgoing.label':
     'Permitir Gravação Automática de Sessões de Saída',
   'pages.strategies.option.privacy_mode.label': 'Modo de Privacidade',
-  'pages.strategies.option.allow-kcp-congestion-control.label': 'Permitir Controle de Congestionamento KCP',
-  'pages.strategies.option.allow-scope-violation-alarm.label': 'Permitir Alarme de Violacao de Escopo',
-  'pages.strategies.option.allow-scope-violation-close.label': 'Permitir Fechamento de Violacao de Escopo',
-  'pages.strategies.option.allow-webrtc-congestion-control.label': 'Permitir Controle de Congestionamento WebRTC',
+  'pages.strategies.option.allow-kcp-congestion-control.label':
+    'Permitir Controle de Congestionamento KCP',
+  'pages.strategies.option.allow-scope-violation-alarm.label':
+    'Permitir Alarme de Violacao de Escopo',
+  'pages.strategies.option.allow-scope-violation-close.label':
+    'Permitir Fechamento de Violacao de Escopo',
+  'pages.strategies.option.allow-webrtc-congestion-control.label':
+    'Permitir Controle de Congestionamento WebRTC',
   'pages.strategies.option.api-server.label': 'Servidor API',
-  'pages.strategies.option.custom-rendezvous-server.label': 'Servidor Rendezvous Personalizado',
+  'pages.strategies.option.custom-rendezvous-server.label':
+    'Servidor Rendezvous Personalizado',
   'pages.strategies.option.direct-access-port.label': 'Porta de Acesso Direto',
-  'pages.strategies.option.enable-privacy-mode.label': 'Ativar Modo de Privacidade',
+  'pages.strategies.option.enable-privacy-mode.label':
+    'Ativar Modo de Privacidade',
   'pages.strategies.option.ice-servers.label': 'Servidores ICE',
   'pages.strategies.option.id-whitelist.label': 'Lista Branca de ID',
   'pages.strategies.option.key.label': 'Chave',
   'pages.strategies.option.relay-server.label': 'Servidor Relay',
-  'pages.strategies.option.trusted-device-expiration-days.label': 'Dias de Expiracao de Dispositivos Confiaveis',
+  'pages.strategies.option.trusted-device-expiration-days.label':
+    'Dias de Expiracao de Dispositivos Confiaveis',
   'pages.strategies.option.websocket-port.label': 'Porta WebSocket',
-  'pages.strategies.option.windows-service-video-save-directory.label': 'Diretorio de Salvamento de Video do Servico Windows',
+  'pages.strategies.option.windows-service-video-save-directory.label':
+    'Diretorio de Salvamento de Video do Servico Windows',
   'pages.strategies.option.auto-disconnect-timeout.description':
     'Tempo limite em minutos',
   'pages.strategies.option.lang.description': 'Código do idioma',

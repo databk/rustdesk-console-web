@@ -671,21 +671,28 @@ export default {
   'pages.strategies.option.allow-auto-record-outgoing.label':
     '允许自动录制传出会话',
   'pages.strategies.option.privacy_mode.label': '隐私模式',
-  'pages.strategies.option.allow-kcp-congestion-control.label': '允许 KCP 拥塞控制',
-  'pages.strategies.option.allow-scope-violation-alarm.label': '允许范围违规告警',
-  'pages.strategies.option.allow-scope-violation-close.label': '允许范围违规关闭',
-  'pages.strategies.option.allow-webrtc-congestion-control.label': '允许 WebRTC 拥塞控制',
+  'pages.strategies.option.allow-kcp-congestion-control.label':
+    '允许 KCP 拥塞控制',
+  'pages.strategies.option.allow-scope-violation-alarm.label':
+    '允许范围违规告警',
+  'pages.strategies.option.allow-scope-violation-close.label':
+    '允许范围违规关闭',
+  'pages.strategies.option.allow-webrtc-congestion-control.label':
+    '允许 WebRTC 拥塞控制',
   'pages.strategies.option.api-server.label': 'API 服务器',
-  'pages.strategies.option.custom-rendezvous-server.label': '自定义 rendezvous 服务器',
+  'pages.strategies.option.custom-rendezvous-server.label':
+    '自定义 rendezvous 服务器',
   'pages.strategies.option.direct-access-port.label': '直连访问端口',
   'pages.strategies.option.enable-privacy-mode.label': '启用隐私模式',
   'pages.strategies.option.ice-servers.label': 'ICE 服务器',
   'pages.strategies.option.id-whitelist.label': 'ID 白名单',
   'pages.strategies.option.key.label': '密钥',
   'pages.strategies.option.relay-server.label': '中继服务器',
-  'pages.strategies.option.trusted-device-expiration-days.label': '可信设备过期天数',
+  'pages.strategies.option.trusted-device-expiration-days.label':
+    '可信设备过期天数',
   'pages.strategies.option.websocket-port.label': 'WebSocket 端口',
-  'pages.strategies.option.windows-service-video-save-directory.label': 'Windows 服务视频保存目录',
+  'pages.strategies.option.windows-service-video-save-directory.label':
+    'Windows 服务视频保存目录',
   'pages.strategies.option.auto-disconnect-timeout.description':
     '超时时间（分钟）',
   'pages.strategies.option.lang.description': '语言代码',
