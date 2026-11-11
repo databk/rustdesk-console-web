@@ -1425,7 +1425,7 @@ export default {
   'pages.strategies.option.trusted-device-expiration-days.label': "Jours d'expiration des appareils de confiance",
   'pages.strategies.option.id-whitelist.label': "Liste blanche d'ID",
   'pages.strategies.option.direct-access-port.label': "Port d'acces direct",
-  'pages.strategies.option.allow-scope-violation-alarm.label': 'Autoriser l'alarme de violation de portee',
+  'pages.strategies.option.allow-scope-violation-alarm.label': "Autoriser l'alarme de violation de portee",
   'pages.strategies.values.no': 'Non',
   'pages.strategies.values.yes': 'Oui',
   'pages.strategies.view': 'Voir la stratégie',
