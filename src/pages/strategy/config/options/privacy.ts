@@ -35,4 +35,12 @@ export const options: ConfigOption[] = [
     options: ['Y', 'N'],
     strategySupported: false,
   },
+  {
+    key: 'windows-service-video-save-directory',
+    label: 'windows-service-video-save-directory',
+    category: 'privacy',
+    type: 'text',
+    defaultValue: '',
+    description: 'Absolute path for service-mode recording storage',
+  },
 ];

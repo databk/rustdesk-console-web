@@ -29,15 +29,6 @@ export const options: ConfigOption[] = [
     strategySupported: false,
   },
   {
-    key: 'allow-remove-wallpaper',
-    label: 'allow-remove-wallpaper',
-    category: 'display',
-    type: 'switch',
-    defaultValue: 'N',
-    options: ['Y', 'N'],
-    strategySupported: false,
-  },
-  {
     key: 'enable-open-new-connections-in-tabs',
     label: 'enable-open-new-connections-in-tabs',
     category: 'display',

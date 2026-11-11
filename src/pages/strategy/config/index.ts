@@ -7,6 +7,7 @@ import { options as fileOptions } from './options/file';
 import { options as floatingOptions } from './options/floating';
 import { options as privacyOptions } from './options/privacy';
 import { options as securityOptions } from './options/security';
+import { options as serverOptions } from './options/server';
 import type { ConfigCategory, ConfigOption } from './types';
 
 export { configCategories } from './categories';
@@ -21,6 +22,7 @@ export const configOptions: ConfigOption[] = [
   ...advancedOptions,
   ...floatingOptions,
   ...privacyOptions,
+  ...serverOptions,
 ];
 
 export const configOptionsMap = configOptions.reduce<
