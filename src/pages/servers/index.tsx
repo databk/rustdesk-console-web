@@ -28,12 +28,10 @@ import {
   getServerConfig,
   getServerLogs,
   getServerNodes,
-  getServerPeers,
   type RelaySession,
   type ServerBans,
   type ServerConfig,
   type ServerNode,
-  type ServerPeer,
   type ServerService,
   saveServerBans,
   saveServerConfig,
@@ -90,7 +88,6 @@ const Servers: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState(false);
-  const [peers, setPeers] = useState<ServerPeer[]>([]);
   const [sessions, setSessions] = useState<ManagedSession[]>([]);
   const [sessionFailures, setSessionFailures] = useState<string[]>([]);
   const [logs, setLogs] = useState('');
@@ -180,7 +177,6 @@ const Servers: React.FC = () => {
     let fetching = false;
     setLoading(true);
     setFailed(false);
-    setPeers([]);
     setSessions([]);
     setSessionFailures([]);
     setLogs('');
@@ -214,10 +210,7 @@ const Servers: React.FC = () => {
           );
         const current = () => active && mutation === mutationVersion.current;
         if (busyRef.current) return;
-        if (tab === 'peers' && currentPrimary?.reachable) {
-          const result = await getServerPeers(currentPrimary.id);
-          if (current()) setPeers(result.data);
-        } else if (tab === 'sessions') {
+        if (tab === 'sessions') {
           const currentRelays = currentNodes.filter(
             (item) =>
               item.services.some((service) => service.service === 'hbbr') &&
@@ -597,51 +590,6 @@ const Servers: React.FC = () => {
     </Space>
   );
 
-  const peerTable = (
-    <Space orientation="vertical" style={{ width: '100%' }}>
-      <Alert
-        type="info"
-        title={t(
-          `注册表来自 hbbs · ${primary?.name || ''}，与 Console 客户端心跳在线状态分别记录。`,
-          `Registrations come from hbbs · ${primary?.name || ''}, tracked separately from Console client heartbeats.`,
-        )}
-      />
-      {!primary?.reachable && (
-        <Alert
-          type="warning"
-          title={t(
-            '主服务不可达，无法获取当前注册表。',
-            'The primary service is unreachable; current registrations are unavailable.',
-          )}
-        />
-      )}
-      <Table<ServerPeer>
-        rowKey="id"
-        dataSource={peers}
-        scroll={{ x: 800 }}
-        columns={[
-          { title: 'ID', dataIndex: 'id' },
-          { title: t('地址', 'Address'), dataIndex: 'address' },
-          {
-            title: t('注册状态', 'Registration'),
-            render: (_, item) => (
-              <Tag color={item.online ? 'green' : undefined}>
-                {item.online ? t('在线', 'Online') : t('离线', 'Offline')}
-              </Tag>
-            ),
-          },
-          {
-            title: t('封禁', 'Banned'),
-            render: (_, item) => (item.banned ? t('是', 'Yes') : t('否', 'No')),
-          },
-          {
-            title: t('距上次注册（秒）', 'Registration age (seconds)'),
-            dataIndex: 'last_registration_age_seconds',
-          },
-        ]}
-      />
-    </Space>
-  );
   const sessionTable = (
     <Space orientation="vertical" style={{ width: '100%' }}>
       <Select
@@ -1182,11 +1130,6 @@ const Servers: React.FC = () => {
               key: 'overview',
               label: t('服务概览', 'Services'),
               children: overview,
-            },
-            {
-              key: 'peers',
-              label: t('注册设备', 'Registrations'),
-              children: primary ? peerTable : managementUnavailable,
             },
             {
               key: 'sessions',

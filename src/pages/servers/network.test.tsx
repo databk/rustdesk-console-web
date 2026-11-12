@@ -20,7 +20,6 @@ import {
   getServerConfig,
   getServerLogs,
   getServerNodes,
-  getServerPeers,
   getTcpNetwork,
   saveServerBans,
   saveServerConfig,
@@ -84,7 +83,6 @@ jest.mock('@/services/rustdesk-console/server', () => ({
   getServerConfig: jest.fn(),
   getServerLogs: jest.fn(),
   getRelaySessions: jest.fn(),
-  getServerPeers: jest.fn(),
   getServerBans: jest.fn(),
   saveServerBans: jest.fn(),
   saveServerConfig: jest.fn(),
@@ -130,7 +128,6 @@ beforeEach(() => {
   mockAccess.canServersDisconnect = false;
   mockAccess.canServersView = true;
   jest.mocked(history.block).mockClear();
-  jest.mocked(getServerPeers).mockReset().mockResolvedValue({ data: [] });
   jest.mocked(getRelaySessions).mockReset().mockResolvedValue({ data: [] });
   jest
     .mocked(getServerBans)
@@ -258,10 +255,9 @@ test('network information is available without installing an extra node agent', 
     expect.objectContaining({ signal: expect.any(AbortSignal) }),
   );
   expect(screen.getByText('Network settings')).toBeTruthy();
-  for (const name of ['Services', 'Registrations', 'Relay sessions', 'Logs'])
+  for (const name of ['Services', 'Relay sessions', 'Logs'])
     expect(screen.getByRole('tab', { name })).toBeTruthy();
   expect(screen.getByText('Server management is not connected')).toBeTruthy();
-  fireEvent.click(screen.getByRole('tab', { name: 'Registrations' }));
   expect(screen.queryByRole('button', { name: 'Restart' })).toBeNull();
 });
 
@@ -510,7 +506,7 @@ test('partial relay query failure is visible while successful results stay avail
   );
 });
 
-test('registrations and bans always use the primary service regardless of the last relay', async () => {
+test('bans always use the primary service regardless of the last relay', async () => {
   mockAccess.canServersBan = true;
   await openFleet();
   fireEvent.click(
@@ -520,9 +516,6 @@ test('registrations and bans always use the primary service regardless of the la
     ),
   );
   await screen.findByText('relay-2/hbbr logs');
-  fireEvent.click(screen.getByRole('tab', { name: 'Registrations' }));
-  await waitFor(() => expect(getServerPeers).toHaveBeenCalledWith('primary'));
-  expect(screen.queryByRole('combobox')).toBeNull();
   fireEvent.click(screen.getByRole('tab', { name: 'Bans' }));
   await screen.findByRole('button', { name: 'Save rules' });
   await waitFor(() => expect(getServerBans).toHaveBeenCalledWith('primary'));
