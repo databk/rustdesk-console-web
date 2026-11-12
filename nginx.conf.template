@@ -4,8 +4,8 @@ server {
 
     root /usr/share/nginx/html;
     index index.html;
-    # Docker DNS is resolved again after a backend container is replaced.
-    resolver 127.0.0.11 valid=5s ipv6=off;
+    # DNS resolver is auto-detected from /etc/resolv.conf at container startup.
+    resolver ${NGINX_RESOLVER} valid=5s ipv6=off;
 
     location = /system-update-health.json {
         add_header Cache-Control "no-store" always;
