@@ -522,6 +522,7 @@ export default {
   'pages.strategies.category.advanced': 'Avancé',
   'pages.strategies.category.floating': 'Fenêtre flottante',
   'pages.strategies.category.privacy': 'Confidentialité & Enregistrement',
+  'pages.strategies.category.server': 'Serveur',
   'pages.users.inviteSuccess': 'Invitation envoyée',
   'pages.users.inviteFailed': "Échec de l'envoi de l'invitation",
   'pages.users.active': 'Actif',
@@ -1410,6 +1411,35 @@ export default {
     "Liste d'IP séparées par des virgules",
   'pages.strategies.option.whitelist.label': "Liste blanche d'IP",
   'pages.strategies.option.zoom-cursor.label': 'Zoom du curseur',
+  'pages.strategies.option.allow-kcp-congestion-control.label':
+    'Autoriser le controle de congestion KCP',
+  'pages.strategies.option.allow-scope-violation-close.label':
+    'Autoriser la fermeture de violation de portee',
+  'pages.strategies.option.allow-webrtc-congestion-control.label':
+    'Autoriser le controle de congestion WebRTC',
+  'pages.strategies.option.api-server.label': 'Serveur API',
+  'pages.strategies.option.custom-rendezvous-server.label':
+    'Serveur rendezvous personnalise',
+  'pages.strategies.option.enable-privacy-mode.label':
+    'Activer le mode confidentialite',
+  'pages.strategies.option.ice-servers.label': 'Serveurs ICE',
+  'pages.strategies.option.ice-servers.description':
+    'URLs des serveurs ICE séparées par des virgules',
+  'pages.strategies.option.key.label': 'Cle',
+  'pages.strategies.option.relay-server.label': 'Serveur relais',
+  'pages.strategies.option.websocket-port.label': 'Port WebSocket',
+  'pages.strategies.option.windows-service-video-save-directory.label':
+    'Repertoire de sauvegarde video du service Windows',
+  'pages.strategies.option.windows-service-video-save-directory.description':
+    'Chemin absolu pour le stockage des enregistrements en mode service',
+  'pages.strategies.option.trusted-device-expiration-days.label':
+    "Jours d'expiration des appareils de confiance",
+  'pages.strategies.option.id-whitelist.label': "Liste blanche d'ID",
+  'pages.strategies.option.id-whitelist.description':
+    "Liste d'ID séparée par des virgules",
+  'pages.strategies.option.direct-access-port.label': "Port d'acces direct",
+  'pages.strategies.option.allow-scope-violation-alarm.label':
+    "Autoriser l'alarme de violation de portee",
   'pages.strategies.values.no': 'Non',
   'pages.strategies.values.yes': 'Oui',
   'pages.strategies.view': 'Voir la stratégie',

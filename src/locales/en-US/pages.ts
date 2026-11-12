@@ -606,6 +606,7 @@ export default {
   'pages.strategies.category.advanced': 'Advanced',
   'pages.strategies.category.floating': 'Floating Window',
   'pages.strategies.category.privacy': 'Privacy & Recording',
+  'pages.strategies.category.server': 'Server',
   'pages.strategies.values.yes': 'Yes',
   'pages.strategies.values.no': 'No',
   'pages.strategies.option.access-mode.label': 'Access Mode',
@@ -736,6 +737,33 @@ export default {
   'pages.strategies.option.allow-auto-record-outgoing.label':
     'Allow Automatic Recording for Outgoing Sessions',
   'pages.strategies.option.privacy_mode.label': 'Privacy Mode',
+  'pages.strategies.option.allow-kcp-congestion-control.label':
+    'Allow KCP Congestion Control',
+  'pages.strategies.option.allow-scope-violation-alarm.label':
+    'Allow Scope Violation Alarm',
+  'pages.strategies.option.allow-scope-violation-close.label':
+    'Allow Scope Violation Close',
+  'pages.strategies.option.allow-webrtc-congestion-control.label':
+    'Allow WebRTC Congestion Control',
+  'pages.strategies.option.api-server.label': 'API Server',
+  'pages.strategies.option.custom-rendezvous-server.label':
+    'Custom Rendezvous Server',
+  'pages.strategies.option.direct-access-port.label': 'Direct Access Port',
+  'pages.strategies.option.enable-privacy-mode.label': 'Enable Privacy Mode',
+  'pages.strategies.option.ice-servers.label': 'ICE Servers',
+  'pages.strategies.option.ice-servers.description':
+    'Comma-separated ICE server URLs',
+  'pages.strategies.option.id-whitelist.label': 'ID Whitelist',
+  'pages.strategies.option.id-whitelist.description': 'Comma-separated ID list',
+  'pages.strategies.option.key.label': 'Key',
+  'pages.strategies.option.relay-server.label': 'Relay Server',
+  'pages.strategies.option.trusted-device-expiration-days.label':
+    'Trusted Device Expiration Days',
+  'pages.strategies.option.websocket-port.label': 'WebSocket Port',
+  'pages.strategies.option.windows-service-video-save-directory.label':
+    'Windows Service Video Save Directory',
+  'pages.strategies.option.windows-service-video-save-directory.description':
+    'Absolute path for service-mode recording storage',
   'pages.strategies.option.auto-disconnect-timeout.description':
     'Timeout in minutes',
   'pages.strategies.option.lang.description': 'Language code',

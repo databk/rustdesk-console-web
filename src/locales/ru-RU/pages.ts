@@ -633,6 +633,7 @@ export default {
   'pages.strategies.category.advanced': 'Расширенные',
   'pages.strategies.category.floating': 'Плавающее окно',
   'pages.strategies.category.privacy': 'Конфиденциальность и запись',
+  'pages.strategies.category.server': 'Сервер',
   'pages.strategies.values.yes': 'Да',
   'pages.strategies.values.no': 'Нет',
   'pages.strategies.option.access-mode.label': 'Режим доступа',
@@ -779,6 +780,34 @@ export default {
   'pages.strategies.option.allow-auto-record-outgoing.label':
     'Разрешить автоматическую запись исходящих сеансов',
   'pages.strategies.option.privacy_mode.label': 'Режим конфиденциальности',
+  'pages.strategies.option.allow-kcp-congestion-control.label':
+    'Разрешить контроль перегрузки KCP',
+  'pages.strategies.option.allow-scope-violation-alarm.label':
+    'Разрешить тревогу нарушения области',
+  'pages.strategies.option.allow-scope-violation-close.label':
+    'Разрешить закрытие нарушения области',
+  'pages.strategies.option.allow-webrtc-congestion-control.label':
+    'Разрешить контроль перегрузки WebRTC',
+  'pages.strategies.option.api-server.label': 'API сервер',
+  'pages.strategies.option.custom-rendezvous-server.label':
+    'Пользовательский rendezvous сервер',
+  'pages.strategies.option.direct-access-port.label': 'Порт прямого доступа',
+  'pages.strategies.option.enable-privacy-mode.label':
+    'Включить режим конфиденциальности',
+  'pages.strategies.option.ice-servers.label': 'ICE серверы',
+  'pages.strategies.option.ice-servers.description':
+    'URL ICE-серверов через запятую',
+  'pages.strategies.option.id-whitelist.label': 'Белый список ID',
+  'pages.strategies.option.id-whitelist.description': 'Список ID через запятую',
+  'pages.strategies.option.key.label': 'Ключ',
+  'pages.strategies.option.relay-server.label': 'Релейный сервер',
+  'pages.strategies.option.trusted-device-expiration-days.label':
+    'Дни истечения доверенных устройств',
+  'pages.strategies.option.websocket-port.label': 'Порт WebSocket',
+  'pages.strategies.option.windows-service-video-save-directory.label':
+    'Каталог сохранения видео службы Windows',
+  'pages.strategies.option.windows-service-video-save-directory.description':
+    'Абсолютный путь для хранения записей в режиме службы',
   'pages.strategies.option.auto-disconnect-timeout.description':
     'Тайм-аут в минутах',
   'pages.strategies.option.lang.description': 'Код языка',
