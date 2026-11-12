@@ -8,6 +8,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
+    strategySupported: true,
   },
   {
     key: 'whitelist',
@@ -16,6 +17,7 @@ export const options: ConfigOption[] = [
     type: 'text',
     defaultValue: '',
     description: 'Comma-separated IP list',
+    strategySupported: true,
   },
   {
     key: 'approve-mode',
@@ -24,6 +26,7 @@ export const options: ConfigOption[] = [
     type: 'select',
     defaultValue: 'password-click',
     options: ['password', 'click', 'password-click'],
+    strategySupported: true,
   },
   {
     key: 'verification-method',
@@ -36,6 +39,7 @@ export const options: ConfigOption[] = [
       'use-permanent-password',
       'use-both-passwords',
     ],
+    strategySupported: true,
   },
   {
     key: 'temporary-password-length',
@@ -44,6 +48,7 @@ export const options: ConfigOption[] = [
     type: 'select',
     defaultValue: '6',
     options: ['6', '8', '10'],
+    strategySupported: true,
   },
   {
     key: 'lock_after_session_end',
@@ -52,7 +57,6 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
-    strategySupported: false,
   },
   {
     key: 'allow-remote-cm-modification',
@@ -61,7 +65,6 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
-    strategySupported: false,
   },
   {
     key: 'enable-trusted-devices',
@@ -78,6 +81,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
+    strategySupported: true,
   },
   {
     key: 'allow-insecure-tls-fallback',
@@ -94,6 +98,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
+    strategySupported: true,
   },
   {
     key: 'enable-privacy-mode',
@@ -102,6 +107,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'Y',
     options: ['Y', 'N'],
+    strategySupported: true,
   },
   {
     key: 'allow-scope-violation-close',
@@ -110,6 +116,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
+    strategySupported: true,
   },
   {
     key: 'allow-scope-violation-alarm',
@@ -118,6 +125,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
+    strategySupported: true,
   },
   {
     key: 'id-whitelist',
@@ -126,6 +134,7 @@ export const options: ConfigOption[] = [
     type: 'text',
     defaultValue: '',
     description: 'Comma-separated ID list',
+    strategySupported: true,
   },
   {
     key: 'trusted-device-expiration-days',

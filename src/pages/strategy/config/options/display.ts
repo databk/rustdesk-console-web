@@ -8,7 +8,6 @@ export const options: ConfigOption[] = [
     type: 'select',
     defaultValue: 'system',
     options: ['dark', 'light', 'system'],
-    strategySupported: false,
   },
   {
     key: 'lang',
@@ -17,7 +16,6 @@ export const options: ConfigOption[] = [
     type: 'text',
     defaultValue: 'default',
     description: 'Language code',
-    strategySupported: false,
   },
   {
     key: 'enable-confirm-closing-tabs',
@@ -26,7 +24,6 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'Y',
     options: ['Y', 'N'],
-    strategySupported: false,
   },
   {
     key: 'enable-open-new-connections-in-tabs',
@@ -35,7 +32,6 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'Y',
     options: ['Y', 'N'],
-    strategySupported: false,
   },
   {
     key: 'peer-card-ui-type',
@@ -44,7 +40,6 @@ export const options: ConfigOption[] = [
     type: 'select',
     defaultValue: '0',
     options: ['0', '1', '2'],
-    strategySupported: false,
   },
   {
     key: 'peer-sorting',
@@ -53,7 +48,6 @@ export const options: ConfigOption[] = [
     type: 'select',
     defaultValue: 'Remote ID',
     options: ['Remote ID', 'Remote Host', 'Username'],
-    strategySupported: false,
   },
   {
     key: 'show_monitors_toolbar',
@@ -62,7 +56,6 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
-    strategySupported: false,
   },
   {
     key: 'collapse_toolbar',
@@ -71,7 +64,6 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
-    strategySupported: false,
   },
   {
     key: 'show_remote_cursor',
@@ -80,7 +72,6 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
-    strategySupported: false,
   },
   {
     key: 'follow_remote_cursor',
@@ -89,7 +80,6 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
-    strategySupported: false,
   },
   {
     key: 'follow_remote_window',
@@ -98,7 +88,6 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
-    strategySupported: false,
   },
   {
     key: 'zoom-cursor',
@@ -107,7 +96,6 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
-    strategySupported: false,
   },
   {
     key: 'show_quality_monitor',
@@ -116,7 +104,6 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
-    strategySupported: false,
   },
   {
     key: 'reverse_mouse_wheel',
@@ -125,7 +112,6 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
-    strategySupported: false,
   },
   {
     key: 'swap-left-right-mouse',
@@ -134,7 +120,6 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
-    strategySupported: false,
   },
   {
     key: 'displays_as_individual_windows',
@@ -143,7 +128,6 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
-    strategySupported: false,
   },
   {
     key: 'use_all_my_displays_for_the_remote_session',
@@ -152,7 +136,6 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
-    strategySupported: false,
   },
   {
     key: 'view_style',
@@ -161,7 +144,6 @@ export const options: ConfigOption[] = [
     type: 'select',
     defaultValue: 'original',
     options: ['original', 'adaptive'],
-    strategySupported: false,
   },
   {
     key: 'scroll_style',
@@ -170,7 +152,6 @@ export const options: ConfigOption[] = [
     type: 'select',
     defaultValue: 'scrollauto',
     options: ['scrollauto', 'scrollbar', 'scrolledge'],
-    strategySupported: false,
   },
   {
     key: 'edge-scroll-edge-thickness',
@@ -180,7 +161,6 @@ export const options: ConfigOption[] = [
     defaultValue: '100',
     min: 20,
     max: 150,
-    strategySupported: false,
   },
   {
     key: 'trackpad-speed',
@@ -190,7 +170,6 @@ export const options: ConfigOption[] = [
     defaultValue: '100',
     min: 10,
     max: 1000,
-    strategySupported: false,
   },
   {
     key: 'disable-group-panel',
@@ -199,7 +178,6 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
-    strategySupported: false,
   },
   {
     key: 'keep-screen-on',
@@ -208,7 +186,6 @@ export const options: ConfigOption[] = [
     type: 'select',
     defaultValue: 'during-controlled',
     options: ['never', 'during-controlled', 'service-on'],
-    strategySupported: false,
   },
   {
     key: 'disable-discovery-panel',
@@ -217,7 +194,6 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
-    strategySupported: false,
   },
   {
     key: 'touch-mode',
@@ -226,7 +202,6 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
-    strategySupported: false,
   },
   {
     key: 'show-virtual-mouse',
@@ -235,7 +210,6 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
-    strategySupported: false,
   },
   {
     key: 'show-virtual-joystick',
@@ -244,6 +218,5 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
-    strategySupported: false,
   },
 ];

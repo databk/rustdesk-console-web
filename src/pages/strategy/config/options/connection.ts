@@ -8,6 +8,7 @@ export const options: ConfigOption[] = [
     type: 'select',
     defaultValue: 'custom',
     options: ['custom', 'full', 'view'],
+    strategySupported: true,
   },
   {
     key: 'enable-keyboard',
@@ -16,6 +17,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'Y',
     options: ['Y', 'N'],
+    strategySupported: true,
   },
   {
     key: 'enable-clipboard',
@@ -24,6 +26,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'Y',
     options: ['Y', 'N'],
+    strategySupported: true,
   },
   {
     key: 'enable-file-transfer',
@@ -32,6 +35,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'Y',
     options: ['Y', 'N'],
+    strategySupported: true,
   },
   {
     key: 'enable-camera',
@@ -40,6 +44,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'Y',
     options: ['Y', 'N'],
+    strategySupported: true,
   },
   {
     key: 'enable-terminal',
@@ -48,6 +53,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'Y',
     options: ['Y', 'N'],
+    strategySupported: true,
   },
   {
     key: 'enable-remote-printer',
@@ -56,6 +62,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'Y',
     options: ['Y', 'N'],
+    strategySupported: true,
   },
   {
     key: 'enable-tunnel',
@@ -64,6 +71,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'Y',
     options: ['Y', 'N'],
+    strategySupported: true,
   },
   {
     key: 'enable-remote-restart',
@@ -72,6 +80,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'Y',
     options: ['Y', 'N'],
+    strategySupported: true,
   },
   {
     key: 'enable-block-input',
@@ -80,6 +89,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'Y',
     options: ['Y', 'N'],
+    strategySupported: true,
   },
   {
     key: 'allow-auto-disconnect',
@@ -88,6 +98,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
+    strategySupported: true,
   },
   {
     key: 'auto-disconnect-timeout',
@@ -98,6 +109,7 @@ export const options: ConfigOption[] = [
     min: 1,
     max: 9999,
     description: 'Timeout in minutes',
+    strategySupported: true,
   },
   {
     key: 'allow-only-conn-window-open',
@@ -106,6 +118,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
+    strategySupported: true,
   },
   {
     key: 'view_only',
@@ -114,7 +127,6 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
-    strategySupported: false,
   },
   {
     key: 'terminal-persistent',
@@ -123,7 +135,6 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
-    strategySupported: false,
   },
   {
     key: 'allow-ask-for-note',
@@ -132,6 +143,5 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
-    strategySupported: false,
   },
 ];

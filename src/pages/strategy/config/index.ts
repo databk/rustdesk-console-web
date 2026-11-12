@@ -38,7 +38,7 @@ export function getOptionsByCategory(category: string): ConfigOption[] {
 
 export function getStrategyOptionsByCategory(category: string): ConfigOption[] {
   return configOptions.filter(
-    (opt) => opt.category === category && opt.strategySupported !== false,
+    (opt) => opt.category === category && opt.strategySupported === true,
   );
 }
 

@@ -8,6 +8,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'Y',
     options: ['Y', 'N'],
+    strategySupported: true,
   },
   {
     key: 'direct-server',
@@ -16,6 +17,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
+    strategySupported: true,
   },
   {
     key: 'allow-auto-update',
@@ -24,6 +26,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
+    strategySupported: true,
   },
   {
     key: 'enable-abr',
@@ -32,6 +35,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'Y',
     options: ['Y', 'N'],
+    strategySupported: true,
   },
   {
     key: 'sync-ab-with-recent-sessions',
@@ -40,7 +44,6 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
-    strategySupported: false,
   },
   {
     key: 'sync-ab-tags',
@@ -49,7 +52,6 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
-    strategySupported: false,
   },
   {
     key: 'filter-ab-by-intersection',
@@ -58,7 +60,6 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
-    strategySupported: false,
   },
   {
     key: 'enable-udp-punch',
@@ -67,7 +68,6 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'Y',
     options: ['Y', 'N'],
-    strategySupported: false,
   },
   {
     key: 'enable-ipv6-punch',
@@ -77,7 +77,6 @@ export const options: ConfigOption[] = [
     defaultValue: 'N',
     options: ['Y', 'N'],
     description: 'Self-hosted: N, others: Y',
-    strategySupported: false,
   },
   {
     key: 'pre-elevate-service',
@@ -86,7 +85,6 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
-    strategySupported: false,
   },
   {
     key: 'keep-awake-during-incoming-sessions',
@@ -95,6 +93,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'Y',
     options: ['Y', 'N'],
+    strategySupported: true,
   },
   {
     key: 'keep-awake-during-outgoing-sessions',
@@ -103,7 +102,6 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'Y',
     options: ['Y', 'N'],
-    strategySupported: false,
   },
   {
     key: 'disable-udp',
@@ -112,6 +110,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
+    strategySupported: true,
   },
   {
     key: 'allow-websocket',
@@ -128,6 +127,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
+    strategySupported: true,
   },
   {
     key: 'allow-webrtc-congestion-control',
@@ -136,6 +136,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
+    strategySupported: true,
   },
   {
     key: 'direct-access-port',
@@ -145,6 +146,7 @@ export const options: ConfigOption[] = [
     defaultValue: '21118',
     min: 1,
     max: 65535,
+    strategySupported: true,
   },
   {
     key: 'websocket-port',

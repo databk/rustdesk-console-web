@@ -8,6 +8,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'Y',
     options: ['Y', 'N'],
+    strategySupported: true,
   },
   {
     key: 'allow-always-software-render',
@@ -16,6 +17,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
+    strategySupported: true,
   },
   {
     key: 'enable-hwcodec',
@@ -24,6 +26,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'Y',
     options: ['Y', 'N'],
+    strategySupported: true,
   },
   {
     key: 'use-texture-render',
@@ -33,7 +36,6 @@ export const options: ConfigOption[] = [
     defaultValue: 'Y',
     options: ['Y', 'N'],
     description: 'Platform dependent',
-    strategySupported: false,
   },
   {
     key: 'disable_audio',
@@ -42,7 +44,6 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
-    strategySupported: false,
   },
   {
     key: 'i444',
@@ -51,7 +52,6 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
-    strategySupported: false,
   },
   {
     key: 'image_quality',
@@ -60,7 +60,6 @@ export const options: ConfigOption[] = [
     type: 'select',
     defaultValue: 'balanced',
     options: ['best', 'balanced', 'low', 'custom'],
-    strategySupported: false,
   },
   {
     key: 'custom_image_quality',
@@ -70,7 +69,6 @@ export const options: ConfigOption[] = [
     defaultValue: '50',
     min: 10,
     max: 2000,
-    strategySupported: false,
   },
   {
     key: 'custom-fps',
@@ -80,7 +78,6 @@ export const options: ConfigOption[] = [
     defaultValue: '30',
     min: 5,
     max: 120,
-    strategySupported: false,
   },
   {
     key: 'enable-directx-capture',
@@ -89,6 +86,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'Y',
     options: ['Y', 'N'],
+    strategySupported: true,
   },
   {
     key: 'enable-android-software-encoding-half-scale',
@@ -97,6 +95,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'Y',
     options: ['Y', 'N'],
+    strategySupported: true,
   },
   {
     key: 'allow-d3d-render',
@@ -105,6 +104,5 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
-    strategySupported: false,
   },
 ];
