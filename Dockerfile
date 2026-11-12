@@ -9,5 +9,10 @@ LABEL org.opencontainers.image.revision=$SOURCE_COMMIT
 
 COPY dist/ /usr/share/nginx/html/
 COPY nginx.conf.template /etc/nginx/templates/default.conf.template
+COPY docker-entrypoint.sh /docker-entrypoint-custom.sh
+RUN chmod +x /docker-entrypoint-custom.sh
 
 EXPOSE 80
+
+ENTRYPOINT ["/docker-entrypoint-custom.sh"]
+CMD ["nginx", "-g", "daemon off;"]
