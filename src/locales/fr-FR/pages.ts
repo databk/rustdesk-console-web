@@ -1423,14 +1423,20 @@ export default {
   'pages.strategies.option.enable-privacy-mode.label':
     'Activer le mode confidentialite',
   'pages.strategies.option.ice-servers.label': 'Serveurs ICE',
+  'pages.strategies.option.ice-servers.description':
+    'URLs des serveurs ICE séparées par des virgules',
   'pages.strategies.option.key.label': 'Cle',
   'pages.strategies.option.relay-server.label': 'Serveur relais',
   'pages.strategies.option.websocket-port.label': 'Port WebSocket',
   'pages.strategies.option.windows-service-video-save-directory.label':
     'Repertoire de sauvegarde video du service Windows',
+  'pages.strategies.option.windows-service-video-save-directory.description':
+    'Chemin absolu pour le stockage des enregistrements en mode service',
   'pages.strategies.option.trusted-device-expiration-days.label':
     "Jours d'expiration des appareils de confiance",
   'pages.strategies.option.id-whitelist.label': "Liste blanche d'ID",
+  'pages.strategies.option.id-whitelist.description':
+    "Liste d'ID séparée par des virgules",
   'pages.strategies.option.direct-access-port.label': "Port d'acces direct",
   'pages.strategies.option.allow-scope-violation-alarm.label':
     "Autoriser l'alarme de violation de portee",

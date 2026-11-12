@@ -685,7 +685,10 @@ export default {
   'pages.strategies.option.direct-access-port.label': '直连访问端口',
   'pages.strategies.option.enable-privacy-mode.label': '启用隐私模式',
   'pages.strategies.option.ice-servers.label': 'ICE 服务器',
+  'pages.strategies.option.ice-servers.description':
+    '逗号分隔的 ICE 服务器 URL',
   'pages.strategies.option.id-whitelist.label': 'ID 白名单',
+  'pages.strategies.option.id-whitelist.description': '逗号分隔的 ID 列表',
   'pages.strategies.option.key.label': '密钥',
   'pages.strategies.option.relay-server.label': '中继服务器',
   'pages.strategies.option.trusted-device-expiration-days.label':
@@ -693,6 +696,8 @@ export default {
   'pages.strategies.option.websocket-port.label': 'WebSocket 端口',
   'pages.strategies.option.windows-service-video-save-directory.label':
     'Windows 服务视频保存目录',
+  'pages.strategies.option.windows-service-video-save-directory.description':
+    '服务模式录像存储的绝对路径',
   'pages.strategies.option.auto-disconnect-timeout.description':
     '超时时间（分钟）',
   'pages.strategies.option.lang.description': '语言代码',

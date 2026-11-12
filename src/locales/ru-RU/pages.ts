@@ -795,7 +795,10 @@ export default {
   'pages.strategies.option.enable-privacy-mode.label':
     'Включить режим конфиденциальности',
   'pages.strategies.option.ice-servers.label': 'ICE серверы',
+  'pages.strategies.option.ice-servers.description':
+    'URL ICE-серверов через запятую',
   'pages.strategies.option.id-whitelist.label': 'Белый список ID',
+  'pages.strategies.option.id-whitelist.description': 'Список ID через запятую',
   'pages.strategies.option.key.label': 'Ключ',
   'pages.strategies.option.relay-server.label': 'Релейный сервер',
   'pages.strategies.option.trusted-device-expiration-days.label':
@@ -803,6 +806,8 @@ export default {
   'pages.strategies.option.websocket-port.label': 'Порт WebSocket',
   'pages.strategies.option.windows-service-video-save-directory.label':
     'Каталог сохранения видео службы Windows',
+  'pages.strategies.option.windows-service-video-save-directory.description':
+    'Абсолютный путь для хранения записей в режиме службы',
   'pages.strategies.option.auto-disconnect-timeout.description':
     'Тайм-аут в минутах',
   'pages.strategies.option.lang.description': 'Код языка',

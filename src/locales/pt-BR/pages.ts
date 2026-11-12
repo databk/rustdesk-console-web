@@ -799,7 +799,11 @@ export default {
   'pages.strategies.option.enable-privacy-mode.label':
     'Ativar Modo de Privacidade',
   'pages.strategies.option.ice-servers.label': 'Servidores ICE',
+  'pages.strategies.option.ice-servers.description':
+    'URLs de servidores ICE separadas por vírgulas',
   'pages.strategies.option.id-whitelist.label': 'Lista Branca de ID',
+  'pages.strategies.option.id-whitelist.description':
+    'Lista de IDs separada por vírgulas',
   'pages.strategies.option.key.label': 'Chave',
   'pages.strategies.option.relay-server.label': 'Servidor Relay',
   'pages.strategies.option.trusted-device-expiration-days.label':
@@ -807,6 +811,8 @@ export default {
   'pages.strategies.option.websocket-port.label': 'Porta WebSocket',
   'pages.strategies.option.windows-service-video-save-directory.label':
     'Diretorio de Salvamento de Video do Servico Windows',
+  'pages.strategies.option.windows-service-video-save-directory.description':
+    'Caminho absoluto para armazenamento de gravação em modo serviço',
   'pages.strategies.option.auto-disconnect-timeout.description':
     'Tempo limite em minutos',
   'pages.strategies.option.lang.description': 'Código do idioma',

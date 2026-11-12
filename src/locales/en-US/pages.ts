@@ -751,7 +751,10 @@ export default {
   'pages.strategies.option.direct-access-port.label': 'Direct Access Port',
   'pages.strategies.option.enable-privacy-mode.label': 'Enable Privacy Mode',
   'pages.strategies.option.ice-servers.label': 'ICE Servers',
+  'pages.strategies.option.ice-servers.description':
+    'Comma-separated ICE server URLs',
   'pages.strategies.option.id-whitelist.label': 'ID Whitelist',
+  'pages.strategies.option.id-whitelist.description': 'Comma-separated ID list',
   'pages.strategies.option.key.label': 'Key',
   'pages.strategies.option.relay-server.label': 'Relay Server',
   'pages.strategies.option.trusted-device-expiration-days.label':
@@ -759,6 +762,8 @@ export default {
   'pages.strategies.option.websocket-port.label': 'WebSocket Port',
   'pages.strategies.option.windows-service-video-save-directory.label':
     'Windows Service Video Save Directory',
+  'pages.strategies.option.windows-service-video-save-directory.description':
+    'Absolute path for service-mode recording storage',
   'pages.strategies.option.auto-disconnect-timeout.description':
     'Timeout in minutes',
   'pages.strategies.option.lang.description': 'Language code',
