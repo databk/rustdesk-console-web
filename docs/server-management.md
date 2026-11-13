@@ -1,16 +1,15 @@
 # Server management scopes
 
-Server management connects to one hbbs management origin. That hbbs exposes
-its own registrations and manages the reverse control channels registered by
-hbbr instances. A Console management entry identifies a service instance; it
-does not establish that the instance runs on a different physical host.
+Server management connects to one hbbs management origin. That hbbs manages
+the reverse control channels registered by hbbr instances. A Console management
+entry identifies a service instance; it does not establish that the instance
+runs on a different physical host.
 
 ## Page scopes
 
 | Page | Scope | Selection |
 | --- | --- | --- |
 | Services | All returned hbbs and hbbr instances | None; card actions identify their own instance |
-| Registrations | The primary hbbs registration table | None |
 | Relay sessions | All registered relays, or one hbbr | A filter inside this page |
 | Logs | One service instance | A selector inside this page |
 | Configuration | One service instance | A selector inside this page |
@@ -27,10 +26,13 @@ current management API supports requesting a process restart. It does not
 support starting or stopping containers, so the UI must not offer those
 unsupported lifecycle actions.
 
-## Registration and relay sessions
+## Relay sessions
 
-Registrations always query the primary hbbs. They are native registration
-records, separate from the Console clients' heartbeat online state.
+The Console device inventory is populated by the client API heartbeat. Server
+management does not show hbbs registrations as a second device list: those
+registrations are transient transport records, while Console operations use
+the heartbeat-backed inventory. hbbs peer-registry endpoints remain in use for
+device ID release, bans and relay routing.
 
 The default relay session view queries each registered relay and displays the
 owning relay with every session. One failed query must be reported as an

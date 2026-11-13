@@ -26,15 +26,6 @@ export interface ServerNode {
   relay?: boolean;
   services: ServiceStatus[];
 }
-export interface ServerPeer {
-  id: string;
-  uuid: string;
-  address: string;
-  ip: string;
-  online: boolean;
-  banned: boolean;
-  last_registration_age_seconds: number;
-}
 export interface RelaySession {
   uuid: string;
   relay_id?: string;
@@ -76,8 +67,6 @@ export async function getTcpNetwork(node?: string, options: { signal?: AbortSign
     { method: 'GET', timeout: 6000, ...options }));
   return result?.kind === 'system' ? result : unavailableTcp('system', 'invalid_response');
 }
-export const getServerPeers = (node: string) =>
-  request<{ data: ServerPeer[] }>(`${base(node)}/peers`);
 export const getRelaySessions = (node: string) =>
   request<{ data: RelaySession[] }>(`${base(node)}/sessions`);
 export const disconnectRelaySession = (node: string, uuid: string) =>

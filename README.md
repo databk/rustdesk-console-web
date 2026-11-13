@@ -57,4 +57,4 @@ npm run preview
 
 ## Server management
 
-The `/servers` page uses the Console backend proxy to display hbbs/hbbr services, registrations, relay sessions, logs, configuration and persistent bans. Access is controlled by the backend-owned global `servers.*` permissions. The Console repository documents node enrollment and the combined deployment in `docs/server-management.md`.
+The `/servers` page uses the Console backend proxy to display hbbs/hbbr services, relay sessions, logs, configuration and persistent bans. The device inventory itself comes from the client API heartbeat. Access is controlled by the backend-owned global `servers.*` permissions. The Console repository documents node enrollment and the combined deployment in `docs/server-management.md`.
