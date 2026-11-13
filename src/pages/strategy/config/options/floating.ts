@@ -35,4 +35,11 @@ export const options: ConfigOption[] = [
     min: 0,
     max: 10,
   },
+  {
+    key: 'floating-window-svg',
+    label: 'floating-window-svg',
+    category: 'floating',
+    type: 'text',
+    defaultValue: '',
+  },
 ];

@@ -25,4 +25,12 @@ export const options: ConfigOption[] = [
     defaultValue: 'N',
     options: ['Y', 'N'],
   },
+  {
+    key: 'allow-sync-clipboard-between-sessions',
+    label: 'allow-sync-clipboard-between-sessions',
+    category: 'file',
+    type: 'switch',
+    defaultValue: 'N',
+    options: ['Y', 'N'],
+  },
 ];

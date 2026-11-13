@@ -105,4 +105,13 @@ export const options: ConfigOption[] = [
     defaultValue: 'N',
     options: ['Y', 'N'],
   },
+
+  {
+    key: 'codec-preference',
+    label: 'codec-preference',
+    category: 'av',
+    type: 'select',
+    defaultValue: 'auto',
+    options: ['auto', 'vp8', 'vp9', 'av1', 'h264', 'h265'],
+  },
 ];

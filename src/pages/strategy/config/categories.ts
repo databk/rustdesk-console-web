@@ -10,4 +10,8 @@ export const configCategories: ConfigCategory[] = [
   { key: 'floating', label: 'Floating Window' },
   { key: 'privacy', label: 'Privacy & Recording' },
   { key: 'server', label: 'Server' },
+  { key: 'proxy', label: 'Proxy' },
+  { key: 'preset', label: 'Preset & Address Book' },
+  { key: 'printer', label: 'Printer' },
+  { key: 'buildin', label: 'Built-in' },
 ];

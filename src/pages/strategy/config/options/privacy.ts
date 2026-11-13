@@ -43,4 +43,19 @@ export const options: ConfigOption[] = [
     defaultValue: '',
     description: 'Absolute path for service-mode recording storage',
   },
+  {
+    key: 'hide-recording-button',
+    label: 'hide-recording-button',
+    category: 'privacy',
+    type: 'switch',
+    defaultValue: 'N',
+    options: ['Y', 'N'],
+  },
+  {
+    key: 'video-save-directory',
+    label: 'video-save-directory',
+    category: 'privacy',
+    type: 'text',
+    defaultValue: '',
+  },
 ];
