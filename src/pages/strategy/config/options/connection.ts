@@ -120,28 +120,4 @@ export const options: ConfigOption[] = [
     options: ['Y', 'N'],
     strategySupported: true,
   },
-  {
-    key: 'view_only',
-    label: 'view_only',
-    category: 'connection',
-    type: 'switch',
-    defaultValue: 'N',
-    options: ['Y', 'N'],
-  },
-  {
-    key: 'terminal-persistent',
-    label: 'terminal-persistent',
-    category: 'connection',
-    type: 'switch',
-    defaultValue: 'N',
-    options: ['Y', 'N'],
-  },
-  {
-    key: 'allow-ask-for-note',
-    label: 'allow-ask-for-note',
-    category: 'connection',
-    type: 'switch',
-    defaultValue: 'N',
-    options: ['Y', 'N'],
-  },
 ];

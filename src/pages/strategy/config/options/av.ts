@@ -105,7 +105,6 @@ export const options: ConfigOption[] = [
     defaultValue: 'N',
     options: ['Y', 'N'],
   },
-
   {
     key: 'codec-preference',
     label: 'codec-preference',

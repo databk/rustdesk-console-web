@@ -51,22 +51,6 @@ export const options: ConfigOption[] = [
     strategySupported: true,
   },
   {
-    key: 'lock_after_session_end',
-    label: 'lock_after_session_end',
-    category: 'security',
-    type: 'switch',
-    defaultValue: 'N',
-    options: ['Y', 'N'],
-  },
-  {
-    key: 'allow-remote-cm-modification',
-    label: 'allow-remote-cm-modification',
-    category: 'security',
-    type: 'switch',
-    defaultValue: 'N',
-    options: ['Y', 'N'],
-  },
-  {
     key: 'enable-trusted-devices',
     label: 'enable-trusted-devices',
     category: 'security',

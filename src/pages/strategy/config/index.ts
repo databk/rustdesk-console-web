@@ -6,12 +6,12 @@ import { options as connectionOptions } from './options/connection';
 import { options as displayOptions } from './options/display';
 import { options as fileOptions } from './options/file';
 import { options as floatingOptions } from './options/floating';
+import { options as generalOptions } from './options/general';
+import { options as networkOptions } from './options/network';
 import { options as presetOptions } from './options/preset';
 import { options as printerOptions } from './options/printer';
 import { options as privacyOptions } from './options/privacy';
-import { options as proxyOptions } from './options/proxy';
 import { options as securityOptions } from './options/security';
-import { options as serverOptions } from './options/server';
 import type { ConfigCategory, ConfigOption } from './types';
 
 export { configCategories } from './categories';
@@ -23,11 +23,11 @@ export const configOptions: ConfigOption[] = [
   ...displayOptions,
   ...avOptions,
   ...fileOptions,
-  ...advancedOptions,
+  ...networkOptions,
+  ...generalOptions,
   ...floatingOptions,
   ...privacyOptions,
-  ...serverOptions,
-  ...proxyOptions,
+  ...advancedOptions,
   ...presetOptions,
   ...printerOptions,
   ...buildinOptions,
