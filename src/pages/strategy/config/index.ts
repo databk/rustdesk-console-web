@@ -1,13 +1,17 @@
 import { configCategories } from './categories';
 import { options as advancedOptions } from './options/advanced';
 import { options as avOptions } from './options/av';
+import { options as buildinOptions } from './options/buildin';
 import { options as connectionOptions } from './options/connection';
 import { options as displayOptions } from './options/display';
 import { options as fileOptions } from './options/file';
 import { options as floatingOptions } from './options/floating';
+import { options as generalOptions } from './options/general';
+import { options as networkOptions } from './options/network';
+import { options as presetOptions } from './options/preset';
+import { options as printerOptions } from './options/printer';
 import { options as privacyOptions } from './options/privacy';
 import { options as securityOptions } from './options/security';
-import { options as serverOptions } from './options/server';
 import type { ConfigCategory, ConfigOption } from './types';
 
 export { configCategories } from './categories';
@@ -19,10 +23,14 @@ export const configOptions: ConfigOption[] = [
   ...displayOptions,
   ...avOptions,
   ...fileOptions,
-  ...advancedOptions,
+  ...networkOptions,
+  ...generalOptions,
   ...floatingOptions,
   ...privacyOptions,
-  ...serverOptions,
+  ...advancedOptions,
+  ...presetOptions,
+  ...printerOptions,
+  ...buildinOptions,
 ];
 
 export const configOptionsMap = configOptions.reduce<
@@ -38,7 +46,7 @@ export function getOptionsByCategory(category: string): ConfigOption[] {
 
 export function getStrategyOptionsByCategory(category: string): ConfigOption[] {
   return configOptions.filter(
-    (opt) => opt.category === category && opt.strategySupported !== false,
+    (opt) => opt.category === category && opt.strategySupported === true,
   );
 }
 

@@ -8,6 +8,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'Y',
     options: ['Y', 'N'],
+    strategySupported: true,
   },
   {
     key: 'allow-auto-record-incoming',
@@ -16,6 +17,7 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
+    strategySupported: true,
   },
   {
     key: 'allow-auto-record-outgoing',
@@ -24,7 +26,6 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
-    strategySupported: false,
   },
   {
     key: 'privacy_mode',
@@ -33,7 +34,6 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
-    strategySupported: false,
   },
   {
     key: 'windows-service-video-save-directory',
@@ -42,5 +42,20 @@ export const options: ConfigOption[] = [
     type: 'text',
     defaultValue: '',
     description: 'Absolute path for service-mode recording storage',
+  },
+  {
+    key: 'hide-recording-button',
+    label: 'hide-recording-button',
+    category: 'privacy',
+    type: 'switch',
+    defaultValue: 'N',
+    options: ['Y', 'N'],
+  },
+  {
+    key: 'video-save-directory',
+    label: 'video-save-directory',
+    category: 'privacy',
+    type: 'text',
+    defaultValue: '',
   },
 ];

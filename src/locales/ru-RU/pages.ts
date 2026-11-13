@@ -635,6 +635,119 @@ export default {
   'pages.strategies.category.privacy': 'Конфиденциальность и запись',
   'pages.strategies.category.server': 'Сервер',
   'pages.strategies.values.yes': 'Да',
+  'pages.strategies.option.allow-command-line-settings-when-settings-disabled.label':
+    'Allow Command Line Settings When Settings Disabled',
+  'pages.strategies.option.allow-deep-link-password.label':
+    'Allow Deep Link Password',
+  'pages.strategies.option.allow-deep-link-server-settings.label':
+    'Allow Deep Link Server Settings',
+  'pages.strategies.option.allow-hostname-as-id.label': 'Allow Hostname As Id',
+  'pages.strategies.option.allow-https-21114.label': 'Allow Https 21114',
+  'pages.strategies.option.allow-logon-screen-password.label':
+    'Allow Logon Screen Password',
+  'pages.strategies.option.allow-printer-auto-print.label':
+    'Allow Printer Auto Print',
+  'pages.strategies.option.allow-sync-clipboard-between-sessions.label':
+    'Allow Sync Clipboard Between Sessions',
+  'pages.strategies.option.avatar.label': 'Avatar',
+  'pages.strategies.option.codec-preference.label': 'Codec Preference',
+  'pages.strategies.option.codec-preference.value.auto': 'Auto',
+  'pages.strategies.option.codec-preference.value.av1': 'AV1',
+  'pages.strategies.option.codec-preference.value.h264': 'H264',
+  'pages.strategies.option.codec-preference.value.h265': 'H265',
+  'pages.strategies.option.codec-preference.value.vp8': 'VP8',
+  'pages.strategies.option.codec-preference.value.vp9': 'VP9',
+  'pages.strategies.option.current-ab-name.label': 'Current Ab Name',
+  'pages.strategies.option.default-connect-password.label':
+    'Default Connect Password',
+  'pages.strategies.option.disable-change-id.label': 'Disable Change Id',
+  'pages.strategies.option.disable-change-permanent-password.label':
+    'Disable Change Permanent Password',
+  'pages.strategies.option.disable-unlock-pin.label': 'Disable Unlock Pin',
+  'pages.strategies.option.display-name.label': 'Display Name',
+  'pages.strategies.option.enable-check-update.label': 'Enable Check Update',
+  'pages.strategies.option.enable-flutter-http-on-rust.label':
+    'Enable Flutter Http On Rust',
+  'pages.strategies.option.enable-perm-change-in-accept-window.label':
+    'Enable Perm Change In Accept Window',
+  'pages.strategies.option.enable-port-forward-mux.label':
+    'Enable Port Forward Mux',
+  'pages.strategies.option.enable-tcp-punch.label': 'Enable Tcp Punch',
+  'pages.strategies.option.enable-webrtc.label': 'Enable Webrtc',
+  'pages.strategies.option.file-transfer-max-files.label':
+    'File Transfer Max Files',
+  'pages.strategies.option.floating-window-svg.label': 'Floating Window Svg',
+  'pages.strategies.option.hide-elevate-button-in-accept-window.label':
+    'Hide Elevate Button In Accept Window',
+  'pages.strategies.option.hide-general-settings.label':
+    'Hide General Settings',
+  'pages.strategies.option.hide-help-cards.label': 'Hide Help Cards',
+  'pages.strategies.option.hide-network-settings.label':
+    'Hide Network Settings',
+  'pages.strategies.option.hide-powered-by-me.label': 'Hide Powered By Me',
+  'pages.strategies.option.hide-proxy-settings.label': 'Hide Proxy Settings',
+  'pages.strategies.option.hide-recording-button.label':
+    'Hide Recording Button',
+  'pages.strategies.option.hide-remote-printer-settings.label':
+    'Hide Remote Printer Settings',
+  'pages.strategies.option.hide-security-settings.label':
+    'Hide Security Settings',
+  'pages.strategies.option.hide-server-settings.label': 'Hide Server Settings',
+  'pages.strategies.option.hide-stop-service.label': 'Hide Stop Service',
+  'pages.strategies.option.hide-tray.label': 'Hide Tray',
+  'pages.strategies.option.hide-username-on-card.label':
+    'Hide Username On Card',
+  'pages.strategies.option.hide-websocket-settings.label':
+    'Hide Websocket Settings',
+  'pages.strategies.option.hideAbTagsPanel.label': 'Hideabtagspanel',
+  'pages.strategies.option.main-window-always-on-top.label':
+    'Main Window Always On Top',
+  'pages.strategies.option.one-way-clipboard-redirection.label':
+    'One Way Clipboard Redirection',
+  'pages.strategies.option.one-way-file-transfer.label':
+    'One Way File Transfer',
+  'pages.strategies.option.peer-tab-index.label': 'Peer Tab Index',
+  'pages.strategies.option.peer-tab-order.label': 'Peer Tab Order',
+  'pages.strategies.option.peer-tab-visible.label': 'Peer Tab Visible',
+  'pages.strategies.option.preset-address-book-alias.label':
+    'Preset Address Book Alias',
+  'pages.strategies.option.preset-address-book-name.label':
+    'Preset Address Book Name',
+  'pages.strategies.option.preset-address-book-note.label':
+    'Preset Address Book Note',
+  'pages.strategies.option.preset-address-book-password.label':
+    'Preset Address Book Password',
+  'pages.strategies.option.preset-address-book-tag.label':
+    'Preset Address Book Tag',
+  'pages.strategies.option.preset-device-group-name.label':
+    'Preset Device Group Name',
+  'pages.strategies.option.preset-device-name.label': 'Preset Device Name',
+  'pages.strategies.option.preset-device-username.label':
+    'Preset Device Username',
+  'pages.strategies.option.preset-note.label': 'Preset Note',
+  'pages.strategies.option.preset-strategy-name.label': 'Preset Strategy Name',
+  'pages.strategies.option.preset-user-name.label': 'Preset User Name',
+  'pages.strategies.option.printer-incomming-job-action.label':
+    'Printer Incomming Job Action',
+  'pages.strategies.option.printer-incomming-job-action.value.auto': 'Auto',
+  'pages.strategies.option.printer-incomming-job-action.value.manual': 'Manual',
+  'pages.strategies.option.printer-selected-name.label':
+    'Printer Selected Name',
+  'pages.strategies.option.proxy-password.label': 'Proxy Password',
+  'pages.strategies.option.proxy-url.label': 'Proxy Url',
+  'pages.strategies.option.proxy-username.label': 'Proxy Username',
+  'pages.strategies.option.quit-button-text.label': 'Quit Button Text',
+  'pages.strategies.option.register-device.label': 'Register Device',
+  'pages.strategies.option.relay-fallback-delay.label': 'Relay Fallback Delay',
+  'pages.strategies.option.remote-menubar-drag-left.label':
+    'Remote Menubar Drag Left',
+  'pages.strategies.option.remote-menubar-drag-right.label':
+    'Remote Menubar Drag Right',
+  'pages.strategies.option.remoteMenubarState.label': 'Remotemenubarstate',
+  'pages.strategies.option.remove-preset-password-warning.label':
+    'Remove Preset Password Warning',
+  'pages.strategies.option.use-raw-tcp-for-api.label': 'Use Raw Tcp For Api',
+  'pages.strategies.option.video-save-directory.label': 'Video Save Directory',
   'pages.strategies.values.no': 'Нет',
   'pages.strategies.option.access-mode.label': 'Режим доступа',
   'pages.strategies.option.enable-keyboard.label': 'Включить клавиатуру и мышь',

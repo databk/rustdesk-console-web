@@ -8,7 +8,6 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
-    strategySupported: false,
   },
   {
     key: 'disable_clipboard',
@@ -17,7 +16,6 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
-    strategySupported: false,
   },
   {
     key: 'sync-init-clipboard',
@@ -26,6 +24,13 @@ export const options: ConfigOption[] = [
     type: 'switch',
     defaultValue: 'N',
     options: ['Y', 'N'],
-    strategySupported: false,
+  },
+  {
+    key: 'allow-sync-clipboard-between-sessions',
+    label: 'allow-sync-clipboard-between-sessions',
+    category: 'file',
+    type: 'switch',
+    defaultValue: 'N',
+    options: ['Y', 'N'],
   },
 ];
