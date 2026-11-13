@@ -154,6 +154,15 @@ export default {
   'pages.devices.exportCsv': '导出 CSV',
   'pages.devices.exportCsvSuccess': '已导出 {count} 台设备到 CSV',
   'pages.devices.exportCsvFailed': '导出 CSV 失败',
+  'pages.devices.presenceAnomalyTitle': '检测到 {count} 台设备状态不一致',
+  'pages.devices.presenceAnomalyHint':
+    'hbbs 注册状态与 Console 心跳是两个独立来源。请检查客户端 API 服务器地址，以及客户端到 hbbs、Console 的网络连通性。',
+  'pages.devices.presence.hbbsOnlineConsoleOffline':
+    'hbbs 显示已注册在线，但 Console 未收到心跳',
+  'pages.devices.presence.consoleOnlineHbbsOffline':
+    '已收到 Console 心跳，但当前未在 hbbs 注册',
+  'pages.devices.presence.hbbsOnly':
+    'hbbs 显示在线，但 Console 设备列表中不存在',
   'pages.addressBook.name': '名称',
   'pages.addressBook.note': '备注',
   'pages.addressBook.shared': '共享地址簿',

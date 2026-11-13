@@ -21,6 +21,7 @@ import { getDeviceColumns } from '@/components/DeviceSelectTable/columns';
 import { getActionColumn } from './columns';
 import EditDeviceModal from './components/EditDeviceModal';
 import ImportDevicesModal from './components/ImportDevicesModal';
+import PresenceAlert from './components/PresenceAlert';
 import { buildCsv, downloadCsv } from '@/utils/csv';
 import { DEFAULT_PAGINATION, toTableResult } from '@/utils/pagination';
 
@@ -52,6 +53,8 @@ const DeviceList: React.FC<DeviceListProps> = ({
   const [batchRemoving, setBatchRemoving] = useState(false);
   const [batchStatusUpdating, setBatchStatusUpdating] = useState(false);
   const [hasDisabledDevice, setHasDisabledDevice] = useState(false);
+  const [presenceDiagnostics, setPresenceDiagnostics] =
+    useState<API.DevicePresenceDiagnostics | null>(null);
 
   const handleEnable = async (guid: string) => {
     try {
@@ -344,6 +347,7 @@ const DeviceList: React.FC<DeviceListProps> = ({
             'Group',
             'Status',
             'Online',
+            'IP',
             'OS',
             'CPU',
             'Memory',
@@ -375,6 +379,7 @@ const DeviceList: React.FC<DeviceListProps> = ({
                   id: 'pages.devices.offline',
                   defaultMessage: 'Offline',
                 }),
+            d.info?.ip ?? '',
             d.info?.os ?? '',
             d.info?.cpu ?? '',
             d.info?.memory ?? '',
@@ -455,6 +460,7 @@ const DeviceList: React.FC<DeviceListProps> = ({
       }
       onBack={onBack}
     >
+      <PresenceAlert diagnostics={presenceDiagnostics} />
       <ProTable<API.DeviceItem>
         headerTitle={
           <FormattedMessage
@@ -592,6 +598,7 @@ const DeviceList: React.FC<DeviceListProps> = ({
             device_group_guid: deviceGroupGuid,
           });
           const tableResult = toTableResult(result);
+          setPresenceDiagnostics(result.diagnostics ?? null);
           setHasDisabledDevice(tableResult.data.some((d) => d.status === 0));
           return tableResult;
         }}
