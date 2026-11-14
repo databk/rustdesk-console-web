@@ -328,12 +328,17 @@ jobs:
             docker.io/databk/rustdesk-console-web:${{ steps.version.outputs.major_minor }}
             docker.io/databk/rustdesk-console-web:${{ steps.version.outputs.major }}
             docker.io/databk/rustdesk-console-web:latest
-            ${{ vars.ACR_DOMAIN }}/databk/rustdesk-console-web:${{ steps.version.outputs.version }}
-            ${{ vars.ACR_DOMAIN }}/databk/rustdesk-console-web:${{ steps.version.outputs.major_minor }}
-            ${{ vars.ACR_DOMAIN }}/databk/rustdesk-console-web:${{ steps.version.outputs.major }}
-            ${{ vars.ACR_DOMAIN }}/databk/rustdesk-console-web:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Copy image to ACR
+        run: |
+          docker buildx imagetools create \
+            --tag ${{ vars.ACR_DOMAIN }}/databk/rustdesk-console-web:${{ steps.version.outputs.version }} \
+            --tag ${{ vars.ACR_DOMAIN }}/databk/rustdesk-console-web:${{ steps.version.outputs.major_minor }} \
+            --tag ${{ vars.ACR_DOMAIN }}/databk/rustdesk-console-web:${{ steps.version.outputs.major }} \
+            --tag ${{ vars.ACR_DOMAIN }}/databk/rustdesk-console-web:latest \
+            databk/rustdesk-console-web:latest
 
       - name: Record immutable Docker evidence
         env:

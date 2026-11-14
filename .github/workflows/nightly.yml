@@ -282,7 +282,6 @@ jobs:
           tags: |
             ghcr.io/${{ github.repository }}:nightly
             docker.io/databk/rustdesk-console-web:nightly
-            ${{ vars.ACR_DOMAIN }}/databk/rustdesk-console-web:nightly
           labels: |
             org.opencontainers.image.title=rustdesk-console-web
             org.opencontainers.image.description=Nightly build of RustDesk Console Web
@@ -291,3 +290,8 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+      - name: Copy image to ACR
+        run: |
+          docker buildx imagetools create \
+            --tag ${{ vars.ACR_DOMAIN }}/databk/rustdesk-console-web:nightly \
+            databk/rustdesk-console-web:nightly
