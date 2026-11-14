@@ -27,16 +27,20 @@ const LogoManager: React.FC<LogoManagerProps> = ({ open }) => {
   const [logos, setLogos] = React.useState<string[]>([]);
   const [loading, setLoading] = React.useState(false);
   const [uploadingFile, setUploadingFile] = React.useState<string | null>(null);
+  const reqIdRef = React.useRef(0);
 
   const loadLogos = React.useCallback(async () => {
+    const reqId = ++reqIdRef.current;
     setLoading(true);
     try {
       const list = await getLogoList();
+      if (reqId !== reqIdRef.current) return;
       setLogos(list);
     } catch {
+      if (reqId !== reqIdRef.current) return;
       msgApi.error('Failed to load logos');
     } finally {
-      setLoading(false);
+      if (reqId === reqIdRef.current) setLoading(false);
     }
   }, [msgApi]);
 
