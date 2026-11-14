@@ -317,6 +317,7 @@ jobs:
         with:
           context: .
           push: true
+          provenance: false
           build-args: SOURCE_COMMIT=${{ needs.prepare.outputs.source_commit }}
           platforms: linux/amd64,linux/arm64
           tags: |
