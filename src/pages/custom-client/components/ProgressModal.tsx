@@ -52,8 +52,7 @@ const ProgressModal: React.FC<ProgressModalProps> = ({
   const [progress, setProgress] =
     React.useState<API.CustomClientBuildProgress | null>(null);
   const [error, setError] = React.useState<string | null>(null);
-  const pollRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
-  const reqIdRef = React.useRef(0);
+  const pollRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 
   React.useEffect(() => {
     if (!open) return;
@@ -63,27 +62,27 @@ const ProgressModal: React.FC<ProgressModalProps> = ({
 
     const stop = () => {
       if (pollRef.current) {
-        clearInterval(pollRef.current);
+        clearTimeout(pollRef.current);
         pollRef.current = null;
       }
     };
 
     const fetchProgress = async () => {
-      const reqId = ++reqIdRef.current;
       try {
         const data = await getBuildProgress(uuid);
-        if (cancelled || reqId !== reqIdRef.current) return;
+        if (cancelled) return;
         setProgress(data);
         setError(null);
-        if (isTerminal(data)) stop();
+        if (isTerminal(data)) return;
       } catch {
-        if (!cancelled && reqId === reqIdRef.current)
-          setError('Failed to fetch build progress');
+        if (!cancelled) setError('Failed to fetch build progress');
+      }
+      if (!cancelled) {
+        pollRef.current = setTimeout(fetchProgress, 5000);
       }
     };
 
     fetchProgress();
-    pollRef.current = setInterval(fetchProgress, 5000);
     return () => {
       cancelled = true;
       stop();
