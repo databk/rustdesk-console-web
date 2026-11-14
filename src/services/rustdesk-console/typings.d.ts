@@ -1220,7 +1220,7 @@ declare namespace API {
     message: string | null;
     files: string | null;
     callbackToken: string;
-    githubRunId: string | null;
+    githubRunId: number | null;
     createdAt: string;
     updatedAt: string;
   };
@@ -1239,7 +1239,7 @@ declare namespace API {
   };
 
   type CustomClientBuildProgress = {
-    runId: string | null;
+    runId: number | null;
     runStatus: string;
     runConclusion: string | null;
     jobs: CustomClientBuildJob[];
