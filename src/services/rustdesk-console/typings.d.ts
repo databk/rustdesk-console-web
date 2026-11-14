@@ -1263,14 +1263,12 @@ declare namespace API {
     generatorRepo: string;
     generatorRef: string;
     signingPublicKey: string;
-    signingPrivateKey: string;
   };
 
   type UpdateCustomClientSettingsParams = {
     githubToken?: string;
     generatorRepo?: string;
     generatorRef?: string;
-    signingPublicKey?: string;
-    signingPrivateKey?: string;
+    regenerateSigningKey?: boolean;
   };
 }
