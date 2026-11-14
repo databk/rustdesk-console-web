@@ -233,6 +233,7 @@ declare namespace API {
   type PaginatedResult<T> = {
     data: T[];
     total: number;
+    diagnostics?: DevicePresenceDiagnostics;
   };
 
   type ResponseResult = {
@@ -343,6 +344,39 @@ declare namespace API {
     ip?: string;
   };
 
+  type DevicePresenceAnomaly =
+    | 'hbbs_online_console_offline'
+    | 'console_online_hbbs_offline';
+
+  type DevicePresence = {
+    registered: boolean;
+    online: boolean;
+    ip: string;
+    address: string | null;
+    last_registration_age_seconds: number | null;
+    banned: boolean;
+    anomaly: DevicePresenceAnomaly | null;
+  };
+
+  type DevicePresenceMismatch = {
+    count: number;
+    device_ids: string[];
+  };
+
+  type DevicePresenceDiagnostics = {
+    available: boolean;
+    reason?: 'not_configured' | 'upstream_error';
+    checked_at: string;
+    hbbs: { registered: number; online: number };
+    console: { total: number; online: number };
+    mismatches: {
+      hbbs_online_console_offline: DevicePresenceMismatch;
+      console_online_hbbs_offline: DevicePresenceMismatch;
+      hbbs_only: DevicePresenceMismatch;
+    };
+    anomaly_count: number;
+  };
+
   type DeviceItem = {
     guid: string;
     id: string;
@@ -357,6 +391,7 @@ declare namespace API {
     is_online?: boolean;
     last_online?: string | null;
     info?: DeviceSysInfo;
+    presence?: DevicePresence;
     created_at?: string;
     updated_at?: string;
   };

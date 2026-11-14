@@ -188,6 +188,16 @@ export default {
   'pages.devices.exportCsvSuccess':
     '{count} dispositivo(s) exportado(s) para CSV',
   'pages.devices.exportCsvFailed': 'Falha ao exportar CSV',
+  'pages.devices.presenceAnomalyTitle':
+    '{count} dispositivo(s) com presença inconsistente',
+  'pages.devices.presenceAnomalyHint':
+    'O hbbs e o heartbeat do Console são fontes independentes. Verifique o endereço do servidor de API do cliente e a conectividade entre o cliente, o hbbs e o Console.',
+  'pages.devices.presence.hbbsOnlineConsoleOffline':
+    'Registrado no hbbs, mas sem heartbeat do Console',
+  'pages.devices.presence.consoleOnlineHbbsOffline':
+    'Alcançou a API do Console, mas não está registrado no hbbs',
+  'pages.devices.presence.hbbsOnly':
+    'Online no hbbs, mas ausente do inventário do Console',
   'pages.addressBook.name': 'Nome',
   'pages.addressBook.note': 'Observação',
   'pages.addressBook.shared': 'Catálogos de Endereços Compartilhados',

@@ -181,6 +181,16 @@ export default {
   'pages.devices.exportCsv': 'Exporter CSV',
   'pages.devices.exportCsvSuccess': '{count} périphérique(s) exporté(s) en CSV',
   'pages.devices.exportCsvFailed': "Échec de l'export CSV",
+  'pages.devices.presenceAnomalyTitle':
+    '{count} appareil(s) présentent une présence incohérente',
+  'pages.devices.presenceAnomalyHint':
+    "hbbs et le battement de cœur Console sont deux sources distinctes. Vérifiez l'adresse du serveur API du client et la connectivité entre le client, hbbs et la Console.",
+  'pages.devices.presence.hbbsOnlineConsoleOffline':
+    'Enregistré sur hbbs mais sans battement de cœur Console',
+  'pages.devices.presence.consoleOnlineHbbsOffline':
+    "A atteint l'API Console mais n'est pas enregistré sur hbbs",
+  'pages.devices.presence.hbbsOnly':
+    "En ligne sur hbbs mais absent de l'inventaire Console",
   'pages.addressBook.name': 'Nom',
   'pages.addressBook.note': 'Note',
   'pages.addressBook.shared': "Carnets d'adresses partagés",

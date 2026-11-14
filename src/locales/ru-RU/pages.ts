@@ -181,6 +181,16 @@ export default {
   'pages.devices.exportCsv': 'Экспорт CSV',
   'pages.devices.exportCsvSuccess': 'Экспортировано {count} устройств(а) в CSV',
   'pages.devices.exportCsvFailed': 'Ошибка экспорта CSV',
+  'pages.devices.presenceAnomalyTitle':
+    'У {count} устройств(а) несогласованное состояние',
+  'pages.devices.presenceAnomalyHint':
+    'hbbs и heartbeat Console — независимые источники. Проверьте адрес API-сервера клиента и связь между клиентом, hbbs и Console.',
+  'pages.devices.presence.hbbsOnlineConsoleOffline':
+    'Зарегистрировано в hbbs, но нет heartbeat Console',
+  'pages.devices.presence.consoleOnlineHbbsOffline':
+    'Достигает API Console, но не зарегистрировано в hbbs',
+  'pages.devices.presence.hbbsOnly':
+    'В сети в hbbs, но отсутствует в списке устройств Console',
   'pages.addressBook.name': 'Название',
   'pages.addressBook.note': 'Примечание',
   'pages.addressBook.shared': 'Общие адресные книги',

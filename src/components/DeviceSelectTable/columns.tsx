@@ -9,6 +9,7 @@ import {
   CloseCircleOutlined,
   CodeOutlined,
   DesktopOutlined,
+  ExclamationCircleOutlined,
   FolderOutlined,
   GlobalOutlined,
   InfoCircleOutlined,
@@ -20,6 +21,13 @@ import {
 } from '@ant-design/icons';
 import React from 'react';
 import WebClientDeviceLink from '../WebClientDeviceLink';
+
+const presenceAnomalyMessageId: Record<API.DevicePresenceAnomaly, string> = {
+  hbbs_online_console_offline:
+    'pages.devices.presence.hbbsOnlineConsoleOffline',
+  console_online_hbbs_offline:
+    'pages.devices.presence.consoleOnlineHbbsOffline',
+};
 
 const buildConnectUrl = (command: string, id: string): string => {
   return `rustdesk://${command}/${id}`;
@@ -216,6 +224,17 @@ export const getDeviceColumns = (options?: {
                 <Badge status={record.is_online ? 'success' : 'error'} />
               </span>
             </Tooltip>
+            {record.presence?.anomaly && (
+              <Tooltip
+                title={intl.formatMessage({
+                  id: presenceAnomalyMessageId[record.presence.anomaly],
+                })}
+              >
+                <ExclamationCircleOutlined
+                  style={{ color: '#faad14', marginLeft: 4 }}
+                />
+              </Tooltip>
+            )}
             &nbsp;&nbsp;
             {osIcon && osTooltip && (
               <Tooltip
@@ -443,6 +462,7 @@ export const getDeviceColumns = (options?: {
       render: (_: unknown, record: API.DeviceItem) => {
         if (!record.info) return '-';
         const parts = [
+          record.info.ip,
           record.info.cpu,
           record.info.memory,
           record.info.version,
