@@ -295,4 +295,3 @@ jobs:
           docker buildx imagetools create \
             --tag ${{ vars.ACR_DOMAIN }}/databk/rustdesk-console-web:nightly \
             databk/rustdesk-console-web:nightly
-
