@@ -1,6 +1,15 @@
-import { SettingOutlined } from '@ant-design/icons';
+import { SettingOutlined, ReloadOutlined } from '@ant-design/icons';
 import { useIntl } from '@umijs/max';
-import { App, Divider, Form, Input, Modal } from 'antd';
+import {
+  App,
+  Button,
+  Divider,
+  Form,
+  Input,
+  Modal,
+  Space,
+  Typography,
+} from 'antd';
 import React from 'react';
 import {
   getCustomClientSettings,
@@ -25,12 +34,16 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   const { message: msgApi } = App.useApp();
   const [form] = Form.useForm();
   const [loading, setLoading] = React.useState(false);
+  const [signingPublicKey, setSigningPublicKey] = React.useState('');
+  const [regenerateSigningKey, setRegenerateSigningKey] = React.useState(false);
 
   React.useEffect(() => {
     if (open) {
+      setRegenerateSigningKey(false);
       getCustomClientSettings()
         .then((settings) => {
           form.setFieldsValue(settings);
+          setSigningPublicKey(settings.signingPublicKey || '');
         })
         .catch(() => {
           msgApi.error('Failed to load settings');
@@ -42,7 +55,10 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     try {
       const values = await form.validateFields();
       setLoading(true);
-      await updateCustomClientSettings(values);
+      await updateCustomClientSettings({
+        ...values,
+        regenerateSigningKey,
+      });
       msgApi.success('Settings saved');
       onClose();
       onSaved();
@@ -116,7 +132,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
         </Divider>
 
         <Form.Item
-          name="signingPublicKey"
           label={intl.formatMessage({
             id: 'pages.customClient.signingPublicKey',
             defaultMessage: 'Signing Public Key',
@@ -124,27 +139,35 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
           tooltip={intl.formatMessage({
             id: 'pages.customClient.signingPublicKeyTip',
             defaultMessage:
-              'Ed25519 public key in base64 (44 chars ending with =)',
+              'Ed25519 public key, auto-derived from the private key',
           })}
         >
-          <Input placeholder="base64 encoded public key" />
-        </Form.Item>
-        <Form.Item
-          name="signingPrivateKey"
-          label={intl.formatMessage({
-            id: 'pages.customClient.signingPrivateKey',
-            defaultMessage: 'Signing Private Key',
-          })}
-          tooltip={intl.formatMessage({
-            id: 'pages.customClient.signingPrivateKeyTip',
-            defaultMessage:
-              'Ed25519 private key in base64. Leave as ****** to keep existing key.',
-          })}
-        >
-          <Input.Password
-            placeholder={TOKEN_MASK}
-            autoComplete="new-password"
-          />
+          <Space.Compact style={{ width: '100%' }}>
+            <Input
+              value={signingPublicKey}
+              readOnly
+              placeholder="Auto-generated"
+            />
+            <Button
+              icon={<ReloadOutlined />}
+              onClick={() => {
+                setRegenerateSigningKey(true);
+                setSigningPublicKey('');
+                msgApi.info(
+                  intl.formatMessage({
+                    id: 'pages.customClient.signingKeyRegenerateNotice',
+                    defaultMessage:
+                      'A new signing key will be generated when you save',
+                  }),
+                );
+              }}
+            >
+              {intl.formatMessage({
+                id: 'pages.customClient.regenerateSigningKey',
+                defaultMessage: 'Regenerate',
+              })}
+            </Button>
+          </Space.Compact>
         </Form.Item>
 
         <Divider titlePlacement="left" plain>
