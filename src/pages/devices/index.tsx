@@ -23,6 +23,7 @@ import EditDeviceModal from './components/EditDeviceModal';
 import ImportDevicesModal from './components/ImportDevicesModal';
 import { buildCsv, downloadCsv } from '@/utils/csv';
 import { DEFAULT_PAGINATION, toTableResult } from '@/utils/pagination';
+import { toTableSortParams } from '@/utils/tableSort';
 
 export interface DeviceListProps {
   deviceGroupGuid?: string;
@@ -40,6 +41,7 @@ const DeviceList: React.FC<DeviceListProps> = ({
   const access = useAccess();
   const actionRef = useRef<ActionType>(null);
   const searchParamsRef = useRef<Record<string, unknown>>({});
+  const sortParamsRef = useRef<API.DeviceSortParams>({});
 
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [editingRecord, setEditingRecord] = useState<API.DeviceItem | null>(
@@ -301,6 +303,7 @@ const DeviceList: React.FC<DeviceListProps> = ({
       onOk: async () => {
         try {
           const params = searchParamsRef.current;
+          const sortParams = sortParamsRef.current;
           const allDevices: API.DeviceItem[] = [];
           let total = 0;
           const pageSize = 100;
@@ -321,6 +324,7 @@ const DeviceList: React.FC<DeviceListProps> = ({
                 | string
                 | undefined,
               device_group_guid: deviceGroupGuid,
+              ...sortParams,
             });
             const tableResult = toTableResult(result);
             if (total === 0) total = tableResult.total;
@@ -577,8 +581,12 @@ const DeviceList: React.FC<DeviceListProps> = ({
             )}
           </Space>
         )}
-        request={async (params) => {
+        request={async (params, sort) => {
           searchParamsRef.current = params;
+          const sortParams = toTableSortParams(sort, {
+            status_display: 'status',
+          });
+          sortParamsRef.current = sortParams;
           const result = await getAdminDeviceList({
             current: params.current || 1,
             pageSize: params.pageSize || 20,
@@ -590,6 +598,7 @@ const DeviceList: React.FC<DeviceListProps> = ({
             os: params.os,
             device_group_name: params.device_group_name_search,
             device_group_guid: deviceGroupGuid,
+            ...sortParams,
           });
           const tableResult = toTableResult(result);
           setHasDisabledDevice(tableResult.data.some((d) => d.status === 0));

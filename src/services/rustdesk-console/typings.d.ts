@@ -361,27 +361,40 @@ declare namespace API {
     updated_at?: string;
   };
 
-  type DeviceListParams = PageParams & {
-    id?: string;
-    status?: string;
-    is_online?: string;
-    user_name?: string;
-    device_group_name?: string;
-    device_group_guid?: string;
-    os?: string;
+  /**
+   * Device list ordering.
+   *
+   * `sort_by` is validated against a whitelist by the backend: id,
+   * device_name, device_group_name, user_name, status, note.
+   */
+  type DeviceSortParams = {
+    sort_by?: string;
+    sort_order?: 'asc' | 'desc';
   };
 
-  type AdminDeviceListParams = PageParams & {
-    id?: string;
-    status?: string;
-    is_online?: string;
-    device_name?: string;
-    user_name?: string;
-    device_username?: string;
-    os?: string;
-    device_group_name?: string;
-    device_group_guid?: string;
-  };
+  type DeviceListParams = PageParams &
+    DeviceSortParams & {
+      id?: string;
+      status?: string;
+      is_online?: string;
+      user_name?: string;
+      device_group_name?: string;
+      device_group_guid?: string;
+      os?: string;
+    };
+
+  type AdminDeviceListParams = PageParams &
+    DeviceSortParams & {
+      id?: string;
+      status?: string;
+      is_online?: string;
+      device_name?: string;
+      user_name?: string;
+      device_username?: string;
+      os?: string;
+      device_group_name?: string;
+      device_group_guid?: string;
+    };
 
   type UpdateDeviceParams = {
     userName?: string | null;

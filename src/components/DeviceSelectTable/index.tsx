@@ -3,6 +3,7 @@ import { ProTable } from '@ant-design/pro-components';
 import React, { useRef } from 'react';
 import { getDeviceList } from '@/services/rustdesk-console/device';
 import { DEFAULT_PAGINATION, toTableResult } from '@/utils/pagination';
+import { toTableSortParams } from '@/utils/tableSort';
 import { getDeviceColumns } from './columns';
 
 interface DeviceSelectTableProps {
@@ -32,7 +33,7 @@ const DeviceSelectTable: React.FC<DeviceSelectTableProps> = ({
         defaultCollapsed: defaultSearchCollapsed,
       }}
       pagination={{ ...DEFAULT_PAGINATION, defaultPageSize: pageSize }}
-      request={async (params) => {
+      request={async (params, sort) => {
         const result = await getDeviceList({
           current: params.current || 1,
           pageSize: params.pageSize || pageSize,
@@ -42,6 +43,7 @@ const DeviceSelectTable: React.FC<DeviceSelectTableProps> = ({
           user_name: params.user_name,
           device_group_name: params.device_group_name_search,
           os: params.os,
+          ...toTableSortParams(sort, { status_display: 'status' }),
         });
         return toTableResult(result);
       }}
