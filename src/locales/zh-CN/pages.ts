@@ -161,6 +161,8 @@ export default {
   'pages.devices.heartbeatHealth.staleTitle': '最近没有收到设备心跳',
   'pages.devices.heartbeatHealth.staleDescription':
     '超过 {seconds} 秒没有收到任何设备心跳。请检查客户端的 API 服务器、防火墙规则以及心跳接口是否可达。',
+  'pages.devices.heartbeatHealth.refreshFailed':
+    '最近一次健康检查失败，当前显示的是最后一次已知结果。',
   'pages.addressBook.name': '名称',
   'pages.addressBook.note': '备注',
   'pages.addressBook.shared': '共享地址簿',

@@ -91,6 +91,14 @@ export const errorConfig: RequestConfig = {
           );
           return;
         }
+        // 401 and 403 are handled above so scoped suppression can never hide
+        // an expired session or a stale permission set.
+        if (
+          Array.isArray(opts?.suppressErrorStatuses) &&
+          opts.suppressErrorStatuses.includes(status)
+        ) {
+          return;
+        }
         message.error(
           formatMessage(
             'pages.request.responseStatus',

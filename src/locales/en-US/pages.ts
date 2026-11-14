@@ -184,6 +184,8 @@ export default {
     'No device heartbeats received recently',
   'pages.devices.heartbeatHealth.staleDescription':
     'Heartbeats have not reached the console for more than {seconds} seconds. Check the client API server, firewall rules, and the heartbeat endpoint.',
+  'pages.devices.heartbeatHealth.refreshFailed':
+    'The latest health check failed; showing the last known result.',
   'pages.addressBook.name': 'Name',
   'pages.addressBook.note': 'Note',
   'pages.addressBook.shared': 'Shared Address Books',

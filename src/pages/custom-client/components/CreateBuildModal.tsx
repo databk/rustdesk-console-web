@@ -14,9 +14,22 @@ import {
   Typography,
 } from 'antd';
 import React from 'react';
+import { getGeneralSettings } from '@/services/rustdesk-console/settings';
 import { ARCH_OPTIONS, CONN_TYPE_OPTIONS, SERVER_FIELDS } from '../constants';
 
 const { Paragraph } = Typography;
+
+const toHttpOrigin = (raw?: string) => {
+  const trimmed = raw?.trim();
+  if (!trimmed) return null;
+  try {
+    const url = new URL(trimmed);
+    if (url.protocol !== 'http:' && url.protocol !== 'https:') return null;
+    return url.origin;
+  } catch {
+    return null;
+  }
+};
 
 const DISABLE_FIELDS = [
   {
@@ -65,29 +78,55 @@ const CreateBuildModal: React.FC<CreateBuildModalProps> = ({
   const [form] = Form.useForm();
 
   React.useEffect(() => {
-    if (open) {
-      const base = initialValues || {
-        arch: 'x86_64',
-        'conn-type': 'both',
-      };
-      const hasApiServer =
-        typeof base['api-server'] === 'string' &&
-        base['api-server'].trim() !== '';
-      // Seed the API server with the console origin. The official client
-      // otherwise derives http://<id-server>:21114, which fails behind an
-      // HTTPS-only reverse proxy. "default" keeps the value editable.
-      form.setFieldsValue(
-        hasApiServer
-          ? base
-          : {
-              ...base,
-              'api-server': window.location.origin,
-              'api-server_type': base['api-server_type'] ?? 'default',
-            },
-      );
-    } else {
+    if (!open) {
       form.resetFields();
+      return;
     }
+
+    const base = initialValues || {
+      arch: 'x86_64',
+      'conn-type': 'both',
+    };
+    const hasApiServer =
+      typeof base['api-server'] === 'string' &&
+      base['api-server'].trim() !== '';
+    // Seed the API server with the browser origin first. The official client
+    // otherwise derives http://<id-server>:21114, which fails behind an
+    // HTTPS-only reverse proxy. "default" keeps the value editable.
+    const fallbackApiServer = window.location.origin;
+    form.setFieldsValue(
+      hasApiServer
+        ? base
+        : {
+            ...base,
+            'api-server': fallbackApiServer,
+            'api-server_type': base['api-server_type'] ?? 'default',
+          },
+    );
+    if (hasApiServer) return;
+
+    let cancelled = false;
+    // Prefer the configured public frontend URL: the address bar may contain
+    // localhost or a private alias that generated clients cannot reach.
+    getGeneralSettings({ suppressErrorStatuses: [403, 404] })
+      .then((settings) => {
+        const configured = toHttpOrigin(settings?.site?.frontendUrl);
+        if (
+          cancelled ||
+          !configured ||
+          form.getFieldValue('api-server') !== fallbackApiServer
+        ) {
+          return;
+        }
+        form.setFieldValue('api-server', configured);
+      })
+      .catch(() => {
+        // Keep the browser origin fallback when settings cannot be loaded.
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, [open, initialValues, form]);
 
   const renderDisableField = (field: (typeof DISABLE_FIELDS)[number]) => (

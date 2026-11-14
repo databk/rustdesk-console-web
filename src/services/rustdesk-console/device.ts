@@ -25,6 +25,9 @@ export async function getAdminDeviceList(
 export async function getHeartbeatHealth() {
   return request<API.HeartbeatHealth>('/api/heartbeat/health', {
     method: 'GET',
+    // Older consoles do not expose this diagnostic endpoint. An expected 404
+    // should stay quiet instead of showing a global error on every poll.
+    suppressErrorStatuses: [404],
   });
 }
 

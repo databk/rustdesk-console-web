@@ -16,7 +16,22 @@ jest.mock('@/utils/auth', () => ({
   removeToken: jest.fn(),
 }));
 
+import { message } from 'antd';
 import { errorConfig, PERMISSIONS_STALE_EVENT } from './requestErrorConfig';
+
+test('a request can suppress an expected error status', () => {
+  const handler = errorConfig.errorConfig?.errorHandler as (
+    error: unknown,
+    options: unknown,
+  ) => void;
+
+  jest.mocked(message.error).mockClear();
+  handler({ response: { status: 404 } }, { suppressErrorStatuses: [404] });
+  expect(message.error).not.toHaveBeenCalled();
+
+  handler({ response: { status: 404 } }, {});
+  expect(message.error).toHaveBeenCalledTimes(1);
+});
 
 test('a 403 requests one permission refresh event without retrying the request', () => {
   const refresh = jest.fn();
