@@ -1,6 +1,15 @@
 import { SettingOutlined, ReloadOutlined } from '@ant-design/icons';
 import { useIntl } from '@umijs/max';
-import { App, Button, Divider, Form, Input, Modal, Space, Typography } from 'antd';
+import {
+  App,
+  Button,
+  Divider,
+  Form,
+  Input,
+  Modal,
+  Space,
+  Typography,
+} from 'antd';
 import React from 'react';
 import {
   getCustomClientSettings,
