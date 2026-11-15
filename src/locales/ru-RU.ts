@@ -6,6 +6,7 @@ import pages from './ru-RU/pages';
 import pwa from './ru-RU/pwa';
 import settingDrawer from './ru-RU/settingDrawer';
 import settings from './ru-RU/settings';
+import serverNetwork from './ru-RU/serverNetwork';
 
 export default {
   ...serverNetwork,
@@ -24,4 +25,3 @@ export default {
   ...component,
   ...pages,
 };
-import serverNetwork from './ru-RU/serverNetwork';

@@ -50,14 +50,18 @@ test.each(Object.entries(dictionaries))(
   '%s 网页远控文案完整、无重复或空值，消息参数与基准一致',
   (language, dictionary) => {
     expect(Object.keys(dictionary).sort()).toEqual(keys);
-    const source = readFileSync(
-      join(__dirname, language, 'webClient.ts'),
-      'utf8',
-    );
-    const declared = Array.from(
-      source.matchAll(/^\s*'((?:webClient\.|menu\.webClient)[^']*)'\s*:/gm),
-      (match) => match[1],
-    );
+    const subdir = join(__dirname, language, 'webClient');
+    const declared: string[] = [];
+    for (const file of readdirSync(subdir)) {
+      if (!file.endsWith('.ts')) continue;
+      const source = readFileSync(join(subdir, file), 'utf8');
+      declared.push(
+        ...Array.from(
+          source.matchAll(/^\s*'((?:webClient\.|menu\.webClient)[^']*)'\s*:/gm),
+          (match) => match[1],
+        ),
+      );
+    }
     expect(declared.length).toBe(keys.length);
     expect(new Set(declared).size).toBe(declared.length);
     for (const key of keys) {

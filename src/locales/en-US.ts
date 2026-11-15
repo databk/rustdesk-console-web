@@ -6,6 +6,7 @@ import pages from './en-US/pages';
 import pwa from './en-US/pwa';
 import settingDrawer from './en-US/settingDrawer';
 import settings from './en-US/settings';
+import serverNetwork from './en-US/serverNetwork';
 
 export default {
   ...serverNetwork,
@@ -24,4 +25,3 @@ export default {
   ...component,
   ...pages,
 };
-import serverNetwork from './en-US/serverNetwork';

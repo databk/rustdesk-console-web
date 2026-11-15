@@ -6,6 +6,7 @@ import pages from './zh-CN/pages';
 import pwa from './zh-CN/pwa';
 import settingDrawer from './zh-CN/settingDrawer';
 import settings from './zh-CN/settings';
+import serverNetwork from './zh-CN/serverNetwork';
 
 export default {
   ...serverNetwork,
@@ -24,4 +25,3 @@ export default {
   ...pwa,
   ...component,
 };
-import serverNetwork from './zh-CN/serverNetwork';

@@ -6,6 +6,7 @@ import pages from './pt-BR/pages';
 import pwa from './pt-BR/pwa';
 import settingDrawer from './pt-BR/settingDrawer';
 import settings from './pt-BR/settings';
+import serverNetwork from './pt-BR/serverNetwork';
 
 export default {
   ...serverNetwork,
@@ -24,4 +25,3 @@ export default {
   ...component,
   ...pages,
 };
-import serverNetwork from './pt-BR/serverNetwork';
