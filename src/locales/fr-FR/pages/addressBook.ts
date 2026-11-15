@@ -1,0 +1,96 @@
+export default {
+  'pages.addressBook.name': 'Nom',
+  'pages.addressBook.note': 'Note',
+  'pages.addressBook.shared': "Carnets d'adresses partagés",
+  'pages.addressBook.create': "Créer un carnet d'adresses",
+  'pages.addressBook.edit': "Modifier le carnet d'adresses",
+  'pages.addressBook.personal': "Carnet d'adresses personnel",
+  'pages.addressBook.currentAddressBook': "Carnet d'adresses",
+  'pages.addressBook.myAddressBook': "Mon carnet d'adresses",
+  'pages.addressBook.loadFailed': "Échec du chargement des carnets d'adresses",
+  'pages.addressBook.addPeer': 'Ajouter par ID',
+  'pages.addressBook.addTag': 'Ajouter une étiquette',
+  'pages.addressBook.tagName': "Nom de l'étiquette",
+  'pages.addressBook.tagAdded': 'Étiquette ajoutée',
+  'pages.addressBook.tagAddFailed': "Échec de l'ajout de l'étiquette",
+  'pages.addressBook.tagDeleted': 'Étiquette supprimée',
+  'pages.addressBook.tagDeleteFailed': "Échec de la suppression de l'étiquette",
+  'pages.addressBook.deleteTagConfirm':
+    'Êtes-vous sûr de vouloir supprimer cette étiquette ?',
+  'pages.addressBook.tagModeUnion': 'Au moins une',
+  'pages.addressBook.tagModeIntersection': 'Toutes',
+  'pages.addressBook.importDevices': 'Importer depuis les appareils',
+  'pages.addressBook.importSuccess':
+    '{count} appareil(s) importé(s) avec succès',
+  'pages.addressBook.importPartialFailed':
+    "Échec de l'importation de {count} appareil(s)",
+  'pages.addressBook.createSuccess': "Carnet d'adresses créé",
+  'pages.addressBook.createFailed': "Échec de la création du carnet d'adresses",
+  'pages.addressBook.updateSuccess': "Carnet d'adresses mis à jour",
+  'pages.addressBook.updateFailed':
+    "Échec de la mise à jour du carnet d'adresses",
+  'pages.addressBook.deleteSuccess': "Carnet(s) d'adresses supprimé(s)",
+  'pages.addressBook.deleteFailed':
+    "Échec de la suppression du ou des carnets d'adresses",
+  'pages.addressBook.deleteConfirm':
+    "Êtes-vous sûr de vouloir supprimer ce carnet d'adresses ?",
+  'pages.addressBook.batchDeleteConfirm':
+    "Êtes-vous sûr de vouloir supprimer les carnets d'adresses sélectionnés ?",
+  'pages.addressBook.device': 'Appareil',
+  'pages.addressBook.alias': 'Alias',
+  'pages.addressBook.tags': 'Étiquettes',
+  'pages.addressBook.peerAdded': 'Pair ajouté',
+  'pages.addressBook.peerAddFailed': "Échec de l'ajout du pair",
+  'pages.addressBook.peerDeleted': 'Pair supprimé',
+  'pages.addressBook.peerDeleteFailed': 'Échec de la suppression du pair',
+  'pages.addressBook.deletePeerConfirm':
+    'Êtes-vous sûr de vouloir supprimer ce pair ?',
+  'pages.addressBook.import': 'Importer depuis les appareils',
+  'pages.addressBook.userGroup': "Groupe d'utilisateurs",
+  'pages.addressBook.permission': 'Autorisation',
+  'pages.addressBook.permissionRead': 'Lecture seule',
+  'pages.addressBook.permissionReadWrite': 'Lecture et écriture',
+  'pages.addressBook.permissionFull': 'Contrôle total',
+  'pages.addressBook.shareAccess': 'Partager',
+  'pages.addressBook.accessTitle': '{name} - Gestion des accès',
+  'pages.addressBook.shareType': 'Type de partage',
+  'pages.addressBook.shareTarget': 'Cible',
+  'pages.addressBook.shareTypeEveryone': 'Tout le monde',
+  'pages.addressBook.shareTypeUser': 'Utilisateur',
+  'pages.addressBook.shareTypeGroup': "Groupe d'utilisateurs",
+  'pages.addressBook.selectUser': "Sélectionner l'utilisateur",
+  'pages.addressBook.selectUserPlaceholder':
+    "Rechercher par nom d'utilisateur ou e-mail",
+  'pages.addressBook.everyoneHint':
+    "Tous les utilisateurs auront accès à ce carnet d'adresses",
+  'pages.addressBook.allUsers': 'Tous les utilisateurs',
+  'pages.addressBook.addAccess': 'Ajouter un accès',
+  'pages.addressBook.accessLoadFailed':
+    "Échec du chargement des règles d'accès",
+  'pages.addressBook.accessAdded': "Règle d'accès ajoutée",
+  'pages.addressBook.accessAddFailed': "Échec de l'ajout de la règle d'accès",
+  'pages.addressBook.accessUpdated': "Règle d'accès mise à jour",
+  'pages.addressBook.accessUpdateFailed':
+    "Échec de la mise à jour de la règle d'accès",
+  'pages.addressBook.accessDeleted': "Règle d'accès supprimée",
+  'pages.addressBook.accessDeleteFailed':
+    "Échec de la suppression de la règle d'accès",
+  'pages.addressBook.accessDeleteConfirm': "Supprimer cette règle d'accès ?",
+  'pages.addressBook.color': 'Couleur',
+  'pages.addressBook.deviceInfo': 'nom_utilisateur@nom_appareil',
+  'pages.addressBook.manageTags': 'Gérer les étiquettes',
+  'pages.addressBook.newTagName': "Nouveau nom d'étiquette",
+  'pages.addressBook.peerUpdateFailed': 'Échec de la mise à jour du pair',
+  'pages.addressBook.peerUpdated': 'Pair mis à jour',
+  'pages.addressBook.renameTag': "Renommer l'étiquette",
+  'pages.addressBook.selectTags': 'Sélectionner des étiquettes',
+  'pages.addressBook.tagColorUpdateFailed':
+    "Échec de la mise à jour de la couleur de l'étiquette",
+  'pages.addressBook.tagRenameFailed':
+    "Échec du changement de nom de l'étiquette",
+  'pages.addressBook.tagRenamed': 'Étiquette renommée',
+  'pages.addressBook.untagged': 'Sans étiquette',
+  'pages.addressBook.accessReadOnlyTitle':
+    '{name} - Paramètres de partage en lecture seule',
+  'pages.addressBook.viewShareSettings': 'Paramètres de partage',
+};

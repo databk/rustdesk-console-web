@@ -1,0 +1,72 @@
+export default {
+  'pages.login.success': 'Connexion réussie !',
+  'pages.login.failure': 'Échec de la connexion, veuillez réessayer !',
+  'pages.login.username.placeholder': "Nom d'utilisateur",
+  'pages.login.username.required': "Veuillez saisir votre nom d'utilisateur !",
+  'pages.login.password.placeholder': 'Mot de passe',
+  'pages.login.password.required': 'Veuillez saisir votre mot de passe !',
+  'pages.login.rememberMe': 'Se souvenir de moi',
+  'pages.login.forgotPassword': 'Mot de passe oublié ?',
+  'pages.login.forgotPassword.title': 'Réinitialiser le mot de passe',
+  'pages.login.forgotPassword.description':
+    "Saisissez votre nom d'utilisateur ou votre adresse e-mail et nous vous enverrons un lien de réinitialisation.",
+  'pages.login.forgotPassword.accountPlaceholder':
+    "Nom d'utilisateur ou e-mail",
+  'pages.login.forgotPassword.accountRequired':
+    "Veuillez saisir votre nom d'utilisateur ou votre e-mail",
+  'pages.login.forgotPassword.send': 'Envoyer le lien',
+  'pages.login.forgotPassword.done': 'Terminé',
+  'pages.login.forgotPassword.sent':
+    "Si le compte existe et dispose d'une adresse e-mail associée, un lien de réinitialisation a été envoyé. Veuillez consulter votre boîte de réception (le lien expire dans 30 minutes).",
+  'pages.login.forgotPassword.failed':
+    "Échec de l'envoi de l'e-mail de réinitialisation",
+  'pages.login.forgotPassword.contactAdmin':
+    "Les comptes sans adresse e-mail associée doivent contacter l'administrateur.",
+  'pages.resetPassword.title': 'Définir un nouveau mot de passe',
+  'pages.resetPassword.subtitle':
+    'Définition d’un nouveau mot de passe pour {account}',
+  'pages.resetPassword.newPassword': 'Nouveau mot de passe',
+  'pages.resetPassword.newPasswordRequired':
+    'Veuillez saisir le nouveau mot de passe',
+  'pages.resetPassword.passwordMinLength':
+    'Le mot de passe doit contenir au moins {count} caractères',
+  'pages.resetPassword.confirmPassword': 'Confirmer le mot de passe',
+  'pages.resetPassword.confirmPasswordRequired':
+    'Veuillez confirmer le nouveau mot de passe',
+  'pages.resetPassword.passwordMismatch':
+    'Les deux mots de passe ne correspondent pas',
+  'pages.resetPassword.submit': 'Réinitialiser le mot de passe',
+  'pages.resetPassword.success':
+    'Le mot de passe a été réinitialisé avec succès. Redirection vers la connexion...',
+  'pages.resetPassword.failed': 'Échec de la réinitialisation du mot de passe',
+  'pages.resetPassword.invalid.title': 'Lien invalide ou expiré',
+  'pages.resetPassword.invalid.description':
+    'Ce lien de réinitialisation est invalide, a déjà été utilisé ou a expiré. Veuillez en demander un nouveau.',
+  'pages.resetPassword.backToLogin': 'Retour à la connexion',
+  'pages.login.submit': 'Se connecter',
+  'pages.login.back': 'Retour',
+  'pages.login.emailCheck.title': 'Vérification par e-mail',
+  'pages.login.emailCheck.description':
+    'Un code à 6 chiffres a été envoyé à {email}',
+  'pages.login.emailCheck.sent':
+    'Un code de vérification a été envoyé sur votre adresse e-mail',
+  'pages.login.tfaCheck.title': 'Authentification à deux facteurs',
+  'pages.login.tfaCheck.description':
+    "Saisissez le code à 6 chiffres de votre application d'authentification",
+  'pages.login.verifyCode.submit': 'Vérifier',
+  'pages.login.verifyCode.invalid': 'Code de vérification invalide',
+  'pages.login.oidc.divider': 'Ou continuer avec',
+  'pages.login.oidc.continueWith': 'Continuer avec {provider}',
+  'pages.login.oidc.authFailed': 'Échec de la connexion OIDC',
+  'pages.login.passkey.login': 'Se connecter avec une Passkey',
+  'pages.login.passkey.verify': 'Vérifier avec une Passkey',
+  'pages.login.passkey.cancelled':
+    'La vérification de la Passkey a été annulée',
+  'pages.login.passkey.failed': 'La vérification de la Passkey a échoué',
+  'pages.login.passkeyCheck.title': 'Vérification par Passkey',
+  'pages.login.passkeyCheck.description':
+    'Utilisez votre Passkey pour finaliser la connexion',
+  'pages.login.permissionsLoadFailed':
+    "Les autorisations n'ont pas pu être chargées. Ouverture du carnet d'adresses personnel ; rafraîchir pour réessayer.",
+  'pages.login.permissionsRetry': 'Réessayer',
+};

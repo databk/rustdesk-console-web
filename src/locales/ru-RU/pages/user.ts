@@ -1,0 +1,117 @@
+export default {
+  'pages.user.center.tab.basic': 'Основная информация',
+  'pages.user.center.tab.security': 'Безопасность',
+  'pages.user.center.basicInfo.displayName': 'Отображаемое имя',
+  'pages.user.center.basicInfo.displayNamePlaceholder':
+    'Введите отображаемое имя',
+  'pages.user.center.basicInfo.name': 'Имя пользователя',
+  'pages.user.center.basicInfo.email': 'Email',
+  'pages.user.center.basicInfo.note': 'Примечание',
+  'pages.user.center.basicInfo.updateSuccess': 'Профиль успешно обновлен',
+  'pages.user.center.basicInfo.updateFailed': 'Не удалось обновить профиль',
+  'pages.user.center.avatar.hint':
+    'Поддерживается JPG, PNG, WebP, макс. 2 МБ, будет изменен до 256x256',
+  'pages.user.center.avatar.upload': 'Загрузить аватар',
+  'pages.user.center.avatar.delete': 'Удалить аватар',
+  'pages.user.center.avatar.deleteConfirm':
+    'Вы уверены, что хотите удалить свой аватар?',
+  'pages.user.center.avatar.uploadSuccess': 'Аватар успешно загружен',
+  'pages.user.center.avatar.uploadFailed': 'Не удалось загрузить аватар',
+  'pages.user.center.avatar.deleteSuccess': 'Аватар успешно удален',
+  'pages.user.center.avatar.deleteFailed': 'Не удалось удалить аватар',
+  'pages.user.center.avatar.fileTooLarge':
+    'Размер файла не может превышать 2 МБ',
+  'pages.user.center.avatar.invalidFormat':
+    'Поддерживаются только форматы JPG, PNG, WebP',
+  'pages.user.center.security.title': 'Настройки безопасности',
+  'pages.user.center.security.2faStatus': 'Статус 2FA',
+  'pages.user.center.security.enabled': 'Включена',
+  'pages.user.center.security.disabled': 'Отключена',
+  'pages.user.center.security.enable2FA': 'Включить 2FA',
+  'pages.user.center.security.disable2FA': 'Отключить 2FA',
+  'pages.user.center.security.setup2FA':
+    'Настройка двухфакторной аутентификации',
+  'pages.user.center.security.setupFailed': 'Не удалось настроить 2FA',
+  'pages.user.center.security.scanQRCode':
+    'Отсканируйте QR-код в приложении-аутентификаторе, затем введите код подтверждения ниже.',
+  'pages.user.center.security.secretKey': 'Секретный ключ',
+  'pages.user.center.security.verificationCode': 'Код подтверждения',
+  'pages.user.center.security.enterCode':
+    'Пожалуйста, введите код подтверждения',
+  'pages.user.center.security.verifyAndEnable': 'Подтвердить и включить',
+  'pages.user.center.security.enableSuccess': '2FA успешно включена',
+  'pages.user.center.security.enableFailed': 'Не удалось включить 2FA',
+  'pages.user.center.security.currentCode': 'Текущий код подтверждения',
+  'pages.user.center.security.confirmDisable': 'Подтвердить отключение',
+  'pages.user.center.security.disableSuccess': '2FA успешно отключена',
+  'pages.user.center.security.disableFailed': 'Не удалось отключить 2FA',
+  'pages.user.center.security.password': 'Пароль входа',
+  'pages.user.center.security.passwordSet': 'Установлен',
+  'pages.user.center.security.passwordNotSet': 'Не установлен',
+  'pages.user.center.security.changePassword': 'Изменить пароль',
+  'pages.user.center.security.currentPassword': 'Текущий пароль',
+  'pages.user.center.security.enterCurrentPassword':
+    'Пожалуйста, введите текущий пароль',
+  'pages.user.center.security.newPassword': 'Новый пароль',
+  'pages.user.center.security.enterNewPassword':
+    'Пожалуйста, введите новый пароль (минимум 6 символов)',
+  'pages.user.center.security.confirmNewPassword': 'Подтвердите новый пароль',
+  'pages.user.center.security.confirmNewPasswordPlaceholder':
+    'Пожалуйста, введите новый пароль еще раз',
+  'pages.user.center.security.passwordMinLength':
+    'Пароль должен содержать минимум 6 символов',
+  'pages.user.center.security.passwordMismatch': 'Пароли не совпадают',
+  'pages.user.center.security.changePasswordSuccess': 'Пароль успешно изменен',
+  'pages.user.center.security.changePasswordFailed':
+    'Не удалось изменить пароль',
+  'pages.user.center.security.thirdPartyUser':
+    'Пользователи, вошедшие через сторонние сервисы, не могут изменить пароль',
+  'pages.user.center.security.noPasswordUser':
+    'Для этой учетной записи не установлен пароль',
+  'pages.user.center.security.passkey.title': 'Управление Passkey',
+  'pages.user.center.security.passkey.register': 'Зарегистрировать Passkey',
+  'pages.user.center.security.passkey.registerSuccess':
+    'Passkey успешно зарегистрирован',
+  'pages.user.center.security.passkey.registerFailed':
+    'Не удалось зарегистрировать Passkey',
+  'pages.user.center.security.passkey.deleteSuccess': 'Passkey успешно удален',
+  'pages.user.center.security.passkey.deleteFailed':
+    'Не удалось удалить Passkey',
+  'pages.user.center.security.passkey.deleteConfirm':
+    'Вы уверены, что хотите удалить этот Passkey?',
+  'pages.user.center.security.passkey.name': 'Название',
+  'pages.user.center.security.passkey.namePlaceholder':
+    'например, MacBook Touch ID',
+  'pages.user.center.security.passkey.namePasskey': 'Назовите ваш Passkey',
+  'pages.user.center.security.passkey.deviceType': 'Тип устройства',
+  'pages.user.center.security.passkey.multiDevice': 'Мультиустройство',
+  'pages.user.center.security.passkey.singleDevice': 'Одно устройство',
+  'pages.user.center.security.passkey.createdAt': 'Дата создания',
+  'pages.user.center.security.passkey.noCredentials':
+    'Passkey не зарегистрированы',
+  'pages.user.center.security.passkey.tfaStatus': 'TFA через Passkey',
+  'pages.user.center.security.passkey.tfaEnabled': 'TFA через Passkey включена',
+  'pages.user.center.security.passkey.tfaDisabled':
+    'TFA через Passkey отключена',
+  'pages.user.center.security.passkey.tfaToggleFailed':
+    'Не удалось изменить состояние TFA через Passkey',
+  'pages.user.center.security.sessions.title': 'Сессии входа',
+  'pages.user.center.security.sessions.device': 'Устройство',
+  'pages.user.center.security.sessions.type': 'Тип',
+  'pages.user.center.security.sessions.browser': 'Браузер',
+  'pages.user.center.security.sessions.client': 'Клиент',
+  'pages.user.center.security.sessions.os': 'ОС',
+  'pages.user.center.security.sessions.createdAt': 'Дата создания',
+  'pages.user.center.security.sessions.expiresAt': 'Истекает',
+  'pages.user.center.security.sessions.current': 'Текущая',
+  'pages.user.center.security.sessions.revoke': 'Отозвать',
+  'pages.user.center.security.sessions.revokeConfirm':
+    'Вы уверены, что хотите отозвать эту сессию?',
+  'pages.user.center.security.sessions.revokeSuccess':
+    'Сессия успешно отозвана',
+  'pages.user.center.security.sessions.revokeFailed':
+    'Не удалось отозвать сессию',
+  'pages.user.center.security.sessions.cannotRevokeCurrent':
+    'Нельзя отозвать текущую сессию',
+  'pages.user.center.security.sessions.noSessions': 'Нет активных сессий',
+};

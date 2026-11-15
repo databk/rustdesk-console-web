@@ -1,0 +1,64 @@
+export default {
+  'pages.smtp.title': 'Настройки SMTP',
+  'pages.smtp.description':
+    'Настройте SMTP-сервер для отправки системных уведомлений по электронной почте',
+  'pages.smtp.host': 'Адрес сервера',
+  'pages.smtp.hostPlaceholder': 'Введите адрес SMTP-сервера',
+  'pages.smtp.port': 'Порт',
+  'pages.smtp.portPlaceholder': 'Введите номер порта',
+  'pages.smtp.secure': 'Использовать SSL/TLS',
+  'pages.smtp.secureHelp':
+    'Включить защищенное соединение (обычно порт 465 использует SSL, порт 587 использует TLS)',
+  'pages.smtp.user': 'Имя пользователя',
+  'pages.smtp.userPlaceholder':
+    'Введите имя пользователя для аутентификации SMTP',
+  'pages.smtp.password': 'Пароль',
+  'pages.smtp.passwordPlaceholder': 'Введите пароль для аутентификации SMTP',
+  'pages.smtp.from': 'Email отправителя',
+  'pages.smtp.fromPlaceholder': 'Введите адрес электронной почты отправителя',
+  'pages.smtp.enabled': 'Включить конфигурацию',
+  'pages.smtp.enabledHelp':
+    'При включении эта конфигурация будет использоваться для отправки системных писем',
+  'pages.smtp.testConnection': 'Проверить подключение',
+  'pages.smtp.testSuccess': 'Проверка SMTP-подключения выполнена успешно',
+  'pages.smtp.testFailed': 'Ошибка проверки SMTP-подключения',
+  'pages.smtp.saveSuccess': 'Настройки SMTP успешно сохранены',
+  'pages.smtp.saveFailed': 'Не удалось сохранить настройки SMTP',
+  'pages.smtp.createdAt': 'Дата создания',
+  'pages.smtp.updatedAt': 'Дата обновления',
+  'pages.serverManagementSettings.title': 'Управление серверами',
+  'pages.serverManagementSettings.description':
+    'Настройка подключения консоли к API управления hbbs/hbbr',
+  'pages.serverManagementSettings.url': 'URL API управления',
+  'pages.serverManagementSettings.urlInvalid':
+    'Должен быть HTTP(S)-источником без пути, напр. http://hbbs:21120',
+  'pages.serverManagementSettings.urlHelp':
+    'HTTP(S)-источник API управления hbbs. Оставьте пустым, чтобы отключить управление серверами.',
+  'pages.serverManagementSettings.token': 'Токен управления',
+  'pages.serverManagementSettings.tokenRequired':
+    'При указании URL требуется токен управления',
+  'pages.serverManagementSettings.tokenTooShort':
+    'Токен должен содержать не менее 32 символов',
+  'pages.serverManagementSettings.tokenHelp':
+    'Общий секрет, настроенный на hbbs/hbbr (RD_MANAGEMENT_TOKEN). Введите ******, чтобы оставить сохранённый токен без изменений.',
+  'pages.serverManagementSettings.nodeId': 'ID узла',
+  'pages.serverManagementSettings.nodeIdRequired': 'Введите ID узла',
+  'pages.serverManagementSettings.nodeIdInvalid':
+    'Только буквы, цифры, дефисы и подчёркивания (макс. 64 символа)',
+  'pages.serverManagementSettings.nodeIdHelp':
+    'Идентификатор этого узла консоли, напр. rustdesk',
+  'pages.serverManagementSettings.nodeName': 'Название узла',
+  'pages.serverManagementSettings.nodeNameRequired': 'Введите название узла',
+  'pages.serverManagementSettings.nodeNameHelp':
+    'Отображаемое название этого узла консоли, напр. RustDesk',
+  'pages.serverManagementSettings.tokenSyncWarning':
+    'После изменения токена обновите SERVER_MANAGEMENT_TOKEN в файле .env для hbbs/hbbr и перезапустите их, чтобы обе стороны использовали один и тот же токен.',
+  'pages.serverManagementSettings.saveSuccess':
+    'Конфигурация управления серверами успешно сохранена',
+  'pages.serverManagementSettings.saveFailed':
+    'Не удалось сохранить конфигурацию управления серверами',
+  'pages.serverManagementSettings.loadFailed':
+    'Не удалось загрузить конфигурацию управления серверами',
+  'pages.serverManagementSettings.createdAt': 'Дата создания',
+  'pages.serverManagementSettings.updatedAt': 'Дата обновления',
+};

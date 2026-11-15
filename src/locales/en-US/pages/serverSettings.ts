@@ -1,0 +1,63 @@
+export default {
+  'pages.smtp.title': 'SMTP Configuration',
+  'pages.smtp.description':
+    'Configure SMTP mail server for sending system notification emails',
+  'pages.smtp.host': 'Server Address',
+  'pages.smtp.hostPlaceholder': 'Please enter SMTP server address',
+  'pages.smtp.port': 'Port',
+  'pages.smtp.portPlaceholder': 'Please enter port number',
+  'pages.smtp.secure': 'Use SSL/TLS',
+  'pages.smtp.secureHelp':
+    'Enable secure connection (usually port 465 uses SSL, port 587 uses TLS)',
+  'pages.smtp.user': 'Username',
+  'pages.smtp.userPlaceholder': 'Please enter SMTP authentication username',
+  'pages.smtp.password': 'Password',
+  'pages.smtp.passwordPlaceholder': 'Please enter SMTP authentication password',
+  'pages.smtp.from': 'Sender Email',
+  'pages.smtp.fromPlaceholder': 'Please enter sender email address',
+  'pages.smtp.enabled': 'Enable Configuration',
+  'pages.smtp.enabledHelp':
+    'When enabled, this configuration will be used to send system emails',
+  'pages.smtp.testConnection': 'Test Connection',
+  'pages.smtp.testSuccess': 'SMTP connection test successful',
+  'pages.smtp.testFailed': 'SMTP connection test failed',
+  'pages.smtp.saveSuccess': 'SMTP configuration saved successfully',
+  'pages.smtp.saveFailed': 'Failed to save SMTP configuration',
+  'pages.smtp.createdAt': 'Created At',
+  'pages.smtp.updatedAt': 'Updated At',
+  'pages.serverManagementSettings.title': 'Server Management',
+  'pages.serverManagementSettings.description':
+    'Configure how the console talks to the hbbs/hbbr management API',
+  'pages.serverManagementSettings.url': 'Management API URL',
+  'pages.serverManagementSettings.urlInvalid':
+    'Must be an HTTP(S) origin without a path, e.g. http://hbbs:21120',
+  'pages.serverManagementSettings.urlHelp':
+    'HTTP(S) origin of the hbbs management API. Leave empty to disable server management.',
+  'pages.serverManagementSettings.token': 'Management Token',
+  'pages.serverManagementSettings.tokenRequired':
+    'A management token is required when a URL is set',
+  'pages.serverManagementSettings.tokenTooShort':
+    'The token must contain at least 32 characters',
+  'pages.serverManagementSettings.tokenHelp':
+    'Shared secret configured on hbbs/hbbr (RD_MANAGEMENT_TOKEN). Enter ****** to keep the stored token unchanged.',
+  'pages.serverManagementSettings.nodeId': 'Node ID',
+  'pages.serverManagementSettings.nodeIdRequired': 'Please enter a node ID',
+  'pages.serverManagementSettings.nodeIdInvalid':
+    'Only letters, numbers, hyphens and underscores (max 64 characters)',
+  'pages.serverManagementSettings.nodeIdHelp':
+    'Identifier of this console node, e.g. rustdesk',
+  'pages.serverManagementSettings.nodeName': 'Node Name',
+  'pages.serverManagementSettings.nodeNameRequired': 'Please enter a node name',
+  'pages.serverManagementSettings.nodeNameHelp':
+    'Display name of this console node, e.g. RustDesk',
+  'pages.serverManagementSettings.tokenSyncWarning':
+    'After changing the token, update SERVER_MANAGEMENT_TOKEN in the .env file of hbbs/hbbr and restart them so both sides use the same token.',
+  'pages.serverManagementSettings.saveSuccess':
+    'Server management configuration saved successfully',
+  'pages.serverManagementSettings.saveFailed':
+    'Failed to save server management configuration',
+  'pages.serverManagementSettings.loadFailed':
+    'Failed to load the server management configuration',
+  'pages.serverManagementSettings.createdAt': 'Created At',
+  'pages.serverManagementSettings.updatedAt': 'Updated At',
+};

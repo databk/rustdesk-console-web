@@ -1,0 +1,54 @@
+export default {
+  'pages.settings.save': 'Enregistrer les paramètres',
+  'pages.settings.general': 'Paramètres généraux',
+  'pages.settings.fetchFailed': 'Échec du chargement des paramètres',
+  'pages.settings.saveSuccess': 'Paramètres enregistrés avec succès',
+  'pages.settings.saveFailed': "Échec de l'enregistrement des paramètres",
+  'pages.settings.generalSection.watermark': "Filigrane du nom d'utilisateur",
+  'pages.settings.generalSection.watermarkExtra':
+    "Afficher en surimpression le nom de l'utilisateur sur chaque page à des fins de responsabilité.",
+  'pages.settings.generalSection.language': 'Langue par défaut',
+  'pages.settings.generalSection.languageExtra':
+    "Langue d'interface par défaut pour les nouveaux visiteurs. Les utilisateurs connectés conservent leur propre préférence.",
+  'pages.settings.generalSection.languagePlaceholder':
+    'Sélectionner la langue par défaut',
+  'pages.settings.generalSection.site': 'Site',
+  'pages.settings.generalSection.frontendUrl': 'URL du Frontend',
+  'pages.settings.generalSection.frontendUrlPlaceholder':
+    'https://console.exemple.com',
+  'pages.settings.generalSection.backendUrl': 'URL du Backend',
+  'pages.settings.generalSection.backendUrlExtra':
+    'Laissez vide pour utiliser la même origine que le frontend.',
+  'pages.settings.generalSection.backendUrlPlaceholder':
+    'https://api.exemple.com',
+  'pages.settings.generalSection.urlInvalid': 'Veuillez saisir une URL valide',
+  'pages.settings.generalSection.webauthn': 'WebAuthn / Passkeys',
+  'pages.settings.generalSection.webauthnEnabled': 'Activer WebAuthn',
+  'pages.settings.generalSection.webauthnEnabledExtra':
+    "Autoriser les utilisateurs à s'inscrire et se connecter avec des Passkeys.",
+  'pages.settings.generalSection.webauthnUnsupported':
+    'Ce navigateur ne prend pas en charge WebAuthn. La connexion par Passkey ne sera pas disponible pour les utilisateurs sur des clients non pris en charge.',
+  'pages.settings.generalSection.rpName': 'Nom de la partie prenante (RP Name)',
+  'pages.settings.generalSection.rpNameExtra':
+    "Nom lisible affiché lors de l'invite Passkey.",
+  'pages.settings.generalSection.rpNamePlaceholder': 'RustDesk Console',
+  'pages.settings.generalSection.security': 'Sécurité et maintenance',
+  'pages.settings.generalSection.jwtExpiryDays':
+    'Expiration du jeton JWT (jours)',
+  'pages.settings.generalSection.jwtExpiryDaysExtra':
+    "Nombre de jours avant l'expiration des jetons utilisateurs. Doit être d'au moins 1.",
+  'pages.settings.generalSection.jwtExpiryDaysRequired':
+    'Veuillez saisir un entier positif',
+  'pages.settings.generalSection.auditRetentionDays':
+    "Rétention des journaux d'audit (jours)",
+  'pages.settings.generalSection.auditRetentionDaysExtra':
+    "Nombre de jours de conservation des journaux d'audit avant nettoyage automatique. Définir à 0 pour désactiver.",
+  'pages.settings.generalSection.auditRetentionDaysRequired':
+    'Veuillez saisir un entier non négatif',
+  'pages.settings.generalSection.deviceCloneIsolation':
+    "Isolation des clones d'appareils",
+  'pages.settings.generalSection.deviceCloneIsolationWarning':
+    "Ne désactivez pas sans précaution après l'activation. Le mode hérité ne peut pas résoudre les enregistrements dérivés et peut créer des appareils dupliqués ou fusionnés. Sauvegardez la base de données avant l'activation. Voir docs/clone-isolation.md.",
+  'pages.settings.generalSection.deviceCloneIsolationExtra':
+    'Séparer les clients clonés partageant un UUID mais ayant des ID RustDesk différents. Désactivé par défaut.',
+};

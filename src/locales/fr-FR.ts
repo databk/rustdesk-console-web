@@ -6,6 +6,7 @@ import pwa from './fr-FR/pwa';
 import settingDrawer from './fr-FR/settingDrawer';
 import settings from './fr-FR/settings';
 import webClient from './fr-FR/webClient';
+import serverNetwork from './fr-FR/serverNetwork';
 
 export default {
   ...serverNetwork,
@@ -24,4 +25,3 @@ export default {
   ...pages,
   ...webClient,
 };
-import serverNetwork from './fr-FR/serverNetwork';

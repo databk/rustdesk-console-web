@@ -1,0 +1,94 @@
+export default {
+  'pages.devices.list': 'Список устройств',
+  'pages.devices.os': 'ОС',
+  'pages.devices.status': 'Статус',
+  'pages.devices.user': 'Пользователь',
+  'pages.devices.deviceGroup': 'Группа',
+  'pages.devices.note': 'Примечание',
+  'pages.devices.online': 'В сети',
+  'pages.devices.offline': 'Не в сети',
+  'pages.devices.days': 'дней',
+  'pages.devices.hours': 'часов',
+  'pages.devices.minutes': 'минут',
+  'pages.devices.justNow': 'только что',
+  'pages.devices.enable': 'Включить',
+  'pages.devices.disable': 'Отключить',
+  'pages.devices.enableSuccess': 'Устройство включено',
+  'pages.devices.enableFailed': 'Не удалось включить устройство',
+  'pages.devices.disableSuccess': 'Устройство отключено',
+  'pages.devices.disableFailed': 'Не удалось отключить устройство',
+  'pages.devices.deleteSuccess': 'Устройство удалено',
+  'pages.devices.deleteFailed': 'Не удалось удалить устройство',
+  'pages.devices.deleteConfirm':
+    'Вы уверены, что хотите удалить это устройство?',
+  'pages.devices.deviceInfo': 'username@device_name',
+  'pages.devices.strategyInfo': 'Информация о стратегии',
+  'pages.devices.device': 'Устройство',
+  'pages.devices.strategy': 'Стратегия',
+  'pages.devices.info': 'Информация',
+  'pages.devices.statusNormal': 'Нормально',
+  'pages.devices.statusDisabled': 'Отключено',
+  'pages.devices.onlineStatus': 'Статус соединения',
+  'pages.devices.deviceGroupSearchTip': 'Фильтр по названию группы устройств',
+  'pages.devices.remove': 'Удалить',
+  'pages.devices.removeFromGroupSuccess': 'Устройство удалено из группы',
+  'pages.devices.removeFromGroupFailed':
+    'Не удалось удалить устройство из группы',
+  'pages.devices.removeFromGroupConfirm':
+    'Вы уверены, что хотите удалить это устройство из группы?',
+  'pages.devices.batchRemove': 'Массовое удаление',
+  'pages.devices.batchRemoveFromGroupSuccess':
+    'Успешно удалено {count} устройство(а) из группы',
+  'pages.devices.batchRemoveFromGroupFailed':
+    'Не удалось удалить устройства из группы',
+  'pages.devices.batchRemoveFromGroupConfirm':
+    'Вы уверены, что хотите удалить выбранные устройства из группы?',
+  'pages.devices.batchEnable': 'Массовое включение',
+  'pages.devices.batchDisable': 'Массовое отключение',
+  'pages.devices.batchEnableConfirm':
+    'Вы уверены, что хотите включить выбранные устройства?',
+  'pages.devices.batchDisableConfirm':
+    'Вы уверены, что хотите отключить выбранные устройства?',
+  'pages.devices.batchEnableSuccess': 'Успешно включено {count} устройство(а)',
+  'pages.devices.batchEnableFailed': 'Не удалось включить устройства',
+  'pages.devices.batchEnablePartialFailed':
+    'Успешно включено {success} устройство(а), {failed} не удалось',
+  'pages.devices.batchDisableSuccess':
+    'Успешно отключено {count} устройство(а)',
+  'pages.devices.batchDisableFailed': 'Не удалось отключить устройства',
+  'pages.devices.batchDisablePartialFailed':
+    'Успешно отключено {success} устройство(а), {failed} не удалось',
+  'pages.devices.edit': 'Редактировать устройство',
+  'pages.devices.updateSuccess': 'Устройство обновлено',
+  'pages.devices.updateFailed': 'Не удалось обновить устройство',
+  'pages.devices.selectUser': 'Выберите пользователя',
+  'pages.devices.selectDeviceGroup': 'Выберите группу устройств',
+  'pages.devices.selectStrategy': 'Выберите стратегию',
+  'pages.devices.connect': 'Подключить',
+  'pages.devices.connectRemoteDesktop': 'Удалённый рабочий стол',
+  'pages.devices.connectFileTransfer': 'Передача файлов',
+  'pages.devices.connectViewCamera': 'Просмотр камеры',
+  'pages.devices.connectPortForward': 'Перенаправление портов',
+  'pages.devices.connectRdp': 'RDP',
+  'pages.devices.connectTerminal': 'Терминал',
+  'pages.devices.connectTerminalAdmin': 'Терминал (Админ)',
+  'pages.devices.searchIdPlaceholder': 'Поиск по ID устройства',
+  'pages.devices.searchUserPlaceholder': 'Поиск по имени пользователя',
+  'pages.devices.searchOsPlaceholder': 'Поиск по ОС',
+  'pages.devices.searchDeviceGroupPlaceholder':
+    'Поиск по названию группы устройств',
+  'pages.devices.searchDeviceNamePlaceholder': 'Поиск по названию устройства',
+  'pages.devices.exportCsv': 'Экспорт CSV',
+  'pages.devices.exportCsvSuccess': 'Экспортировано {count} устройств(а) в CSV',
+  'pages.devices.exportCsvFailed': 'Ошибка экспорта CSV',
+  'pages.devices.presenceAnomalyTitle':
+    'У {count} устройств(а) несогласованное состояние',
+  'pages.devices.presenceAnomalyHint':
+    'hbbs и heartbeat Console — независимые источники. Проверьте адрес API-сервера клиента и связь между клиентом, hbbs и Console.',
+  'pages.devices.presence.hbbsOnlineConsoleOffline':
+    'Зарегистрировано в hbbs, но нет heartbeat Console',
+  'pages.devices.presence.consoleOnlineHbbsOffline':
+    'Достигает API Console, но не зарегистрировано в hbbs',
+  'pages.devices.presence.hbbsOnly':
+    'В сети в hbbs, но отсутствует в списке устройств Console',
+};

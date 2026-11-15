@@ -1,0 +1,43 @@
+export default {
+  'pages.userGroups.list': "Liste des groupes d'utilisateurs",
+  'pages.userGroups.name': 'Nom du groupe',
+  'pages.userGroups.note': 'Note',
+  'pages.userGroups.userCount': "Nombre d'utilisateurs",
+  'pages.userGroups.create': "Créer un groupe d'utilisateurs",
+  'pages.userGroups.edit': "Modifier le groupe d'utilisateurs",
+  'pages.userGroups.deleteConfirm':
+    "Êtes-vous sûr de vouloir supprimer ce groupe d'utilisateurs ?",
+  'pages.userGroups.createSuccess': "Groupe d'utilisateurs créé",
+  'pages.userGroups.createFailed':
+    "Échec de la création du groupe d'utilisateurs",
+  'pages.userGroups.updateSuccess': "Groupe d'utilisateurs mis à jour",
+  'pages.userGroups.updateFailed':
+    "Échec de la mise à jour du groupe d'utilisateurs",
+  'pages.userGroups.deleteSuccess': "Groupe d'utilisateurs supprimé",
+  'pages.userGroups.deleteFailed':
+    "Échec de la suppression du groupe d'utilisateurs",
+  'pages.userGroups.loadFailed':
+    "Échec du chargement des groupes d'utilisateurs",
+  'pages.userGroups.default': 'Par défaut',
+  'pages.userGroups.destination': 'Groupe de destination',
+  'pages.userGroups.selectDestination': 'Sélectionner le groupe de destination',
+  'pages.userGroups.move': 'Déplacer',
+  'pages.userGroups.batchMove': 'Déplacer en lot',
+  'pages.userGroups.moveToGroup': 'Déplacer vers le groupe',
+  'pages.userGroups.import': 'Importer',
+  'pages.userGroups.importUsers': 'Importer des utilisateurs',
+  'pages.userGroups.importSuccess':
+    '{count} utilisateur(s) importé(s) avec succès',
+  'pages.userGroups.importFailed': "Échec de l'importation des utilisateurs",
+  'pages.userGroups.membersUpdated': '{count} utilisateur(s) mis à jour',
+  'pages.userGroups.membersUpdateFailed':
+    'Échec de la mise à jour des membres du groupe',
+  'pages.userGroups.enterName': 'Saisir le nom du groupe',
+  'pages.userGroups.addSelected': 'Ajouter les utilisateurs sélectionnés',
+  'pages.userGroups.addUsers': 'Ajouter des utilisateurs',
+  'pages.userGroups.currentMembers': 'Membres actuels',
+  'pages.userGroups.members': 'Membres',
+  'pages.userGroups.membersTitle': 'Membres de {name}',
+  'pages.userGroups.moveSelected': 'Déplacer la sélection',
+  'pages.userGroups.searchNamePlaceholder': 'Rechercher par nom',
+};
