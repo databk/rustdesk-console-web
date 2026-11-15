@@ -79,7 +79,7 @@ const CustomClientPage: React.FC = () => {
     const defaultSettings: Record<string, string> = {};
 
     Object.entries(strategyConfig).forEach(([key, item]) => {
-      if (item.mode === 'override' && item.value) {
+      if (item.mode === 'override') {
         overrideSettings[key] = item.value;
       } else if (item.mode === 'default' && item.value) {
         defaultSettings[key] = item.value;
