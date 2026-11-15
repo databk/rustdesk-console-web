@@ -293,5 +293,6 @@ jobs:
       - name: Copy image to ACR
         run: |
           docker buildx imagetools create \
+            --provenance=false \
             --tag ${{ vars.ACR_DOMAIN }}/databk/rustdesk-console-web:nightly \
             databk/rustdesk-console-web:nightly
