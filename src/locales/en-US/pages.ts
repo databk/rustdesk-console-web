@@ -359,7 +359,8 @@ export default {
   'pages.customClient.strategyModeOff': 'Off',
   'pages.customClient.strategyModeDefault': 'Default',
   'pages.customClient.strategyModeOverride': 'Override',
-  'pages.customClient.selectStrategyPlaceholder': 'Select a strategy as base preset (optional)',
+  'pages.customClient.selectStrategyPlaceholder':
+    'Select a strategy as base preset (optional)',
   'pages.customClient.defaultCount': '{count} default',
   'pages.customClient.overrideCount': '{count} override',
   'pages.customClient.noConfigSelected': 'No config selected',

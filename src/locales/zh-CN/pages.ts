@@ -326,7 +326,8 @@ export default {
   'pages.customClient.strategyModeOff': '关闭',
   'pages.customClient.strategyModeDefault': '默认',
   'pages.customClient.strategyModeOverride': '覆盖',
-  'pages.customClient.selectStrategyPlaceholder': '选择策略作为基础预设（可选）',
+  'pages.customClient.selectStrategyPlaceholder':
+    '选择策略作为基础预设（可选）',
   'pages.customClient.defaultCount': '{count} 个默认',
   'pages.customClient.overrideCount': '{count} 个覆盖',
   'pages.customClient.noConfigSelected': '未选择配置',

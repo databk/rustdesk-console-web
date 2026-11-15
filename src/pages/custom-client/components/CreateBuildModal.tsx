@@ -69,7 +69,8 @@ const CreateBuildModal: React.FC<CreateBuildModalProps> = ({
   const intl = useIntl();
   const [form] = Form.useForm();
   const [currentStep, setCurrentStep] = React.useState(0);
-  const [strategyConfig, setStrategyConfig] = React.useState<StrategyConfigValues>({});
+  const [strategyConfig, setStrategyConfig] =
+    React.useState<StrategyConfigValues>({});
   const osValue = Form.useWatch('os', form);
   const isAllOs = osValue === 'all';
   const availableArchs =

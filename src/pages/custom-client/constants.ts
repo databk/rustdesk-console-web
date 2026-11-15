@@ -28,4 +28,3 @@ export const CONN_TYPE_OPTIONS = [
   { value: 'incoming', label: 'Incoming' },
   { value: 'outgoing', label: 'Outgoing' },
 ];
-

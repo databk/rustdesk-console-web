@@ -62,7 +62,10 @@ const ConfigOptionControl: React.FC<{
         defaultMessage: option.description,
       })
     : intl.formatMessage(
-        { id: 'pages.strategies.defaultValue', defaultMessage: 'Default: {value}' },
+        {
+          id: 'pages.strategies.defaultValue',
+          defaultMessage: 'Default: {value}',
+        },
         { value: defaultValueLabel },
       );
 
@@ -142,12 +145,17 @@ const ConfigOptionControl: React.FC<{
       break;
     }
     case 'number': {
-      const numValue = mode === 'off' ? Number(option.defaultValue) : Number(value);
+      const numValue =
+        mode === 'off' ? Number(option.defaultValue) : Number(value);
       control = (
         <InputNumber
           disabled={disabled}
           value={numValue}
-          onChange={(v) => handleValueChange(v !== null && v !== undefined ? String(v) : undefined)}
+          onChange={(v) =>
+            handleValueChange(
+              v !== null && v !== undefined ? String(v) : undefined,
+            )
+          }
           min={option.min}
           max={option.max}
           style={{ width: '100%' }}
@@ -226,8 +234,12 @@ const StrategyConfigStep: React.FC<StrategyConfigStepProps> = ({
 }) => {
   const intl = useIntl();
   const [strategyList, setStrategyList] = useState<API.StrategyItem[]>([]);
-  const [selectedStrategyGuid, setSelectedStrategyGuid] = useState<string | undefined>();
-  const [localValue, setLocalValue] = useState<StrategyConfigValues>({ ...value });
+  const [selectedStrategyGuid, setSelectedStrategyGuid] = useState<
+    string | undefined
+  >();
+  const [localValue, setLocalValue] = useState<StrategyConfigValues>({
+    ...value,
+  });
 
   useEffect(() => {
     setLocalValue({ ...value });
