@@ -1,7 +1,9 @@
 export default {
   'pages.roles.resource.web_client': 'Contrôle web',
-  'pages.roles.permission.web_client.connect': 'Connexion aux appareils distants',
-  'pages.roles.permission.web_client.file_transfer': 'Utiliser le canal de fichiers web',
+  'pages.roles.permission.web_client.connect':
+    'Connexion aux appareils distants',
+  'pages.roles.permission.web_client.file_transfer':
+    'Utiliser le canal de fichiers web',
   'pages.roles.list': 'Liste des rôles',
   'pages.roles.name': 'Nom du rôle',
   'pages.roles.note': 'Note',
@@ -19,12 +21,17 @@ export default {
   'pages.roles.deleteFailed': 'Échec de la suppression du rôle',
   'pages.roles.basicFunction': 'Fonctionnalité de base',
   'pages.roles.detailLoadFailed': 'Échec du chargement des détails du rôle',
-  'pages.roles.disableProtectionAffected': '{count} membre(s) deviendront gérables par les administrateurs délégués.',
-  'pages.roles.disableProtectionConfirm': 'Désactiver la protection pour ce rôle ?',
+  'pages.roles.disableProtectionAffected':
+    '{count} membre(s) deviendront gérables par les administrateurs délégués.',
+  'pages.roles.disableProtectionConfirm':
+    'Désactiver la protection pour ce rôle ?',
   'pages.roles.ownerOnly': 'Super administrateur uniquement',
-  'pages.roles.permission.address_books.edit': "Modifier les carnets d'adresses partagés",
-  'pages.roles.permission.address_books.share': "Créer et gérer les carnets d'adresses partagés",
-  'pages.roles.permission.address_books.view': "Voir les paramètres des carnets d'adresses partagés",
+  'pages.roles.permission.address_books.edit':
+    "Modifier les carnets d'adresses partagés",
+  'pages.roles.permission.address_books.share':
+    "Créer et gérer les carnets d'adresses partagés",
+  'pages.roles.permission.address_books.view':
+    "Voir les paramètres des carnets d'adresses partagés",
   'pages.roles.permission.audit.view': "Voir les journaux d'audit",
   'pages.roles.permission.devices.delete': 'Supprimer des appareils',
   'pages.roles.permission.devices.disconnect': 'Déconnecter des appareils',
@@ -41,32 +48,42 @@ export default {
   'pages.roles.permission.strategies.delete': 'Supprimer des stratégies',
   'pages.roles.permission.strategies.edit': 'Modifier des stratégies',
   'pages.roles.permission.strategies.view': 'Voir les stratégies',
-  'pages.roles.permission.user_groups.create': "Créer des groupes d'utilisateurs",
-  'pages.roles.permission.user_groups.delete': "Supprimer des groupes d'utilisateurs",
-  'pages.roles.permission.user_groups.edit': "Modifier des groupes d'utilisateurs",
-  'pages.roles.permission.user_groups.membership': "Gérer l'appartenance aux groupes d'utilisateurs",
+  'pages.roles.permission.user_groups.create':
+    "Créer des groupes d'utilisateurs",
+  'pages.roles.permission.user_groups.delete':
+    "Supprimer des groupes d'utilisateurs",
+  'pages.roles.permission.user_groups.edit':
+    "Modifier des groupes d'utilisateurs",
+  'pages.roles.permission.user_groups.membership':
+    "Gérer l'appartenance aux groupes d'utilisateurs",
   'pages.roles.permission.user_groups.view': "Voir les groupes d'utilisateurs",
   'pages.roles.permission.users.create': 'Créer des utilisateurs',
   'pages.roles.permission.users.delete': 'Supprimer des utilisateurs',
   'pages.roles.permission.users.edit': 'Modifier des utilisateurs',
-  'pages.roles.permission.users.force_logout': "Forcer la déconnexion d'un utilisateur",
+  'pages.roles.permission.users.force_logout':
+    "Forcer la déconnexion d'un utilisateur",
   'pages.roles.permission.users.security': 'Gérer la sécurité des utilisateurs',
   'pages.roles.permission.users.status': 'Changer le statut des utilisateurs',
   'pages.roles.permission.users.view': 'Voir les utilisateurs',
   'pages.roles.permissionPresets': "Préréglages d'autorisations",
-  'pages.roles.permissionScopeInfo': "Les actions sur les appareils peuvent être attribuées globalement ou à des groupes d'appareils sélectionnés lorsqu'un utilisateur reçoit ce rôle.",
-  'pages.roles.permissionsLoadFailed': 'Échec du chargement du catalogue des autorisations',
+  'pages.roles.permissionScopeInfo':
+    "Les actions sur les appareils peuvent être attribuées globalement ou à des groupes d'appareils sélectionnés lorsqu'un utilisateur reçoit ce rôle.",
+  'pages.roles.permissionsLoadFailed':
+    'Échec du chargement du catalogue des autorisations',
   'pages.roles.personalAddressBook': "Carnet d'adresses personnel",
   'pages.roles.preset.custom': 'Personnalisé',
   'pages.roles.preset.deviceOperator': "Opérateur d'appareil",
-  'pages.roles.preset.deviceStrategyAssigner': "Attribueur de stratégie d'appareil",
+  'pages.roles.preset.deviceStrategyAssigner':
+    "Attribueur de stratégie d'appareil",
   'pages.roles.preset.readOnly': 'Lecture seule globale',
-  'pages.roles.preset.sharedAddressBookAdministrator': "Administrateur de carnets d'adresses partagés",
+  'pages.roles.preset.sharedAddressBookAdministrator':
+    "Administrateur de carnets d'adresses partagés",
   'pages.roles.preset.strategyMaintainer': 'Gestionnaire de stratégies',
   'pages.roles.preset.systemAdministrator': 'Administrateur système',
   'pages.roles.preset.userAdministrator': "Administrateur d'utilisateurs",
   'pages.roles.protectedAccount': 'Comptes protégés',
-  'pages.roles.protectedAccountInfo': 'Seul le super administrateur peut gérer les comptes protégés.',
+  'pages.roles.protectedAccountInfo':
+    'Seul le super administrateur peut gérer les comptes protégés.',
   'pages.roles.resource.address_books': "Carnets d'adresses",
   'pages.roles.resource.audit': 'Audit',
   'pages.roles.resource.devices': 'Appareils',
@@ -77,18 +94,25 @@ export default {
   'pages.roles.resource.user_groups': "Groupes d'utilisateurs",
   'pages.roles.resource.servers': 'Serveurs',
   'pages.roles.permission.servers.view': 'Afficher les serveurs',
-  'pages.roles.permission.servers.control': 'Contrôler les services des serveurs',
+  'pages.roles.permission.servers.control':
+    'Contrôler les services des serveurs',
   'pages.roles.permission.servers.config': 'Configurer les serveurs',
-  'pages.roles.permission.servers.disconnect': 'Déconnecter les sessions relais',
-  'pages.roles.permission.servers.ban': 'Gérer les règles de blocage des serveurs',
+  'pages.roles.permission.servers.disconnect':
+    'Déconnecter les sessions relais',
+  'pages.roles.permission.servers.ban':
+    'Gérer les règles de blocage des serveurs',
   'pages.roles.resource.users': 'Utilisateurs',
-  'pages.roles.superAdminInfo': "L'accès super administrateur est protégé séparément et ne peut être accordé via un rôle.",
+  'pages.roles.superAdminInfo':
+    "L'accès super administrateur est protégé séparément et ne peut être accordé via un rôle.",
   'pages.roles.systemIdentity.builtIn': 'Intégré',
   'pages.roles.systemIdentity.ordinary': 'Utilisateur ordinaire',
-  'pages.roles.systemIdentity.ordinarySummary': "Fonctionnalité de base du carnet d'adresses personnel uniquement.",
+  'pages.roles.systemIdentity.ordinarySummary':
+    "Fonctionnalité de base du carnet d'adresses personnel uniquement.",
   'pages.roles.systemIdentity.superAdmin': 'Super administrateur',
-  'pages.roles.systemIdentity.superAdminSummary': 'Autorité effective complète pour le propriétaire unique du système.',
-  'pages.roles.systemIdentity.systemCapabilities': "Définition des rôles, paramètres système, structure des groupes d'appareils et administration des identités",
+  'pages.roles.systemIdentity.superAdminSummary':
+    'Autorité effective complète pour le propriétaire unique du système.',
+  'pages.roles.systemIdentity.systemCapabilities':
+    "Définition des rôles, paramètres système, structure des groupes d'appareils et administration des identités",
   'pages.roles.unknownPermission': 'Autorisation inconnue',
   'pages.roles.unknownResource': 'Ressource inconnue',
   'pages.roles.view': 'Voir le rôle',

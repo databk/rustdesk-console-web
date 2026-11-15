@@ -7,10 +7,12 @@ export default {
   'pages.roles.note': '备注',
   'pages.roles.permissions': '权限',
   'pages.roles.permissionsInfo': '实际权限和功能数量',
-  'pages.roles.superAdminInfo': '超级管理员权限受到单独保护，无法通过角色授予。',
+  'pages.roles.superAdminInfo':
+    '超级管理员权限受到单独保护，无法通过角色授予。',
   'pages.roles.permissionsLoadFailed': '加载权限目录失败',
   'pages.roles.detailLoadFailed': '加载角色详情失败',
-  'pages.roles.permissionScopeInfo': '为用户分配此角色时，设备操作可以全局授予，也可以限定到选定的设备组。',
+  'pages.roles.permissionScopeInfo':
+    '为用户分配此角色时，设备操作可以全局授予，也可以限定到选定的设备组。',
   'pages.roles.personalAddressBook': '个人地址簿',
   'pages.roles.basicFunction': '基本功能',
   'pages.roles.permissionPresets': '权限预设',
@@ -23,16 +25,20 @@ export default {
   'pages.roles.preset.deviceStrategyAssigner': '设备策略分配员',
   'pages.roles.preset.systemAdministrator': '系统管理员',
   'pages.roles.protectedAccount': '受保护账号',
-  'pages.roles.protectedAccountInfo': '除超级管理员外，其他管理员不能管理受保护账号。',
+  'pages.roles.protectedAccountInfo':
+    '除超级管理员外，其他管理员不能管理受保护账号。',
   'pages.roles.ownerOnly': '仅超级管理员',
   'pages.roles.systemIdentity.ordinary': '普通用户',
   'pages.roles.systemIdentity.superAdmin': '超级管理员',
   'pages.roles.systemIdentity.builtIn': '系统内置',
   'pages.roles.systemIdentity.ordinarySummary': '仅提供个人地址簿基本功能。',
-  'pages.roles.systemIdentity.superAdminSummary': '唯一系统所有者的完整有效权限。',
-  'pages.roles.systemIdentity.systemCapabilities': '角色定义、系统设置、设备组结构和身份管理',
+  'pages.roles.systemIdentity.superAdminSummary':
+    '唯一系统所有者的完整有效权限。',
+  'pages.roles.systemIdentity.systemCapabilities':
+    '角色定义、系统设置、设备组结构和身份管理',
   'pages.roles.disableProtectionConfirm': '确定要取消此角色的账号保护吗？',
-  'pages.roles.disableProtectionAffected': '{count} 个成员将可由受委派管理员管理。',
+  'pages.roles.disableProtectionAffected':
+    '{count} 个成员将可由受委派管理员管理。',
   'pages.roles.resource.servers': '服务器',
   'pages.roles.permission.servers.view': '查看服务器',
   'pages.roles.permission.servers.control': '控制服务器服务',

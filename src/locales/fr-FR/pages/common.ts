@@ -5,15 +5,20 @@ export default {
   'pages.deviceGroups.create': "Créer un groupe d'appareils",
   'pages.deviceGroups.edit': "Modifier le groupe d'appareils",
   'pages.deviceGroups.createSuccess': "Groupe d'appareils créé",
-  'pages.deviceGroups.createFailed': "Échec de la création du groupe d'appareils",
+  'pages.deviceGroups.createFailed':
+    "Échec de la création du groupe d'appareils",
   'pages.deviceGroups.updateSuccess': "Groupe d'appareils mis à jour",
-  'pages.deviceGroups.updateFailed': "Échec de la mise à jour du groupe d'appareils",
+  'pages.deviceGroups.updateFailed':
+    "Échec de la mise à jour du groupe d'appareils",
   'pages.deviceGroups.deleteSuccess': "Groupe d'appareils supprimé",
-  'pages.deviceGroups.deleteFailed': "Échec de la suppression du groupe d'appareils",
-  'pages.deviceGroups.deleteConfirm': "Êtes-vous sûr de vouloir supprimer ce groupe d'appareils ?",
+  'pages.deviceGroups.deleteFailed':
+    "Échec de la suppression du groupe d'appareils",
+  'pages.deviceGroups.deleteConfirm':
+    "Êtes-vous sûr de vouloir supprimer ce groupe d'appareils ?",
   'pages.deviceGroups.import': 'Importer',
   'pages.deviceGroups.importDevices': 'Importer des appareils',
-  'pages.deviceGroups.importSuccess': '{count} appareil(s) importé(s) avec succès',
+  'pages.deviceGroups.importSuccess':
+    '{count} appareil(s) importé(s) avec succès',
   'pages.deviceGroups.importFailed': "Échec de l'importation des appareils",
   'pages.common.action': 'Action',
   'pages.common.delete': 'Supprimer',
@@ -38,7 +43,8 @@ export default {
   'pages.common.retry': 'Réessayer',
   'pages.common.back': 'Retour',
   'pages.common.close': 'Fermer',
-  'pages.request.accessDenied': "Vous n'avez pas la permission d'effectuer cette action",
+  'pages.request.accessDenied':
+    "Vous n'avez pas la permission d'effectuer cette action",
   'pages.request.error': 'La demande a échoué. Veuillez réessayer.',
   'pages.request.loginExpired': 'Session expirée, veuillez vous reconnecter',
   'pages.request.noResponse': "Le serveur n'a pas répondu. Veuillez réessayer.",

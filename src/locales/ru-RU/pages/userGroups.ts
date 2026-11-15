@@ -5,7 +5,8 @@ export default {
   'pages.userGroups.userCount': 'Количество пользователей',
   'pages.userGroups.create': 'Создать группу пользователей',
   'pages.userGroups.edit': 'Редактировать группу пользователей',
-  'pages.userGroups.deleteConfirm': 'Вы уверены, что хотите удалить эту группу пользователей?',
+  'pages.userGroups.deleteConfirm':
+    'Вы уверены, что хотите удалить эту группу пользователей?',
   'pages.userGroups.createSuccess': 'Группа пользователей создана',
   'pages.userGroups.createFailed': 'Не удалось создать группу пользователей',
   'pages.userGroups.updateSuccess': 'Группа пользователей обновлена',
@@ -21,10 +22,12 @@ export default {
   'pages.userGroups.moveToGroup': 'Переместить в группу',
   'pages.userGroups.import': 'Импорт',
   'pages.userGroups.importUsers': 'Импорт пользователей',
-  'pages.userGroups.importSuccess': 'Успешно импортировано {count} пользователь(ей)',
+  'pages.userGroups.importSuccess':
+    'Успешно импортировано {count} пользователь(ей)',
   'pages.userGroups.importFailed': 'Не удалось импортировать пользователей',
   'pages.userGroups.membersUpdated': 'Обновлено {count} пользователь(ей)',
-  'pages.userGroups.membersUpdateFailed': 'Не удалось обновить участников группы',
+  'pages.userGroups.membersUpdateFailed':
+    'Не удалось обновить участников группы',
   'pages.userGroups.members': 'Участники',
   'pages.userGroups.moveSelected': 'Переместить выбранных',
   'pages.userGroups.addSelected': 'Добавить выбранных пользователей',

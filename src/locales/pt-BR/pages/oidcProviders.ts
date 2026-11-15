@@ -29,22 +29,27 @@ export default {
   'pages.oidcProviders.updateFailed': 'Falha ao atualizar provedor OIDC',
   'pages.oidcProviders.deleteSuccess': 'Provedor OIDC removido',
   'pages.oidcProviders.deleteFailed': 'Falha ao remover provedor OIDC',
-  'pages.oidcProviders.deleteConfirm': 'Tem certeza de que deseja remover este provedor?',
+  'pages.oidcProviders.deleteConfirm':
+    'Tem certeza de que deseja remover este provedor?',
   'pages.oidcProviders.enableSuccess': 'Provedor OIDC ativado',
   'pages.oidcProviders.enableFailed': 'Falha ao ativar provedor OIDC',
   'pages.oidcProviders.disableSuccess': 'Provedor OIDC desativado',
   'pages.oidcProviders.disableFailed': 'Falha ao desativar provedor OIDC',
-  'pages.oidcProviders.enableConfirm': 'Tem certeza de que deseja ativar este provedor?',
-  'pages.oidcProviders.disableConfirm': 'Tem certeza de que deseja desativar este provedor?',
+  'pages.oidcProviders.enableConfirm':
+    'Tem certeza de que deseja ativar este provedor?',
+  'pages.oidcProviders.disableConfirm':
+    'Tem certeza de que deseja desativar este provedor?',
   'pages.oidcProviders.testFailed': 'Falha ao testar conexão OIDC',
   'pages.oidcProviders.sortFailed': 'Falha ao atualizar ordem dos provedores',
   'pages.oidcProviders.preset': 'Modelo de Provedor',
-  'pages.oidcProviders.presetPlaceholder': 'Selecione um provedor integrado ou personalizado',
+  'pages.oidcProviders.presetPlaceholder':
+    'Selecione um provedor integrado ou personalizado',
   'pages.oidcProviders.custom': 'Personalizado',
   'pages.oidcProviders.icon': 'Ícone (SVG)',
   'pages.oidcProviders.uploadSvg': 'Carregar SVG',
   'pages.oidcProviders.clearIcon': 'Limpar',
   'pages.oidcProviders.svgTooLarge': 'Arquivo SVG muito grande (máx. 100KB)',
   'pages.oidcProviders.invalidSvg': 'Conteúdo SVG inválido',
-  'pages.oidcProviders.fetchDetailFailed': 'Falha ao obter detalhes do provedor',
+  'pages.oidcProviders.fetchDetailFailed':
+    'Falha ao obter detalhes do provedor',
 };

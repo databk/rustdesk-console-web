@@ -27,8 +27,10 @@ export default {
   'pages.addressBook.updateFailed': 'Failed to update address book',
   'pages.addressBook.deleteSuccess': 'Address book(s) deleted',
   'pages.addressBook.deleteFailed': 'Failed to delete address book(s)',
-  'pages.addressBook.deleteConfirm': 'Are you sure to delete this address book?',
-  'pages.addressBook.batchDeleteConfirm': 'Are you sure to delete selected address books?',
+  'pages.addressBook.deleteConfirm':
+    'Are you sure to delete this address book?',
+  'pages.addressBook.batchDeleteConfirm':
+    'Are you sure to delete selected address books?',
   'pages.addressBook.device': 'Device',
   'pages.addressBook.alias': 'Alias',
   'pages.addressBook.tags': 'Tags',
@@ -54,7 +56,8 @@ export default {
   'pages.addressBook.shareTypeGroup': 'User group',
   'pages.addressBook.selectUser': 'Select user',
   'pages.addressBook.selectUserPlaceholder': 'Search by username or email',
-  'pages.addressBook.everyoneHint': 'All users will have access to this address book',
+  'pages.addressBook.everyoneHint':
+    'All users will have access to this address book',
   'pages.addressBook.allUsers': 'All users',
   'pages.addressBook.addAccess': 'Add access',
   'pages.addressBook.accessLoadFailed': 'Failed to load access rules',

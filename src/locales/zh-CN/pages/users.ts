@@ -34,7 +34,8 @@ export default {
   'pages.users.globalScope': '全局',
   'pages.users.deviceGroupScope': '指定设备组',
   'pages.users.selectDeviceGroups': '选择一个或多个设备组',
-  'pages.users.unsupportedDeviceGroupScope': '仅包含设备操作和策略分配权限的角色可使用设备组范围',
+  'pages.users.unsupportedDeviceGroupScope':
+    '仅包含设备操作和策略分配权限的角色可使用设备组范围',
   'pages.users.deviceGroupScopeRequired': '请至少选择一个设备组',
   'pages.users.rolesScopeInfo': '全局授权会覆盖范围更小的设备组授权。',
   'pages.users.protectedAccount': '受保护账号',
@@ -50,14 +51,20 @@ export default {
   'pages.users.systemCapability.identity_sources.manage': '管理身份源',
   'pages.users.roleEligibility.assign_not_allowed': '当前管理员不能分配此角色',
   'pages.users.roleEligibility.remove_not_allowed': '当前管理员不能移除此角色',
-  'pages.users.roleEligibility.protected_role': '受保护角色只能由超级管理员分配或移除',
+  'pages.users.roleEligibility.protected_role':
+    '受保护角色只能由超级管理员分配或移除',
   'pages.users.roleEligibility.protected_target': '目标账号受到保护',
-  'pages.users.roleEligibility.super_admin_target': '超级管理员不能分配普通角色',
+  'pages.users.roleEligibility.super_admin_target':
+    '超级管理员不能分配普通角色',
   'pages.users.roleEligibility.self_target': '不能修改自己的角色',
-  'pages.users.roleEligibility.missing_caller_scope': '当前管理员没有所需权限范围',
-  'pages.users.roleEligibility.scope_exceeds_caller': '角色范围超出当前管理员权限',
-  'pages.users.roleEligibility.missing_permission': '当前管理员缺少角色所需权限',
-  'pages.users.roleEligibility.role_grants_roles_assign': '包含角色分配权限的角色只能由超级管理员管理',
+  'pages.users.roleEligibility.missing_caller_scope':
+    '当前管理员没有所需权限范围',
+  'pages.users.roleEligibility.scope_exceeds_caller':
+    '角色范围超出当前管理员权限',
+  'pages.users.roleEligibility.missing_permission':
+    '当前管理员缺少角色所需权限',
+  'pages.users.roleEligibility.role_grants_roles_assign':
+    '包含角色分配权限的角色只能由超级管理员管理',
   'pages.users.effectiveScope': '实际生效范围',
   'pages.users.strategy': '策略',
   'pages.users.invite': '邀请用户',
@@ -89,10 +96,12 @@ export default {
   'pages.users.batchForceLogoutConfirm': '确定要强制登出选中的用户吗？',
   'pages.users.batchEnableSuccess': '成功启用 {count} 个用户',
   'pages.users.batchEnableFailed': '启用用户失败',
-  'pages.users.batchEnablePartialFailed': '成功启用 {success} 个用户，{failed} 个失败',
+  'pages.users.batchEnablePartialFailed':
+    '成功启用 {success} 个用户，{failed} 个失败',
   'pages.users.batchDisableSuccess': '成功禁用 {count} 个用户',
   'pages.users.batchDisableFailed': '禁用用户失败',
-  'pages.users.batchDisablePartialFailed': '成功禁用 {success} 个用户，{failed} 个失败',
+  'pages.users.batchDisablePartialFailed':
+    '成功禁用 {success} 个用户，{failed} 个失败',
   'pages.users.batchForceLogoutSuccess': '批量强制登出成功',
   'pages.users.batchForceLogoutFailed': '批量强制登出失败',
   'pages.users.admin': '管理员',

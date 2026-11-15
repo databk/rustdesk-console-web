@@ -4,9 +4,11 @@ export default {
   'webClient.fileResize': 'Resize file window',
   'webClient.fileUploadFile': 'Upload file',
   'webClient.fileSaveLocal': 'Save locally',
-  'webClient.fileUploadHint': 'Choose local files to upload to the current remote folder',
+  'webClient.fileUploadHint':
+    'Choose local files to upload to the current remote folder',
   'webClient.fileSaveHint': 'Save the selected remote file to this computer',
-  'webClient.fileChooseHint': 'Choose a local folder; access is limited to that folder',
+  'webClient.fileChooseHint':
+    'Choose a local folder; access is limited to that folder',
   'webClient.fileOpenPath': 'Open',
   'webClient.fileNotConnected': 'File connection is not ready',
   'webClient.fileEmpty': 'This directory is empty',
@@ -43,10 +45,12 @@ export default {
   'webClient.localUp': 'Parent local folder',
   'webClient.localRefresh': 'Refresh local folder',
   'webClient.localPath': 'Path within the selected local folder',
-  'webClient.localDirectoryUnavailable': 'Folder access is unavailable. Use file upload and browser download.',
+  'webClient.localDirectoryUnavailable':
+    'Folder access is unavailable. Use file upload and browser download.',
   'webClient.fileSendToRemote': 'Send to remote folder',
   'webClient.fileReceiveHere': 'Receive in local folder',
-  'webClient.fileApprovalHint': 'Waiting for the remote device. You can enter its password if needed.',
+  'webClient.fileApprovalHint':
+    'Waiting for the remote device. You can enter its password if needed.',
   'webClient.localFileConflict': 'A local file with this name exists.',
   'webClient.localKeepFile': 'Keep local file',
   'webClient.localOverwriteFile': 'Overwrite local file',

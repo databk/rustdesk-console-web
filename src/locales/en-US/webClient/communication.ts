@@ -20,7 +20,8 @@ export default {
   'webClient.chatYou': 'You',
   'webClient.chatMessage': 'Message',
   'webClient.chatSend': 'Send',
-  'webClient.chatFailed': 'Message not sent. Try again; each message is limited to 4 KiB.',
+  'webClient.chatFailed':
+    'Message not sent. Try again; each message is limited to 4 KiB.',
   'webClient.voiceCall': 'Voice call',
   'webClient.callIdle': 'Call the remote user.',
   'webClient.callPreparing': 'Requesting microphone access…',
@@ -30,15 +31,18 @@ export default {
   'webClient.callTimeout': 'No answer. You can call again.',
   'webClient.callFailed': 'Call failed. Check microphone access and try again.',
   'webClient.callEnded': 'Call ended.',
-  'webClient.callUnsupported': 'This browser cannot capture or encode Opus microphone audio. Try a recent Chrome or Edge.',
+  'webClient.callUnsupported':
+    'This browser cannot capture or encode Opus microphone audio. Try a recent Chrome or Edge.',
   'webClient.callStart': 'Call',
   'webClient.callMute': 'Mute microphone',
   'webClient.callUnmute': 'Unmute',
   'webClient.callHangup': 'End call',
   'webClient.callCancel': 'Cancel call',
-  'webClient.audioHint': 'Start playback when you want to hear the remote device. Playback stops when the session ends.',
+  'webClient.audioHint':
+    'Start playback when you want to hear the remote device. Playback stops when the session ends.',
   'webClient.audioDenied': 'Audio is disabled by the remote device.',
   'webClient.audioStart': 'Play audio',
   'webClient.mute': 'Mute',
-  'webClient.audioUnavailable': 'Opus audio decoding is unavailable in this browser.',
+  'webClient.audioUnavailable':
+    'Opus audio decoding is unavailable in this browser.',
 };

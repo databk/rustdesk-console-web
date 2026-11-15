@@ -19,7 +19,8 @@ export default {
   'pages.devices.disableFailed': 'Не удалось отключить устройство',
   'pages.devices.deleteSuccess': 'Устройство удалено',
   'pages.devices.deleteFailed': 'Не удалось удалить устройство',
-  'pages.devices.deleteConfirm': 'Вы уверены, что хотите удалить это устройство?',
+  'pages.devices.deleteConfirm':
+    'Вы уверены, что хотите удалить это устройство?',
   'pages.devices.deviceInfo': 'username@device_name',
   'pages.devices.strategyInfo': 'Информация о стратегии',
   'pages.devices.device': 'Устройство',
@@ -31,22 +32,32 @@ export default {
   'pages.devices.deviceGroupSearchTip': 'Фильтр по названию группы устройств',
   'pages.devices.remove': 'Удалить',
   'pages.devices.removeFromGroupSuccess': 'Устройство удалено из группы',
-  'pages.devices.removeFromGroupFailed': 'Не удалось удалить устройство из группы',
-  'pages.devices.removeFromGroupConfirm': 'Вы уверены, что хотите удалить это устройство из группы?',
+  'pages.devices.removeFromGroupFailed':
+    'Не удалось удалить устройство из группы',
+  'pages.devices.removeFromGroupConfirm':
+    'Вы уверены, что хотите удалить это устройство из группы?',
   'pages.devices.batchRemove': 'Массовое удаление',
-  'pages.devices.batchRemoveFromGroupSuccess': 'Успешно удалено {count} устройство(а) из группы',
-  'pages.devices.batchRemoveFromGroupFailed': 'Не удалось удалить устройства из группы',
-  'pages.devices.batchRemoveFromGroupConfirm': 'Вы уверены, что хотите удалить выбранные устройства из группы?',
+  'pages.devices.batchRemoveFromGroupSuccess':
+    'Успешно удалено {count} устройство(а) из группы',
+  'pages.devices.batchRemoveFromGroupFailed':
+    'Не удалось удалить устройства из группы',
+  'pages.devices.batchRemoveFromGroupConfirm':
+    'Вы уверены, что хотите удалить выбранные устройства из группы?',
   'pages.devices.batchEnable': 'Массовое включение',
   'pages.devices.batchDisable': 'Массовое отключение',
-  'pages.devices.batchEnableConfirm': 'Вы уверены, что хотите включить выбранные устройства?',
-  'pages.devices.batchDisableConfirm': 'Вы уверены, что хотите отключить выбранные устройства?',
+  'pages.devices.batchEnableConfirm':
+    'Вы уверены, что хотите включить выбранные устройства?',
+  'pages.devices.batchDisableConfirm':
+    'Вы уверены, что хотите отключить выбранные устройства?',
   'pages.devices.batchEnableSuccess': 'Успешно включено {count} устройство(а)',
   'pages.devices.batchEnableFailed': 'Не удалось включить устройства',
-  'pages.devices.batchEnablePartialFailed': 'Успешно включено {success} устройство(а), {failed} не удалось',
-  'pages.devices.batchDisableSuccess': 'Успешно отключено {count} устройство(а)',
+  'pages.devices.batchEnablePartialFailed':
+    'Успешно включено {success} устройство(а), {failed} не удалось',
+  'pages.devices.batchDisableSuccess':
+    'Успешно отключено {count} устройство(а)',
   'pages.devices.batchDisableFailed': 'Не удалось отключить устройства',
-  'pages.devices.batchDisablePartialFailed': 'Успешно отключено {success} устройство(а), {failed} не удалось',
+  'pages.devices.batchDisablePartialFailed':
+    'Успешно отключено {success} устройство(а), {failed} не удалось',
   'pages.devices.edit': 'Редактировать устройство',
   'pages.devices.updateSuccess': 'Устройство обновлено',
   'pages.devices.updateFailed': 'Не удалось обновить устройство',
@@ -64,14 +75,20 @@ export default {
   'pages.devices.searchIdPlaceholder': 'Поиск по ID устройства',
   'pages.devices.searchUserPlaceholder': 'Поиск по имени пользователя',
   'pages.devices.searchOsPlaceholder': 'Поиск по ОС',
-  'pages.devices.searchDeviceGroupPlaceholder': 'Поиск по названию группы устройств',
+  'pages.devices.searchDeviceGroupPlaceholder':
+    'Поиск по названию группы устройств',
   'pages.devices.searchDeviceNamePlaceholder': 'Поиск по названию устройства',
   'pages.devices.exportCsv': 'Экспорт CSV',
   'pages.devices.exportCsvSuccess': 'Экспортировано {count} устройств(а) в CSV',
   'pages.devices.exportCsvFailed': 'Ошибка экспорта CSV',
-  'pages.devices.presenceAnomalyTitle': 'У {count} устройств(а) несогласованное состояние',
-  'pages.devices.presenceAnomalyHint': 'hbbs и heartbeat Console — независимые источники. Проверьте адрес API-сервера клиента и связь между клиентом, hbbs и Console.',
-  'pages.devices.presence.hbbsOnlineConsoleOffline': 'Зарегистрировано в hbbs, но нет heartbeat Console',
-  'pages.devices.presence.consoleOnlineHbbsOffline': 'Достигает API Console, но не зарегистрировано в hbbs',
-  'pages.devices.presence.hbbsOnly': 'В сети в hbbs, но отсутствует в списке устройств Console',
+  'pages.devices.presenceAnomalyTitle':
+    'У {count} устройств(а) несогласованное состояние',
+  'pages.devices.presenceAnomalyHint':
+    'hbbs и heartbeat Console — независимые источники. Проверьте адрес API-сервера клиента и связь между клиентом, hbbs и Console.',
+  'pages.devices.presence.hbbsOnlineConsoleOffline':
+    'Зарегистрировано в hbbs, но нет heartbeat Console',
+  'pages.devices.presence.consoleOnlineHbbsOffline':
+    'Достигает API Console, но не зарегистрировано в hbbs',
+  'pages.devices.presence.hbbsOnly':
+    'В сети в hbbs, но отсутствует в списке устройств Console',
 };

@@ -12,13 +12,15 @@ export default {
   'webClient.originalResolution': '原始分辨率',
   'webClient.resolutionRestoreShort': '恢复',
   'webClient.shortcutGuideTitle': '全屏使用快捷键',
-  'webClient.shortcutGuideBody': '全屏后可开启快捷键捕获，减少本机响应。部分系统快捷键仍可能由本机处理。',
+  'webClient.shortcutGuideBody':
+    '全屏后可开启快捷键捕获，减少本机响应。部分系统快捷键仍可能由本机处理。',
   'webClient.shortcutGuideHint': '本次连接只提示一次。',
   'webClient.shortcutGuideClose': '关闭',
   'webClient.shortcutGuideFullscreen': '一键全屏',
   'webClient.checkingCredentialsHint': '正在检查这台设备已保存的密码。',
   'webClient.automaticAuthenticationHint': '正在使用已保存的密码连接。',
-  'webClient.paste.image-too-large': '图片太大，无法粘贴。请缩小图片，或使用文件传输。',
+  'webClient.paste.image-too-large':
+    '图片太大，无法粘贴。请缩小图片，或使用文件传输。',
   'webClient.rememberPassword': '记住密码',
   'webClient.credentialSaved': '设备密码已保存在当前浏览器',
   'webClient.forgetPassword': '清除密码',
@@ -40,18 +42,22 @@ export default {
   'webClient.devicesTitle': '可访问设备',
   'webClient.devicesRefresh': '刷新设备',
   'webClient.devicesOnlineOnly': '仅在线',
-  'webClient.devicesFailed': '未能加载设备，请刷新重试。手动输入 ID 也需要设备授权。',
-  'webClient.devicesEmpty': '当前角色没有可连接的设备，请联系管理员配置设备范围。',
+  'webClient.devicesFailed':
+    '未能加载设备，请刷新重试。手动输入 ID 也需要设备授权。',
+  'webClient.devicesEmpty':
+    '当前角色没有可连接的设备，请联系管理员配置设备范围。',
   'webClient.deviceOnline': '在线',
   'webClient.deviceOffline': '离线',
   'webClient.deviceCount': '台设备',
   'webClient.search': '搜索',
   'webClient.previous': '上一页',
   'webClient.next': '下一页',
-  'webClient.pasteHint': '点击远程画面后，按 Ctrl/Cmd+V 直接粘贴本机文字或 PNG 图片。',
+  'webClient.pasteHint':
+    '点击远程画面后，按 Ctrl/Cmd+V 直接粘贴本机文字或 PNG 图片。',
   'webClient.paste.sending': '正在发送剪贴板…',
   'webClient.paste.sent': '粘贴请求已发送，请查看远端结果。',
-  'webClient.paste.failed': '粘贴失败。请确认复制的是文字或 PNG 图片，再试一次。',
+  'webClient.paste.failed':
+    '粘贴失败。请确认复制的是文字或 PNG 图片，再试一次。',
   'webClient.paste.denied': '远端已关闭剪贴板或键盘权限，暂时不能粘贴。',
   'webClient.idPlaceholder': '输入被控设备 ID',
   'webClient.toolAudio': '声音',
@@ -71,7 +77,8 @@ export default {
   'webClient.password': '被控设备密码',
   'webClient.authenticate': '连接',
   'webClient.approval': '也可以等待对方同意连接。',
-  'webClient.notice': '仅连接配置的服务器；仍需原生密码或本机批准。扩展功能受远端权限和浏览器能力限制。',
+  'webClient.notice':
+    '仅连接配置的服务器；仍需原生密码或本机批准。扩展功能受远端权限和浏览器能力限制。',
   'webClient.desktop': '远程桌面，点击聚焦后发送键盘和鼠标操作。',
   'webClient.clipboardDenied': '被控端已禁用剪贴板。',
   'webClient.sendText': '发送文本输入',
@@ -83,7 +90,8 @@ export default {
   'webClient.touchScroll': '远端滚动',
   'webClient.touchZoom': '缩放后平移',
   'webClient.zoomReset': '重置缩放',
-  'webClient.touchNotice': '轻点定位并点击，移动拖动，长按右键；双指仅缩放本地画面。滚轮请选择“远端滚动”。输入法组合完成后显式发送文本。',
+  'webClient.touchNotice':
+    '轻点定位并点击，移动拖动，长按右键；双指仅缩放本地画面。滚轮请选择“远端滚动”。输入法组合完成后显式发送文本。',
   'webClient.connectDevice': '连接设备',
   'webClient.connectionApproval': '使用设备密码，或等待对方同意连接。',
   'webClient.sessionAlerts': '连接提示',
@@ -105,9 +113,11 @@ export default {
   'webClient.legacyFileBadge': '文件会话：旧版加密',
   'webClient.legacyTitle': '旧版加密',
   'webClient.remoteVersion': '远端客户端',
-  'webClient.legacyRisk': '连接仍已加密，但旧版方案存在已知风险，可能降低传输内容的保密性。',
+  'webClient.legacyRisk':
+    '连接仍已加密，但旧版方案存在已知风险，可能降低传输内容的保密性。',
   'webClient.legacyUpgrade': '建议更新远端 RustDesk 后重新连接。',
-  'webClient.legacyCompatibility': '1.4.9 为旧方案。已验证的官方 1.5.0 nightly 支持新方案；nightly 是开发版，不能只凭版本号判断。',
+  'webClient.legacyCompatibility':
+    '1.4.9 为旧方案。已验证的官方 1.5.0 nightly 支持新方案；nightly 是开发版，不能只凭版本号判断。',
   'webClient.cancelConnection': '取消连接',
   'webClient.viewMode': '显示方式',
   'webClient.fitWindow': '适应窗口',

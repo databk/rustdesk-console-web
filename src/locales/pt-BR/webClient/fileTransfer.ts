@@ -4,9 +4,12 @@ export default {
   'webClient.fileResize': 'Redimensionar janela de arquivos',
   'webClient.fileUploadFile': 'Enviar arquivo',
   'webClient.fileSaveLocal': 'Salvar neste computador',
-  'webClient.fileUploadHint': 'Escolher arquivos locais e enviar à pasta remota atual',
-  'webClient.fileSaveHint': 'Salvar o arquivo remoto selecionado neste computador',
-  'webClient.fileChooseHint': 'Escolher uma pasta local; o acesso fica limitado a ela',
+  'webClient.fileUploadHint':
+    'Escolher arquivos locais e enviar à pasta remota atual',
+  'webClient.fileSaveHint':
+    'Salvar o arquivo remoto selecionado neste computador',
+  'webClient.fileChooseHint':
+    'Escolher uma pasta local; o acesso fica limitado a ela',
   'webClient.fileOpenPath': 'Abrir',
   'webClient.fileNotConnected': 'Conexão de arquivos não está pronta',
   'webClient.fileEmpty': 'Esta pasta está vazia',
@@ -43,10 +46,12 @@ export default {
   'webClient.localUp': 'Pasta local anterior',
   'webClient.localRefresh': 'Atualizar pasta local',
   'webClient.localPath': 'Caminho dentro da pasta local escolhida',
-  'webClient.localDirectoryUnavailable': 'Acesso a pastas indisponível. Use envio e download de arquivos.',
+  'webClient.localDirectoryUnavailable':
+    'Acesso a pastas indisponível. Use envio e download de arquivos.',
   'webClient.fileSendToRemote': 'Enviar à pasta remota',
   'webClient.fileReceiveHere': 'Receber na pasta local',
-  'webClient.fileApprovalHint': 'Aguardando o dispositivo remoto. Digite a senha se precisar.',
+  'webClient.fileApprovalHint':
+    'Aguardando o dispositivo remoto. Digite a senha se precisar.',
   'webClient.localFileConflict': 'Já existe um arquivo local com este nome.',
   'webClient.localKeepFile': 'Manter arquivo local',
   'webClient.localOverwriteFile': 'Substituir arquivo local',

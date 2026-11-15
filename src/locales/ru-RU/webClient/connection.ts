@@ -1,10 +1,12 @@
 export default {
-  'webClient.permissionRequired': 'Попросите администратора предоставить право веб-управления.',
+  'webClient.permissionRequired':
+    'Попросите администратора предоставить право веб-управления.',
   'webClient.sessionOptions': 'Сеанс',
   'webClient.sessionMode': 'Режим сеанса',
   'webClient.controlMode': 'Управление',
   'webClient.viewOnlyMode': 'Только просмотр',
-  'webClient.viewOnlyReason': 'В режиме просмотра ввод с клавиатуры и мыши недоступен.',
+  'webClient.viewOnlyReason':
+    'В режиме просмотра ввод с клавиатуры и мыши недоступен.',
   'webClient.remoteActions': 'Удалённые действия',
   'webClient.credentialNone': 'Пароль не сохранён',
   'webClient.connectionDetails': 'Сведения о подключении',
@@ -14,25 +16,32 @@ export default {
   'webClient.authTitle': 'Введите пароль устройства',
   'webClient.connectDevice': 'Подключиться к устройству',
   'webClient.connectingHint': 'Подождите.',
-  'webClient.connectionApproval': 'Введите пароль устройства или дождитесь подтверждения.',
+  'webClient.connectionApproval':
+    'Введите пароль устройства или дождитесь подтверждения.',
   'webClient.deviceCount': 'устройств',
   'webClient.deviceOffline': 'Не в сети',
   'webClient.deviceOnline': 'В сети',
-  'webClient.devicesEmpty': 'Для вашей роли нет доступных устройств. Попросите администратора настроить область доступа.',
-  'webClient.devicesFailed': 'Не удалось загрузить устройства. Обновите список. Ввод ID также требует разрешения на устройство.',
+  'webClient.devicesEmpty':
+    'Для вашей роли нет доступных устройств. Попросите администратора настроить область доступа.',
+  'webClient.devicesFailed':
+    'Не удалось загрузить устройства. Обновите список. Ввод ID также требует разрешения на устройство.',
   'webClient.devicesOnlineOnly': 'Только в сети',
   'webClient.devicesRefresh': 'Обновить устройства',
   'webClient.devicesTitle': 'Доступные устройства',
   'webClient.exitFullscreen': 'Выйти из полного экрана',
   'webClient.idPlaceholder': 'Введите ID устройства',
-  'webClient.idleHint': 'Выберите устройство ниже или введите ID для подключения.',
+  'webClient.idleHint':
+    'Выберите устройство ниже или введите ID для подключения.',
   'webClient.legacyBadge': 'Старое шифрование',
   'webClient.next': 'Далее',
   'webClient.noticeBadge': 'Уведомление',
-  'webClient.paste.denied': 'Удалённое устройство отключило буфер обмена или клавиатуру.',
-  'webClient.paste.failed': 'Не удалось вставить. Скопируйте текст или изображение PNG и повторите.',
+  'webClient.paste.denied':
+    'Удалённое устройство отключило буфер обмена или клавиатуру.',
+  'webClient.paste.failed':
+    'Не удалось вставить. Скопируйте текст или изображение PNG и повторите.',
   'webClient.paste.sending': 'Отправка буфера обмена…',
-  'webClient.pasteHint': 'Нажмите на удалённый экран и используйте Ctrl/Cmd+V для вставки текста или PNG.',
+  'webClient.pasteHint':
+    'Нажмите на удалённый экран и используйте Ctrl/Cmd+V для вставки текста или PNG.',
   'webClient.pasteSendingBadge': 'Отправка буфера обмена',
   'webClient.previous': 'Назад',
   'webClient.search': 'Поиск',
@@ -44,26 +53,33 @@ export default {
   'webClient.viewOnlyBadge': 'Только просмотр',
   'webClient.waitingFrame': 'Ожидание удалённого экрана',
   'webClient.shortcutGuideTitle': 'Сочетания клавиш в полноэкранном режиме',
-  'webClient.shortcutGuideBody': 'Полноэкранный режим позволяет перехватывать клавиши и уменьшить локальные действия. Некоторые системные сочетания всё равно могут обрабатываться на этом компьютере.',
+  'webClient.shortcutGuideBody':
+    'Полноэкранный режим позволяет перехватывать клавиши и уменьшить локальные действия. Некоторые системные сочетания всё равно могут обрабатываться на этом компьютере.',
   'webClient.shortcutGuideHint': 'Показывается один раз за подключение.',
   'webClient.shortcutGuideClose': 'Закрыть',
   'webClient.shortcutGuideFullscreen': 'На весь экран',
-  'webClient.checkingCredentialsHint': 'Проверяем сохранённый пароль устройства.',
-  'webClient.automaticAuthenticationHint': 'Подключаемся с сохранённым паролем.',
-  'webClient.paste.image-too-large': 'Изображение слишком велико. Уменьшите его или используйте передачу файлов.',
-  'webClient.paste.sent': 'Запрос вставки отправлен. Проверьте результат на удалённом устройстве.',
+  'webClient.checkingCredentialsHint':
+    'Проверяем сохранённый пароль устройства.',
+  'webClient.automaticAuthenticationHint':
+    'Подключаемся с сохранённым паролем.',
+  'webClient.paste.image-too-large':
+    'Изображение слишком велико. Уменьшите его или используйте передачу файлов.',
+  'webClient.paste.sent':
+    'Запрос вставки отправлен. Проверьте результат на удалённом устройстве.',
   'webClient.pasteSentBadge': 'Запрос вставки отправлен',
   'webClient.rememberPassword': 'Запомнить пароль',
   'webClient.credentialSaved': 'Пароль сохранён в этом браузере',
   'webClient.forgetPassword': 'Забыть пароль',
-  'webClient.credentialUnavailable': 'Сохранённые пароли недоступны в этом браузере.',
+  'webClient.credentialUnavailable':
+    'Сохранённые пароли недоступны в этом браузере.',
   'webClient.credentialForgotten': 'Сохранённый пароль удалён.',
   'webClient.zoomCursor': 'Масштабировать курсор с изображением',
   'webClient.remoteResolution': 'Удалённое разрешение',
   'webClient.resolutionUnavailable': 'Доступные разрешения не сообщены.',
   'webClient.resolution.pending': 'Ожидание удалённого изображения…',
   'webClient.resolution.confirmed': 'Целевое разрешение подтверждено.',
-  'webClient.resolution.unconfirmed': 'Изменение разрешения не подтверждено. Проверьте изображение и повторите.',
+  'webClient.resolution.unconfirmed':
+    'Изменение разрешения не подтверждено. Проверьте изображение и повторите.',
   'webClient.resolution.rejected': 'Не удалось отправить запрос разрешения.',
   'webClient.close': 'Закрыть',
   'webClient.clipboardSync': 'Синхронизация буфера обмена',
@@ -79,9 +95,12 @@ export default {
   'webClient.fullscreen': 'Полный экран',
   'webClient.password': 'Пароль удалённого устройства',
   'webClient.authenticate': 'Подключить',
-  'webClient.approval': 'Можно также подтвердить подключение на удалённом устройстве.',
-  'webClient.notice': 'Соединение через настроенный сервер. Требуется пароль устройства или локальное подтверждение. Расширения зависят от разрешений и возможностей браузера.',
-  'webClient.desktop': 'Удалённый рабочий стол. Нажмите для управления клавиатурой и мышью.',
+  'webClient.approval':
+    'Можно также подтвердить подключение на удалённом устройстве.',
+  'webClient.notice':
+    'Соединение через настроенный сервер. Требуется пароль устройства или локальное подтверждение. Расширения зависят от разрешений и возможностей браузера.',
+  'webClient.desktop':
+    'Удалённый рабочий стол. Нажмите для управления клавиатурой и мышью.',
   'webClient.clipboardDenied': 'Буфер обмена отключён удалённым устройством.',
   'webClient.sendText': 'Ввести текст',
   'menu.webClient': 'Веб-клиент',
@@ -92,7 +111,8 @@ export default {
   'webClient.touchScroll': 'Прокрутка',
   'webClient.touchZoom': 'Перемещение увеличенного вида',
   'webClient.zoomReset': 'Сбросить масштаб',
-  'webClient.touchNotice': 'Касание — щелчок, движение — перетаскивание, удержание — правая кнопка. Два пальца меняют локальный масштаб. Для удалённой прокрутки выберите режим прокрутки. Отправляйте текст после завершения ввода IME.',
+  'webClient.touchNotice':
+    'Касание — щелчок, движение — перетаскивание, удержание — правая кнопка. Два пальца меняют локальный масштаб. Для удалённой прокрутки выберите режим прокрутки. Отправляйте текст после завершения ввода IME.',
   'webClient.openTools': 'Показать меню сеанса',
   'webClient.sessionMenu': 'Меню сеанса',
   'webClient.pinMenu': 'Закрепить меню',
@@ -100,14 +120,18 @@ export default {
   'webClient.displayOptions': 'Изображение',
   'webClient.remoteFiles': 'Удалённые файлы',
   'webClient.touchHelp': 'Справка по касаниям',
-  'webClient.clipboardRetryHint': 'Браузер заблокировал синхронизацию буфера обмена.',
+  'webClient.clipboardRetryHint':
+    'Браузер заблокировал синхронизацию буфера обмена.',
   'webClient.clipboardRetry': 'Нажмите для копирования',
   'webClient.legacyFileBadge': 'Файловый сеанс: старое шифрование',
   'webClient.legacyTitle': 'Старое шифрование',
   'webClient.remoteVersion': 'Удалённый клиент',
-  'webClient.legacyRisk': 'Соединение зашифровано, но старый метод имеет известный риск, который может снизить конфиденциальность передаваемых данных.',
-  'webClient.legacyUpgrade': 'Обновите RustDesk на удалённом устройстве и подключитесь снова.',
-  'webClient.legacyCompatibility': 'RustDesk 1.4.9 использует старый метод. Новый проверен в конкретной официальной сборке 1.5.0 nightly. Nightly — версия для разработки; номер версии сам по себе не гарантирует исправление.',
+  'webClient.legacyRisk':
+    'Соединение зашифровано, но старый метод имеет известный риск, который может снизить конфиденциальность передаваемых данных.',
+  'webClient.legacyUpgrade':
+    'Обновите RustDesk на удалённом устройстве и подключитесь снова.',
+  'webClient.legacyCompatibility':
+    'RustDesk 1.4.9 использует старый метод. Новый проверен в конкретной официальной сборке 1.5.0 nightly. Nightly — версия для разработки; номер версии сам по себе не гарантирует исправление.',
   'webClient.cancelConnection': 'Отменить подключение',
   'webClient.viewMode': 'Режим отображения',
   'webClient.fitWindow': 'По размеру окна',

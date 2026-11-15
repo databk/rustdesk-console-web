@@ -6,11 +6,14 @@ export default {
   'pages.roles.name': 'Role Name',
   'pages.roles.note': 'Note',
   'pages.roles.permissions': 'Permissions',
-  'pages.roles.permissionsInfo': 'Number of effective permissions and capabilities',
-  'pages.roles.superAdminInfo': 'Super-administrator access is protected separately and cannot be granted through a role.',
+  'pages.roles.permissionsInfo':
+    'Number of effective permissions and capabilities',
+  'pages.roles.superAdminInfo':
+    'Super-administrator access is protected separately and cannot be granted through a role.',
   'pages.roles.permissionsLoadFailed': 'Failed to load the permission catalog',
   'pages.roles.detailLoadFailed': 'Failed to load role details',
-  'pages.roles.permissionScopeInfo': 'Device actions can be assigned globally or to selected device groups when a user receives this role.',
+  'pages.roles.permissionScopeInfo':
+    'Device actions can be assigned globally or to selected device groups when a user receives this role.',
   'pages.roles.personalAddressBook': 'Personal address book',
   'pages.roles.basicFunction': 'Basic feature',
   'pages.roles.permissionPresets': 'Permission presets',
@@ -18,21 +21,27 @@ export default {
   'pages.roles.preset.readOnly': 'Global read-only',
   'pages.roles.preset.deviceOperator': 'Device operator',
   'pages.roles.preset.userAdministrator': 'User administrator',
-  'pages.roles.preset.sharedAddressBookAdministrator': 'Shared address book administrator',
+  'pages.roles.preset.sharedAddressBookAdministrator':
+    'Shared address book administrator',
   'pages.roles.preset.strategyMaintainer': 'Strategy maintainer',
   'pages.roles.preset.deviceStrategyAssigner': 'Device strategy assigner',
   'pages.roles.preset.systemAdministrator': 'System administrator',
   'pages.roles.protectedAccount': 'Protected accounts',
-  'pages.roles.protectedAccountInfo': 'Only the super administrator can manage protected accounts.',
+  'pages.roles.protectedAccountInfo':
+    'Only the super administrator can manage protected accounts.',
   'pages.roles.ownerOnly': 'Super administrator only',
   'pages.roles.systemIdentity.ordinary': 'Ordinary user',
   'pages.roles.systemIdentity.superAdmin': 'Super administrator',
   'pages.roles.systemIdentity.builtIn': 'Built-in',
-  'pages.roles.systemIdentity.ordinarySummary': 'Personal address book basic functionality only.',
-  'pages.roles.systemIdentity.superAdminSummary': 'Full effective authority for the unique system owner.',
-  'pages.roles.systemIdentity.systemCapabilities': 'Role definition, system settings, device-group structure and identity administration',
+  'pages.roles.systemIdentity.ordinarySummary':
+    'Personal address book basic functionality only.',
+  'pages.roles.systemIdentity.superAdminSummary':
+    'Full effective authority for the unique system owner.',
+  'pages.roles.systemIdentity.systemCapabilities':
+    'Role definition, system settings, device-group structure and identity administration',
   'pages.roles.disableProtectionConfirm': 'Disable protection for this role?',
-  'pages.roles.disableProtectionAffected': '{count} members will become manageable by delegated administrators.',
+  'pages.roles.disableProtectionAffected':
+    '{count} members will become manageable by delegated administrators.',
   'pages.roles.resource.servers': 'Servers',
   'pages.roles.permission.servers.view': 'View servers',
   'pages.roles.permission.servers.control': 'Control server services',
@@ -61,15 +70,18 @@ export default {
   'pages.roles.permission.user_groups.create': 'Create user groups',
   'pages.roles.permission.user_groups.edit': 'Edit user groups',
   'pages.roles.permission.user_groups.delete': 'Delete user groups',
-  'pages.roles.permission.user_groups.membership': 'Manage user group membership',
+  'pages.roles.permission.user_groups.membership':
+    'Manage user group membership',
   'pages.roles.permission.devices.view': 'View devices',
   'pages.roles.permission.devices.edit': 'Edit device details',
   'pages.roles.permission.devices.status': 'Change device status',
   'pages.roles.permission.devices.delete': 'Delete devices',
   'pages.roles.permission.devices.disconnect': 'Disconnect devices',
-  'pages.roles.permission.address_books.view': 'View shared address book settings',
+  'pages.roles.permission.address_books.view':
+    'View shared address book settings',
   'pages.roles.permission.address_books.edit': 'Edit shared address books',
-  'pages.roles.permission.address_books.share': 'Create and manage shared address books',
+  'pages.roles.permission.address_books.share':
+    'Create and manage shared address books',
   'pages.roles.permission.strategies.view': 'View strategies',
   'pages.roles.permission.strategies.create': 'Create strategies',
   'pages.roles.permission.strategies.edit': 'Edit strategies',

@@ -8,7 +8,8 @@ export default {
   'pages.customClient.strategyModeOff': 'Off',
   'pages.customClient.strategyModeDefault': 'Default',
   'pages.customClient.strategyModeOverride': 'Override',
-  'pages.customClient.selectStrategyPlaceholder': 'Select a strategy as base preset (optional)',
+  'pages.customClient.selectStrategyPlaceholder':
+    'Select a strategy as base preset (optional)',
   'pages.customClient.defaultCount': '{count} default',
   'pages.customClient.overrideCount': '{count} override',
   'pages.customClient.noConfigSelected': 'No config selected',
@@ -27,7 +28,8 @@ export default {
   'pages.customClient.disableAccount': 'Disable Account',
   'pages.customClient.disableAb': 'Disable AB',
   'pages.customClient.disableTcpListen': 'Disable TCP Listen',
-  'pages.customClient.deleteBuildConfirm': 'Are you sure you want to delete this build record?',
+  'pages.customClient.deleteBuildConfirm':
+    'Are you sure you want to delete this build record?',
   'pages.customClient.deleteSuccess': 'Build record deleted',
   'pages.customClient.deleteFailed': 'Failed to delete build record',
   'pages.customClient.uuid': 'UUID',
@@ -48,7 +50,8 @@ export default {
   'pages.customClient.statusCancelled': 'Build Cancelled',
   'pages.customClient.settings': 'Settings',
   'pages.customClient.settingsRequired': 'GitHub token not configured',
-  'pages.customClient.settingsRequiredDesc': 'Configure the GitHub token and generator repository in settings to enable custom client builds.',
+  'pages.customClient.settingsRequiredDesc':
+    'Configure the GitHub token and generator repository in settings to enable custom client builds.',
   'pages.customClient.openSettings': 'Open Settings',
   'pages.customClient.loadFailed': 'Failed to load builds',
   'pages.customClient.retry': 'Retry',
@@ -59,7 +62,8 @@ export default {
   'pages.customClient.signingKeys': 'Signing Keys',
   'pages.customClient.signingPublicKey': 'Signing Public Key',
   'pages.customClient.signingPublicKeyTip': 'Regenerate',
-  'pages.customClient.signingKeyRegenerateNotice': 'Regenerating the signing key will invalidate existing custom clients.',
+  'pages.customClient.signingKeyRegenerateNotice':
+    'Regenerating the signing key will invalidate existing custom clients.',
   'pages.customClient.regenerateSigningKey': 'Regenerate Signing Key',
   'pages.customClient.logoManagement': 'Logo Management',
   'pages.customClient.createdAt': 'Created At',

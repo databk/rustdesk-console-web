@@ -20,7 +20,8 @@ export default {
   'webClient.chatYou': 'Vous',
   'webClient.chatMessage': 'Message',
   'webClient.chatSend': 'Envoyer',
-  'webClient.chatFailed': 'Message non envoyé. Réessayez ; la limite est de 4 KiB par message.',
+  'webClient.chatFailed':
+    'Message non envoyé. Réessayez ; la limite est de 4 KiB par message.',
   'webClient.voiceCall': 'Appel vocal',
   'webClient.callIdle': 'Appelez votre interlocuteur.',
   'webClient.callPreparing': 'Demande d’accès au microphone…',
@@ -28,17 +29,21 @@ export default {
   'webClient.callActive': 'Appel en cours',
   'webClient.callDeclined': 'Appel refusé.',
   'webClient.callTimeout': 'Pas de réponse. Vous pouvez rappeler.',
-  'webClient.callFailed': 'Échec de l’appel. Vérifiez l’accès au microphone et réessayez.',
+  'webClient.callFailed':
+    'Échec de l’appel. Vérifiez l’accès au microphone et réessayez.',
   'webClient.callEnded': 'Appel terminé.',
-  'webClient.callUnsupported': 'Ce navigateur ne peut pas capturer le microphone ou encoder en Opus. Utilisez une version récente de Chrome ou Edge.',
+  'webClient.callUnsupported':
+    'Ce navigateur ne peut pas capturer le microphone ou encoder en Opus. Utilisez une version récente de Chrome ou Edge.',
   'webClient.callStart': 'Appeler',
   'webClient.callMute': 'Couper le microphone',
   'webClient.callUnmute': 'Activer le microphone',
   'webClient.callHangup': 'Terminer l’appel',
   'webClient.callCancel': 'Annuler l’appel',
-  'webClient.audioHint': 'Activez le son distant si nécessaire. La lecture s’arrête à la déconnexion.',
+  'webClient.audioHint':
+    'Activez le son distant si nécessaire. La lecture s’arrête à la déconnexion.',
   'webClient.audioDenied': 'L’appareil distant a désactivé le son.',
   'webClient.audioStart': 'Lire le son distant',
   'webClient.mute': 'Couper le son',
-  'webClient.audioUnavailable': 'Le décodage audio Opus est indisponible dans ce navigateur.',
+  'webClient.audioUnavailable':
+    'Le décodage audio Opus est indisponible dans ce navigateur.',
 };

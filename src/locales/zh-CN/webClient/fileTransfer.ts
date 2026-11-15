@@ -43,7 +43,8 @@ export default {
   'webClient.localUp': '本机上一级',
   'webClient.localRefresh': '刷新本机文件夹',
   'webClient.localPath': '所选本机文件夹内的路径',
-  'webClient.localDirectoryUnavailable': '浏览器不支持目录访问，请使用上传和下载。',
+  'webClient.localDirectoryUnavailable':
+    '浏览器不支持目录访问，请使用上传和下载。',
   'webClient.fileSendToRemote': '发送到远端文件夹',
   'webClient.fileReceiveHere': '接收到本机文件夹',
   'webClient.fileApprovalHint': '等待对方同意；需要时可输入设备密码。',

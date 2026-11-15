@@ -43,10 +43,12 @@ export default {
   'pages.devices.batchDisableConfirm': '确定要禁用选中的设备吗？',
   'pages.devices.batchEnableSuccess': '成功启用 {count} 个设备',
   'pages.devices.batchEnableFailed': '启用设备失败',
-  'pages.devices.batchEnablePartialFailed': '成功启用 {success} 个设备，{failed} 个失败',
+  'pages.devices.batchEnablePartialFailed':
+    '成功启用 {success} 个设备，{failed} 个失败',
   'pages.devices.batchDisableSuccess': '成功禁用 {count} 个设备',
   'pages.devices.batchDisableFailed': '禁用设备失败',
-  'pages.devices.batchDisablePartialFailed': '成功禁用 {success} 个设备，{failed} 个失败',
+  'pages.devices.batchDisablePartialFailed':
+    '成功禁用 {success} 个设备，{failed} 个失败',
   'pages.devices.edit': '编辑设备',
   'pages.devices.updateSuccess': '设备已更新',
   'pages.devices.updateFailed': '更新设备失败',
@@ -70,8 +72,12 @@ export default {
   'pages.devices.exportCsvSuccess': '已导出 {count} 台设备到 CSV',
   'pages.devices.exportCsvFailed': '导出 CSV 失败',
   'pages.devices.presenceAnomalyTitle': '检测到 {count} 台设备状态不一致',
-  'pages.devices.presenceAnomalyHint': 'hbbs 注册状态与 Console 心跳是两个独立来源。请检查客户端 API 服务器地址，以及客户端到 hbbs、Console 的网络连通性。',
-  'pages.devices.presence.hbbsOnlineConsoleOffline': 'hbbs 显示已注册在线，但 Console 未收到心跳',
-  'pages.devices.presence.consoleOnlineHbbsOffline': '已收到 Console 心跳，但当前未在 hbbs 注册',
-  'pages.devices.presence.hbbsOnly': 'hbbs 显示在线，但 Console 设备列表中不存在',
+  'pages.devices.presenceAnomalyHint':
+    'hbbs 注册状态与 Console 心跳是两个独立来源。请检查客户端 API 服务器地址，以及客户端到 hbbs、Console 的网络连通性。',
+  'pages.devices.presence.hbbsOnlineConsoleOffline':
+    'hbbs 显示已注册在线，但 Console 未收到心跳',
+  'pages.devices.presence.consoleOnlineHbbsOffline':
+    '已收到 Console 心跳，但当前未在 hbbs 注册',
+  'pages.devices.presence.hbbsOnly':
+    'hbbs 显示在线，但 Console 设备列表中不存在',
 };

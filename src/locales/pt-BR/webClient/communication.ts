@@ -15,14 +15,16 @@ export default {
   'webClient.callMicrophoneMuted': 'Microfone silenciado',
   'webClient.callMicrophonePreparing': 'Aguardando acesso ao microfone',
   'webClient.audioDenied': 'O dispositivo remoto desativou o áudio.',
-  'webClient.audioHint': 'Ative o áudio remoto quando precisar. A reprodução termina ao desconectar.',
+  'webClient.audioHint':
+    'Ative o áudio remoto quando precisar. A reprodução termina ao desconectar.',
   'webClient.chat': 'Chat',
   'webClient.chatEmpty': 'Envie uma mensagem ao usuário remoto.',
   'webClient.chatRemote': 'Usuário remoto',
   'webClient.chatYou': 'Você',
   'webClient.chatMessage': 'Mensagem',
   'webClient.chatSend': 'Enviar',
-  'webClient.chatFailed': 'Mensagem não enviada. Tente novamente; limite de 4 KiB por mensagem.',
+  'webClient.chatFailed':
+    'Mensagem não enviada. Tente novamente; limite de 4 KiB por mensagem.',
   'webClient.voiceCall': 'Chamada de voz',
   'webClient.callIdle': 'Ligue para o usuário remoto.',
   'webClient.callPreparing': 'Solicitando acesso ao microfone…',
@@ -32,7 +34,8 @@ export default {
   'webClient.callTimeout': 'Sem resposta. Você pode ligar novamente.',
   'webClient.callFailed': 'Falha na chamada. Confira o acesso ao microfone.',
   'webClient.callEnded': 'Chamada encerrada.',
-  'webClient.callUnsupported': 'Este navegador não suporta captura ou codificação Opus. Use Chrome ou Edge atualizados.',
+  'webClient.callUnsupported':
+    'Este navegador não suporta captura ou codificação Opus. Use Chrome ou Edge atualizados.',
   'webClient.callStart': 'Ligar',
   'webClient.callMute': 'Silenciar microfone',
   'webClient.callUnmute': 'Ativar microfone',
@@ -40,5 +43,6 @@ export default {
   'webClient.callCancel': 'Cancelar chamada',
   'webClient.audioStart': 'Reproduzir áudio',
   'webClient.mute': 'Silenciar',
-  'webClient.audioUnavailable': 'A decodificação de áudio Opus não está disponível neste navegador.',
+  'webClient.audioUnavailable':
+    'A decodificação de áudio Opus não está disponível neste navegador.',
 };

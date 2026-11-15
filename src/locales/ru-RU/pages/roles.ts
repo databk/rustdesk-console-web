@@ -1,16 +1,20 @@
 export default {
   'pages.roles.resource.web_client': 'Веб-управление',
-  'pages.roles.permission.web_client.connect': 'Подключение к удалённым устройствам',
-  'pages.roles.permission.web_client.file_transfer': 'Использовать веб-канал передачи файлов',
+  'pages.roles.permission.web_client.connect':
+    'Подключение к удалённым устройствам',
+  'pages.roles.permission.web_client.file_transfer':
+    'Использовать веб-канал передачи файлов',
   'pages.roles.list': 'Список ролей',
   'pages.roles.name': 'Название роли',
   'pages.roles.note': 'Примечание',
   'pages.roles.permissions': 'Права',
   'pages.roles.permissionsInfo': 'Количество действующих прав и возможностей',
-  'pages.roles.superAdminInfo': 'Доступ суперадминистратора защищён отдельно и не может быть предоставлен через роль.',
+  'pages.roles.superAdminInfo':
+    'Доступ суперадминистратора защищён отдельно и не может быть предоставлен через роль.',
   'pages.roles.permissionsLoadFailed': 'Не удалось загрузить каталог прав',
   'pages.roles.detailLoadFailed': 'Не удалось загрузить сведения о роли',
-  'pages.roles.permissionScopeInfo': 'При назначении роли действия с устройствами можно разрешить глобально или только для выбранных групп устройств.',
+  'pages.roles.permissionScopeInfo':
+    'При назначении роли действия с устройствами можно разрешить глобально или только для выбранных групп устройств.',
   'pages.roles.personalAddressBook': 'Личная адресная книга',
   'pages.roles.basicFunction': 'Базовая функция',
   'pages.roles.permissionPresets': 'Предустановки прав',
@@ -18,26 +22,34 @@ export default {
   'pages.roles.preset.readOnly': 'Глобальный просмотр',
   'pages.roles.preset.deviceOperator': 'Оператор устройств',
   'pages.roles.preset.userAdministrator': 'Администратор пользователей',
-  'pages.roles.preset.sharedAddressBookAdministrator': 'Администратор общих адресных книг',
+  'pages.roles.preset.sharedAddressBookAdministrator':
+    'Администратор общих адресных книг',
   'pages.roles.preset.strategyMaintainer': 'Редактор стратегий',
-  'pages.roles.preset.deviceStrategyAssigner': 'Назначение стратегий устройствам',
+  'pages.roles.preset.deviceStrategyAssigner':
+    'Назначение стратегий устройствам',
   'pages.roles.preset.systemAdministrator': 'Системный администратор',
   'pages.roles.protectedAccount': 'Защищённые аккаунты',
-  'pages.roles.protectedAccountInfo': 'Управлять защищёнными аккаунтами может только суперадминистратор.',
+  'pages.roles.protectedAccountInfo':
+    'Управлять защищёнными аккаунтами может только суперадминистратор.',
   'pages.roles.ownerOnly': 'Только суперадминистратор',
   'pages.roles.systemIdentity.ordinary': 'Обычный пользователь',
   'pages.roles.systemIdentity.superAdmin': 'Суперадминистратор',
   'pages.roles.systemIdentity.builtIn': 'Встроенная система',
-  'pages.roles.systemIdentity.ordinarySummary': 'Только базовые функции личной адресной книги.',
-  'pages.roles.systemIdentity.superAdminSummary': 'Полные эффективные полномочия единственного владельца системы.',
-  'pages.roles.systemIdentity.systemCapabilities': 'Определение ролей, системные настройки, структура групп устройств и управление идентификацией',
+  'pages.roles.systemIdentity.ordinarySummary':
+    'Только базовые функции личной адресной книги.',
+  'pages.roles.systemIdentity.superAdminSummary':
+    'Полные эффективные полномочия единственного владельца системы.',
+  'pages.roles.systemIdentity.systemCapabilities':
+    'Определение ролей, системные настройки, структура групп устройств и управление идентификацией',
   'pages.roles.disableProtectionConfirm': 'Отключить защиту этой роли?',
-  'pages.roles.disableProtectionAffected': 'Участники: {count}; ими смогут управлять делегированные администраторы.',
+  'pages.roles.disableProtectionAffected':
+    'Участники: {count}; ими смогут управлять делегированные администраторы.',
   'pages.roles.resource.servers': 'Серверы',
   'pages.roles.permission.servers.view': 'Просмотр серверов',
   'pages.roles.permission.servers.control': 'Управление службами серверов',
   'pages.roles.permission.servers.config': 'Настройка серверов',
-  'pages.roles.permission.servers.disconnect': 'Отключение сеансов ретрансляции',
+  'pages.roles.permission.servers.disconnect':
+    'Отключение сеансов ретрансляции',
   'pages.roles.permission.servers.ban': 'Управление блокировками серверов',
   'pages.roles.resource.users': 'Пользователи',
   'pages.roles.resource.user_groups': 'Группы пользователей',
@@ -55,21 +67,28 @@ export default {
   'pages.roles.permission.users.edit': 'Редактирование пользователей',
   'pages.roles.permission.users.status': 'Изменение статуса пользователей',
   'pages.roles.permission.users.delete': 'Удаление пользователей',
-  'pages.roles.permission.users.security': 'Управление безопасностью пользователей',
-  'pages.roles.permission.users.force_logout': 'Принудительное завершение сеансов пользователей',
+  'pages.roles.permission.users.security':
+    'Управление безопасностью пользователей',
+  'pages.roles.permission.users.force_logout':
+    'Принудительное завершение сеансов пользователей',
   'pages.roles.permission.user_groups.view': 'Просмотр групп пользователей',
   'pages.roles.permission.user_groups.create': 'Создание групп пользователей',
-  'pages.roles.permission.user_groups.edit': 'Редактирование групп пользователей',
+  'pages.roles.permission.user_groups.edit':
+    'Редактирование групп пользователей',
   'pages.roles.permission.user_groups.delete': 'Удаление групп пользователей',
-  'pages.roles.permission.user_groups.membership': 'Управление составом групп пользователей',
+  'pages.roles.permission.user_groups.membership':
+    'Управление составом групп пользователей',
   'pages.roles.permission.devices.view': 'Просмотр устройств',
-  'pages.roles.permission.devices.edit': 'Редактирование сведений об устройствах',
+  'pages.roles.permission.devices.edit':
+    'Редактирование сведений об устройствах',
   'pages.roles.permission.devices.status': 'Изменение статуса устройств',
   'pages.roles.permission.devices.delete': 'Удаление устройств',
   'pages.roles.permission.devices.disconnect': 'Отключение устройств',
-  'pages.roles.permission.address_books.view': 'Просмотр настроек общих адресных книг',
+  'pages.roles.permission.address_books.view':
+    'Просмотр настроек общих адресных книг',
   'pages.roles.permission.address_books.edit': 'Изменение общих адресных книг',
-  'pages.roles.permission.address_books.share': 'Создание и управление общими адресными книгами',
+  'pages.roles.permission.address_books.share':
+    'Создание и управление общими адресными книгами',
   'pages.roles.permission.strategies.view': 'Просмотр стратегий',
   'pages.roles.permission.strategies.create': 'Создание стратегий',
   'pages.roles.permission.strategies.edit': 'Редактирование стратегий',

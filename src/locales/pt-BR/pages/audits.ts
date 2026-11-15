@@ -4,20 +4,27 @@ export default {
   'pages.audits.webClient.request_denied': 'Conexão web negada',
   'pages.audits.webClient.gateway_open': 'Canal web aberto',
   'pages.audits.webClient.session_ended': 'Sessão web encerrada',
-  'pages.audits.webClient.remote_auth_succeeded': 'Autenticação remota concluída (relato do navegador)',
-  'pages.audits.webClient.remote_auth_failed': 'Autenticação remota falhou (relato do navegador)',
-  'pages.audits.webClient.file_started': 'Transferência iniciada (relato do navegador)',
-  'pages.audits.webClient.file_completed': 'Transferência concluída (relato do navegador)',
-  'pages.audits.webClient.file_failed': 'Transferência falhou (relato do navegador)',
+  'pages.audits.webClient.remote_auth_succeeded':
+    'Autenticação remota concluída (relato do navegador)',
+  'pages.audits.webClient.remote_auth_failed':
+    'Autenticação remota falhou (relato do navegador)',
+  'pages.audits.webClient.file_started':
+    'Transferência iniciada (relato do navegador)',
+  'pages.audits.webClient.file_completed':
+    'Transferência concluída (relato do navegador)',
+  'pages.audits.webClient.file_failed':
+    'Transferência falhou (relato do navegador)',
   'pages.audits.webClient.session': 'Sessão de controle web',
   'pages.audits.webClient.device': 'Dispositivo remoto',
   'pages.audits.webClient.source': 'Origem do registro',
   'pages.audits.webClient.source.server': 'Confirmado pelo servidor',
-  'pages.audits.webClient.source.browser': 'Relato do navegador, não verificado pelo servidor',
+  'pages.audits.webClient.source.browser':
+    'Relato do navegador, não verificado pelo servidor',
   'pages.audits.webClient.source.unknown': 'Origem desconhecida',
   'pages.audits.webClient.disconnect': 'Encerrar conexão web',
   'pages.audits.webClient.ended': 'A conexão foi encerrada.',
-  'pages.audits.webClient.endFailed': 'Não foi possível encerrar a conexão. Tente novamente.',
+  'pages.audits.webClient.endFailed':
+    'Não foi possível encerrar a conexão. Tente novamente.',
   'pages.audits.conn': 'Auditoria de Conexões',
   'pages.audits.file': 'Logs de Transferência de Arquivos',
   'pages.audits.alarm': 'Auditoria de Alarmes',
@@ -56,7 +63,8 @@ export default {
   'pages.audits.disconnectSuccess': 'Solicitação de desconexão enviada',
   'pages.audits.disconnectFailed': 'Falha ao desconectar!',
   'pages.audits.disconnectConfirmTitle': 'Confirmar Operação',
-  'pages.audits.disconnectConfirmTip': 'Tem certeza de que deseja desconectar este dispositivo?',
+  'pages.audits.disconnectConfirmTip':
+    'Tem certeza de que deseja desconectar este dispositivo?',
   'pages.audits.updateSuccess': 'Atualização realizada com sucesso',
   'pages.audits.updateFailed': 'Falha na atualização, tente novamente!',
   'pages.audits.exportCSV': 'Exportar CSV',
@@ -64,13 +72,15 @@ export default {
   'pages.audits.exportSuccess': 'Exportação concluída com sucesso',
   'pages.audits.exportFailed': 'Falha na exportação',
   'pages.audits.exportConfirmTitle': 'Exportar CSV',
-  'pages.audits.exportConfirmContent': 'Exportar até 1000 registros. Deseja continuar?',
+  'pages.audits.exportConfirmContent':
+    'Exportar até 1000 registros. Deseja continuar?',
   'pages.audits.remote': 'Remoto',
   'pages.audits.local': 'Local',
   'pages.audits.direction': 'Direção',
   'pages.audits.files': 'Arquivos',
   'pages.audits.remoteTip': 'Computador ou terminal controlado remotamente',
-  'pages.audits.remoteSearchTip': 'Pesquisar por ID do dispositivo remoto (correspondência parcial)',
+  'pages.audits.remoteSearchTip':
+    'Pesquisar por ID do dispositivo remoto (correspondência parcial)',
   'pages.audits.remotePlaceholder': 'Digite o ID do dispositivo remoto',
   'pages.audits.pathTip': 'Caminho do Dispositivo Remoto',
   'pages.audits.exportCsvTip': 'Exporte até 1000 registros por vez',
@@ -78,12 +88,18 @@ export default {
   'pages.audits.startTime': 'Hora de Início',
   'pages.audits.endTime': 'Hora de Término',
   'pages.audits.alarmType.ipWhitelist': 'IP Não Está na Lista Branca',
-  'pages.audits.alarmType.exceedThirtyAttempts': 'O Mesmo IP Excedeu 30 Tentativas Sem Sucesso',
-  'pages.audits.alarmType.sixAttemptsWithinOneMinute': 'Mais de 6 Tentativas em 1 Minuto',
-  'pages.audits.alarmType.exceedIpv6PrefixAttempts': 'Limite de Tentativas do Prefixo IPv6 Excedido',
-  'pages.audits.alarmType.terminalOsLoginBackoff': 'Login do Sistema Operacional Bloqueado por Backoff',
-  'pages.audits.alarmType.terminalOsLoginConcurrency': 'Limite de Concorrência de Login do Sistema Operacional Excedido',
-  'pages.audits.alarmType.sessionScopeViolation': 'Violação de Permissão de Escopo de Sessão',
+  'pages.audits.alarmType.exceedThirtyAttempts':
+    'O Mesmo IP Excedeu 30 Tentativas Sem Sucesso',
+  'pages.audits.alarmType.sixAttemptsWithinOneMinute':
+    'Mais de 6 Tentativas em 1 Minuto',
+  'pages.audits.alarmType.exceedIpv6PrefixAttempts':
+    'Limite de Tentativas do Prefixo IPv6 Excedido',
+  'pages.audits.alarmType.terminalOsLoginBackoff':
+    'Login do Sistema Operacional Bloqueado por Backoff',
+  'pages.audits.alarmType.terminalOsLoginConcurrency':
+    'Limite de Concorrência de Login do Sistema Operacional Excedido',
+  'pages.audits.alarmType.sessionScopeViolation':
+    'Violação de Permissão de Escopo de Sessão',
   'pages.audits.alarmType.idWhitelist': 'ID Não Está na Lista Branca',
   'pages.audits.primaryAuth': 'Autenticação Primária',
   'pages.audits.primaryAuth.none': 'Nenhum',

@@ -1,6 +1,7 @@
 export default {
   'pages.request.loginExpired': 'Login expired, please sign in again',
-  'pages.request.accessDenied': 'You do not have permission to perform this action',
+  'pages.request.accessDenied':
+    'You do not have permission to perform this action',
   'pages.request.responseStatus': 'Request failed (HTTP {status})',
   'pages.request.noResponse': 'The server did not respond. Please try again.',
   'pages.request.error': 'The request failed. Please try again.',
@@ -15,7 +16,8 @@ export default {
   'pages.deviceGroups.updateFailed': 'Failed to update device group',
   'pages.deviceGroups.deleteSuccess': 'Device group deleted',
   'pages.deviceGroups.deleteFailed': 'Failed to delete device group',
-  'pages.deviceGroups.deleteConfirm': 'Are you sure to delete this device group?',
+  'pages.deviceGroups.deleteConfirm':
+    'Are you sure to delete this device group?',
   'pages.deviceGroups.import': 'Import',
   'pages.deviceGroups.importDevices': 'Import Devices',
   'pages.deviceGroups.importSuccess': 'Successfully imported {count} device(s)',

@@ -32,7 +32,8 @@ export default {
   'pages.strategies.selectTarget': '请选择目标',
   'pages.strategies.assignSuccess': '策略分配成功',
   'pages.strategies.assignFailed': '策略分配失败',
-  'pages.strategies.assignPartialFailed': '成功分配 {success} 个目标，{failed} 个失败：{errors}',
+  'pages.strategies.assignPartialFailed':
+    '成功分配 {success} 个目标，{failed} 个失败：{errors}',
   'pages.strategies.unassignSuccess': '策略取消分配成功',
   'pages.strategies.unassignFailed': '策略取消分配失败',
   'pages.strategies.unassignConfirm': '确定要取消分配此目标吗？',
@@ -48,14 +49,19 @@ export default {
   'pages.strategies.category.privacy': '隐私与录制',
   'pages.strategies.category.server': '服务器',
   'pages.strategies.values.yes': '是',
-  'pages.strategies.option.allow-command-line-settings-when-settings-disabled.label': '禁用设置时允许命令行设置',
+  'pages.strategies.option.allow-command-line-settings-when-settings-disabled.label':
+    '禁用设置时允许命令行设置',
   'pages.strategies.option.allow-deep-link-password.label': '允许深链接密码',
-  'pages.strategies.option.allow-deep-link-server-settings.label': '允许深链接服务器设置',
+  'pages.strategies.option.allow-deep-link-server-settings.label':
+    '允许深链接服务器设置',
   'pages.strategies.option.allow-hostname-as-id.label': '允许主机名作为 ID',
   'pages.strategies.option.allow-https-21114.label': '允许 HTTPS 21114',
-  'pages.strategies.option.allow-logon-screen-password.label': '允许登录屏幕密码',
-  'pages.strategies.option.allow-printer-auto-print.label': '允许打印机自动打印',
-  'pages.strategies.option.allow-sync-clipboard-between-sessions.label': '允许会话间同步剪贴板',
+  'pages.strategies.option.allow-logon-screen-password.label':
+    '允许登录屏幕密码',
+  'pages.strategies.option.allow-printer-auto-print.label':
+    '允许打印机自动打印',
+  'pages.strategies.option.allow-sync-clipboard-between-sessions.label':
+    '允许会话间同步剪贴板',
   'pages.strategies.option.avatar.label': '头像',
   'pages.strategies.option.codec-preference.label': '编解码器偏好',
   'pages.strategies.option.codec-preference.value.auto': '自动',
@@ -67,34 +73,41 @@ export default {
   'pages.strategies.option.current-ab-name.label': '当前 AB 名称',
   'pages.strategies.option.default-connect-password.label': '默认连接密码',
   'pages.strategies.option.disable-change-id.label': '禁用修改 ID',
-  'pages.strategies.option.disable-change-permanent-password.label': '禁用修改永久密码',
+  'pages.strategies.option.disable-change-permanent-password.label':
+    '禁用修改永久密码',
   'pages.strategies.option.disable-unlock-pin.label': '禁用解锁 PIN',
   'pages.strategies.option.display-name.label': '显示名称',
   'pages.strategies.option.enable-check-update.label': '启用检查更新',
-  'pages.strategies.option.enable-flutter-http-on-rust.label': '启用 Flutter HTTP on Rust',
-  'pages.strategies.option.enable-perm-change-in-accept-window.label': '在接受窗口中启用权限变更',
+  'pages.strategies.option.enable-flutter-http-on-rust.label':
+    '启用 Flutter HTTP on Rust',
+  'pages.strategies.option.enable-perm-change-in-accept-window.label':
+    '在接受窗口中启用权限变更',
   'pages.strategies.option.enable-port-forward-mux.label': '启用端口转发复用',
   'pages.strategies.option.enable-tcp-punch.label': '启用 TCP 打洞',
   'pages.strategies.option.enable-webrtc.label': '启用 WebRTC',
   'pages.strategies.option.file-transfer-max-files.label': '文件传输最大文件数',
   'pages.strategies.option.floating-window-svg.label': '悬浮窗 SVG',
-  'pages.strategies.option.hide-elevate-button-in-accept-window.label': '在接受窗口中隐藏提升按钮',
+  'pages.strategies.option.hide-elevate-button-in-accept-window.label':
+    '在接受窗口中隐藏提升按钮',
   'pages.strategies.option.hide-general-settings.label': '隐藏常规设置',
   'pages.strategies.option.hide-help-cards.label': '隐藏帮助卡片',
   'pages.strategies.option.hide-network-settings.label': '隐藏网络设置',
   'pages.strategies.option.hide-powered-by-me.label': '隐藏 Powered By',
   'pages.strategies.option.hide-proxy-settings.label': '隐藏代理设置',
   'pages.strategies.option.hide-recording-button.label': '隐藏录制按钮',
-  'pages.strategies.option.hide-remote-printer-settings.label': '隐藏远程打印机设置',
+  'pages.strategies.option.hide-remote-printer-settings.label':
+    '隐藏远程打印机设置',
   'pages.strategies.option.hide-security-settings.label': '隐藏安全设置',
   'pages.strategies.option.hide-server-settings.label': '隐藏服务器设置',
   'pages.strategies.option.hide-stop-service.label': '隐藏停止服务',
   'pages.strategies.option.hide-tray.label': '隐藏托盘',
   'pages.strategies.option.hide-username-on-card.label': '隐藏卡片上的用户名',
-  'pages.strategies.option.hide-websocket-settings.label': '隐藏 WebSocket 设置',
+  'pages.strategies.option.hide-websocket-settings.label':
+    '隐藏 WebSocket 设置',
   'pages.strategies.option.hideAbTagsPanel.label': '隐藏 AB 标签面板',
   'pages.strategies.option.main-window-always-on-top.label': '主窗口始终置顶',
-  'pages.strategies.option.one-way-clipboard-redirection.label': '单向剪贴板重定向',
+  'pages.strategies.option.one-way-clipboard-redirection.label':
+    '单向剪贴板重定向',
   'pages.strategies.option.one-way-file-transfer.label': '单向文件传输',
   'pages.strategies.option.peer-tab-index.label': '对端标签索引',
   'pages.strategies.option.peer-tab-order.label': '对端标签顺序',
@@ -102,7 +115,8 @@ export default {
   'pages.strategies.option.preset-address-book-alias.label': '预设地址簿别名',
   'pages.strategies.option.preset-address-book-name.label': '预设地址簿名称',
   'pages.strategies.option.preset-address-book-note.label': '预设地址簿备注',
-  'pages.strategies.option.preset-address-book-password.label': '预设地址簿密码',
+  'pages.strategies.option.preset-address-book-password.label':
+    '预设地址簿密码',
   'pages.strategies.option.preset-address-book-tag.label': '预设地址簿标签',
   'pages.strategies.option.preset-device-group-name.label': '预设设备组名称',
   'pages.strategies.option.preset-device-name.label': '预设设备名称',
@@ -110,7 +124,8 @@ export default {
   'pages.strategies.option.preset-note.label': '预设备注',
   'pages.strategies.option.preset-strategy-name.label': '预设策略名称',
   'pages.strategies.option.preset-user-name.label': '预设用户名',
-  'pages.strategies.option.printer-incomming-job-action.label': '打印机传入作业操作',
+  'pages.strategies.option.printer-incomming-job-action.label':
+    '打印机传入作业操作',
   'pages.strategies.option.printer-incomming-job-action.value.auto': '自动',
   'pages.strategies.option.printer-incomming-job-action.value.manual': '手动',
   'pages.strategies.option.printer-selected-name.label': '打印机选定名称',
@@ -120,10 +135,13 @@ export default {
   'pages.strategies.option.quit-button-text.label': '退出按钮文本',
   'pages.strategies.option.register-device.label': '注册设备',
   'pages.strategies.option.relay-fallback-delay.label': '中继回退延迟',
-  'pages.strategies.option.remote-menubar-drag-left.label': '远程菜单栏拖拽左侧',
-  'pages.strategies.option.remote-menubar-drag-right.label': '远程菜单栏拖拽右侧',
+  'pages.strategies.option.remote-menubar-drag-left.label':
+    '远程菜单栏拖拽左侧',
+  'pages.strategies.option.remote-menubar-drag-right.label':
+    '远程菜单栏拖拽右侧',
   'pages.strategies.option.remoteMenubarState.label': '远程菜单栏状态',
-  'pages.strategies.option.remove-preset-password-warning.label': '移除预设密码警告',
+  'pages.strategies.option.remove-preset-password-warning.label':
+    '移除预设密码警告',
   'pages.strategies.option.use-raw-tcp-for-api.label': '使用原始 TCP for API',
   'pages.strategies.option.video-save-directory.label': '视频保存目录',
   'pages.strategies.values.no': '否',
@@ -139,25 +157,31 @@ export default {
   'pages.strategies.option.enable-block-input.label': '阻止输入',
   'pages.strategies.option.allow-auto-disconnect.label': '允许自动断开',
   'pages.strategies.option.auto-disconnect-timeout.label': '自动断开超时',
-  'pages.strategies.option.allow-only-conn-window-open.label': '仅允许连接窗口打开',
+  'pages.strategies.option.allow-only-conn-window-open.label':
+    '仅允许连接窗口打开',
   'pages.strategies.option.view_only.label': '仅查看',
   'pages.strategies.option.terminal-persistent.label': '终端持久化',
   'pages.strategies.option.allow-ask-for-note.label': '请求连接备注',
-  'pages.strategies.option.allow-remote-config-modification.label': '允许远程修改配置',
+  'pages.strategies.option.allow-remote-config-modification.label':
+    '允许远程修改配置',
   'pages.strategies.option.whitelist.label': 'IP 白名单',
   'pages.strategies.option.approve-mode.label': '审批模式',
   'pages.strategies.option.verification-method.label': '验证方式',
   'pages.strategies.option.temporary-password-length.label': '临时密码长度',
   'pages.strategies.option.lock_after_session_end.label': '会话结束后锁定',
-  'pages.strategies.option.allow-remote-cm-modification.label': '允许远程客户端修改',
+  'pages.strategies.option.allow-remote-cm-modification.label':
+    '允许远程客户端修改',
   'pages.strategies.option.enable-trusted-devices.label': '启用受信任设备',
-  'pages.strategies.option.allow-numeric-one-time-password.label': '允许数字一次性密码',
-  'pages.strategies.option.allow-insecure-tls-fallback.label': '允许不安全 TLS 回退',
+  'pages.strategies.option.allow-numeric-one-time-password.label':
+    '允许数字一次性密码',
+  'pages.strategies.option.allow-insecure-tls-fallback.label':
+    '允许不安全 TLS 回退',
   'pages.strategies.option.theme.label': '主题',
   'pages.strategies.option.lang.label': '语言',
   'pages.strategies.option.enable-confirm-closing-tabs.label': '确认关闭标签页',
   'pages.strategies.option.allow-remove-wallpaper.label': '允许移除壁纸',
-  'pages.strategies.option.enable-open-new-connections-in-tabs.label': '在标签页中打开新连接',
+  'pages.strategies.option.enable-open-new-connections-in-tabs.label':
+    '在标签页中打开新连接',
   'pages.strategies.option.peer-card-ui-type.label': '设备卡片界面类型',
   'pages.strategies.option.peer-sorting.label': '设备排序方式',
   'pages.strategies.option.show_monitors_toolbar.label': '显示显示器工具栏',
@@ -169,8 +193,10 @@ export default {
   'pages.strategies.option.show_quality_monitor.label': '显示质量监视器',
   'pages.strategies.option.reverse_mouse_wheel.label': '反转鼠标滚轮',
   'pages.strategies.option.swap-left-right-mouse.label': '交换鼠标左右键',
-  'pages.strategies.option.displays_as_individual_windows.label': '将显示器作为独立窗口显示',
-  'pages.strategies.option.use_all_my_displays_for_the_remote_session.label': '远程会话使用所有显示器',
+  'pages.strategies.option.displays_as_individual_windows.label':
+    '将显示器作为独立窗口显示',
+  'pages.strategies.option.use_all_my_displays_for_the_remote_session.label':
+    '远程会话使用所有显示器',
   'pages.strategies.option.view_style.label': '查看样式',
   'pages.strategies.option.scroll_style.label': '滚动样式',
   'pages.strategies.option.edge-scroll-edge-thickness.label': '边缘滚动厚度',
@@ -182,7 +208,8 @@ export default {
   'pages.strategies.option.show-virtual-mouse.label': '显示虚拟鼠标',
   'pages.strategies.option.show-virtual-joystick.label': '显示虚拟摇杆',
   'pages.strategies.option.enable-audio.label': '启用音频',
-  'pages.strategies.option.allow-always-software-render.label': '始终使用软件渲染',
+  'pages.strategies.option.allow-always-software-render.label':
+    '始终使用软件渲染',
   'pages.strategies.option.enable-hwcodec.label': '启用硬件编解码',
   'pages.strategies.option.use-texture-render.label': '使用纹理渲染',
   'pages.strategies.option.disable_audio.label': '禁用音频',
@@ -191,7 +218,8 @@ export default {
   'pages.strategies.option.custom_image_quality.label': '自定义图像质量',
   'pages.strategies.option.custom-fps.label': '自定义帧率',
   'pages.strategies.option.enable-directx-capture.label': '启用 DirectX 捕获',
-  'pages.strategies.option.enable-android-software-encoding-half-scale.label': '启用 Android 软件半尺寸编码',
+  'pages.strategies.option.enable-android-software-encoding-half-scale.label':
+    '启用 Android 软件半尺寸编码',
   'pages.strategies.option.allow-d3d-render.label': '允许 D3D 渲染',
   'pages.strategies.option.enable-file-copy-paste.label': '启用文件复制和粘贴',
   'pages.strategies.option.disable_clipboard.label': '禁用剪贴板',
@@ -200,45 +228,63 @@ export default {
   'pages.strategies.option.direct-server.label': '直连服务器',
   'pages.strategies.option.allow-auto-update.label': '允许自动更新',
   'pages.strategies.option.enable-abr.label': '启用自适应码率',
-  'pages.strategies.option.sync-ab-with-recent-sessions.label': '与最近会话同步地址簿',
+  'pages.strategies.option.sync-ab-with-recent-sessions.label':
+    '与最近会话同步地址簿',
   'pages.strategies.option.sync-ab-tags.label': '同步地址簿标签',
   'pages.strategies.option.filter-ab-by-intersection.label': '按交集筛选地址簿',
   'pages.strategies.option.enable-udp-punch.label': '启用 UDP 打洞',
   'pages.strategies.option.enable-ipv6-punch.label': '启用 IPv6 打洞',
   'pages.strategies.option.pre-elevate-service.label': '预提升服务权限',
-  'pages.strategies.option.keep-awake-during-incoming-sessions.label': '传入会话期间保持唤醒',
-  'pages.strategies.option.keep-awake-during-outgoing-sessions.label': '传出会话期间保持唤醒',
+  'pages.strategies.option.keep-awake-during-incoming-sessions.label':
+    '传入会话期间保持唤醒',
+  'pages.strategies.option.keep-awake-during-outgoing-sessions.label':
+    '传出会话期间保持唤醒',
   'pages.strategies.option.disable-udp.label': '禁用 UDP',
   'pages.strategies.option.allow-websocket.label': '允许 WebSocket',
   'pages.strategies.option.disable-floating-window.label': '禁用浮动窗口',
   'pages.strategies.option.floating-window-size.label': '浮动窗口大小',
-  'pages.strategies.option.floating-window-untouchable.label': '浮动窗口不可触摸',
-  'pages.strategies.option.floating-window-transparency.label': '浮动窗口透明度',
+  'pages.strategies.option.floating-window-untouchable.label':
+    '浮动窗口不可触摸',
+  'pages.strategies.option.floating-window-transparency.label':
+    '浮动窗口透明度',
   'pages.strategies.option.enable-record-session.label': '启用会话录制',
-  'pages.strategies.option.allow-auto-record-incoming.label': '允许自动录制传入会话',
-  'pages.strategies.option.allow-auto-record-outgoing.label': '允许自动录制传出会话',
+  'pages.strategies.option.allow-auto-record-incoming.label':
+    '允许自动录制传入会话',
+  'pages.strategies.option.allow-auto-record-outgoing.label':
+    '允许自动录制传出会话',
   'pages.strategies.option.privacy_mode.label': '隐私模式',
-  'pages.strategies.option.allow-kcp-congestion-control.label': '允许 KCP 拥塞控制',
-  'pages.strategies.option.allow-scope-violation-alarm.label': '允许范围违规告警',
-  'pages.strategies.option.allow-scope-violation-close.label': '允许范围违规关闭',
-  'pages.strategies.option.allow-webrtc-congestion-control.label': '允许 WebRTC 拥塞控制',
+  'pages.strategies.option.allow-kcp-congestion-control.label':
+    '允许 KCP 拥塞控制',
+  'pages.strategies.option.allow-scope-violation-alarm.label':
+    '允许范围违规告警',
+  'pages.strategies.option.allow-scope-violation-close.label':
+    '允许范围违规关闭',
+  'pages.strategies.option.allow-webrtc-congestion-control.label':
+    '允许 WebRTC 拥塞控制',
   'pages.strategies.option.api-server.label': 'API 服务器',
-  'pages.strategies.option.custom-rendezvous-server.label': '自定义 rendezvous 服务器',
+  'pages.strategies.option.custom-rendezvous-server.label':
+    '自定义 rendezvous 服务器',
   'pages.strategies.option.direct-access-port.label': '直连访问端口',
   'pages.strategies.option.enable-privacy-mode.label': '启用隐私模式',
   'pages.strategies.option.ice-servers.label': 'ICE 服务器',
-  'pages.strategies.option.ice-servers.description': '逗号分隔的 ICE 服务器 URL',
+  'pages.strategies.option.ice-servers.description':
+    '逗号分隔的 ICE 服务器 URL',
   'pages.strategies.option.id-whitelist.label': 'ID 白名单',
   'pages.strategies.option.id-whitelist.description': '逗号分隔的 ID 列表',
   'pages.strategies.option.key.label': '密钥',
   'pages.strategies.option.relay-server.label': '中继服务器',
-  'pages.strategies.option.trusted-device-expiration-days.label': '可信设备过期天数',
+  'pages.strategies.option.trusted-device-expiration-days.label':
+    '可信设备过期天数',
   'pages.strategies.option.websocket-port.label': 'WebSocket 端口',
-  'pages.strategies.option.windows-service-video-save-directory.label': 'Windows 服务视频保存目录',
-  'pages.strategies.option.windows-service-video-save-directory.description': '服务模式录像存储的绝对路径',
-  'pages.strategies.option.auto-disconnect-timeout.description': '超时时间（分钟）',
+  'pages.strategies.option.windows-service-video-save-directory.label':
+    'Windows 服务视频保存目录',
+  'pages.strategies.option.windows-service-video-save-directory.description':
+    '服务模式录像存储的绝对路径',
+  'pages.strategies.option.auto-disconnect-timeout.description':
+    '超时时间（分钟）',
   'pages.strategies.option.lang.description': '语言代码',
-  'pages.strategies.option.enable-ipv6-punch.description': '自托管：否，其他环境：是',
+  'pages.strategies.option.enable-ipv6-punch.description':
+    '自托管：否，其他环境：是',
   'pages.strategies.option.use-texture-render.description': '取决于平台',
   'pages.strategies.option.whitelist.description': '以逗号分隔的 IP 列表',
   'pages.strategies.option.image_quality.value.best': '最佳',
@@ -263,14 +309,18 @@ export default {
   'pages.strategies.option.scroll_style.value.scrollbar': '滚动条',
   'pages.strategies.option.scroll_style.value.scrolledge': '边缘滚动',
   'pages.strategies.option.keep-screen-on.value.never': '从不',
-  'pages.strategies.option.keep-screen-on.value.during-controlled': '受控会话期间',
+  'pages.strategies.option.keep-screen-on.value.during-controlled':
+    '受控会话期间',
   'pages.strategies.option.keep-screen-on.value.service-on': '服务运行时',
   'pages.strategies.option.approve-mode.value.password': '密码',
   'pages.strategies.option.approve-mode.value.click': '点击',
   'pages.strategies.option.approve-mode.value.password-click': '密码和点击',
-  'pages.strategies.option.verification-method.value.use-temporary-password': '临时密码',
-  'pages.strategies.option.verification-method.value.use-permanent-password': '永久密码',
-  'pages.strategies.option.verification-method.value.use-both-passwords': '两种密码',
+  'pages.strategies.option.verification-method.value.use-temporary-password':
+    '临时密码',
+  'pages.strategies.option.verification-method.value.use-permanent-password':
+    '永久密码',
+  'pages.strategies.option.verification-method.value.use-both-passwords':
+    '两种密码',
   'pages.strategies.option.temporary-password-length.value.6': '6 位',
   'pages.strategies.option.temporary-password-length.value.8': '8 位',
   'pages.strategies.option.temporary-password-length.value.10': '10 位',

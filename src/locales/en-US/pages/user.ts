@@ -8,16 +8,19 @@ export default {
   'pages.user.center.basicInfo.note': 'Note',
   'pages.user.center.basicInfo.updateSuccess': 'Profile updated successfully',
   'pages.user.center.basicInfo.updateFailed': 'Failed to update profile',
-  'pages.user.center.avatar.hint': 'Supports JPG, PNG, WebP, max 2MB, will be resized to 256x256',
+  'pages.user.center.avatar.hint':
+    'Supports JPG, PNG, WebP, max 2MB, will be resized to 256x256',
   'pages.user.center.avatar.upload': 'Upload Avatar',
   'pages.user.center.avatar.delete': 'Delete Avatar',
-  'pages.user.center.avatar.deleteConfirm': 'Are you sure to delete your avatar?',
+  'pages.user.center.avatar.deleteConfirm':
+    'Are you sure to delete your avatar?',
   'pages.user.center.avatar.uploadSuccess': 'Avatar uploaded successfully',
   'pages.user.center.avatar.uploadFailed': 'Failed to upload avatar',
   'pages.user.center.avatar.deleteSuccess': 'Avatar deleted successfully',
   'pages.user.center.avatar.deleteFailed': 'Failed to delete avatar',
   'pages.user.center.avatar.fileTooLarge': 'File size cannot exceed 2MB',
-  'pages.user.center.avatar.invalidFormat': 'Only JPG, PNG, WebP formats are supported',
+  'pages.user.center.avatar.invalidFormat':
+    'Only JPG, PNG, WebP formats are supported',
   'pages.user.center.security.title': 'Security Settings',
   'pages.user.center.security.2faStatus': '2FA Status',
   'pages.user.center.security.enabled': 'Enabled',
@@ -26,7 +29,8 @@ export default {
   'pages.user.center.security.disable2FA': 'Disable 2FA',
   'pages.user.center.security.setup2FA': 'Setup Two-Factor Authentication',
   'pages.user.center.security.setupFailed': 'Failed to setup 2FA',
-  'pages.user.center.security.scanQRCode': 'Scan the QR code with your authenticator app, then enter the verification code below.',
+  'pages.user.center.security.scanQRCode':
+    'Scan the QR code with your authenticator app, then enter the verification code below.',
   'pages.user.center.security.secretKey': 'Secret Key',
   'pages.user.center.security.verificationCode': 'Verification Code',
   'pages.user.center.security.enterCode': 'Please enter verification code',
@@ -42,24 +46,37 @@ export default {
   'pages.user.center.security.passwordNotSet': 'Not Set',
   'pages.user.center.security.changePassword': 'Change Password',
   'pages.user.center.security.currentPassword': 'Current Password',
-  'pages.user.center.security.enterCurrentPassword': 'Please enter current password',
+  'pages.user.center.security.enterCurrentPassword':
+    'Please enter current password',
   'pages.user.center.security.newPassword': 'New Password',
-  'pages.user.center.security.enterNewPassword': 'Please enter new password (min 6 characters)',
+  'pages.user.center.security.enterNewPassword':
+    'Please enter new password (min 6 characters)',
   'pages.user.center.security.confirmNewPassword': 'Confirm New Password',
-  'pages.user.center.security.confirmNewPasswordPlaceholder': 'Please re-enter new password',
-  'pages.user.center.security.passwordMinLength': 'Password must be at least 6 characters',
-  'pages.user.center.security.passwordMismatch': 'The two passwords do not match',
-  'pages.user.center.security.changePasswordSuccess': 'Password changed successfully',
-  'pages.user.center.security.changePasswordFailed': 'Failed to change password',
-  'pages.user.center.security.thirdPartyUser': 'Third-party login users cannot change password',
-  'pages.user.center.security.noPasswordUser': 'No password set for this account',
+  'pages.user.center.security.confirmNewPasswordPlaceholder':
+    'Please re-enter new password',
+  'pages.user.center.security.passwordMinLength':
+    'Password must be at least 6 characters',
+  'pages.user.center.security.passwordMismatch':
+    'The two passwords do not match',
+  'pages.user.center.security.changePasswordSuccess':
+    'Password changed successfully',
+  'pages.user.center.security.changePasswordFailed':
+    'Failed to change password',
+  'pages.user.center.security.thirdPartyUser':
+    'Third-party login users cannot change password',
+  'pages.user.center.security.noPasswordUser':
+    'No password set for this account',
   'pages.user.center.security.passkey.title': 'Passkey Management',
   'pages.user.center.security.passkey.register': 'Register Passkey',
-  'pages.user.center.security.passkey.registerSuccess': 'Passkey registered successfully',
-  'pages.user.center.security.passkey.registerFailed': 'Failed to register Passkey',
-  'pages.user.center.security.passkey.deleteSuccess': 'Passkey deleted successfully',
+  'pages.user.center.security.passkey.registerSuccess':
+    'Passkey registered successfully',
+  'pages.user.center.security.passkey.registerFailed':
+    'Failed to register Passkey',
+  'pages.user.center.security.passkey.deleteSuccess':
+    'Passkey deleted successfully',
   'pages.user.center.security.passkey.deleteFailed': 'Failed to delete Passkey',
-  'pages.user.center.security.passkey.deleteConfirm': 'Are you sure to delete this Passkey?',
+  'pages.user.center.security.passkey.deleteConfirm':
+    'Are you sure to delete this Passkey?',
   'pages.user.center.security.passkey.name': 'Name',
   'pages.user.center.security.passkey.namePlaceholder': 'e.g. MacBook Touch ID',
   'pages.user.center.security.passkey.namePasskey': 'Name your Passkey',
@@ -71,7 +88,8 @@ export default {
   'pages.user.center.security.passkey.tfaStatus': 'Passkey TFA',
   'pages.user.center.security.passkey.tfaEnabled': 'Passkey TFA enabled',
   'pages.user.center.security.passkey.tfaDisabled': 'Passkey TFA disabled',
-  'pages.user.center.security.passkey.tfaToggleFailed': 'Failed to toggle Passkey TFA',
+  'pages.user.center.security.passkey.tfaToggleFailed':
+    'Failed to toggle Passkey TFA',
   'pages.user.center.security.sessions.title': 'Login Sessions',
   'pages.user.center.security.sessions.device': 'Device',
   'pages.user.center.security.sessions.type': 'Type',
@@ -82,9 +100,13 @@ export default {
   'pages.user.center.security.sessions.expiresAt': 'Expires At',
   'pages.user.center.security.sessions.current': 'Current',
   'pages.user.center.security.sessions.revoke': 'Revoke',
-  'pages.user.center.security.sessions.revokeConfirm': 'Are you sure to revoke this session?',
-  'pages.user.center.security.sessions.revokeSuccess': 'Session revoked successfully',
-  'pages.user.center.security.sessions.revokeFailed': 'Failed to revoke session',
-  'pages.user.center.security.sessions.cannotRevokeCurrent': 'Cannot revoke current session',
+  'pages.user.center.security.sessions.revokeConfirm':
+    'Are you sure to revoke this session?',
+  'pages.user.center.security.sessions.revokeSuccess':
+    'Session revoked successfully',
+  'pages.user.center.security.sessions.revokeFailed':
+    'Failed to revoke session',
+  'pages.user.center.security.sessions.cannotRevokeCurrent':
+    'Cannot revoke current session',
   'pages.user.center.security.sessions.noSessions': 'No active sessions',
 };

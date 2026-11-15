@@ -8,7 +8,8 @@ export default {
   'pages.user.center.basicInfo.note': '备注',
   'pages.user.center.basicInfo.updateSuccess': '用户信息已更新',
   'pages.user.center.basicInfo.updateFailed': '更新用户信息失败',
-  'pages.user.center.avatar.hint': '支持 JPG、PNG、WebP 格式，最大 2MB，将自动缩放为 256x256',
+  'pages.user.center.avatar.hint':
+    '支持 JPG、PNG、WebP 格式，最大 2MB，将自动缩放为 256x256',
   'pages.user.center.avatar.upload': '上传头像',
   'pages.user.center.avatar.delete': '删除头像',
   'pages.user.center.avatar.deleteConfirm': '确定要删除头像吗？',
@@ -26,7 +27,8 @@ export default {
   'pages.user.center.security.disable2FA': '禁用 2FA',
   'pages.user.center.security.setup2FA': '设置双因素认证',
   'pages.user.center.security.setupFailed': '设置 2FA 失败',
-  'pages.user.center.security.scanQRCode': '请使用认证器应用扫描二维码，然后输入验证码完成绑定。',
+  'pages.user.center.security.scanQRCode':
+    '请使用认证器应用扫描二维码，然后输入验证码完成绑定。',
   'pages.user.center.security.secretKey': '密钥',
   'pages.user.center.security.verificationCode': '验证码',
   'pages.user.center.security.enterCode': '请输入验证码',
@@ -46,7 +48,8 @@ export default {
   'pages.user.center.security.newPassword': '新密码',
   'pages.user.center.security.enterNewPassword': '请输入新密码（至少6位）',
   'pages.user.center.security.confirmNewPassword': '确认新密码',
-  'pages.user.center.security.confirmNewPasswordPlaceholder': '请再次输入新密码',
+  'pages.user.center.security.confirmNewPasswordPlaceholder':
+    '请再次输入新密码',
   'pages.user.center.security.passwordMinLength': '密码长度不能少于6位',
   'pages.user.center.security.passwordMismatch': '两次输入的密码不一致',
   'pages.user.center.security.changePasswordSuccess': '密码修改成功',
@@ -59,9 +62,11 @@ export default {
   'pages.user.center.security.passkey.registerFailed': '注册 Passkey 失败',
   'pages.user.center.security.passkey.deleteSuccess': 'Passkey 已删除',
   'pages.user.center.security.passkey.deleteFailed': '删除 Passkey 失败',
-  'pages.user.center.security.passkey.deleteConfirm': '确定要删除此 Passkey 吗？',
+  'pages.user.center.security.passkey.deleteConfirm':
+    '确定要删除此 Passkey 吗？',
   'pages.user.center.security.passkey.name': '名称',
-  'pages.user.center.security.passkey.namePlaceholder': '例如：MacBook Touch ID',
+  'pages.user.center.security.passkey.namePlaceholder':
+    '例如：MacBook Touch ID',
   'pages.user.center.security.passkey.namePasskey': '为您的 Passkey 命名',
   'pages.user.center.security.passkey.deviceType': '设备类型',
   'pages.user.center.security.passkey.multiDevice': '多设备',
@@ -71,7 +76,8 @@ export default {
   'pages.user.center.security.passkey.tfaStatus': 'Passkey 双因素认证',
   'pages.user.center.security.passkey.tfaEnabled': '已启用 Passkey 双因素认证',
   'pages.user.center.security.passkey.tfaDisabled': '已禁用 Passkey 双因素认证',
-  'pages.user.center.security.passkey.tfaToggleFailed': '切换 Passkey 双因素认证失败',
+  'pages.user.center.security.passkey.tfaToggleFailed':
+    '切换 Passkey 双因素认证失败',
   'pages.user.center.security.sessions.title': '登录会话',
   'pages.user.center.security.sessions.device': '设备',
   'pages.user.center.security.sessions.type': '类型',

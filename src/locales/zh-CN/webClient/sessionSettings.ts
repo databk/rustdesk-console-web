@@ -23,16 +23,20 @@ export default {
   'webClient.captureDisable': '关闭接管',
   'webClient.captureRetry': '重试',
   'webClient.capturePendingAction': '开启中…',
-  'webClient.captureNonFullscreenHint': '非全屏：部分快捷键可能触发本机或浏览器的操作。',
-  'webClient.captureFullscreenHint': '全屏并开启接管：可将更多快捷键发送到远端。',
+  'webClient.captureNonFullscreenHint':
+    '非全屏：部分快捷键可能触发本机或浏览器的操作。',
+  'webClient.captureFullscreenHint':
+    '全屏并开启接管：可将更多快捷键发送到远端。',
   'webClient.captureSystemHint': '部分系统快捷键仍可能在本机生效。',
   'webClient.captureUnsupportedHint': '可改用屏幕键盘发送按键。',
   'webClient.inputMappings': '键鼠映射',
   'webClient.screenKeyboard': '屏幕键盘',
   'webClient.keyboardKeysTab': '按键',
   'webClient.keyboardTextTab': '文字输入',
-  'webClient.keyboardModifierHint': '点亮修饰键后，再点击其它按键发送组合键。关闭或离开键盘时会释放修饰键。',
-  'webClient.keyboardTextHint': '输入文字后发送，支持本机输入法。文字输入不附加修饰键。',
+  'webClient.keyboardModifierHint':
+    '点亮修饰键后，再点击其它按键发送组合键。关闭或离开键盘时会释放修饰键。',
+  'webClient.keyboardTextHint':
+    '输入文字后发送，支持本机输入法。文字输入不附加修饰键。',
   'webClient.keyboardClose': '收起屏幕键盘',
   'webClient.keyboardMove': '移动屏幕键盘',
   'webClient.keyboardResize': '调整屏幕键盘大小',
@@ -68,16 +72,19 @@ export default {
   'webClient.codecAuto': '自动',
   'webClient.codecActual': '当前画面',
   'webClient.trueColor': '真彩色 4:4:4',
-  'webClient.trueColorHint': '仅在浏览器与远端均支持时使用；多控制端或远端策略可能仍采用4:2:0。',
+  'webClient.trueColorHint':
+    '仅在浏览器与远端均支持时使用；多控制端或远端策略可能仍采用4:2:0。',
   'webClient.colorFormat': '色彩格式',
   'webClient.recordStart': '录制画面',
   'webClient.recordStop': '停止录制',
   'webClient.recording': '录制中',
-  'webClient.recordFallback': '浏览器不支持流式保存，录制达到 16 MiB 后自动保存。',
+  'webClient.recordFallback':
+    '浏览器不支持流式保存，录制达到 16 MiB 后自动保存。',
   'webClient.recordSaveCancelled': '未开始录制。',
   'webClient.recordFailed': '录制保存失败，远控连接仍可使用。',
   'webClient.recordSaved': '录制已保存。',
-  'webClient.recordChanged': '画面格式已变化，当前录制已保存。需要时可重新录制。',
+  'webClient.recordChanged':
+    '画面格式已变化，当前录制已保存。需要时可重新录制。',
   'webClient.recordLimit': '录制达到 16 MiB，已自动保存。',
   'webClient.recordDenied': '对端关闭了录制权限，录制已停止。',
   'webClient.error.video': '画面解码失败，正在尝试 VP9 软件解码。',
@@ -90,7 +97,8 @@ export default {
   'webClient.qualityCodec': '编码',
   'webClient.disabled': '管理员尚未启用网页远控。',
   'webClient.unavailable': '后端暂不支持网页远控，或部署配置不可用。',
-  'webClient.keyboardDenied': '被控端已禁用键盘和鼠标。此前按住的按键或鼠标按钮可能仍保持按下；请恢复权限，或在被控端按下并松开对应按键或按钮。',
+  'webClient.keyboardDenied':
+    '被控端已禁用键盘和鼠标。此前按住的按键或鼠标按钮可能仍保持按下；请恢复权限，或在被控端按下并松开对应按键或按钮。',
   'webClient.state.idle': '就绪',
   'webClient.state.connecting': '连接中',
   'webClient.state.securing': '校验身份',
@@ -99,7 +107,8 @@ export default {
   'webClient.state.connected': '已连接',
   'webClient.state.closed': '已断开',
   'webClient.state.failed': '连接失败',
-  'webClient.error.configuration': '设备 ID 或服务器配置无效；不支持 IP 直连、URL 或指定其他服务器。',
+  'webClient.error.configuration':
+    '设备 ID 或服务器配置无效；不支持 IP 直连、URL 或指定其他服务器。',
   'webClient.error.identity': '远端身份校验失败，已终止连接。',
   'webClient.error.encryption': '安全会话初始化或消息验证失败。',
   'webClient.error.password': '被控设备拒绝了该密码，请重试。',
@@ -109,20 +118,27 @@ export default {
   'webClient.error.transport': '网络连接已中断。',
   'webClient.error.protocol': '被控端返回了不支持的协议消息。',
   'webClient.error.overload': '会话数据超出缓冲限制，已安全断开。',
-  'webClient.error.unsupported': '需要 HTTPS 及支持 WebCodecs 视频解码的浏览器。Android/iOS 真机兼容性仍需逐机验证。',
+  'webClient.error.unsupported':
+    '需要 HTTPS 及支持 WebCodecs 视频解码的浏览器。Android/iOS 真机兼容性仍需逐机验证。',
   'webClient.error.media': '画面解码停止，请断开并重新连接。',
   'webClient.error.worker': '网页远控 Worker 加载失败，请检查部署资源。',
-  'webClient.error.clipboard': '剪贴板数据无效、超限或浏览器拒绝访问。文字上限 1 MiB，PNG 上限 4 MiB。',
+  'webClient.error.clipboard':
+    '剪贴板数据无效、超限或浏览器拒绝访问。文字上限 1 MiB，PNG 上限 4 MiB。',
   'webClient.error.fullscreen': '当前浏览器环境不允许全屏。',
   'webClient.error.cancelled': '操作已取消。',
   'webClient.softText': '软键盘文本',
-  'webClient.error.audio': '音频不可用或缓冲超限。请确认浏览器支持 Opus，并在用户操作后重新开启。',
+  'webClient.error.audio':
+    '音频不可用或缓冲超限。请确认浏览器支持 Opus，并在用户操作后重新开启。',
   'webClient.error.files': '文件操作失败。请检查文件权限和大小后重试。',
-  'webClient.error.fileSaveBlocked': '浏览器阻止了保存窗口。请直接点击“保存到本机”重试。',
-  'webClient.error.fileSaveDenied': '未获得本机文件的写入权限。请重新选择保存位置并允许访问。',
+  'webClient.error.fileSaveBlocked':
+    '浏览器阻止了保存窗口。请直接点击“保存到本机”重试。',
+  'webClient.error.fileSaveDenied':
+    '未获得本机文件的写入权限。请重新选择保存位置并允许访问。',
   'webClient.errorBadge': '操作失败',
-  'webClient.error.filePath': '目录地址无效。请输入完整盘符路径，例如 C:/Users；当前目录未改变。',
-  'webClient.error.localFiles': '本机文件夹无法访问。请重新选择，或使用上传和下载。',
+  'webClient.error.filePath':
+    '目录地址无效。请输入完整盘符路径，例如 C:/Users；当前目录未改变。',
+  'webClient.error.localFiles':
+    '本机文件夹无法访问。请重新选择，或使用上传和下载。',
   'webClient.quality': '画质',
   'webClient.qualityLow': '流畅',
   'webClient.qualityBalanced': '均衡',

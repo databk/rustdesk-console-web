@@ -19,7 +19,8 @@ export default {
   'pages.devices.disableFailed': 'Falha ao desativar o dispositivo',
   'pages.devices.deleteSuccess': 'Dispositivo removido',
   'pages.devices.deleteFailed': 'Falha ao remover o dispositivo',
-  'pages.devices.deleteConfirm': 'Tem certeza de que deseja remover este dispositivo?',
+  'pages.devices.deleteConfirm':
+    'Tem certeza de que deseja remover este dispositivo?',
   'pages.devices.deviceInfo': 'username@device_name',
   'pages.devices.strategyInfo': 'Informações da Estratégia',
   'pages.devices.device': 'Dispositivo',
@@ -28,25 +29,37 @@ export default {
   'pages.devices.statusNormal': 'Normal',
   'pages.devices.statusDisabled': 'Desativado',
   'pages.devices.onlineStatus': 'Status Online',
-  'pages.devices.deviceGroupSearchTip': 'Filtrar pelo nome do grupo de dispositivos',
+  'pages.devices.deviceGroupSearchTip':
+    'Filtrar pelo nome do grupo de dispositivos',
   'pages.devices.remove': 'Remover',
   'pages.devices.removeFromGroupSuccess': 'Dispositivo removido do grupo',
-  'pages.devices.removeFromGroupFailed': 'Falha ao remover o dispositivo do grupo',
-  'pages.devices.removeFromGroupConfirm': 'Tem certeza de que deseja remover este dispositivo do grupo?',
+  'pages.devices.removeFromGroupFailed':
+    'Falha ao remover o dispositivo do grupo',
+  'pages.devices.removeFromGroupConfirm':
+    'Tem certeza de que deseja remover este dispositivo do grupo?',
   'pages.devices.batchRemove': 'Remoção em Lote',
-  'pages.devices.batchRemoveFromGroupSuccess': '{count} dispositivo(s) removido(s) do grupo com sucesso',
-  'pages.devices.batchRemoveFromGroupFailed': 'Falha ao remover dispositivos do grupo',
-  'pages.devices.batchRemoveFromGroupConfirm': 'Tem certeza de que deseja remover os dispositivos selecionados do grupo?',
+  'pages.devices.batchRemoveFromGroupSuccess':
+    '{count} dispositivo(s) removido(s) do grupo com sucesso',
+  'pages.devices.batchRemoveFromGroupFailed':
+    'Falha ao remover dispositivos do grupo',
+  'pages.devices.batchRemoveFromGroupConfirm':
+    'Tem certeza de que deseja remover os dispositivos selecionados do grupo?',
   'pages.devices.batchEnable': 'Ativar em Lote',
   'pages.devices.batchDisable': 'Desativar em Lote',
-  'pages.devices.batchEnableConfirm': 'Tem certeza de que deseja ativar os dispositivos selecionados?',
-  'pages.devices.batchDisableConfirm': 'Tem certeza de que deseja desativar os dispositivos selecionados?',
-  'pages.devices.batchEnableSuccess': '{count} dispositivo(s) ativado(s) com sucesso',
+  'pages.devices.batchEnableConfirm':
+    'Tem certeza de que deseja ativar os dispositivos selecionados?',
+  'pages.devices.batchDisableConfirm':
+    'Tem certeza de que deseja desativar os dispositivos selecionados?',
+  'pages.devices.batchEnableSuccess':
+    '{count} dispositivo(s) ativado(s) com sucesso',
   'pages.devices.batchEnableFailed': 'Falha ao ativar dispositivos',
-  'pages.devices.batchEnablePartialFailed': '{success} dispositivo(s) ativado(s) com sucesso, {failed} falharam',
-  'pages.devices.batchDisableSuccess': '{count} dispositivo(s) desativado(s) com sucesso',
+  'pages.devices.batchEnablePartialFailed':
+    '{success} dispositivo(s) ativado(s) com sucesso, {failed} falharam',
+  'pages.devices.batchDisableSuccess':
+    '{count} dispositivo(s) desativado(s) com sucesso',
   'pages.devices.batchDisableFailed': 'Falha ao desativar dispositivos',
-  'pages.devices.batchDisablePartialFailed': '{success} dispositivo(s) desativado(s) com sucesso, {failed} falharam',
+  'pages.devices.batchDisablePartialFailed':
+    '{success} dispositivo(s) desativado(s) com sucesso, {failed} falharam',
   'pages.devices.edit': 'Editar Dispositivo',
   'pages.devices.updateSuccess': 'Dispositivo atualizado',
   'pages.devices.updateFailed': 'Falha ao atualizar o dispositivo',
@@ -64,14 +77,21 @@ export default {
   'pages.devices.searchIdPlaceholder': 'Buscar por ID do dispositivo',
   'pages.devices.searchUserPlaceholder': 'Buscar por nome de usuário',
   'pages.devices.searchOsPlaceholder': 'Buscar por SO',
-  'pages.devices.searchDeviceGroupPlaceholder': 'Buscar por nome do grupo de dispositivos',
+  'pages.devices.searchDeviceGroupPlaceholder':
+    'Buscar por nome do grupo de dispositivos',
   'pages.devices.searchDeviceNamePlaceholder': 'Buscar por nome do dispositivo',
   'pages.devices.exportCsv': 'Exportar CSV',
-  'pages.devices.exportCsvSuccess': '{count} dispositivo(s) exportado(s) para CSV',
+  'pages.devices.exportCsvSuccess':
+    '{count} dispositivo(s) exportado(s) para CSV',
   'pages.devices.exportCsvFailed': 'Falha ao exportar CSV',
-  'pages.devices.presenceAnomalyTitle': '{count} dispositivo(s) com presença inconsistente',
-  'pages.devices.presenceAnomalyHint': 'O hbbs e o heartbeat do Console são fontes independentes. Verifique o endereço do servidor de API do cliente e a conectividade entre o cliente, o hbbs e o Console.',
-  'pages.devices.presence.hbbsOnlineConsoleOffline': 'Registrado no hbbs, mas sem heartbeat do Console',
-  'pages.devices.presence.consoleOnlineHbbsOffline': 'Alcançou a API do Console, mas não está registrado no hbbs',
-  'pages.devices.presence.hbbsOnly': 'Online no hbbs, mas ausente do inventário do Console',
+  'pages.devices.presenceAnomalyTitle':
+    '{count} dispositivo(s) com presença inconsistente',
+  'pages.devices.presenceAnomalyHint':
+    'O hbbs e o heartbeat do Console são fontes independentes. Verifique o endereço do servidor de API do cliente e a conectividade entre o cliente, o hbbs e o Console.',
+  'pages.devices.presence.hbbsOnlineConsoleOffline':
+    'Registrado no hbbs, mas sem heartbeat do Console',
+  'pages.devices.presence.consoleOnlineHbbsOffline':
+    'Alcançou a API do Console, mas não está registrado no hbbs',
+  'pages.devices.presence.hbbsOnly':
+    'Online no hbbs, mas ausente do inventário do Console',
 };

@@ -4,9 +4,12 @@ export default {
   'webClient.fileResize': 'Redimensionner la fenêtre fichiers',
   'webClient.fileUploadFile': 'Envoyer un fichier',
   'webClient.fileSaveLocal': 'Enregistrer localement',
-  'webClient.fileUploadHint': 'Choisir des fichiers locaux à envoyer dans le dossier distant actuel',
-  'webClient.fileSaveHint': 'Enregistrer le fichier distant sélectionné sur cet ordinateur',
-  'webClient.fileChooseHint': 'Choisir un dossier local ; l’accès reste limité à ce dossier',
+  'webClient.fileUploadHint':
+    'Choisir des fichiers locaux à envoyer dans le dossier distant actuel',
+  'webClient.fileSaveHint':
+    'Enregistrer le fichier distant sélectionné sur cet ordinateur',
+  'webClient.fileChooseHint':
+    'Choisir un dossier local ; l’accès reste limité à ce dossier',
   'webClient.fileOpenPath': 'Ouvrir',
   'webClient.fileNotConnected': 'La connexion fichiers n’est pas prête',
   'webClient.fileEmpty': 'Ce dossier est vide',
@@ -43,10 +46,12 @@ export default {
   'webClient.localUp': 'Dossier local parent',
   'webClient.localRefresh': 'Actualiser le dossier local',
   'webClient.localPath': 'Chemin dans le dossier local choisi',
-  'webClient.localDirectoryUnavailable': 'L’accès aux dossiers est indisponible. Utilisez l’envoi et le téléchargement de fichiers.',
+  'webClient.localDirectoryUnavailable':
+    'L’accès aux dossiers est indisponible. Utilisez l’envoi et le téléchargement de fichiers.',
   'webClient.fileSendToRemote': 'Envoyer dans le dossier distant',
   'webClient.fileReceiveHere': 'Recevoir dans le dossier local',
-  'webClient.fileApprovalHint': 'En attente de l’appareil distant. Vous pouvez entrer son mot de passe.',
+  'webClient.fileApprovalHint':
+    'En attente de l’appareil distant. Vous pouvez entrer son mot de passe.',
   'webClient.localFileConflict': 'Un fichier local porte déjà ce nom.',
   'webClient.localKeepFile': 'Garder le fichier local',
   'webClient.localOverwriteFile': 'Remplacer le fichier local',

@@ -1,10 +1,12 @@
 export default {
-  'webClient.permissionRequired': 'Demandez à un administrateur l’autorisation de contrôle web.',
+  'webClient.permissionRequired':
+    'Demandez à un administrateur l’autorisation de contrôle web.',
   'webClient.sessionOptions': 'Session',
   'webClient.sessionMode': 'Mode de session',
   'webClient.controlMode': 'Contrôle',
   'webClient.viewOnlyMode': 'Consultation seule',
-  'webClient.viewOnlyReason': 'Le clavier et la souris sont indisponibles en consultation seule.',
+  'webClient.viewOnlyReason':
+    'Le clavier et la souris sont indisponibles en consultation seule.',
   'webClient.remoteActions': 'Actions distantes',
   'webClient.credentialNone': 'Aucun mot de passe enregistré',
   'webClient.connectionDetails': 'Détails de connexion',
@@ -12,25 +14,32 @@ export default {
   'webClient.originalResolution': 'Résolution initiale',
   'webClient.resolutionRestoreShort': 'Rétablir',
   'webClient.shortcutGuideTitle': 'Raccourcis en plein écran',
-  'webClient.shortcutGuideBody': 'Le plein écran permet de capturer davantage de raccourcis. Certains raccourcis système peuvent encore agir sur cet ordinateur.',
+  'webClient.shortcutGuideBody':
+    'Le plein écran permet de capturer davantage de raccourcis. Certains raccourcis système peuvent encore agir sur cet ordinateur.',
   'webClient.shortcutGuideHint': 'Cet avis apparaît une fois par connexion.',
   'webClient.shortcutGuideClose': 'Fermer',
   'webClient.shortcutGuideFullscreen': 'Passer en plein écran',
-  'webClient.checkingCredentialsHint': 'Vérification du mot de passe enregistré pour cet appareil.',
-  'webClient.automaticAuthenticationHint': 'Connexion avec le mot de passe enregistré.',
-  'webClient.paste.image-too-large': 'Cette image est trop grande. Réduisez sa taille ou utilisez le transfert de fichiers.',
+  'webClient.checkingCredentialsHint':
+    'Vérification du mot de passe enregistré pour cet appareil.',
+  'webClient.automaticAuthenticationHint':
+    'Connexion avec le mot de passe enregistré.',
+  'webClient.paste.image-too-large':
+    'Cette image est trop grande. Réduisez sa taille ou utilisez le transfert de fichiers.',
   'webClient.rememberPassword': 'Mémoriser le mot de passe',
   'webClient.credentialSaved': 'Mot de passe enregistré dans ce navigateur',
   'webClient.forgetPassword': 'Effacer le mot de passe',
-  'webClient.credentialUnavailable': 'Les mots de passe enregistrés sont indisponibles dans ce navigateur.',
+  'webClient.credentialUnavailable':
+    'Les mots de passe enregistrés sont indisponibles dans ce navigateur.',
   'webClient.credentialForgotten': 'Mot de passe enregistré effacé.',
   'webClient.zoomCursor': 'Adapter le curseur au zoom',
   'webClient.remoteResolution': 'Résolution distante',
   'webClient.resolutionUnavailable': 'Aucune résolution modifiable indiquée.',
   'webClient.resolution.pending': 'En attente de l’image distante…',
   'webClient.resolution.confirmed': 'Résolution demandée confirmée.',
-  'webClient.resolution.unconfirmed': 'Changement non confirmé. Vérifiez l’image et réessayez.',
-  'webClient.resolution.rejected': 'La demande de résolution n’a pas pu être envoyée.',
+  'webClient.resolution.unconfirmed':
+    'Changement non confirmé. Vérifiez l’image et réessayez.',
+  'webClient.resolution.rejected':
+    'La demande de résolution n’a pas pu être envoyée.',
   'webClient.close': 'Fermer',
   'webClient.clipboardSync': 'Synchroniser le presse-papiers',
   'webClient.reverseWheel': 'Inverser la molette',
@@ -40,25 +49,32 @@ export default {
   'webClient.devicesTitle': 'Appareils accessibles',
   'webClient.devicesRefresh': 'Actualiser les appareils',
   'webClient.devicesOnlineOnly': 'En ligne uniquement',
-  'webClient.devicesFailed': 'Impossible de charger les appareils. Actualisez pour réessayer. Un ID saisi nécessite aussi une autorisation.',
-  'webClient.devicesEmpty': 'Aucun appareil n’est accessible à votre rôle. Demandez à un administrateur de définir son périmètre.',
+  'webClient.devicesFailed':
+    'Impossible de charger les appareils. Actualisez pour réessayer. Un ID saisi nécessite aussi une autorisation.',
+  'webClient.devicesEmpty':
+    'Aucun appareil n’est accessible à votre rôle. Demandez à un administrateur de définir son périmètre.',
   'webClient.deviceOnline': 'En ligne',
   'webClient.deviceOffline': 'Hors ligne',
   'webClient.deviceCount': 'appareils',
   'webClient.search': 'Rechercher',
   'webClient.previous': 'Précédente',
   'webClient.next': 'Suivante',
-  'webClient.pasteHint': 'Cliquez sur l’écran distant puis appuyez sur Ctrl/Cmd+V pour coller du texte ou une image PNG.',
+  'webClient.pasteHint':
+    'Cliquez sur l’écran distant puis appuyez sur Ctrl/Cmd+V pour coller du texte ou une image PNG.',
   'webClient.paste.sending': 'Envoi du presse-papiers…',
-  'webClient.paste.sent': 'Demande de collage envoyée. Vérifiez le résultat distant.',
-  'webClient.paste.failed': 'Échec du collage. Copiez du texte ou une image PNG et réessayez.',
-  'webClient.paste.denied': 'L’appareil distant a désactivé le presse-papiers ou le clavier.',
+  'webClient.paste.sent':
+    'Demande de collage envoyée. Vérifiez le résultat distant.',
+  'webClient.paste.failed':
+    'Échec du collage. Copiez du texte ou une image PNG et réessayez.',
+  'webClient.paste.denied':
+    'L’appareil distant a désactivé le presse-papiers ou le clavier.',
   'webClient.idPlaceholder': 'ID de l’appareil distant',
   'webClient.toolInput': 'Clavier et souris',
   'webClient.toolAudio': 'Son',
   'webClient.tools': 'Outils de la session',
   'webClient.exitFullscreen': 'Quitter le plein écran',
-  'webClient.idleHint': 'Choisissez un appareil ou entrez son ID pour vous connecter.',
+  'webClient.idleHint':
+    'Choisissez un appareil ou entrez son ID pour vous connecter.',
   'webClient.authTitle': 'Entrez le mot de passe de l’appareil',
   'webClient.waitingFrame': 'En attente de l’écran distant',
   'webClient.connectingHint': 'Veuillez patienter.',
@@ -71,10 +87,14 @@ export default {
   'webClient.fullscreen': 'Plein écran',
   'webClient.password': 'Mot de passe de l’appareil',
   'webClient.authenticate': 'Connecter',
-  'webClient.approval': 'Vous pouvez aussi approuver la connexion sur l’appareil distant.',
-  'webClient.notice': 'Connexion via le serveur configuré. Un mot de passe natif ou une approbation est requis. Les extensions dépendent des permissions distantes et du navigateur.',
-  'webClient.desktop': 'Bureau distant. Cliquez pour envoyer les actions du clavier et de la souris.',
-  'webClient.clipboardDenied': 'L’appareil distant a désactivé le presse-papiers.',
+  'webClient.approval':
+    'Vous pouvez aussi approuver la connexion sur l’appareil distant.',
+  'webClient.notice':
+    'Connexion via le serveur configuré. Un mot de passe natif ou une approbation est requis. Les extensions dépendent des permissions distantes et du navigateur.',
+  'webClient.desktop':
+    'Bureau distant. Cliquez pour envoyer les actions du clavier et de la souris.',
+  'webClient.clipboardDenied':
+    'L’appareil distant a désactivé le presse-papiers.',
   'webClient.sendText': 'Envoyer le texte',
   'menu.webClient': 'Client Web',
   'webClient.display': 'Écran',
@@ -84,9 +104,11 @@ export default {
   'webClient.touchScroll': 'Défilement distant',
   'webClient.touchZoom': 'Déplacer la vue agrandie',
   'webClient.zoomReset': 'Réinitialiser le zoom',
-  'webClient.touchNotice': 'Touchez pour cliquer, déplacez pour glisser, maintenez pour un clic droit. Deux doigts zooment la vue locale ; utilisez Défilement distant pour la molette. Envoyez le texte après la composition IME.',
+  'webClient.touchNotice':
+    'Touchez pour cliquer, déplacez pour glisser, maintenez pour un clic droit. Deux doigts zooment la vue locale ; utilisez Défilement distant pour la molette. Envoyez le texte après la composition IME.',
   'webClient.connectDevice': 'Connecter un appareil',
-  'webClient.connectionApproval': 'Entrez le mot de passe de l’appareil ou attendez l’approbation distante.',
+  'webClient.connectionApproval':
+    'Entrez le mot de passe de l’appareil ou attendez l’approbation distante.',
   'webClient.sessionAlerts': 'Avis de connexion',
   'webClient.legacyBadge': 'Ancien chiffrement',
   'webClient.noticeBadge': 'Avis de connexion',
@@ -100,14 +122,18 @@ export default {
   'webClient.displayOptions': 'Affichage',
   'webClient.remoteFiles': 'Fichiers distants',
   'webClient.touchHelp': 'Aide tactile',
-  'webClient.clipboardRetryHint': 'Le navigateur a bloqué la synchronisation du presse-papiers.',
+  'webClient.clipboardRetryHint':
+    'Le navigateur a bloqué la synchronisation du presse-papiers.',
   'webClient.clipboardRetry': 'Cliquer pour copier',
   'webClient.legacyFileBadge': 'Session fichiers : ancien chiffrement',
   'webClient.legacyTitle': 'Ancien chiffrement',
   'webClient.remoteVersion': 'Client distant',
-  'webClient.legacyRisk': 'La connexion est chiffrée, mais l’ancienne méthode présente un risque connu qui peut réduire la confidentialité des données transférées.',
-  'webClient.legacyUpgrade': 'Mettez à jour RustDesk sur l’appareil distant, puis reconnectez-vous.',
-  'webClient.legacyCompatibility': 'RustDesk 1.4.9 utilise l’ancienne méthode. La nouvelle méthode a été vérifiée dans une version nightly officielle précise de 1.5.0. Une nightly est une version de développement ; le numéro seul ne garantit pas la modification.',
+  'webClient.legacyRisk':
+    'La connexion est chiffrée, mais l’ancienne méthode présente un risque connu qui peut réduire la confidentialité des données transférées.',
+  'webClient.legacyUpgrade':
+    'Mettez à jour RustDesk sur l’appareil distant, puis reconnectez-vous.',
+  'webClient.legacyCompatibility':
+    'RustDesk 1.4.9 utilise l’ancienne méthode. La nouvelle méthode a été vérifiée dans une version nightly officielle précise de 1.5.0. Une nightly est une version de développement ; le numéro seul ne garantit pas la modification.',
   'webClient.cancelConnection': 'Annuler la connexion',
   'webClient.viewMode': 'Mode d’affichage',
   'webClient.fitWindow': 'Adapter à la fenêtre',
@@ -116,7 +142,8 @@ export default {
   'webClient.remoteCursor': 'Afficher le curseur distant',
   'webClient.refreshFrame': 'Actualiser l’image',
   'webClient.readOnly': 'Consultation seule',
-  'webClient.sasUnavailable': 'Le client distant ne prend pas en charge Ctrl+Alt+Del.',
+  'webClient.sasUnavailable':
+    'Le client distant ne prend pas en charge Ctrl+Alt+Del.',
   'webClient.lockScreen': 'Verrouiller l’écran distant',
   'webClient.connectionInfo': 'Informations de connexion',
   'webClient.encryption': 'Chiffrement',

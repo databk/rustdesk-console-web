@@ -29,18 +29,23 @@ export default {
   'pages.oidcProviders.updateFailed': 'Не удалось обновить провайдера OIDC',
   'pages.oidcProviders.deleteSuccess': 'Провайдер OIDC удален',
   'pages.oidcProviders.deleteFailed': 'Не удалось удалить провайдера OIDC',
-  'pages.oidcProviders.deleteConfirm': 'Вы уверены, что хотите удалить этого провайдера?',
+  'pages.oidcProviders.deleteConfirm':
+    'Вы уверены, что хотите удалить этого провайдера?',
   'pages.oidcProviders.enableSuccess': 'Провайдер OIDC включен',
   'pages.oidcProviders.enableFailed': 'Не удалось включить провайдера OIDC',
   'pages.oidcProviders.disableSuccess': 'Провайдер OIDC отключен',
   'pages.oidcProviders.disableFailed': 'Не удалось отключить провайдера OIDC',
-  'pages.oidcProviders.enableConfirm': 'Вы уверены, что хотите включить этого провайдера?',
-  'pages.oidcProviders.disableConfirm': 'Вы уверены, что хотите отключить этого провайдера?',
+  'pages.oidcProviders.enableConfirm':
+    'Вы уверены, что хотите включить этого провайдера?',
+  'pages.oidcProviders.disableConfirm':
+    'Вы уверены, что хотите отключить этого провайдера?',
   'pages.oidcProviders.testFailed': 'Не удалось проверить подключение OIDC',
-  'pages.oidcProviders.fetchDetailFailed': 'Не удалось загрузить детали провайдера',
+  'pages.oidcProviders.fetchDetailFailed':
+    'Не удалось загрузить детали провайдера',
   'pages.oidcProviders.sortFailed': 'Не удалось обновить порядок провайдеров',
   'pages.oidcProviders.preset': 'Шаблон провайдера',
-  'pages.oidcProviders.presetPlaceholder': 'Выберите встроенного провайдера или пользовательский',
+  'pages.oidcProviders.presetPlaceholder':
+    'Выберите встроенного провайдера или пользовательский',
   'pages.oidcProviders.custom': 'Пользовательский',
   'pages.oidcProviders.icon': 'Иконка (SVG)',
   'pages.oidcProviders.uploadSvg': 'Загрузить SVG',

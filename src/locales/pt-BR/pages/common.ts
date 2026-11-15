@@ -1,8 +1,11 @@
 export default {
-  'pages.request.loginExpired': 'A sessão expirou. Entre novamente para continuar',
-  'pages.request.accessDenied': 'Você não tem permissão para executar esta ação',
+  'pages.request.loginExpired':
+    'A sessão expirou. Entre novamente para continuar',
+  'pages.request.accessDenied':
+    'Você não tem permissão para executar esta ação',
   'pages.request.responseStatus': 'Falha na solicitação (HTTP {status})',
-  'pages.request.noResponse': 'O servidor não respondeu. Tente novamente mais tarde.',
+  'pages.request.noResponse':
+    'O servidor não respondeu. Tente novamente mais tarde.',
   'pages.request.error': 'Falha na solicitação. Tente novamente mais tarde.',
   'pages.deviceGroups.list': 'Grupos de Dispositivos',
   'pages.deviceGroups.name': 'Nome',
@@ -15,10 +18,12 @@ export default {
   'pages.deviceGroups.updateFailed': 'Falha ao atualizar grupo de dispositivos',
   'pages.deviceGroups.deleteSuccess': 'Grupo de dispositivos removido',
   'pages.deviceGroups.deleteFailed': 'Falha ao remover grupo de dispositivos',
-  'pages.deviceGroups.deleteConfirm': 'Tem certeza de que deseja remover este grupo de dispositivos?',
+  'pages.deviceGroups.deleteConfirm':
+    'Tem certeza de que deseja remover este grupo de dispositivos?',
   'pages.deviceGroups.import': 'Importar',
   'pages.deviceGroups.importDevices': 'Importar Dispositivos',
-  'pages.deviceGroups.importSuccess': '{count} dispositivo(s) importado(s) com sucesso',
+  'pages.deviceGroups.importSuccess':
+    '{count} dispositivo(s) importado(s) com sucesso',
   'pages.deviceGroups.importFailed': 'Falha ao importar dispositivos',
   'pages.deviceGroups.searchNamePlaceholder': 'Buscar por nome',
   'pages.common.action': 'Ação',

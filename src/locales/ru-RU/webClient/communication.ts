@@ -15,14 +15,16 @@ export default {
   'webClient.callMicrophoneMuted': 'Микрофон выключен',
   'webClient.callMicrophonePreparing': 'Ожидание доступа к микрофону',
   'webClient.audioDenied': 'Удалённое устройство отключило звук.',
-  'webClient.audioHint': 'Включайте удалённый звук при необходимости. При отключении воспроизведение прекращается.',
+  'webClient.audioHint':
+    'Включайте удалённый звук при необходимости. При отключении воспроизведение прекращается.',
   'webClient.chat': 'Чат',
   'webClient.chatEmpty': 'Отправьте сообщение удалённому пользователю.',
   'webClient.chatRemote': 'Собеседник',
   'webClient.chatYou': 'Вы',
   'webClient.chatMessage': 'Сообщение',
   'webClient.chatSend': 'Отправить',
-  'webClient.chatFailed': 'Сообщение не отправлено. Повторите попытку; предел 4 КиБ.',
+  'webClient.chatFailed':
+    'Сообщение не отправлено. Повторите попытку; предел 4 КиБ.',
   'webClient.voiceCall': 'Голосовой вызов',
   'webClient.callIdle': 'Позвоните удалённому пользователю.',
   'webClient.callPreparing': 'Запрос доступа к микрофону…',
@@ -32,7 +34,8 @@ export default {
   'webClient.callTimeout': 'Нет ответа. Можно позвонить снова.',
   'webClient.callFailed': 'Вызов не удался. Проверьте доступ к микрофону.',
   'webClient.callEnded': 'Разговор завершён.',
-  'webClient.callUnsupported': 'Браузер не поддерживает захват микрофона или кодирование Opus. Используйте современный Chrome или Edge.',
+  'webClient.callUnsupported':
+    'Браузер не поддерживает захват микрофона или кодирование Opus. Используйте современный Chrome или Edge.',
   'webClient.callStart': 'Позвонить',
   'webClient.callMute': 'Выключить микрофон',
   'webClient.callUnmute': 'Включить микрофон',
@@ -40,5 +43,6 @@ export default {
   'webClient.callCancel': 'Отменить вызов',
   'webClient.audioStart': 'Включить звук',
   'webClient.mute': 'Без звука',
-  'webClient.audioUnavailable': 'В этом браузере недоступно декодирование Opus.',
+  'webClient.audioUnavailable':
+    'В этом браузере недоступно декодирование Opus.',
 };

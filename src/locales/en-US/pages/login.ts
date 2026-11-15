@@ -1,6 +1,7 @@
 export default {
   'pages.login.success': 'Login successful!',
-  'pages.login.permissionsLoadFailed': 'Permissions could not be loaded. Opened the personal address book; refresh to retry.',
+  'pages.login.permissionsLoadFailed':
+    'Permissions could not be loaded. Opened the personal address book; refresh to retry.',
   'pages.login.permissionsRetry': 'Retry',
   'pages.login.failure': 'Login failed, please try again!',
   'pages.login.username.placeholder': 'Username',
@@ -10,35 +11,46 @@ export default {
   'pages.login.rememberMe': 'Remember me',
   'pages.login.forgotPassword': 'Forgot Password?',
   'pages.login.forgotPassword.title': 'Reset Password',
-  'pages.login.forgotPassword.description': 'Enter your username or email address and we will send you a password reset link.',
+  'pages.login.forgotPassword.description':
+    'Enter your username or email address and we will send you a password reset link.',
   'pages.login.forgotPassword.accountPlaceholder': 'Username or email',
-  'pages.login.forgotPassword.accountRequired': 'Please enter your username or email',
+  'pages.login.forgotPassword.accountRequired':
+    'Please enter your username or email',
   'pages.login.forgotPassword.send': 'Send Reset Link',
   'pages.login.forgotPassword.done': 'Done',
-  'pages.login.forgotPassword.sent': 'If the account exists and has a bound email address, a password reset link has been sent. Please check your inbox (the link expires in 30 minutes).',
+  'pages.login.forgotPassword.sent':
+    'If the account exists and has a bound email address, a password reset link has been sent. Please check your inbox (the link expires in 30 minutes).',
   'pages.login.forgotPassword.failed': 'Failed to send the reset email',
-  'pages.login.forgotPassword.contactAdmin': 'Accounts without a bound email address need to contact the administrator.',
+  'pages.login.forgotPassword.contactAdmin':
+    'Accounts without a bound email address need to contact the administrator.',
   'pages.resetPassword.title': 'Set a New Password',
   'pages.resetPassword.subtitle': 'Setting a new password for {account}',
   'pages.resetPassword.newPassword': 'New Password',
   'pages.resetPassword.newPasswordRequired': 'Please enter the new password',
-  'pages.resetPassword.passwordMinLength': 'Password must be at least {count} characters',
+  'pages.resetPassword.passwordMinLength':
+    'Password must be at least {count} characters',
   'pages.resetPassword.confirmPassword': 'Confirm Password',
-  'pages.resetPassword.confirmPasswordRequired': 'Please confirm the new password',
+  'pages.resetPassword.confirmPasswordRequired':
+    'Please confirm the new password',
   'pages.resetPassword.passwordMismatch': 'The two passwords do not match',
   'pages.resetPassword.submit': 'Reset Password',
-  'pages.resetPassword.success': 'Password has been reset successfully. Redirecting to login...',
+  'pages.resetPassword.success':
+    'Password has been reset successfully. Redirecting to login...',
   'pages.resetPassword.failed': 'Failed to reset the password',
   'pages.resetPassword.invalid.title': 'Invalid or Expired Link',
-  'pages.resetPassword.invalid.description': 'This password reset link is invalid, has already been used, or has expired. Please request a new one.',
+  'pages.resetPassword.invalid.description':
+    'This password reset link is invalid, has already been used, or has expired. Please request a new one.',
   'pages.resetPassword.backToLogin': 'Back to Login',
   'pages.login.submit': 'Login',
   'pages.login.back': 'Back',
   'pages.login.emailCheck.title': 'Email Verification',
-  'pages.login.emailCheck.description': 'A 6-digit code has been sent to {email}',
-  'pages.login.emailCheck.sent': 'A verification code has been sent to your email',
+  'pages.login.emailCheck.description':
+    'A 6-digit code has been sent to {email}',
+  'pages.login.emailCheck.sent':
+    'A verification code has been sent to your email',
   'pages.login.tfaCheck.title': 'Two-Factor Authentication',
-  'pages.login.tfaCheck.description': 'Enter the 6-digit code from your authenticator app',
+  'pages.login.tfaCheck.description':
+    'Enter the 6-digit code from your authenticator app',
   'pages.login.verifyCode.submit': 'Verify',
   'pages.login.verifyCode.invalid': 'Invalid verification code',
   'pages.login.oidc.divider': 'Or continue with',
@@ -49,5 +61,6 @@ export default {
   'pages.login.passkey.cancelled': 'Passkey verification was cancelled',
   'pages.login.passkey.failed': 'Passkey verification failed',
   'pages.login.passkeyCheck.title': 'Passkey Verification',
-  'pages.login.passkeyCheck.description': 'Use your Passkey to complete sign-in',
+  'pages.login.passkeyCheck.description':
+    'Use your Passkey to complete sign-in',
 };

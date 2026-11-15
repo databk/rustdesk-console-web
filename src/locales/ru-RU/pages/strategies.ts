@@ -5,7 +5,8 @@ export default {
   'pages.strategies.create': 'Создать стратегию',
   'pages.strategies.edit': 'Редактировать стратегию',
   'pages.strategies.view': 'Просмотреть стратегию',
-  'pages.strategies.deleteConfirm': 'Вы уверены, что хотите удалить эту стратегию?',
+  'pages.strategies.deleteConfirm':
+    'Вы уверены, что хотите удалить эту стратегию?',
   'pages.strategies.createSuccess': 'Стратегия создана',
   'pages.strategies.createFailed': 'Не удалось создать стратегию',
   'pages.strategies.updateSuccess': 'Стратегия обновлена',
@@ -21,7 +22,8 @@ export default {
   'pages.strategies.resetAll': 'Сбросить все',
   'pages.strategies.assign': 'Назначить',
   'pages.strategies.assignManagement': 'Управление назначениями',
-  'pages.strategies.loadAssignedFailed': 'Не удалось загрузить назначенные цели',
+  'pages.strategies.loadAssignedFailed':
+    'Не удалось загрузить назначенные цели',
   'pages.strategies.loadTargetsFailed': 'Не удалось загрузить цели',
   'pages.strategies.assignDevice': 'Устройство',
   'pages.strategies.assignUser': 'Пользователь',
@@ -32,7 +34,8 @@ export default {
   'pages.strategies.selectTarget': 'Выберите объект',
   'pages.strategies.assignSuccess': 'Стратегия успешно назначена',
   'pages.strategies.assignFailed': 'Не удалось назначить стратегию',
-  'pages.strategies.assignPartialFailed': 'Назначено {success} объект(ов), не удалось {failed}: {errors}',
+  'pages.strategies.assignPartialFailed':
+    'Назначено {success} объект(ов), не удалось {failed}: {errors}',
   'pages.strategies.unassignSuccess': 'Назначение стратегии успешно отменено',
   'pages.strategies.unassignFailed': 'Не удалось отменить назначение стратегии',
   'pages.strategies.unassignConfirm': 'Отменить назначение для этого объекта?',
@@ -48,14 +51,20 @@ export default {
   'pages.strategies.category.privacy': 'Конфиденциальность и запись',
   'pages.strategies.category.server': 'Сервер',
   'pages.strategies.values.yes': 'Да',
-  'pages.strategies.option.allow-command-line-settings-when-settings-disabled.label': 'Allow Command Line Settings When Settings Disabled',
-  'pages.strategies.option.allow-deep-link-password.label': 'Allow Deep Link Password',
-  'pages.strategies.option.allow-deep-link-server-settings.label': 'Allow Deep Link Server Settings',
+  'pages.strategies.option.allow-command-line-settings-when-settings-disabled.label':
+    'Allow Command Line Settings When Settings Disabled',
+  'pages.strategies.option.allow-deep-link-password.label':
+    'Allow Deep Link Password',
+  'pages.strategies.option.allow-deep-link-server-settings.label':
+    'Allow Deep Link Server Settings',
   'pages.strategies.option.allow-hostname-as-id.label': 'Allow Hostname As Id',
   'pages.strategies.option.allow-https-21114.label': 'Allow Https 21114',
-  'pages.strategies.option.allow-logon-screen-password.label': 'Allow Logon Screen Password',
-  'pages.strategies.option.allow-printer-auto-print.label': 'Allow Printer Auto Print',
-  'pages.strategies.option.allow-sync-clipboard-between-sessions.label': 'Allow Sync Clipboard Between Sessions',
+  'pages.strategies.option.allow-logon-screen-password.label':
+    'Allow Logon Screen Password',
+  'pages.strategies.option.allow-printer-auto-print.label':
+    'Allow Printer Auto Print',
+  'pages.strategies.option.allow-sync-clipboard-between-sessions.label':
+    'Allow Sync Clipboard Between Sessions',
   'pages.strategies.option.avatar.label': 'Avatar',
   'pages.strategies.option.codec-preference.label': 'Codec Preference',
   'pages.strategies.option.codec-preference.value.auto': 'Auto',
@@ -65,181 +74,276 @@ export default {
   'pages.strategies.option.codec-preference.value.vp8': 'VP8',
   'pages.strategies.option.codec-preference.value.vp9': 'VP9',
   'pages.strategies.option.current-ab-name.label': 'Current Ab Name',
-  'pages.strategies.option.default-connect-password.label': 'Default Connect Password',
+  'pages.strategies.option.default-connect-password.label':
+    'Default Connect Password',
   'pages.strategies.option.disable-change-id.label': 'Disable Change Id',
-  'pages.strategies.option.disable-change-permanent-password.label': 'Disable Change Permanent Password',
+  'pages.strategies.option.disable-change-permanent-password.label':
+    'Disable Change Permanent Password',
   'pages.strategies.option.disable-unlock-pin.label': 'Disable Unlock Pin',
   'pages.strategies.option.display-name.label': 'Display Name',
   'pages.strategies.option.enable-check-update.label': 'Enable Check Update',
-  'pages.strategies.option.enable-flutter-http-on-rust.label': 'Enable Flutter Http On Rust',
-  'pages.strategies.option.enable-perm-change-in-accept-window.label': 'Enable Perm Change In Accept Window',
-  'pages.strategies.option.enable-port-forward-mux.label': 'Enable Port Forward Mux',
+  'pages.strategies.option.enable-flutter-http-on-rust.label':
+    'Enable Flutter Http On Rust',
+  'pages.strategies.option.enable-perm-change-in-accept-window.label':
+    'Enable Perm Change In Accept Window',
+  'pages.strategies.option.enable-port-forward-mux.label':
+    'Enable Port Forward Mux',
   'pages.strategies.option.enable-tcp-punch.label': 'Enable Tcp Punch',
   'pages.strategies.option.enable-webrtc.label': 'Enable Webrtc',
-  'pages.strategies.option.file-transfer-max-files.label': 'File Transfer Max Files',
+  'pages.strategies.option.file-transfer-max-files.label':
+    'File Transfer Max Files',
   'pages.strategies.option.floating-window-svg.label': 'Floating Window Svg',
-  'pages.strategies.option.hide-elevate-button-in-accept-window.label': 'Hide Elevate Button In Accept Window',
-  'pages.strategies.option.hide-general-settings.label': 'Hide General Settings',
+  'pages.strategies.option.hide-elevate-button-in-accept-window.label':
+    'Hide Elevate Button In Accept Window',
+  'pages.strategies.option.hide-general-settings.label':
+    'Hide General Settings',
   'pages.strategies.option.hide-help-cards.label': 'Hide Help Cards',
-  'pages.strategies.option.hide-network-settings.label': 'Hide Network Settings',
+  'pages.strategies.option.hide-network-settings.label':
+    'Hide Network Settings',
   'pages.strategies.option.hide-powered-by-me.label': 'Hide Powered By Me',
   'pages.strategies.option.hide-proxy-settings.label': 'Hide Proxy Settings',
-  'pages.strategies.option.hide-recording-button.label': 'Hide Recording Button',
-  'pages.strategies.option.hide-remote-printer-settings.label': 'Hide Remote Printer Settings',
-  'pages.strategies.option.hide-security-settings.label': 'Hide Security Settings',
+  'pages.strategies.option.hide-recording-button.label':
+    'Hide Recording Button',
+  'pages.strategies.option.hide-remote-printer-settings.label':
+    'Hide Remote Printer Settings',
+  'pages.strategies.option.hide-security-settings.label':
+    'Hide Security Settings',
   'pages.strategies.option.hide-server-settings.label': 'Hide Server Settings',
   'pages.strategies.option.hide-stop-service.label': 'Hide Stop Service',
   'pages.strategies.option.hide-tray.label': 'Hide Tray',
-  'pages.strategies.option.hide-username-on-card.label': 'Hide Username On Card',
-  'pages.strategies.option.hide-websocket-settings.label': 'Hide Websocket Settings',
+  'pages.strategies.option.hide-username-on-card.label':
+    'Hide Username On Card',
+  'pages.strategies.option.hide-websocket-settings.label':
+    'Hide Websocket Settings',
   'pages.strategies.option.hideAbTagsPanel.label': 'Hideabtagspanel',
-  'pages.strategies.option.main-window-always-on-top.label': 'Main Window Always On Top',
-  'pages.strategies.option.one-way-clipboard-redirection.label': 'One Way Clipboard Redirection',
-  'pages.strategies.option.one-way-file-transfer.label': 'One Way File Transfer',
+  'pages.strategies.option.main-window-always-on-top.label':
+    'Main Window Always On Top',
+  'pages.strategies.option.one-way-clipboard-redirection.label':
+    'One Way Clipboard Redirection',
+  'pages.strategies.option.one-way-file-transfer.label':
+    'One Way File Transfer',
   'pages.strategies.option.peer-tab-index.label': 'Peer Tab Index',
   'pages.strategies.option.peer-tab-order.label': 'Peer Tab Order',
   'pages.strategies.option.peer-tab-visible.label': 'Peer Tab Visible',
-  'pages.strategies.option.preset-address-book-alias.label': 'Preset Address Book Alias',
-  'pages.strategies.option.preset-address-book-name.label': 'Preset Address Book Name',
-  'pages.strategies.option.preset-address-book-note.label': 'Preset Address Book Note',
-  'pages.strategies.option.preset-address-book-password.label': 'Preset Address Book Password',
-  'pages.strategies.option.preset-address-book-tag.label': 'Preset Address Book Tag',
-  'pages.strategies.option.preset-device-group-name.label': 'Preset Device Group Name',
+  'pages.strategies.option.preset-address-book-alias.label':
+    'Preset Address Book Alias',
+  'pages.strategies.option.preset-address-book-name.label':
+    'Preset Address Book Name',
+  'pages.strategies.option.preset-address-book-note.label':
+    'Preset Address Book Note',
+  'pages.strategies.option.preset-address-book-password.label':
+    'Preset Address Book Password',
+  'pages.strategies.option.preset-address-book-tag.label':
+    'Preset Address Book Tag',
+  'pages.strategies.option.preset-device-group-name.label':
+    'Preset Device Group Name',
   'pages.strategies.option.preset-device-name.label': 'Preset Device Name',
-  'pages.strategies.option.preset-device-username.label': 'Preset Device Username',
+  'pages.strategies.option.preset-device-username.label':
+    'Preset Device Username',
   'pages.strategies.option.preset-note.label': 'Preset Note',
   'pages.strategies.option.preset-strategy-name.label': 'Preset Strategy Name',
   'pages.strategies.option.preset-user-name.label': 'Preset User Name',
-  'pages.strategies.option.printer-incomming-job-action.label': 'Printer Incomming Job Action',
+  'pages.strategies.option.printer-incomming-job-action.label':
+    'Printer Incomming Job Action',
   'pages.strategies.option.printer-incomming-job-action.value.auto': 'Auto',
   'pages.strategies.option.printer-incomming-job-action.value.manual': 'Manual',
-  'pages.strategies.option.printer-selected-name.label': 'Printer Selected Name',
+  'pages.strategies.option.printer-selected-name.label':
+    'Printer Selected Name',
   'pages.strategies.option.proxy-password.label': 'Proxy Password',
   'pages.strategies.option.proxy-url.label': 'Proxy Url',
   'pages.strategies.option.proxy-username.label': 'Proxy Username',
   'pages.strategies.option.quit-button-text.label': 'Quit Button Text',
   'pages.strategies.option.register-device.label': 'Register Device',
   'pages.strategies.option.relay-fallback-delay.label': 'Relay Fallback Delay',
-  'pages.strategies.option.remote-menubar-drag-left.label': 'Remote Menubar Drag Left',
-  'pages.strategies.option.remote-menubar-drag-right.label': 'Remote Menubar Drag Right',
+  'pages.strategies.option.remote-menubar-drag-left.label':
+    'Remote Menubar Drag Left',
+  'pages.strategies.option.remote-menubar-drag-right.label':
+    'Remote Menubar Drag Right',
   'pages.strategies.option.remoteMenubarState.label': 'Remotemenubarstate',
-  'pages.strategies.option.remove-preset-password-warning.label': 'Remove Preset Password Warning',
+  'pages.strategies.option.remove-preset-password-warning.label':
+    'Remove Preset Password Warning',
   'pages.strategies.option.use-raw-tcp-for-api.label': 'Use Raw Tcp For Api',
   'pages.strategies.option.video-save-directory.label': 'Video Save Directory',
   'pages.strategies.values.no': 'Нет',
   'pages.strategies.option.access-mode.label': 'Режим доступа',
   'pages.strategies.option.enable-keyboard.label': 'Включить клавиатуру и мышь',
   'pages.strategies.option.enable-clipboard.label': 'Включить буфер обмена',
-  'pages.strategies.option.enable-file-transfer.label': 'Включить передачу файлов',
+  'pages.strategies.option.enable-file-transfer.label':
+    'Включить передачу файлов',
   'pages.strategies.option.enable-camera.label': 'Включить камеру',
   'pages.strategies.option.enable-terminal.label': 'Включить терминал',
-  'pages.strategies.option.enable-remote-printer.label': 'Включить удалённый принтер',
+  'pages.strategies.option.enable-remote-printer.label':
+    'Включить удалённый принтер',
   'pages.strategies.option.enable-tunnel.label': 'Включить туннель',
-  'pages.strategies.option.enable-remote-restart.label': 'Включить удалённый перезапуск',
+  'pages.strategies.option.enable-remote-restart.label':
+    'Включить удалённый перезапуск',
   'pages.strategies.option.enable-block-input.label': 'Блокировать ввод',
-  'pages.strategies.option.allow-auto-disconnect.label': 'Разрешить автоматическое отключение',
-  'pages.strategies.option.auto-disconnect-timeout.label': 'Тайм-аут автоматического отключения',
-  'pages.strategies.option.allow-only-conn-window-open.label': 'Разрешать только открытое окно подключения',
+  'pages.strategies.option.allow-auto-disconnect.label':
+    'Разрешить автоматическое отключение',
+  'pages.strategies.option.auto-disconnect-timeout.label':
+    'Тайм-аут автоматического отключения',
+  'pages.strategies.option.allow-only-conn-window-open.label':
+    'Разрешать только открытое окно подключения',
   'pages.strategies.option.view_only.label': 'Только просмотр',
   'pages.strategies.option.terminal-persistent.label': 'Постоянный терминал',
-  'pages.strategies.option.allow-ask-for-note.label': 'Запрашивать примечание к подключению',
-  'pages.strategies.option.allow-remote-config-modification.label': 'Разрешить удалённое изменение конфигурации',
+  'pages.strategies.option.allow-ask-for-note.label':
+    'Запрашивать примечание к подключению',
+  'pages.strategies.option.allow-remote-config-modification.label':
+    'Разрешить удалённое изменение конфигурации',
   'pages.strategies.option.whitelist.label': 'Список разрешённых IP',
   'pages.strategies.option.approve-mode.label': 'Режим подтверждения',
   'pages.strategies.option.verification-method.label': 'Способ проверки',
-  'pages.strategies.option.temporary-password-length.label': 'Длина временного пароля',
-  'pages.strategies.option.lock_after_session_end.label': 'Блокировать после завершения сеанса',
-  'pages.strategies.option.allow-remote-cm-modification.label': 'Разрешить удалённое изменение клиента',
-  'pages.strategies.option.enable-trusted-devices.label': 'Включить доверенные устройства',
-  'pages.strategies.option.allow-numeric-one-time-password.label': 'Разрешить числовой одноразовый пароль',
-  'pages.strategies.option.allow-insecure-tls-fallback.label': 'Разрешить небезопасный откат TLS',
+  'pages.strategies.option.temporary-password-length.label':
+    'Длина временного пароля',
+  'pages.strategies.option.lock_after_session_end.label':
+    'Блокировать после завершения сеанса',
+  'pages.strategies.option.allow-remote-cm-modification.label':
+    'Разрешить удалённое изменение клиента',
+  'pages.strategies.option.enable-trusted-devices.label':
+    'Включить доверенные устройства',
+  'pages.strategies.option.allow-numeric-one-time-password.label':
+    'Разрешить числовой одноразовый пароль',
+  'pages.strategies.option.allow-insecure-tls-fallback.label':
+    'Разрешить небезопасный откат TLS',
   'pages.strategies.option.theme.label': 'Тема',
   'pages.strategies.option.lang.label': 'Язык',
-  'pages.strategies.option.enable-confirm-closing-tabs.label': 'Подтверждать закрытие вкладок',
-  'pages.strategies.option.allow-remove-wallpaper.label': 'Разрешить удаление обоев',
-  'pages.strategies.option.enable-open-new-connections-in-tabs.label': 'Открывать новые подключения во вкладках',
+  'pages.strategies.option.enable-confirm-closing-tabs.label':
+    'Подтверждать закрытие вкладок',
+  'pages.strategies.option.allow-remove-wallpaper.label':
+    'Разрешить удаление обоев',
+  'pages.strategies.option.enable-open-new-connections-in-tabs.label':
+    'Открывать новые подключения во вкладках',
   'pages.strategies.option.peer-card-ui-type.label': 'Тип карточки устройства',
   'pages.strategies.option.peer-sorting.label': 'Сортировка устройств',
-  'pages.strategies.option.show_monitors_toolbar.label': 'Показывать панель мониторов',
-  'pages.strategies.option.collapse_toolbar.label': 'Сворачивать панель инструментов',
-  'pages.strategies.option.show_remote_cursor.label': 'Показывать удалённый курсор',
-  'pages.strategies.option.follow_remote_cursor.label': 'Следовать за удалённым курсором',
-  'pages.strategies.option.follow_remote_window.label': 'Следовать за удалённым окном',
+  'pages.strategies.option.show_monitors_toolbar.label':
+    'Показывать панель мониторов',
+  'pages.strategies.option.collapse_toolbar.label':
+    'Сворачивать панель инструментов',
+  'pages.strategies.option.show_remote_cursor.label':
+    'Показывать удалённый курсор',
+  'pages.strategies.option.follow_remote_cursor.label':
+    'Следовать за удалённым курсором',
+  'pages.strategies.option.follow_remote_window.label':
+    'Следовать за удалённым окном',
   'pages.strategies.option.zoom-cursor.label': 'Увеличивать курсор',
-  'pages.strategies.option.show_quality_monitor.label': 'Показывать монитор качества',
-  'pages.strategies.option.reverse_mouse_wheel.label': 'Инвертировать колесо мыши',
-  'pages.strategies.option.swap-left-right-mouse.label': 'Поменять левую и правую кнопки мыши',
-  'pages.strategies.option.displays_as_individual_windows.label': 'Показывать мониторы отдельными окнами',
-  'pages.strategies.option.use_all_my_displays_for_the_remote_session.label': 'Использовать все мониторы в удалённом сеансе',
+  'pages.strategies.option.show_quality_monitor.label':
+    'Показывать монитор качества',
+  'pages.strategies.option.reverse_mouse_wheel.label':
+    'Инвертировать колесо мыши',
+  'pages.strategies.option.swap-left-right-mouse.label':
+    'Поменять левую и правую кнопки мыши',
+  'pages.strategies.option.displays_as_individual_windows.label':
+    'Показывать мониторы отдельными окнами',
+  'pages.strategies.option.use_all_my_displays_for_the_remote_session.label':
+    'Использовать все мониторы в удалённом сеансе',
   'pages.strategies.option.view_style.label': 'Стиль просмотра',
   'pages.strategies.option.scroll_style.label': 'Стиль прокрутки',
-  'pages.strategies.option.edge-scroll-edge-thickness.label': 'Толщина прокрутки у края',
+  'pages.strategies.option.edge-scroll-edge-thickness.label':
+    'Толщина прокрутки у края',
   'pages.strategies.option.trackpad-speed.label': 'Скорость трекпада',
   'pages.strategies.option.disable-group-panel.label': 'Отключить панель групп',
   'pages.strategies.option.keep-screen-on.label': 'Не выключать экран',
-  'pages.strategies.option.disable-discovery-panel.label': 'Отключить панель обнаружения',
+  'pages.strategies.option.disable-discovery-panel.label':
+    'Отключить панель обнаружения',
   'pages.strategies.option.touch-mode.label': 'Сенсорный режим',
-  'pages.strategies.option.show-virtual-mouse.label': 'Показывать виртуальную мышь',
-  'pages.strategies.option.show-virtual-joystick.label': 'Показывать виртуальный джойстик',
+  'pages.strategies.option.show-virtual-mouse.label':
+    'Показывать виртуальную мышь',
+  'pages.strategies.option.show-virtual-joystick.label':
+    'Показывать виртуальный джойстик',
   'pages.strategies.option.enable-audio.label': 'Включить звук',
-  'pages.strategies.option.allow-always-software-render.label': 'Всегда использовать программный рендеринг',
+  'pages.strategies.option.allow-always-software-render.label':
+    'Всегда использовать программный рендеринг',
   'pages.strategies.option.enable-hwcodec.label': 'Включить аппаратный кодек',
-  'pages.strategies.option.use-texture-render.label': 'Использовать текстурный рендеринг',
+  'pages.strategies.option.use-texture-render.label':
+    'Использовать текстурный рендеринг',
   'pages.strategies.option.disable_audio.label': 'Отключить звук',
   'pages.strategies.option.i444.label': 'Цветовой формат I444',
   'pages.strategies.option.image_quality.label': 'Качество изображения',
-  'pages.strategies.option.custom_image_quality.label': 'Пользовательское качество изображения',
+  'pages.strategies.option.custom_image_quality.label':
+    'Пользовательское качество изображения',
   'pages.strategies.option.custom-fps.label': 'Пользовательская частота кадров',
-  'pages.strategies.option.enable-directx-capture.label': 'Включить захват DirectX',
-  'pages.strategies.option.enable-android-software-encoding-half-scale.label': 'Включить программное кодирование Android в половинном масштабе',
+  'pages.strategies.option.enable-directx-capture.label':
+    'Включить захват DirectX',
+  'pages.strategies.option.enable-android-software-encoding-half-scale.label':
+    'Включить программное кодирование Android в половинном масштабе',
   'pages.strategies.option.allow-d3d-render.label': 'Разрешить рендеринг D3D',
-  'pages.strategies.option.enable-file-copy-paste.label': 'Включить копирование и вставку файлов',
+  'pages.strategies.option.enable-file-copy-paste.label':
+    'Включить копирование и вставку файлов',
   'pages.strategies.option.disable_clipboard.label': 'Отключить буфер обмена',
-  'pages.strategies.option.sync-init-clipboard.label': 'Синхронизировать исходный буфер обмена',
-  'pages.strategies.option.enable-lan-discovery.label': 'Включить обнаружение в LAN',
+  'pages.strategies.option.sync-init-clipboard.label':
+    'Синхронизировать исходный буфер обмена',
+  'pages.strategies.option.enable-lan-discovery.label':
+    'Включить обнаружение в LAN',
   'pages.strategies.option.direct-server.label': 'Прямой сервер',
-  'pages.strategies.option.allow-auto-update.label': 'Разрешить автоматические обновления',
+  'pages.strategies.option.allow-auto-update.label':
+    'Разрешить автоматические обновления',
   'pages.strategies.option.enable-abr.label': 'Включить адаптивный битрейт',
-  'pages.strategies.option.sync-ab-with-recent-sessions.label': 'Синхронизировать адресную книгу с последними сеансами',
-  'pages.strategies.option.sync-ab-tags.label': 'Синхронизировать теги адресной книги',
-  'pages.strategies.option.filter-ab-by-intersection.label': 'Фильтровать адресную книгу по пересечению',
+  'pages.strategies.option.sync-ab-with-recent-sessions.label':
+    'Синхронизировать адресную книгу с последними сеансами',
+  'pages.strategies.option.sync-ab-tags.label':
+    'Синхронизировать теги адресной книги',
+  'pages.strategies.option.filter-ab-by-intersection.label':
+    'Фильтровать адресную книгу по пересечению',
   'pages.strategies.option.enable-udp-punch.label': 'Включить UDP-проброс',
   'pages.strategies.option.enable-ipv6-punch.label': 'Включить IPv6-проброс',
-  'pages.strategies.option.pre-elevate-service.label': 'Предварительно повысить права службы',
-  'pages.strategies.option.keep-awake-during-incoming-sessions.label': 'Не отключать сон во время входящих сеансов',
-  'pages.strategies.option.keep-awake-during-outgoing-sessions.label': 'Не отключать сон во время исходящих сеансов',
+  'pages.strategies.option.pre-elevate-service.label':
+    'Предварительно повысить права службы',
+  'pages.strategies.option.keep-awake-during-incoming-sessions.label':
+    'Не отключать сон во время входящих сеансов',
+  'pages.strategies.option.keep-awake-during-outgoing-sessions.label':
+    'Не отключать сон во время исходящих сеансов',
   'pages.strategies.option.disable-udp.label': 'Отключить UDP',
   'pages.strategies.option.allow-websocket.label': 'Разрешить WebSocket',
-  'pages.strategies.option.disable-floating-window.label': 'Отключить плавающее окно',
-  'pages.strategies.option.floating-window-size.label': 'Размер плавающего окна',
-  'pages.strategies.option.floating-window-untouchable.label': 'Плавающее окно без касаний',
-  'pages.strategies.option.floating-window-transparency.label': 'Прозрачность плавающего окна',
-  'pages.strategies.option.enable-record-session.label': 'Включить запись сеансов',
-  'pages.strategies.option.allow-auto-record-incoming.label': 'Разрешить автоматическую запись входящих сеансов',
-  'pages.strategies.option.allow-auto-record-outgoing.label': 'Разрешить автоматическую запись исходящих сеансов',
+  'pages.strategies.option.disable-floating-window.label':
+    'Отключить плавающее окно',
+  'pages.strategies.option.floating-window-size.label':
+    'Размер плавающего окна',
+  'pages.strategies.option.floating-window-untouchable.label':
+    'Плавающее окно без касаний',
+  'pages.strategies.option.floating-window-transparency.label':
+    'Прозрачность плавающего окна',
+  'pages.strategies.option.enable-record-session.label':
+    'Включить запись сеансов',
+  'pages.strategies.option.allow-auto-record-incoming.label':
+    'Разрешить автоматическую запись входящих сеансов',
+  'pages.strategies.option.allow-auto-record-outgoing.label':
+    'Разрешить автоматическую запись исходящих сеансов',
   'pages.strategies.option.privacy_mode.label': 'Режим конфиденциальности',
-  'pages.strategies.option.allow-kcp-congestion-control.label': 'Разрешить контроль перегрузки KCP',
-  'pages.strategies.option.allow-scope-violation-alarm.label': 'Разрешить тревогу нарушения области',
-  'pages.strategies.option.allow-scope-violation-close.label': 'Разрешить закрытие нарушения области',
-  'pages.strategies.option.allow-webrtc-congestion-control.label': 'Разрешить контроль перегрузки WebRTC',
+  'pages.strategies.option.allow-kcp-congestion-control.label':
+    'Разрешить контроль перегрузки KCP',
+  'pages.strategies.option.allow-scope-violation-alarm.label':
+    'Разрешить тревогу нарушения области',
+  'pages.strategies.option.allow-scope-violation-close.label':
+    'Разрешить закрытие нарушения области',
+  'pages.strategies.option.allow-webrtc-congestion-control.label':
+    'Разрешить контроль перегрузки WebRTC',
   'pages.strategies.option.api-server.label': 'API сервер',
-  'pages.strategies.option.custom-rendezvous-server.label': 'Пользовательский rendezvous сервер',
+  'pages.strategies.option.custom-rendezvous-server.label':
+    'Пользовательский rendezvous сервер',
   'pages.strategies.option.direct-access-port.label': 'Порт прямого доступа',
-  'pages.strategies.option.enable-privacy-mode.label': 'Включить режим конфиденциальности',
+  'pages.strategies.option.enable-privacy-mode.label':
+    'Включить режим конфиденциальности',
   'pages.strategies.option.ice-servers.label': 'ICE серверы',
-  'pages.strategies.option.ice-servers.description': 'URL ICE-серверов через запятую',
+  'pages.strategies.option.ice-servers.description':
+    'URL ICE-серверов через запятую',
   'pages.strategies.option.id-whitelist.label': 'Белый список ID',
   'pages.strategies.option.id-whitelist.description': 'Список ID через запятую',
   'pages.strategies.option.key.label': 'Ключ',
   'pages.strategies.option.relay-server.label': 'Релейный сервер',
-  'pages.strategies.option.trusted-device-expiration-days.label': 'Дни истечения доверенных устройств',
+  'pages.strategies.option.trusted-device-expiration-days.label':
+    'Дни истечения доверенных устройств',
   'pages.strategies.option.websocket-port.label': 'Порт WebSocket',
-  'pages.strategies.option.windows-service-video-save-directory.label': 'Каталог сохранения видео службы Windows',
-  'pages.strategies.option.windows-service-video-save-directory.description': 'Абсолютный путь для хранения записей в режиме службы',
-  'pages.strategies.option.auto-disconnect-timeout.description': 'Тайм-аут в минутах',
+  'pages.strategies.option.windows-service-video-save-directory.label':
+    'Каталог сохранения видео службы Windows',
+  'pages.strategies.option.windows-service-video-save-directory.description':
+    'Абсолютный путь для хранения записей в режиме службы',
+  'pages.strategies.option.auto-disconnect-timeout.description':
+    'Тайм-аут в минутах',
   'pages.strategies.option.lang.description': 'Код языка',
-  'pages.strategies.option.enable-ipv6-punch.description': 'Собственный сервер: Нет, остальные: Да',
-  'pages.strategies.option.use-texture-render.description': 'Зависит от платформы',
+  'pages.strategies.option.enable-ipv6-punch.description':
+    'Собственный сервер: Нет, остальные: Да',
+  'pages.strategies.option.use-texture-render.description':
+    'Зависит от платформы',
   'pages.strategies.option.whitelist.description': 'Список IP через запятую',
   'pages.strategies.option.image_quality.value.best': 'Лучшее',
   'pages.strategies.option.image_quality.value.balanced': 'Сбалансированное',
@@ -263,14 +367,20 @@ export default {
   'pages.strategies.option.scroll_style.value.scrollbar': 'Полоса прокрутки',
   'pages.strategies.option.scroll_style.value.scrolledge': 'Прокрутка у края',
   'pages.strategies.option.keep-screen-on.value.never': 'Никогда',
-  'pages.strategies.option.keep-screen-on.value.during-controlled': 'Во время управляемого сеанса',
-  'pages.strategies.option.keep-screen-on.value.service-on': 'При включённой службе',
+  'pages.strategies.option.keep-screen-on.value.during-controlled':
+    'Во время управляемого сеанса',
+  'pages.strategies.option.keep-screen-on.value.service-on':
+    'При включённой службе',
   'pages.strategies.option.approve-mode.value.password': 'Пароль',
   'pages.strategies.option.approve-mode.value.click': 'Щелчок',
-  'pages.strategies.option.approve-mode.value.password-click': 'Пароль и щелчок',
-  'pages.strategies.option.verification-method.value.use-temporary-password': 'Временный пароль',
-  'pages.strategies.option.verification-method.value.use-permanent-password': 'Постоянный пароль',
-  'pages.strategies.option.verification-method.value.use-both-passwords': 'Оба пароля',
+  'pages.strategies.option.approve-mode.value.password-click':
+    'Пароль и щелчок',
+  'pages.strategies.option.verification-method.value.use-temporary-password':
+    'Временный пароль',
+  'pages.strategies.option.verification-method.value.use-permanent-password':
+    'Постоянный пароль',
+  'pages.strategies.option.verification-method.value.use-both-passwords':
+    'Оба пароля',
   'pages.strategies.option.temporary-password-length.value.6': '6 цифр',
   'pages.strategies.option.temporary-password-length.value.8': '8 цифр',
   'pages.strategies.option.temporary-password-length.value.10': '10 цифр',

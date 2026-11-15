@@ -34,30 +34,47 @@ export default {
   'pages.users.globalScope': 'Global',
   'pages.users.deviceGroupScope': 'Selected device groups',
   'pages.users.selectDeviceGroups': 'Select one or more device groups',
-  'pages.users.unsupportedDeviceGroupScope': 'Device-group scope is only available for roles containing device actions and strategy assignment',
-  'pages.users.deviceGroupScopeRequired': 'Select at least one device group for a device-group assignment',
-  'pages.users.rolesScopeInfo': 'Global grants override narrower device-group grants.',
+  'pages.users.unsupportedDeviceGroupScope':
+    'Device-group scope is only available for roles containing device actions and strategy assignment',
+  'pages.users.deviceGroupScopeRequired':
+    'Select at least one device group for a device-group assignment',
+  'pages.users.rolesScopeInfo':
+    'Global grants override narrower device-group grants.',
   'pages.users.protectedAccount': 'Protected account',
-  'pages.users.protectedAccountInfo': 'Protected accounts can only be managed by the super administrator.',
-  'pages.users.systemOwnerStatusBlocked': 'The system owner cannot be enabled or disabled.',
-  'pages.users.systemOwnerMutationBlocked': 'The system owner cannot be disabled or deleted.',
+  'pages.users.protectedAccountInfo':
+    'Protected accounts can only be managed by the super administrator.',
+  'pages.users.systemOwnerStatusBlocked':
+    'The system owner cannot be enabled or disabled.',
+  'pages.users.systemOwnerMutationBlocked':
+    'The system owner cannot be disabled or deleted.',
   'pages.users.systemCapabilities': 'System capabilities',
   'pages.users.systemCapability.roles.create': 'Create role definitions',
   'pages.users.systemCapability.roles.edit': 'Edit role definitions',
   'pages.users.systemCapability.roles.delete': 'Delete role definitions',
   'pages.users.systemCapability.settings.manage': 'Manage system settings',
-  'pages.users.systemCapability.device_groups.manage': 'Manage device-group structure',
-  'pages.users.systemCapability.identity_sources.manage': 'Manage identity sources',
-  'pages.users.roleEligibility.assign_not_allowed': 'You cannot assign this role',
-  'pages.users.roleEligibility.remove_not_allowed': 'You cannot remove this role',
-  'pages.users.roleEligibility.protected_role': 'Protected roles can only be assigned or removed by the super administrator',
-  'pages.users.roleEligibility.protected_target': 'The target account is protected',
-  'pages.users.roleEligibility.super_admin_target': 'Ordinary roles cannot be assigned to the super administrator',
+  'pages.users.systemCapability.device_groups.manage':
+    'Manage device-group structure',
+  'pages.users.systemCapability.identity_sources.manage':
+    'Manage identity sources',
+  'pages.users.roleEligibility.assign_not_allowed':
+    'You cannot assign this role',
+  'pages.users.roleEligibility.remove_not_allowed':
+    'You cannot remove this role',
+  'pages.users.roleEligibility.protected_role':
+    'Protected roles can only be assigned or removed by the super administrator',
+  'pages.users.roleEligibility.protected_target':
+    'The target account is protected',
+  'pages.users.roleEligibility.super_admin_target':
+    'Ordinary roles cannot be assigned to the super administrator',
   'pages.users.roleEligibility.self_target': 'You cannot change your own roles',
-  'pages.users.roleEligibility.missing_caller_scope': 'Your permission scope is insufficient',
-  'pages.users.roleEligibility.scope_exceeds_caller': 'The role scope exceeds your permissions',
-  'pages.users.roleEligibility.missing_permission': 'You lack a permission required by this role',
-  'pages.users.roleEligibility.role_grants_roles_assign': 'Roles that grant role assignment can only be managed by the super administrator',
+  'pages.users.roleEligibility.missing_caller_scope':
+    'Your permission scope is insufficient',
+  'pages.users.roleEligibility.scope_exceeds_caller':
+    'The role scope exceeds your permissions',
+  'pages.users.roleEligibility.missing_permission':
+    'You lack a permission required by this role',
+  'pages.users.roleEligibility.role_grants_roles_assign':
+    'Roles that grant role assignment can only be managed by the super administrator',
   'pages.users.effectiveScope': 'Effective scope',
   'pages.users.strategy': 'Strategy',
   'pages.users.invite': 'Invite User',
@@ -86,13 +103,16 @@ export default {
   'pages.users.batchForceLogout': 'Batch Force Logout',
   'pages.users.batchEnableConfirm': 'Are you sure to enable selected users?',
   'pages.users.batchDisableConfirm': 'Are you sure to disable selected users?',
-  'pages.users.batchForceLogoutConfirm': 'Are you sure to force logout selected users?',
+  'pages.users.batchForceLogoutConfirm':
+    'Are you sure to force logout selected users?',
   'pages.users.batchEnableSuccess': 'Successfully enabled {count} user(s)',
   'pages.users.batchEnableFailed': 'Failed to enable users',
-  'pages.users.batchEnablePartialFailed': 'Successfully enabled {success} user(s), {failed} failed',
+  'pages.users.batchEnablePartialFailed':
+    'Successfully enabled {success} user(s), {failed} failed',
   'pages.users.batchDisableSuccess': 'Successfully disabled {count} user(s)',
   'pages.users.batchDisableFailed': 'Failed to disable users',
-  'pages.users.batchDisablePartialFailed': 'Successfully disabled {success} user(s), {failed} failed',
+  'pages.users.batchDisablePartialFailed':
+    'Successfully disabled {success} user(s), {failed} failed',
   'pages.users.batchForceLogoutSuccess': 'Batch force logout successful',
   'pages.users.batchForceLogoutFailed': 'Failed to force logout users',
   'pages.users.admin': 'Admin',

@@ -1,9 +1,11 @@
 export default {
   'webClient.qualityTcpEntry': 'Remetente da entrada',
   'webClient.qualityTcpRelay': 'Remetente do relay',
-  'webClient.error.authorization': 'Você não pode conectar a este dispositivo, ou esta autorização expirou.',
+  'webClient.error.authorization':
+    'Você não pode conectar a este dispositivo, ou esta autorização expirou.',
   'webClient.error.sessionExpired': 'Seu login expirou. Entre novamente.',
-  'webClient.trueColorUnavailable': 'O navegador ou dispositivo remoto não suporta cor real com este codec.',
+  'webClient.trueColorUnavailable':
+    'O navegador ou dispositivo remoto não suporta cor real com este codec.',
   'webClient.recordPreparing': 'Preparando gravação…',
   'webClient.frameRateValue': 'Valor do limite de FPS',
   'webClient.keyboardLeftKey': '{key} esquerdo',
@@ -23,16 +25,22 @@ export default {
   'webClient.captureDisable': 'Desativar captura',
   'webClient.captureRetry': 'Tentar de novo',
   'webClient.capturePendingAction': 'Ativando…',
-  'webClient.captureNonFullscreenHint': 'Fora da tela cheia: alguns atalhos podem agir neste computador ou no navegador.',
-  'webClient.captureFullscreenHint': 'Tela cheia com captura: mais atalhos podem ser enviados ao dispositivo remoto.',
-  'webClient.captureSystemHint': 'Alguns atalhos do sistema ainda podem agir neste computador.',
-  'webClient.captureUnsupportedHint': 'Use o teclado na tela para enviar teclas.',
+  'webClient.captureNonFullscreenHint':
+    'Fora da tela cheia: alguns atalhos podem agir neste computador ou no navegador.',
+  'webClient.captureFullscreenHint':
+    'Tela cheia com captura: mais atalhos podem ser enviados ao dispositivo remoto.',
+  'webClient.captureSystemHint':
+    'Alguns atalhos do sistema ainda podem agir neste computador.',
+  'webClient.captureUnsupportedHint':
+    'Use o teclado na tela para enviar teclas.',
   'webClient.inputMappings': 'Mapeamento de entrada',
   'webClient.screenKeyboard': 'Teclado na tela',
   'webClient.keyboardKeysTab': 'Teclas',
   'webClient.keyboardTextTab': 'Texto',
-  'webClient.keyboardModifierHint': 'Ative as teclas modificadoras e clique em outra tecla para enviar um atalho. Ao sair ou fechar o teclado, elas são liberadas.',
-  'webClient.keyboardTextHint': 'Digite com seu método de entrada e envie. O texto não inclui teclas modificadoras.',
+  'webClient.keyboardModifierHint':
+    'Ative as teclas modificadoras e clique em outra tecla para enviar um atalho. Ao sair ou fechar o teclado, elas são liberadas.',
+  'webClient.keyboardTextHint':
+    'Digite com seu método de entrada e envie. O texto não inclui teclas modificadoras.',
   'webClient.keyboardClose': 'Recolher teclado na tela',
   'webClient.keyboardMove': 'Mover teclado na tela',
   'webClient.keyboardResize': 'Redimensionar teclado na tela',
@@ -69,16 +77,20 @@ export default {
   'webClient.codecAuto': 'Automático',
   'webClient.codecActual': 'Recebendo',
   'webClient.trueColor': 'Cor real 4:4:4',
-  'webClient.trueColorHint': 'Requer suporte do navegador e do dispositivo remoto. Outros clientes ou a política remota ainda podem usar 4:2:0.',
+  'webClient.trueColorHint':
+    'Requer suporte do navegador e do dispositivo remoto. Outros clientes ou a política remota ainda podem usar 4:2:0.',
   'webClient.colorFormat': 'Formato de cor',
   'webClient.recordStart': 'Gravar tela',
   'webClient.recordStop': 'Parar gravação',
   'webClient.recording': 'Gravando',
-  'webClient.recordFallback': 'Salvamento em fluxo indisponível. A gravação é salva ao atingir 16 MiB.',
+  'webClient.recordFallback':
+    'Salvamento em fluxo indisponível. A gravação é salva ao atingir 16 MiB.',
   'webClient.recordSaveCancelled': 'Gravação não iniciada.',
-  'webClient.recordFailed': 'Não foi possível salvar. O controle remoto continua disponível.',
+  'webClient.recordFailed':
+    'Não foi possível salvar. O controle remoto continua disponível.',
   'webClient.recordSaved': 'Gravação salva.',
-  'webClient.recordChanged': 'O formato mudou. A gravação foi salva; inicie outra se precisar.',
+  'webClient.recordChanged':
+    'O formato mudou. A gravação foi salva; inicie outra se precisar.',
   'webClient.recordLimit': 'A gravação atingiu 16 MiB e foi salva.',
   'webClient.recordDenied': 'A permissão de gravação foi revogada.',
   'webClient.error.video': 'Falha na decodificação. Tentando VP9 por software.',
@@ -91,7 +103,8 @@ export default {
   'webClient.qualityCodec': 'Codec',
   'webClient.disabled': 'O administrador desativou o Cliente Web.',
   'webClient.unavailable': 'O Cliente Web não está disponível neste servidor.',
-  'webClient.keyboardDenied': 'O dispositivo remoto desativou teclado e mouse. Teclas ou botões anteriormente pressionados podem continuar assim; restaure a permissão ou pressione e solte-os no dispositivo remoto.',
+  'webClient.keyboardDenied':
+    'O dispositivo remoto desativou teclado e mouse. Teclas ou botões anteriormente pressionados podem continuar assim; restaure a permissão ou pressione e solte-os no dispositivo remoto.',
   'webClient.state.idle': 'Pronto',
   'webClient.state.connecting': 'Conectando',
   'webClient.state.securing': 'Verificando identidade',
@@ -100,29 +113,48 @@ export default {
   'webClient.state.connected': 'Conectado',
   'webClient.state.closed': 'Desconectado',
   'webClient.state.failed': 'Falha na conexão',
-  'webClient.error.configuration': 'ID ou configuração de servidor inválidos. Não são aceitos IPs, URLs ou outros servidores.',
-  'webClient.error.identity': 'Falha na verificação da identidade remota. A conexão foi encerrada.',
-  'webClient.error.encryption': 'Falha ao iniciar a sessão segura ou verificar mensagens.',
-  'webClient.error.password': 'O dispositivo remoto rejeitou a senha. Tente novamente.',
-  'webClient.error.denied': 'O dispositivo remoto recusou ou encerrou a sessão.',
-  'webClient.error.offline': 'O ID não existe neste servidor ou o dispositivo está offline.',
+  'webClient.error.configuration':
+    'ID ou configuração de servidor inválidos. Não são aceitos IPs, URLs ou outros servidores.',
+  'webClient.error.identity':
+    'Falha na verificação da identidade remota. A conexão foi encerrada.',
+  'webClient.error.encryption':
+    'Falha ao iniciar a sessão segura ou verificar mensagens.',
+  'webClient.error.password':
+    'O dispositivo remoto rejeitou a senha. Tente novamente.',
+  'webClient.error.denied':
+    'O dispositivo remoto recusou ou encerrou a sessão.',
+  'webClient.error.offline':
+    'O ID não existe neste servidor ou o dispositivo está offline.',
   'webClient.error.timeout': 'A conexão expirou. Desconecte e tente novamente.',
   'webClient.error.transport': 'A conexão de rede foi interrompida.',
-  'webClient.error.protocol': 'O dispositivo remoto enviou uma mensagem de protocolo não suportada.',
-  'webClient.error.overload': 'A sessão excedeu o limite do buffer e foi encerrada.',
-  'webClient.error.unsupported': 'Requer HTTPS e um navegador com decodificação de vídeo WebCodecs. A compatibilidade Android/iOS exige testes em dispositivos.',
-  'webClient.error.media': 'A decodificação parou. Desconecte e conecte novamente.',
-  'webClient.error.worker': 'O Worker do Cliente Web não foi carregado. Confira os arquivos da implantação.',
-  'webClient.error.clipboard': 'Acesso negado ou dados inválidos ou grandes demais. Texto: até 1 MiB. Para PNG, selecione um arquivo ou baixe a imagem.',
-  'webClient.error.fullscreen': 'A tela cheia não está disponível neste contexto.',
+  'webClient.error.protocol':
+    'O dispositivo remoto enviou uma mensagem de protocolo não suportada.',
+  'webClient.error.overload':
+    'A sessão excedeu o limite do buffer e foi encerrada.',
+  'webClient.error.unsupported':
+    'Requer HTTPS e um navegador com decodificação de vídeo WebCodecs. A compatibilidade Android/iOS exige testes em dispositivos.',
+  'webClient.error.media':
+    'A decodificação parou. Desconecte e conecte novamente.',
+  'webClient.error.worker':
+    'O Worker do Cliente Web não foi carregado. Confira os arquivos da implantação.',
+  'webClient.error.clipboard':
+    'Acesso negado ou dados inválidos ou grandes demais. Texto: até 1 MiB. Para PNG, selecione um arquivo ou baixe a imagem.',
+  'webClient.error.fullscreen':
+    'A tela cheia não está disponível neste contexto.',
   'webClient.error.cancelled': 'Operação cancelada.',
   'webClient.softText': 'Texto do teclado',
-  'webClient.error.audio': 'Áudio indisponível ou limite de buffer excedido. Verifique o suporte a Opus e ative novamente.',
-  'webClient.error.files': 'A operação no arquivo falhou. Verifique as permissões e o tamanho e tente novamente.',
-  'webClient.error.fileSaveBlocked': 'O navegador bloqueou a janela de salvamento. Clique diretamente em Salvar neste computador para tentar novamente.',
-  'webClient.error.fileSaveDenied': 'A gravação do arquivo local foi negada. Escolha novamente o local de salvamento e permita o acesso.',
-  'webClient.error.filePath': 'Pasta inválida. Digite o caminho completo, como C:/Users; a pasta atual não mudou.',
-  'webClient.error.localFiles': 'Não foi possível acessar a pasta local. Escolha novamente ou use envio e download.',
+  'webClient.error.audio':
+    'Áudio indisponível ou limite de buffer excedido. Verifique o suporte a Opus e ative novamente.',
+  'webClient.error.files':
+    'A operação no arquivo falhou. Verifique as permissões e o tamanho e tente novamente.',
+  'webClient.error.fileSaveBlocked':
+    'O navegador bloqueou a janela de salvamento. Clique diretamente em Salvar neste computador para tentar novamente.',
+  'webClient.error.fileSaveDenied':
+    'A gravação do arquivo local foi negada. Escolha novamente o local de salvamento e permita o acesso.',
+  'webClient.error.filePath':
+    'Pasta inválida. Digite o caminho completo, como C:/Users; a pasta atual não mudou.',
+  'webClient.error.localFiles':
+    'Não foi possível acessar a pasta local. Escolha novamente ou use envio e download.',
   'webClient.quality': 'Qualidade da imagem',
   'webClient.qualityLow': 'Fluida',
   'webClient.qualityBalanced': 'Equilibrada',

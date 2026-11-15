@@ -8,7 +8,8 @@ export default {
   'pages.customClient.strategyModeOff': '关闭',
   'pages.customClient.strategyModeDefault': '默认',
   'pages.customClient.strategyModeOverride': '覆盖',
-  'pages.customClient.selectStrategyPlaceholder': '选择策略作为基础预设（可选）',
+  'pages.customClient.selectStrategyPlaceholder':
+    '选择策略作为基础预设（可选）',
   'pages.customClient.defaultCount': '{count} 个默认',
   'pages.customClient.overrideCount': '{count} 个覆盖',
   'pages.customClient.noConfigSelected': '未选择配置',
@@ -48,7 +49,8 @@ export default {
   'pages.customClient.statusCancelled': '构建已取消',
   'pages.customClient.settings': '设置',
   'pages.customClient.settingsRequired': 'GitHub Token 未配置',
-  'pages.customClient.settingsRequiredDesc': '请在设置中配置 GitHub Token 和生成器仓库以启用自定义客户端构建。',
+  'pages.customClient.settingsRequiredDesc':
+    '请在设置中配置 GitHub Token 和生成器仓库以启用自定义客户端构建。',
   'pages.customClient.openSettings': '打开设置',
   'pages.customClient.loadFailed': '加载构建列表失败',
   'pages.customClient.retry': '重试',
@@ -59,7 +61,8 @@ export default {
   'pages.customClient.signingKeys': '签名密钥',
   'pages.customClient.signingPublicKey': '签名公钥',
   'pages.customClient.signingPublicKeyTip': '重新生成',
-  'pages.customClient.signingKeyRegenerateNotice': '重新生成签名密钥将使现有的自定义客户端失效。',
+  'pages.customClient.signingKeyRegenerateNotice':
+    '重新生成签名密钥将使现有的自定义客户端失效。',
   'pages.customClient.regenerateSigningKey': '重新生成签名密钥',
   'pages.customClient.logoManagement': 'Logo 管理',
   'pages.customClient.createdAt': '创建时间',

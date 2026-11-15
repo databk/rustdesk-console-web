@@ -4,20 +4,25 @@ export default {
   'pages.audits.webClient.request_denied': 'Веб-подключение отклонено',
   'pages.audits.webClient.gateway_open': 'Веб-канал открыт',
   'pages.audits.webClient.session_ended': 'Веб-сеанс завершён',
-  'pages.audits.webClient.remote_auth_succeeded': 'Удалённая аутентификация успешна (отчёт браузера)',
-  'pages.audits.webClient.remote_auth_failed': 'Удалённая аутентификация не удалась (отчёт браузера)',
+  'pages.audits.webClient.remote_auth_succeeded':
+    'Удалённая аутентификация успешна (отчёт браузера)',
+  'pages.audits.webClient.remote_auth_failed':
+    'Удалённая аутентификация не удалась (отчёт браузера)',
   'pages.audits.webClient.file_started': 'Передача начата (отчёт браузера)',
-  'pages.audits.webClient.file_completed': 'Передача завершена (отчёт браузера)',
+  'pages.audits.webClient.file_completed':
+    'Передача завершена (отчёт браузера)',
   'pages.audits.webClient.file_failed': 'Передача не удалась (отчёт браузера)',
   'pages.audits.webClient.session': 'Сеанс веб-управления',
   'pages.audits.webClient.device': 'Удалённое устройство',
   'pages.audits.webClient.source': 'Источник записи',
   'pages.audits.webClient.source.server': 'Подтверждено сервером',
-  'pages.audits.webClient.source.browser': 'Отчёт браузера, не проверен сервером',
+  'pages.audits.webClient.source.browser':
+    'Отчёт браузера, не проверен сервером',
   'pages.audits.webClient.source.unknown': 'Источник неизвестен',
   'pages.audits.webClient.disconnect': 'Завершить веб-подключение',
   'pages.audits.webClient.ended': 'Подключение завершено.',
-  'pages.audits.webClient.endFailed': 'Не удалось завершить подключение. Повторите попытку.',
+  'pages.audits.webClient.endFailed':
+    'Не удалось завершить подключение. Повторите попытку.',
   'pages.audits.conn': 'Журнал подключений',
   'pages.audits.file': 'Журнал передачи файлов',
   'pages.audits.alarm': 'Журнал оповещений',
@@ -56,7 +61,8 @@ export default {
   'pages.audits.disconnectSuccess': 'Запрос на отключение отправлен',
   'pages.audits.disconnectFailed': 'Не удалось отключить!',
   'pages.audits.disconnectConfirmTitle': 'Подтверждение операции',
-  'pages.audits.disconnectConfirmTip': 'Вы уверены, что хотите отключить это устройство?',
+  'pages.audits.disconnectConfirmTip':
+    'Вы уверены, что хотите отключить это устройство?',
   'pages.audits.updateSuccess': 'Обновление выполнено успешно',
   'pages.audits.updateFailed': 'Не удалось обновить, попробуйте снова!',
   'pages.audits.exportCSV': 'Экспорт в CSV',
@@ -64,13 +70,15 @@ export default {
   'pages.audits.exportSuccess': 'Экспорт выполнен успешно',
   'pages.audits.exportFailed': 'Не удалось выполнить экспорт',
   'pages.audits.exportConfirmTitle': 'Экспорт в CSV',
-  'pages.audits.exportConfirmContent': 'Экспортируется до 1000 записей. Продолжить?',
+  'pages.audits.exportConfirmContent':
+    'Экспортируется до 1000 записей. Продолжить?',
   'pages.audits.remote': 'Удаленный',
   'pages.audits.local': 'Локальный',
   'pages.audits.direction': 'Направление',
   'pages.audits.files': 'Файлы',
   'pages.audits.remoteTip': 'Удаленно управляемый компьютер или терминал',
-  'pages.audits.remoteSearchTip': 'Поиск по ID удаленного устройства (нечеткое совпадение)',
+  'pages.audits.remoteSearchTip':
+    'Поиск по ID удаленного устройства (нечеткое совпадение)',
   'pages.audits.remotePlaceholder': 'Введите ID удаленного устройства',
   'pages.audits.pathTip': 'Путь на удаленном устройстве',
   'pages.audits.exportCsvTip': 'Экспорт до 1000 записей за один раз',
@@ -78,12 +86,18 @@ export default {
   'pages.audits.startTime': 'Время начала',
   'pages.audits.endTime': 'Время окончания',
   'pages.audits.alarmType.ipWhitelist': 'IP не в белом списке',
-  'pages.audits.alarmType.exceedThirtyAttempts': 'С одного IP более 30 неудачных попыток',
-  'pages.audits.alarmType.sixAttemptsWithinOneMinute': 'Более 6 попыток за 1 минуту',
-  'pages.audits.alarmType.exceedIpv6PrefixAttempts': 'Превышен лимит попыток с IPv6-префикса',
-  'pages.audits.alarmType.terminalOsLoginBackoff': 'Блокировка входа в ОС терминала из-за задержки',
-  'pages.audits.alarmType.terminalOsLoginConcurrency': 'Превышен лимит одновременных входов в ОС терминала',
-  'pages.audits.alarmType.sessionScopeViolation': 'Нарушение разрешений в области сеанса',
+  'pages.audits.alarmType.exceedThirtyAttempts':
+    'С одного IP более 30 неудачных попыток',
+  'pages.audits.alarmType.sixAttemptsWithinOneMinute':
+    'Более 6 попыток за 1 минуту',
+  'pages.audits.alarmType.exceedIpv6PrefixAttempts':
+    'Превышен лимит попыток с IPv6-префикса',
+  'pages.audits.alarmType.terminalOsLoginBackoff':
+    'Блокировка входа в ОС терминала из-за задержки',
+  'pages.audits.alarmType.terminalOsLoginConcurrency':
+    'Превышен лимит одновременных входов в ОС терминала',
+  'pages.audits.alarmType.sessionScopeViolation':
+    'Нарушение разрешений в области сеанса',
   'pages.audits.alarmType.idWhitelist': 'ID не в белом списке',
   'pages.audits.primaryAuth': 'Основная аутентификация',
   'pages.audits.primaryAuth.none': 'Нет',

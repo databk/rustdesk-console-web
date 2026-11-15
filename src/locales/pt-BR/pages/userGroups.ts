@@ -5,7 +5,8 @@ export default {
   'pages.userGroups.userCount': 'Quantidade de Usuários',
   'pages.userGroups.create': 'Criar Grupo de Usuários',
   'pages.userGroups.edit': 'Editar Grupo de Usuários',
-  'pages.userGroups.deleteConfirm': 'Tem certeza de que deseja excluir este grupo de usuários?',
+  'pages.userGroups.deleteConfirm':
+    'Tem certeza de que deseja excluir este grupo de usuários?',
   'pages.userGroups.createSuccess': 'Grupo de usuários criado',
   'pages.userGroups.createFailed': 'Falha ao criar grupo de usuários',
   'pages.userGroups.updateSuccess': 'Grupo de usuários atualizado',
@@ -21,7 +22,8 @@ export default {
   'pages.userGroups.moveToGroup': 'Mover para grupo',
   'pages.userGroups.import': 'Importar',
   'pages.userGroups.importUsers': 'Importar Usuários',
-  'pages.userGroups.importSuccess': '{count} usuário(s) importado(s) com sucesso',
+  'pages.userGroups.importSuccess':
+    '{count} usuário(s) importado(s) com sucesso',
   'pages.userGroups.importFailed': 'Falha ao importar usuários',
   'pages.userGroups.membersUpdated': '{count} usuário(s) atualizado(s)',
   'pages.userGroups.membersUpdateFailed': 'Falha ao atualizar membros do grupo',

@@ -30,7 +30,8 @@ export default {
   'webClient.callTimeout': '等待超时，可以重新拨打。',
   'webClient.callFailed': '通话未能建立，请检查麦克风权限后重试。',
   'webClient.callEnded': '通话已结束。',
-  'webClient.callUnsupported': '此浏览器不支持麦克风采集或 Opus 编码，请使用新版 Chrome 或 Edge。',
+  'webClient.callUnsupported':
+    '此浏览器不支持麦克风采集或 Opus 编码，请使用新版 Chrome 或 Edge。',
   'webClient.callStart': '拨打',
   'webClient.callMute': '静音麦克风',
   'webClient.callUnmute': '开启麦克风',

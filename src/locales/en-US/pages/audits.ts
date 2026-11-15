@@ -4,20 +4,26 @@ export default {
   'pages.audits.webClient.request_denied': 'Web connection denied',
   'pages.audits.webClient.gateway_open': 'Web channel opened',
   'pages.audits.webClient.session_ended': 'Web session ended',
-  'pages.audits.webClient.remote_auth_succeeded': 'Remote authentication succeeded (browser report)',
-  'pages.audits.webClient.remote_auth_failed': 'Remote authentication failed (browser report)',
-  'pages.audits.webClient.file_started': 'File transfer started (browser report)',
-  'pages.audits.webClient.file_completed': 'File transfer completed (browser report)',
+  'pages.audits.webClient.remote_auth_succeeded':
+    'Remote authentication succeeded (browser report)',
+  'pages.audits.webClient.remote_auth_failed':
+    'Remote authentication failed (browser report)',
+  'pages.audits.webClient.file_started':
+    'File transfer started (browser report)',
+  'pages.audits.webClient.file_completed':
+    'File transfer completed (browser report)',
   'pages.audits.webClient.file_failed': 'File transfer failed (browser report)',
   'pages.audits.webClient.session': 'Web Client session',
   'pages.audits.webClient.device': 'Remote device',
   'pages.audits.webClient.source': 'Evidence source',
   'pages.audits.webClient.source.server': 'Server confirmed',
-  'pages.audits.webClient.source.browser': 'Browser report, not verified by the server',
+  'pages.audits.webClient.source.browser':
+    'Browser report, not verified by the server',
   'pages.audits.webClient.source.unknown': 'Unknown source',
   'pages.audits.webClient.disconnect': 'End Web Client connection',
   'pages.audits.webClient.ended': 'The connection has ended.',
-  'pages.audits.webClient.endFailed': 'Could not end the connection. Try again.',
+  'pages.audits.webClient.endFailed':
+    'Could not end the connection. Try again.',
   'pages.audits.conn': 'Connection Audits',
   'pages.audits.file': 'File Transfer Logs',
   'pages.audits.alarm': 'Alarm Audits',
@@ -56,7 +62,8 @@ export default {
   'pages.audits.disconnectSuccess': 'Disconnect request submitted',
   'pages.audits.disconnectFailed': 'Disconnect failed!',
   'pages.audits.disconnectConfirmTitle': 'Confirm Operation',
-  'pages.audits.disconnectConfirmTip': 'Are you sure you want to disconnect this device?',
+  'pages.audits.disconnectConfirmTip':
+    'Are you sure you want to disconnect this device?',
   'pages.audits.updateSuccess': 'Update is successful',
   'pages.audits.updateFailed': 'Update failed, please try again!',
   'pages.audits.exportCSV': 'Export CSV',
@@ -78,12 +85,18 @@ export default {
   'pages.audits.startTime': 'Start Time',
   'pages.audits.endTime': 'End Time',
   'pages.audits.alarmType.ipWhitelist': 'IP Not in Whitelist',
-  'pages.audits.alarmType.exceedThirtyAttempts': 'Same IP Exceeds 30 Failed Attempts',
-  'pages.audits.alarmType.sixAttemptsWithinOneMinute': 'More Than 6 Attempts Within 1 Minute',
-  'pages.audits.alarmType.exceedIpv6PrefixAttempts': 'IPv6 Prefix Attempt Limit Exceeded',
-  'pages.audits.alarmType.terminalOsLoginBackoff': 'Terminal OS Login Blocked by Backoff',
-  'pages.audits.alarmType.terminalOsLoginConcurrency': 'Terminal OS Login Concurrency Limit Exceeded',
-  'pages.audits.alarmType.sessionScopeViolation': 'Session Scope Permission Violation',
+  'pages.audits.alarmType.exceedThirtyAttempts':
+    'Same IP Exceeds 30 Failed Attempts',
+  'pages.audits.alarmType.sixAttemptsWithinOneMinute':
+    'More Than 6 Attempts Within 1 Minute',
+  'pages.audits.alarmType.exceedIpv6PrefixAttempts':
+    'IPv6 Prefix Attempt Limit Exceeded',
+  'pages.audits.alarmType.terminalOsLoginBackoff':
+    'Terminal OS Login Blocked by Backoff',
+  'pages.audits.alarmType.terminalOsLoginConcurrency':
+    'Terminal OS Login Concurrency Limit Exceeded',
+  'pages.audits.alarmType.sessionScopeViolation':
+    'Session Scope Permission Violation',
   'pages.audits.alarmType.idWhitelist': 'ID Not in Whitelist',
   'pages.audits.primaryAuth': 'Primary Auth',
   'pages.audits.primaryAuth.none': 'None',

@@ -1,6 +1,7 @@
 export default {
   'pages.login.success': '登录成功！',
-  'pages.login.permissionsLoadFailed': '权限加载失败，已进入个人地址簿；请刷新页面重试。',
+  'pages.login.permissionsLoadFailed':
+    '权限加载失败，已进入个人地址簿；请刷新页面重试。',
   'pages.login.permissionsRetry': '重试',
   'pages.login.failure': '登录失败，请重试！',
   'pages.login.username.placeholder': '用户名',
@@ -10,14 +11,17 @@ export default {
   'pages.login.rememberMe': '记住我',
   'pages.login.forgotPassword': '忘记密码？',
   'pages.login.forgotPassword.title': '重置密码',
-  'pages.login.forgotPassword.description': '输入您的用户名或邮箱地址，我们将向您发送密码重置链接。',
+  'pages.login.forgotPassword.description':
+    '输入您的用户名或邮箱地址，我们将向您发送密码重置链接。',
   'pages.login.forgotPassword.accountPlaceholder': '用户名或邮箱',
   'pages.login.forgotPassword.accountRequired': '请输入用户名或邮箱',
   'pages.login.forgotPassword.send': '发送重置链接',
   'pages.login.forgotPassword.done': '完成',
-  'pages.login.forgotPassword.sent': '若该账号存在且绑定了邮箱，密码重置链接已发送，请查收（链接 30 分钟内有效）。',
+  'pages.login.forgotPassword.sent':
+    '若该账号存在且绑定了邮箱，密码重置链接已发送，请查收（链接 30 分钟内有效）。',
   'pages.login.forgotPassword.failed': '发送重置邮件失败',
-  'pages.login.forgotPassword.contactAdmin': '未绑定邮箱的账号请联系管理员处理。',
+  'pages.login.forgotPassword.contactAdmin':
+    '未绑定邮箱的账号请联系管理员处理。',
   'pages.resetPassword.title': '设置新密码',
   'pages.resetPassword.subtitle': '正在为 {account} 设置新密码',
   'pages.resetPassword.newPassword': '新密码',
@@ -30,7 +34,8 @@ export default {
   'pages.resetPassword.success': '密码重置成功，即将跳转到登录页...',
   'pages.resetPassword.failed': '密码重置失败',
   'pages.resetPassword.invalid.title': '链接无效或已过期',
-  'pages.resetPassword.invalid.description': '该密码重置链接无效、已被使用或已过期，请重新申请。',
+  'pages.resetPassword.invalid.description':
+    '该密码重置链接无效、已被使用或已过期，请重新申请。',
   'pages.resetPassword.backToLogin': '返回登录',
   'pages.login.submit': '登录',
   'pages.login.back': '返回',

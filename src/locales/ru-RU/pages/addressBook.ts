@@ -15,20 +15,25 @@ export default {
   'pages.addressBook.tagAddFailed': 'Не удалось добавить тег',
   'pages.addressBook.tagDeleted': 'Тег удален',
   'pages.addressBook.tagDeleteFailed': 'Не удалось удалить тег',
-  'pages.addressBook.deleteTagConfirm': 'Вы уверены, что хотите удалить этот тег?',
+  'pages.addressBook.deleteTagConfirm':
+    'Вы уверены, что хотите удалить этот тег?',
   'pages.addressBook.tagModeUnion': 'Любой',
   'pages.addressBook.tagModeIntersection': 'Все',
   'pages.addressBook.importDevices': 'Импорт из устройств',
-  'pages.addressBook.importSuccess': 'Успешно импортировано {count} устройство(а)',
-  'pages.addressBook.importPartialFailed': 'Не удалось импортировать {count} устройство(а)',
+  'pages.addressBook.importSuccess':
+    'Успешно импортировано {count} устройство(а)',
+  'pages.addressBook.importPartialFailed':
+    'Не удалось импортировать {count} устройство(а)',
   'pages.addressBook.createSuccess': 'Адресная книга создана',
   'pages.addressBook.createFailed': 'Не удалось создать адресную книгу',
   'pages.addressBook.updateSuccess': 'Адресная книга обновлена',
   'pages.addressBook.updateFailed': 'Не удалось обновить адресную книгу',
   'pages.addressBook.deleteSuccess': 'Адресная книга(и) удалена(ы)',
   'pages.addressBook.deleteFailed': 'Не удалось удалить адресную книгу(и)',
-  'pages.addressBook.deleteConfirm': 'Вы уверены, что хотите удалить эту адресную книгу?',
-  'pages.addressBook.batchDeleteConfirm': 'Вы уверены, что хотите удалить выбранные адресные книги?',
+  'pages.addressBook.deleteConfirm':
+    'Вы уверены, что хотите удалить эту адресную книгу?',
+  'pages.addressBook.batchDeleteConfirm':
+    'Вы уверены, что хотите удалить выбранные адресные книги?',
   'pages.addressBook.device': 'Устройство',
   'pages.addressBook.alias': 'Псевдоним',
   'pages.addressBook.tags': 'Теги',
@@ -36,7 +41,8 @@ export default {
   'pages.addressBook.peerAddFailed': 'Не удалось добавить участника',
   'pages.addressBook.peerDeleted': 'Участник удален',
   'pages.addressBook.peerDeleteFailed': 'Не удалось удалить участника',
-  'pages.addressBook.deletePeerConfirm': 'Вы уверены, что хотите удалить этого участника?',
+  'pages.addressBook.deletePeerConfirm':
+    'Вы уверены, что хотите удалить этого участника?',
   'pages.addressBook.import': 'Импорт из устройств',
   'pages.addressBook.userGroup': 'Группа пользователей',
   'pages.addressBook.permission': 'Права доступа',
@@ -53,8 +59,10 @@ export default {
   'pages.addressBook.shareTypeUser': 'Пользователь',
   'pages.addressBook.shareTypeGroup': 'Группа пользователей',
   'pages.addressBook.selectUser': 'Выберите пользователя',
-  'pages.addressBook.selectUserPlaceholder': 'Поиск по имени пользователя или email',
-  'pages.addressBook.everyoneHint': 'Все пользователи будут иметь доступ к этой адресной книге',
+  'pages.addressBook.selectUserPlaceholder':
+    'Поиск по имени пользователя или email',
+  'pages.addressBook.everyoneHint':
+    'Все пользователи будут иметь доступ к этой адресной книге',
   'pages.addressBook.allUsers': 'Все пользователи',
   'pages.addressBook.addAccess': 'Добавить правило доступа',
   'pages.addressBook.accessLoadFailed': 'Не удалось загрузить правила доступа',

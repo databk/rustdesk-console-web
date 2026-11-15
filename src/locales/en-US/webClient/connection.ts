@@ -1,10 +1,12 @@
 export default {
-  'webClient.permissionRequired': 'Ask an administrator for Web Client permission.',
+  'webClient.permissionRequired':
+    'Ask an administrator for Web Client permission.',
   'webClient.sessionOptions': 'Session',
   'webClient.sessionMode': 'Session mode',
   'webClient.controlMode': 'Control',
   'webClient.viewOnlyMode': 'View only',
-  'webClient.viewOnlyReason': 'Keyboard and mouse input is unavailable in view-only mode.',
+  'webClient.viewOnlyReason':
+    'Keyboard and mouse input is unavailable in view-only mode.',
   'webClient.remoteActions': 'Remote actions',
   'webClient.credentialNone': 'No device password saved',
   'webClient.connectionDetails': 'Connection details',
@@ -12,24 +14,30 @@ export default {
   'webClient.originalResolution': 'Original resolution',
   'webClient.resolutionRestoreShort': 'Restore',
   'webClient.shortcutGuideTitle': 'Use shortcuts in fullscreen',
-  'webClient.shortcutGuideBody': 'Fullscreen can enable shortcut capture and reduce local responses. Some system shortcuts may still be handled on this computer.',
+  'webClient.shortcutGuideBody':
+    'Fullscreen can enable shortcut capture and reduce local responses. Some system shortcuts may still be handled on this computer.',
   'webClient.shortcutGuideHint': 'Shown once per connection.',
   'webClient.shortcutGuideClose': 'Close',
   'webClient.shortcutGuideFullscreen': 'Go fullscreen',
-  'webClient.checkingCredentialsHint': 'Checking the saved password for this device.',
-  'webClient.automaticAuthenticationHint': 'Connecting with your saved password.',
-  'webClient.paste.image-too-large': 'This image is too large to paste. Reduce its size or use file transfer.',
+  'webClient.checkingCredentialsHint':
+    'Checking the saved password for this device.',
+  'webClient.automaticAuthenticationHint':
+    'Connecting with your saved password.',
+  'webClient.paste.image-too-large':
+    'This image is too large to paste. Reduce its size or use file transfer.',
   'webClient.rememberPassword': 'Remember password',
   'webClient.credentialSaved': 'Device password saved in this browser',
   'webClient.forgetPassword': 'Forget password',
-  'webClient.credentialUnavailable': 'Saved passwords are unavailable in this browser.',
+  'webClient.credentialUnavailable':
+    'Saved passwords are unavailable in this browser.',
   'webClient.credentialForgotten': 'Saved password cleared.',
   'webClient.zoomCursor': 'Zoom cursor',
   'webClient.remoteResolution': 'Remote resolution',
   'webClient.resolutionUnavailable': 'No supported resolutions reported.',
   'webClient.resolution.pending': 'Waiting for the remote picture…',
   'webClient.resolution.confirmed': 'Target resolution confirmed.',
-  'webClient.resolution.unconfirmed': 'Resolution change unconfirmed. Check the picture and retry.',
+  'webClient.resolution.unconfirmed':
+    'Resolution change unconfirmed. Check the picture and retry.',
   'webClient.resolution.rejected': 'Resolution request could not be sent.',
   'webClient.close': 'Close',
   'webClient.clipboardSync': 'Clipboard sync',
@@ -40,19 +48,23 @@ export default {
   'webClient.devicesTitle': 'Accessible devices',
   'webClient.devicesRefresh': 'Refresh devices',
   'webClient.devicesOnlineOnly': 'Online only',
-  'webClient.devicesFailed': 'Could not load devices. Refresh to retry. Entering an ID also requires device authorization.',
-  'webClient.devicesEmpty': 'Your role has no available devices. Ask an administrator to configure its device scope.',
+  'webClient.devicesFailed':
+    'Could not load devices. Refresh to retry. Entering an ID also requires device authorization.',
+  'webClient.devicesEmpty':
+    'Your role has no available devices. Ask an administrator to configure its device scope.',
   'webClient.deviceOnline': 'Online',
   'webClient.deviceOffline': 'Offline',
   'webClient.deviceCount': 'devices',
   'webClient.search': 'Search',
   'webClient.previous': 'Previous',
   'webClient.next': 'Next',
-  'webClient.pasteHint': 'Focus the remote desktop and press Ctrl/Cmd+V to paste text or a PNG image.',
+  'webClient.pasteHint':
+    'Focus the remote desktop and press Ctrl/Cmd+V to paste text or a PNG image.',
   'webClient.paste.sending': 'Sending clipboard…',
   'webClient.paste.sent': 'Paste request sent. Check the remote result.',
   'webClient.paste.failed': 'Paste failed. Check the content and try again.',
-  'webClient.paste.denied': 'The remote device has disabled clipboard or keyboard access.',
+  'webClient.paste.denied':
+    'The remote device has disabled clipboard or keyboard access.',
   'webClient.idPlaceholder': 'Enter the device ID',
   'webClient.toolInput': 'Keyboard and mouse',
   'webClient.toolAudio': 'Audio',
@@ -61,7 +73,8 @@ export default {
   'webClient.idleHint': 'Choose a device below, or enter its ID to connect.',
   'webClient.authTitle': 'Approve your connection',
   'webClient.waitingFrame': 'Waiting for the desktop',
-  'webClient.connectingHint': 'The session is being prepared. You can disconnect at any time.',
+  'webClient.connectingHint':
+    'The session is being prepared. You can disconnect at any time.',
   'webClient.open': 'Connect in browser',
   'webClient.title': 'Web Client',
   'webClient.id': 'Remote ID',
@@ -71,9 +84,12 @@ export default {
   'webClient.fullscreen': 'Fullscreen',
   'webClient.password': 'Remote device password',
   'webClient.authenticate': 'Connect',
-  'webClient.approval': 'You can also approve the connection on the remote device.',
-  'webClient.notice': 'Connects through the configured server. Native password or local approval is required. Extensions depend on remote permissions and browser support.',
-  'webClient.desktop': 'Remote desktop. Focus to send keyboard and mouse input.',
+  'webClient.approval':
+    'You can also approve the connection on the remote device.',
+  'webClient.notice':
+    'Connects through the configured server. Native password or local approval is required. Extensions depend on remote permissions and browser support.',
+  'webClient.desktop':
+    'Remote desktop. Focus to send keyboard and mouse input.',
   'webClient.clipboardDenied': 'Clipboard is disabled by the remote device.',
   'webClient.sendText': 'Send text as input',
   'menu.webClient': 'Web Client',
@@ -84,9 +100,11 @@ export default {
   'webClient.touchScroll': 'Scroll',
   'webClient.touchZoom': 'Pan zoomed view',
   'webClient.zoomReset': 'Reset zoom',
-  'webClient.touchNotice': 'Touch to click, move to drag, hold for right click. Pinch with two fingers to zoom locally; use Scroll mode for the remote wheel. Send keyboard text after IME composition.',
+  'webClient.touchNotice':
+    'Touch to click, move to drag, hold for right click. Pinch with two fingers to zoom locally; use Scroll mode for the remote wheel. Send keyboard text after IME composition.',
   'webClient.connectDevice': 'Connect to a device',
-  'webClient.connectionApproval': 'Use the device password, or wait for approval on the remote device.',
+  'webClient.connectionApproval':
+    'Use the device password, or wait for approval on the remote device.',
   'webClient.sessionAlerts': 'Session notices',
   'webClient.legacyBadge': 'Legacy protocol',
   'webClient.noticeBadge': 'Session notice',
@@ -105,9 +123,12 @@ export default {
   'webClient.legacyFileBadge': 'File connection: legacy encryption',
   'webClient.legacyTitle': 'Legacy encryption',
   'webClient.remoteVersion': 'Remote client',
-  'webClient.legacyRisk': 'This connection is encrypted, but the older method has a known risk that can weaken the privacy of transferred content.',
-  'webClient.legacyUpgrade': 'Update RustDesk on the remote device, then reconnect.',
-  'webClient.legacyCompatibility': 'RustDesk 1.4.9 uses the older method. The new method has been verified in a specific official 1.5.0 nightly build. Nightly is a development build; the version number alone does not guarantee the change.',
+  'webClient.legacyRisk':
+    'This connection is encrypted, but the older method has a known risk that can weaken the privacy of transferred content.',
+  'webClient.legacyUpgrade':
+    'Update RustDesk on the remote device, then reconnect.',
+  'webClient.legacyCompatibility':
+    'RustDesk 1.4.9 uses the older method. The new method has been verified in a specific official 1.5.0 nightly build. Nightly is a development build; the version number alone does not guarantee the change.',
   'webClient.cancelConnection': 'Cancel connection',
   'webClient.viewMode': 'View mode',
   'webClient.fitWindow': 'Fit window',
@@ -116,7 +137,8 @@ export default {
   'webClient.remoteCursor': 'Remote cursor',
   'webClient.refreshFrame': 'Refresh desktop',
   'webClient.readOnly': 'View only',
-  'webClient.sasUnavailable': 'The remote client does not support Ctrl+Alt+Del.',
+  'webClient.sasUnavailable':
+    'The remote client does not support Ctrl+Alt+Del.',
   'webClient.lockScreen': 'Lock remote screen',
   'webClient.connectionInfo': 'Connection information',
   'webClient.encryption': 'Encryption',

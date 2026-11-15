@@ -1,10 +1,12 @@
 export default {
-  'webClient.permissionRequired': 'Peça a um administrador permissão para o controle web.',
+  'webClient.permissionRequired':
+    'Peça a um administrador permissão para o controle web.',
   'webClient.sessionOptions': 'Sessão',
   'webClient.sessionMode': 'Modo da sessão',
   'webClient.controlMode': 'Controlar',
   'webClient.viewOnlyMode': 'Só visualizar',
-  'webClient.viewOnlyReason': 'O modo de visualização não envia teclado e mouse.',
+  'webClient.viewOnlyReason':
+    'O modo de visualização não envia teclado e mouse.',
   'webClient.remoteActions': 'Ações remotas',
   'webClient.credentialNone': 'Senha não salva',
   'webClient.connectionDetails': 'Detalhes da conexão',
@@ -14,25 +16,32 @@ export default {
   'webClient.authTitle': 'Digite a senha do dispositivo',
   'webClient.connectDevice': 'Conectar a um dispositivo',
   'webClient.connectingHint': 'Aguarde.',
-  'webClient.connectionApproval': 'Use a senha do dispositivo ou aguarde a aprovação remota.',
+  'webClient.connectionApproval':
+    'Use a senha do dispositivo ou aguarde a aprovação remota.',
   'webClient.deviceCount': 'dispositivos',
   'webClient.deviceOffline': 'Offline',
   'webClient.deviceOnline': 'Online',
-  'webClient.devicesEmpty': 'Seu papel não tem dispositivos disponíveis. Peça a um administrador para configurar o escopo.',
-  'webClient.devicesFailed': 'Não foi possível carregar os dispositivos. Atualize para tentar novamente. Digitar um ID também exige autorização.',
+  'webClient.devicesEmpty':
+    'Seu papel não tem dispositivos disponíveis. Peça a um administrador para configurar o escopo.',
+  'webClient.devicesFailed':
+    'Não foi possível carregar os dispositivos. Atualize para tentar novamente. Digitar um ID também exige autorização.',
   'webClient.devicesOnlineOnly': 'Só online',
   'webClient.devicesRefresh': 'Atualizar dispositivos',
   'webClient.devicesTitle': 'Dispositivos acessíveis',
   'webClient.exitFullscreen': 'Sair da tela cheia',
   'webClient.idPlaceholder': 'Digite o ID do dispositivo',
-  'webClient.idleHint': 'Escolha um dispositivo abaixo ou digite o ID para conectar.',
+  'webClient.idleHint':
+    'Escolha um dispositivo abaixo ou digite o ID para conectar.',
   'webClient.legacyBadge': 'Criptografia antiga',
   'webClient.next': 'Próxima',
   'webClient.noticeBadge': 'Aviso da conexão',
-  'webClient.paste.denied': 'O dispositivo remoto desativou a área de transferência ou o teclado.',
-  'webClient.paste.failed': 'Falha ao colar. Copie texto ou uma imagem PNG e tente novamente.',
+  'webClient.paste.denied':
+    'O dispositivo remoto desativou a área de transferência ou o teclado.',
+  'webClient.paste.failed':
+    'Falha ao colar. Copie texto ou uma imagem PNG e tente novamente.',
   'webClient.paste.sending': 'Enviando área de transferência…',
-  'webClient.pasteHint': 'Clique na tela remota e use Ctrl/Cmd+V para colar texto ou uma imagem PNG.',
+  'webClient.pasteHint':
+    'Clique na tela remota e use Ctrl/Cmd+V para colar texto ou uma imagem PNG.',
   'webClient.pasteSendingBadge': 'Enviando área de transferência',
   'webClient.previous': 'Anterior',
   'webClient.search': 'Buscar',
@@ -44,27 +53,34 @@ export default {
   'webClient.viewOnlyBadge': 'Só visualizar',
   'webClient.waitingFrame': 'Aguardando a tela remota',
   'webClient.shortcutGuideTitle': 'Use atalhos em tela cheia',
-  'webClient.shortcutGuideBody': 'A tela cheia permite capturar atalhos e reduzir ações locais. Alguns atalhos do sistema ainda podem agir neste computador.',
+  'webClient.shortcutGuideBody':
+    'A tela cheia permite capturar atalhos e reduzir ações locais. Alguns atalhos do sistema ainda podem agir neste computador.',
   'webClient.shortcutGuideHint': 'Este aviso aparece uma vez por conexão.',
   'webClient.shortcutGuideClose': 'Fechar',
   'webClient.shortcutGuideFullscreen': 'Tela cheia',
-  'webClient.checkingCredentialsHint': 'Verificando a senha salva deste dispositivo.',
+  'webClient.checkingCredentialsHint':
+    'Verificando a senha salva deste dispositivo.',
   'webClient.automaticAuthenticationHint': 'Conectando com sua senha salva.',
-  'webClient.paste.image-too-large': 'A imagem é grande demais. Reduza o tamanho ou use a transferência de arquivos.',
-  'webClient.paste.sent': 'Solicitação de colagem enviada. Confira o resultado no dispositivo remoto.',
+  'webClient.paste.image-too-large':
+    'A imagem é grande demais. Reduza o tamanho ou use a transferência de arquivos.',
+  'webClient.paste.sent':
+    'Solicitação de colagem enviada. Confira o resultado no dispositivo remoto.',
   'webClient.pasteSentBadge': 'Solicitação de colagem enviada',
   'webClient.rememberPassword': 'Lembrar senha',
   'webClient.credentialSaved': 'Senha salva neste navegador',
   'webClient.forgetPassword': 'Esquecer senha',
-  'webClient.credentialUnavailable': 'As senhas salvas não estão disponíveis neste navegador.',
+  'webClient.credentialUnavailable':
+    'As senhas salvas não estão disponíveis neste navegador.',
   'webClient.credentialForgotten': 'Senha salva removida.',
   'webClient.zoomCursor': 'Escalar cursor com a imagem',
   'webClient.remoteResolution': 'Resolução remota',
   'webClient.resolutionUnavailable': 'Nenhuma resolução compatível informada.',
   'webClient.resolution.pending': 'Aguardando a imagem remota…',
   'webClient.resolution.confirmed': 'Resolução de destino confirmada.',
-  'webClient.resolution.unconfirmed': 'Alteração de resolução não confirmada. Confira a imagem e tente novamente.',
-  'webClient.resolution.rejected': 'Não foi possível enviar a solicitação de resolução.',
+  'webClient.resolution.unconfirmed':
+    'Alteração de resolução não confirmada. Confira a imagem e tente novamente.',
+  'webClient.resolution.rejected':
+    'Não foi possível enviar a solicitação de resolução.',
   'webClient.close': 'Fechar',
   'webClient.clipboardSync': 'Sincronizar área de transferência',
   'webClient.reverseWheel': 'Inverter roda do mouse',
@@ -79,10 +95,14 @@ export default {
   'webClient.fullscreen': 'Tela cheia',
   'webClient.password': 'Senha do dispositivo remoto',
   'webClient.authenticate': 'Conectar',
-  'webClient.approval': 'Você também pode aprovar a conexão no dispositivo remoto.',
-  'webClient.notice': 'Conecta pelo servidor configurado. Exige senha nativa ou aprovação local. Extensões dependem das permissões remotas e do navegador.',
-  'webClient.desktop': 'Área de trabalho remota. Clique para controlar teclado e mouse.',
-  'webClient.clipboardDenied': 'O dispositivo remoto desativou a área de transferência.',
+  'webClient.approval':
+    'Você também pode aprovar a conexão no dispositivo remoto.',
+  'webClient.notice':
+    'Conecta pelo servidor configurado. Exige senha nativa ou aprovação local. Extensões dependem das permissões remotas e do navegador.',
+  'webClient.desktop':
+    'Área de trabalho remota. Clique para controlar teclado e mouse.',
+  'webClient.clipboardDenied':
+    'O dispositivo remoto desativou a área de transferência.',
   'webClient.sendText': 'Enviar texto como entrada',
   'menu.webClient': 'Cliente Web',
   'webClient.display': 'Tela',
@@ -92,7 +112,8 @@ export default {
   'webClient.touchScroll': 'Rolar',
   'webClient.touchZoom': 'Mover imagem ampliada',
   'webClient.zoomReset': 'Redefinir zoom',
-  'webClient.touchNotice': 'Toque para clicar, mova para arrastar e segure para clicar com o botão direito. Use dois dedos para ampliar e o modo Rolar para a rolagem remota. Envie o texto após a composição do IME.',
+  'webClient.touchNotice':
+    'Toque para clicar, mova para arrastar e segure para clicar com o botão direito. Use dois dedos para ampliar e o modo Rolar para a rolagem remota. Envie o texto após a composição do IME.',
   'webClient.openTools': 'Mostrar menu da sessão',
   'webClient.sessionMenu': 'Menu da sessão',
   'webClient.pinMenu': 'Fixar menu',
@@ -100,14 +121,18 @@ export default {
   'webClient.displayOptions': 'Imagem',
   'webClient.remoteFiles': 'Arquivos remotos',
   'webClient.touchHelp': 'Ajuda para toque',
-  'webClient.clipboardRetryHint': 'O navegador bloqueou a sincronização da área de transferência.',
+  'webClient.clipboardRetryHint':
+    'O navegador bloqueou a sincronização da área de transferência.',
   'webClient.clipboardRetry': 'Clique para copiar',
   'webClient.legacyFileBadge': 'Sessão de arquivos: criptografia antiga',
   'webClient.legacyTitle': 'Criptografia antiga',
   'webClient.remoteVersion': 'Cliente remoto',
-  'webClient.legacyRisk': 'A conexão é criptografada, mas o método antigo tem um risco conhecido que pode reduzir a privacidade do conteúdo transferido.',
-  'webClient.legacyUpgrade': 'Atualize o RustDesk no dispositivo remoto e reconecte.',
-  'webClient.legacyCompatibility': 'O RustDesk 1.4.9 usa o método antigo. O novo foi verificado em uma compilação oficial específica 1.5.0 nightly. Nightly é uma versão de desenvolvimento; o número da versão não garante a correção.',
+  'webClient.legacyRisk':
+    'A conexão é criptografada, mas o método antigo tem um risco conhecido que pode reduzir a privacidade do conteúdo transferido.',
+  'webClient.legacyUpgrade':
+    'Atualize o RustDesk no dispositivo remoto e reconecte.',
+  'webClient.legacyCompatibility':
+    'O RustDesk 1.4.9 usa o método antigo. O novo foi verificado em uma compilação oficial específica 1.5.0 nightly. Nightly é uma versão de desenvolvimento; o número da versão não garante a correção.',
   'webClient.cancelConnection': 'Cancelar conexão',
   'webClient.viewMode': 'Modo de exibição',
   'webClient.fitWindow': 'Ajustar à janela',

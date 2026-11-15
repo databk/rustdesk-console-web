@@ -4,9 +4,12 @@ export default {
   'webClient.fileResize': 'Изменить размер окна файлов',
   'webClient.fileUploadFile': 'Загрузить файл',
   'webClient.fileSaveLocal': 'Сохранить на компьютере',
-  'webClient.fileUploadHint': 'Выбрать локальные файлы и отправить в текущую удалённую папку',
-  'webClient.fileSaveHint': 'Сохранить выбранный удалённый файл на этом компьютере',
-  'webClient.fileChooseHint': 'Выбрать локальную папку; доступ ограничен этой папкой',
+  'webClient.fileUploadHint':
+    'Выбрать локальные файлы и отправить в текущую удалённую папку',
+  'webClient.fileSaveHint':
+    'Сохранить выбранный удалённый файл на этом компьютере',
+  'webClient.fileChooseHint':
+    'Выбрать локальную папку; доступ ограничен этой папкой',
   'webClient.fileOpenPath': 'Открыть',
   'webClient.fileNotConnected': 'Файловое соединение не готово',
   'webClient.fileEmpty': 'Папка пуста',
@@ -43,11 +46,14 @@ export default {
   'webClient.localUp': 'Родительская локальная папка',
   'webClient.localRefresh': 'Обновить локальную папку',
   'webClient.localPath': 'Путь внутри выбранной локальной папки',
-  'webClient.localDirectoryUnavailable': 'Доступ к папкам недоступен. Используйте загрузку и скачивание файлов.',
+  'webClient.localDirectoryUnavailable':
+    'Доступ к папкам недоступен. Используйте загрузку и скачивание файлов.',
   'webClient.fileSendToRemote': 'Отправить в удалённую папку',
   'webClient.fileReceiveHere': 'Получить в локальную папку',
-  'webClient.fileApprovalHint': 'Ожидание удалённого устройства. При необходимости введите пароль.',
-  'webClient.localFileConflict': 'Локальный файл с таким именем уже существует.',
+  'webClient.fileApprovalHint':
+    'Ожидание удалённого устройства. При необходимости введите пароль.',
+  'webClient.localFileConflict':
+    'Локальный файл с таким именем уже существует.',
   'webClient.localKeepFile': 'Сохранить локальный файл',
   'webClient.localOverwriteFile': 'Заменить локальный файл',
   'webClient.fileUsePassword': 'Использовать пароль',

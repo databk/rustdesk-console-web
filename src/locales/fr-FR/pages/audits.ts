@@ -4,20 +4,27 @@ export default {
   'pages.audits.webClient.request_denied': 'Connexion web refusée',
   'pages.audits.webClient.gateway_open': 'Canal web ouvert',
   'pages.audits.webClient.session_ended': 'Session web terminée',
-  'pages.audits.webClient.remote_auth_succeeded': 'Authentification distante réussie (signalement du navigateur)',
-  'pages.audits.webClient.remote_auth_failed': 'Authentification distante échouée (signalement du navigateur)',
-  'pages.audits.webClient.file_started': 'Transfert démarré (signalement du navigateur)',
-  'pages.audits.webClient.file_completed': 'Transfert terminé (signalement du navigateur)',
-  'pages.audits.webClient.file_failed': 'Transfert échoué (signalement du navigateur)',
+  'pages.audits.webClient.remote_auth_succeeded':
+    'Authentification distante réussie (signalement du navigateur)',
+  'pages.audits.webClient.remote_auth_failed':
+    'Authentification distante échouée (signalement du navigateur)',
+  'pages.audits.webClient.file_started':
+    'Transfert démarré (signalement du navigateur)',
+  'pages.audits.webClient.file_completed':
+    'Transfert terminé (signalement du navigateur)',
+  'pages.audits.webClient.file_failed':
+    'Transfert échoué (signalement du navigateur)',
   'pages.audits.webClient.session': 'Session de contrôle web',
   'pages.audits.webClient.device': 'Appareil distant',
   'pages.audits.webClient.source': 'Source du journal',
   'pages.audits.webClient.source.server': 'Confirmé par le serveur',
-  'pages.audits.webClient.source.browser': 'Signalement du navigateur, non vérifié par le serveur',
+  'pages.audits.webClient.source.browser':
+    'Signalement du navigateur, non vérifié par le serveur',
   'pages.audits.webClient.source.unknown': 'Source inconnue',
   'pages.audits.webClient.disconnect': 'Terminer la connexion web',
   'pages.audits.webClient.ended': 'La connexion est terminée.',
-  'pages.audits.webClient.endFailed': 'Impossible de terminer la connexion. Réessayez.',
+  'pages.audits.webClient.endFailed':
+    'Impossible de terminer la connexion. Réessayez.',
   'pages.audits.conn': 'Audits de connexion',
   'pages.audits.file': 'Journaux de transfert de fichiers',
   'pages.audits.alarm': "Audits d'alarmes",
@@ -43,7 +50,8 @@ export default {
   'pages.audits.disconnectSuccess': 'Déconnexion réussie !',
   'pages.audits.disconnectFailed': 'La déconnexion a échoué !',
   'pages.audits.disconnectConfirmTitle': "Confirmer l'opération",
-  'pages.audits.disconnectConfirmTip': 'Êtes-vous sûr de vouloir déconnecter cet appareil ?',
+  'pages.audits.disconnectConfirmTip':
+    'Êtes-vous sûr de vouloir déconnecter cet appareil ?',
   'pages.audits.updateSuccess': 'Mise à jour réussie',
   'pages.audits.updateFailed': 'La mise à jour a échoué, veuillez réessayer !',
   'pages.audits.exportCSV': 'Exporter en CSV',
@@ -51,26 +59,35 @@ export default {
   'pages.audits.exportSuccess': 'Exportation réussie',
   'pages.audits.exportFailed': "L'exportation a échoué",
   'pages.audits.exportConfirmTitle': 'Exporter en CSV',
-  'pages.audits.exportConfirmContent': "Exporter jusqu'à 1 000 enregistrements. Continuer ?",
+  'pages.audits.exportConfirmContent':
+    "Exporter jusqu'à 1 000 enregistrements. Continuer ?",
   'pages.audits.remote': 'Distant',
   'pages.audits.local': 'Local',
   'pages.audits.direction': 'Direction',
   'pages.audits.files': 'Fichiers',
   'pages.audits.remoteTip': 'Ordinateur ou terminal contrôlé à distance',
-  'pages.audits.remoteSearchTip': "Recherche par ID d'appareil distant (recherche floue)",
+  'pages.audits.remoteSearchTip':
+    "Recherche par ID d'appareil distant (recherche floue)",
   'pages.audits.remotePlaceholder': "Entrez l'ID de l'appareil distant",
   'pages.audits.pathTip': "Chemin d'accès de l'appareil distant",
-  'pages.audits.exportCsvTip': "Exporter jusqu'à 1 000 enregistrements à la fois",
+  'pages.audits.exportCsvTip':
+    "Exporter jusqu'à 1 000 enregistrements à la fois",
   'pages.audits.limitedTip': 'Afficher les 10 plus grands fichiers par taille',
   'pages.audits.startTime': 'Heure de début',
   'pages.audits.endTime': 'Heure de fin',
   'pages.audits.alarmType.ipWhitelist': 'IP non présente dans la liste blanche',
-  'pages.audits.alarmType.exceedThirtyAttempts': 'Même IP : plus de 30 tentatives échouées',
-  'pages.audits.alarmType.sixAttemptsWithinOneMinute': 'Plus de 6 tentatives en 1 minute',
-  'pages.audits.alarmType.exceedIpv6PrefixAttempts': 'Limite de tentatives dépassée pour le préfixe IPv6',
-  'pages.audits.alarmType.terminalOsLoginBackoff': 'Connexion au terminal OS bloquée par temporisation',
-  'pages.audits.alarmType.terminalOsLoginConcurrency': 'Limite de connexions simultanées au terminal OS dépassée',
-  'pages.audits.alarmType.sessionScopeViolation': 'Violation des permissions de portée de session',
+  'pages.audits.alarmType.exceedThirtyAttempts':
+    'Même IP : plus de 30 tentatives échouées',
+  'pages.audits.alarmType.sixAttemptsWithinOneMinute':
+    'Plus de 6 tentatives en 1 minute',
+  'pages.audits.alarmType.exceedIpv6PrefixAttempts':
+    'Limite de tentatives dépassée pour le préfixe IPv6',
+  'pages.audits.alarmType.terminalOsLoginBackoff':
+    'Connexion au terminal OS bloquée par temporisation',
+  'pages.audits.alarmType.terminalOsLoginConcurrency':
+    'Limite de connexions simultanées au terminal OS dépassée',
+  'pages.audits.alarmType.sessionScopeViolation':
+    'Violation des permissions de portée de session',
   'pages.audits.alarmType.idWhitelist': 'ID non présent dans la liste blanche',
   'pages.audits.primaryAuth': 'Authentification principale',
   'pages.audits.primaryAuth.none': 'Aucune',

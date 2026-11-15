@@ -15,20 +15,26 @@ export default {
   'pages.addressBook.tagAddFailed': 'Falha ao adicionar tag',
   'pages.addressBook.tagDeleted': 'Tag removida',
   'pages.addressBook.tagDeleteFailed': 'Falha ao remover a tag',
-  'pages.addressBook.deleteTagConfirm': 'Tem certeza de que deseja remover esta tag?',
+  'pages.addressBook.deleteTagConfirm':
+    'Tem certeza de que deseja remover esta tag?',
   'pages.addressBook.tagModeUnion': 'Qualquer',
   'pages.addressBook.tagModeIntersection': 'Todos',
   'pages.addressBook.importDevices': 'Importar de Dispositivos',
-  'pages.addressBook.importSuccess': '{count} dispositivo(s) importado(s) com sucesso',
-  'pages.addressBook.importPartialFailed': '{count} dispositivo(s) falharam na importação',
+  'pages.addressBook.importSuccess':
+    '{count} dispositivo(s) importado(s) com sucesso',
+  'pages.addressBook.importPartialFailed':
+    '{count} dispositivo(s) falharam na importação',
   'pages.addressBook.createSuccess': 'Catálogo de endereços criado',
   'pages.addressBook.createFailed': 'Falha ao criar o catálogo de endereços',
   'pages.addressBook.updateSuccess': 'Catálogo de endereços atualizado',
-  'pages.addressBook.updateFailed': 'Falha ao atualizar o catálogo de endereços',
+  'pages.addressBook.updateFailed':
+    'Falha ao atualizar o catálogo de endereços',
   'pages.addressBook.deleteSuccess': 'Catálogo(s) de endereços removido(s)',
   'pages.addressBook.deleteFailed': 'Falha ao remover catálogo(s) de endereços',
-  'pages.addressBook.deleteConfirm': 'Tem certeza de que deseja remover este catálogo de endereços?',
-  'pages.addressBook.batchDeleteConfirm': 'Tem certeza de que deseja remover os catálogos de endereços selecionados?',
+  'pages.addressBook.deleteConfirm':
+    'Tem certeza de que deseja remover este catálogo de endereços?',
+  'pages.addressBook.batchDeleteConfirm':
+    'Tem certeza de que deseja remover os catálogos de endereços selecionados?',
   'pages.addressBook.device': 'Dispositivo',
   'pages.addressBook.alias': 'Alias',
   'pages.addressBook.tags': 'Tags',
@@ -36,7 +42,8 @@ export default {
   'pages.addressBook.peerAddFailed': 'Falha ao adicionar contato',
   'pages.addressBook.peerDeleted': 'Contato removido',
   'pages.addressBook.peerDeleteFailed': 'Falha ao remover contato',
-  'pages.addressBook.deletePeerConfirm': 'Tem certeza de que deseja remover este contato?',
+  'pages.addressBook.deletePeerConfirm':
+    'Tem certeza de que deseja remover este contato?',
   'pages.addressBook.import': 'Importar de Dispositivos',
   'pages.addressBook.userGroup': 'Grupo de usuários',
   'pages.addressBook.permission': 'Permissão',
@@ -45,7 +52,8 @@ export default {
   'pages.addressBook.permissionFull': 'Controle total',
   'pages.addressBook.shareAccess': 'Compartilhar',
   'pages.addressBook.accessTitle': '{name} - Gerenciamento de acesso',
-  'pages.addressBook.accessReadOnlyTitle': 'Configurações de compartilhamento de {name}',
+  'pages.addressBook.accessReadOnlyTitle':
+    'Configurações de compartilhamento de {name}',
   'pages.addressBook.viewShareSettings': 'Configurações de compartilhamento',
   'pages.addressBook.shareType': 'Tipo de compartilhamento',
   'pages.addressBook.shareTarget': 'Destino',
@@ -53,8 +61,10 @@ export default {
   'pages.addressBook.shareTypeUser': 'Usuário',
   'pages.addressBook.shareTypeGroup': 'Grupo de usuários',
   'pages.addressBook.selectUser': 'Selecionar usuário',
-  'pages.addressBook.selectUserPlaceholder': 'Pesquisar por nome de usuário ou e-mail',
-  'pages.addressBook.everyoneHint': 'Todos os usuários terão acesso a este catálogo de endereços',
+  'pages.addressBook.selectUserPlaceholder':
+    'Pesquisar por nome de usuário ou e-mail',
+  'pages.addressBook.everyoneHint':
+    'Todos os usuários terão acesso a este catálogo de endereços',
   'pages.addressBook.allUsers': 'Todos os usuários',
   'pages.addressBook.addAccess': 'Adicionar acesso',
   'pages.addressBook.accessLoadFailed': 'Falha ao carregar regras de acesso',

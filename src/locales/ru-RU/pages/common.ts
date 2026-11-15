@@ -1,9 +1,11 @@
 export default {
   'pages.request.loginExpired': 'Срок действия сеанса истёк. Войдите снова.',
-  'pages.request.accessDenied': 'У вас нет разрешения на выполнение этого действия',
+  'pages.request.accessDenied':
+    'У вас нет разрешения на выполнение этого действия',
   'pages.request.responseStatus': 'Ошибка запроса (HTTP {status})',
   'pages.request.noResponse': 'Сервер не ответил. Повторите попытку позже.',
-  'pages.request.error': 'Не удалось выполнить запрос. Повторите попытку позже.',
+  'pages.request.error':
+    'Не удалось выполнить запрос. Повторите попытку позже.',
   'pages.deviceGroups.list': 'Группы устройств',
   'pages.deviceGroups.name': 'Название',
   'pages.deviceGroups.note': 'Примечание',
@@ -15,10 +17,12 @@ export default {
   'pages.deviceGroups.updateFailed': 'Не удалось обновить группу устройств',
   'pages.deviceGroups.deleteSuccess': 'Группа устройств удалена',
   'pages.deviceGroups.deleteFailed': 'Не удалось удалить группу устройств',
-  'pages.deviceGroups.deleteConfirm': 'Вы уверены, что хотите удалить эту группу устройств?',
+  'pages.deviceGroups.deleteConfirm':
+    'Вы уверены, что хотите удалить эту группу устройств?',
   'pages.deviceGroups.import': 'Импорт',
   'pages.deviceGroups.importDevices': 'Импорт устройств',
-  'pages.deviceGroups.importSuccess': 'Успешно импортировано {count} устройство(а)',
+  'pages.deviceGroups.importSuccess':
+    'Успешно импортировано {count} устройство(а)',
   'pages.deviceGroups.importFailed': 'Не удалось импортировать устройства',
   'pages.deviceGroups.searchNamePlaceholder': 'Поиск по названию',
   'pages.common.action': 'Действие',

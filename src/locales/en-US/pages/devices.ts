@@ -32,21 +32,30 @@ export default {
   'pages.devices.remove': 'Remove',
   'pages.devices.removeFromGroupSuccess': 'Device removed from group',
   'pages.devices.removeFromGroupFailed': 'Failed to remove device from group',
-  'pages.devices.removeFromGroupConfirm': 'Are you sure to remove this device from the group?',
+  'pages.devices.removeFromGroupConfirm':
+    'Are you sure to remove this device from the group?',
   'pages.devices.batchRemove': 'Batch Remove',
-  'pages.devices.batchRemoveFromGroupSuccess': 'Successfully removed {count} device(s) from group',
-  'pages.devices.batchRemoveFromGroupFailed': 'Failed to remove devices from group',
-  'pages.devices.batchRemoveFromGroupConfirm': 'Are you sure to remove selected devices from the group?',
+  'pages.devices.batchRemoveFromGroupSuccess':
+    'Successfully removed {count} device(s) from group',
+  'pages.devices.batchRemoveFromGroupFailed':
+    'Failed to remove devices from group',
+  'pages.devices.batchRemoveFromGroupConfirm':
+    'Are you sure to remove selected devices from the group?',
   'pages.devices.batchEnable': 'Batch Enable',
   'pages.devices.batchDisable': 'Batch Disable',
-  'pages.devices.batchEnableConfirm': 'Are you sure to enable selected devices?',
-  'pages.devices.batchDisableConfirm': 'Are you sure to disable selected devices?',
+  'pages.devices.batchEnableConfirm':
+    'Are you sure to enable selected devices?',
+  'pages.devices.batchDisableConfirm':
+    'Are you sure to disable selected devices?',
   'pages.devices.batchEnableSuccess': 'Successfully enabled {count} device(s)',
   'pages.devices.batchEnableFailed': 'Failed to enable devices',
-  'pages.devices.batchEnablePartialFailed': 'Successfully enabled {success} device(s), {failed} failed',
-  'pages.devices.batchDisableSuccess': 'Successfully disabled {count} device(s)',
+  'pages.devices.batchEnablePartialFailed':
+    'Successfully enabled {success} device(s), {failed} failed',
+  'pages.devices.batchDisableSuccess':
+    'Successfully disabled {count} device(s)',
   'pages.devices.batchDisableFailed': 'Failed to disable devices',
-  'pages.devices.batchDisablePartialFailed': 'Successfully disabled {success} device(s), {failed} failed',
+  'pages.devices.batchDisablePartialFailed':
+    'Successfully disabled {success} device(s), {failed} failed',
   'pages.devices.edit': 'Edit Device',
   'pages.devices.updateSuccess': 'Device updated',
   'pages.devices.updateFailed': 'Failed to update device',
@@ -69,9 +78,14 @@ export default {
   'pages.devices.exportCsv': 'Export CSV',
   'pages.devices.exportCsvSuccess': 'Exported {count} device(s) to CSV',
   'pages.devices.exportCsvFailed': 'Failed to export CSV',
-  'pages.devices.presenceAnomalyTitle': '{count} device(s) report inconsistent presence',
-  'pages.devices.presenceAnomalyHint': 'hbbs and the Console heartbeat are separate sources. Check the client API server address and connectivity between the client, hbbs and the Console.',
-  'pages.devices.presence.hbbsOnlineConsoleOffline': 'Registered at hbbs but missing a Console heartbeat',
-  'pages.devices.presence.consoleOnlineHbbsOffline': 'Reached the Console API but not currently registered at hbbs',
-  'pages.devices.presence.hbbsOnly': 'Online at hbbs but missing from the Console inventory',
+  'pages.devices.presenceAnomalyTitle':
+    '{count} device(s) report inconsistent presence',
+  'pages.devices.presenceAnomalyHint':
+    'hbbs and the Console heartbeat are separate sources. Check the client API server address and connectivity between the client, hbbs and the Console.',
+  'pages.devices.presence.hbbsOnlineConsoleOffline':
+    'Registered at hbbs but missing a Console heartbeat',
+  'pages.devices.presence.consoleOnlineHbbsOffline':
+    'Reached the Console API but not currently registered at hbbs',
+  'pages.devices.presence.hbbsOnly':
+    'Online at hbbs but missing from the Console inventory',
 };
