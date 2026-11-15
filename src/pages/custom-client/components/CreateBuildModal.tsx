@@ -170,39 +170,31 @@ const CreateBuildModal: React.FC<CreateBuildModalProps> = ({
       width={900}
       destroyOnHidden
       footer={
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <Button onClick={onCancel}>
-            {intl.formatMessage({
-              id: 'pages.common.cancel',
-              defaultMessage: 'Cancel',
-            })}
-          </Button>
-          <div style={{ display: 'flex', gap: 8 }}>
-            {currentStep > 0 && (
-              <Button onClick={handlePrev}>
-                {intl.formatMessage({
-                  id: 'pages.customClient.prevStep',
-                  defaultMessage: 'Previous',
-                })}
-              </Button>
-            )}
-            {currentStep === 0 && (
-              <Button type="primary" onClick={handleNext}>
-                {intl.formatMessage({
-                  id: 'pages.customClient.nextStep',
-                  defaultMessage: 'Next',
-                })}
-              </Button>
-            )}
-            {currentStep === 1 && (
-              <Button type="primary" loading={loading} onClick={handleSubmit}>
-                {intl.formatMessage({
-                  id: 'pages.customClient.submitBuild',
-                  defaultMessage: 'Submit Build',
-                })}
-              </Button>
-            )}
-          </div>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
+          {currentStep > 0 && (
+            <Button onClick={handlePrev}>
+              {intl.formatMessage({
+                id: 'pages.customClient.prevStep',
+                defaultMessage: 'Previous',
+              })}
+            </Button>
+          )}
+          {currentStep === 0 && (
+            <Button type="primary" onClick={handleNext}>
+              {intl.formatMessage({
+                id: 'pages.customClient.nextStep',
+                defaultMessage: 'Next',
+              })}
+            </Button>
+          )}
+          {currentStep === 1 && (
+            <Button type="primary" loading={loading} onClick={handleSubmit}>
+              {intl.formatMessage({
+                id: 'pages.customClient.submitBuild',
+                defaultMessage: 'Submit Build',
+              })}
+            </Button>
+          )}
         </div>
       }
     >
