@@ -39,7 +39,10 @@ server {
     }
 
     # API requests - reverse proxy to backend
-    location /api/ {
+    # ^~ ensures this prefix match takes priority over regex locations (e.g. static
+    # asset caching by extension), so API paths ending in .png/.ico are proxied
+    # instead of being served as static files.
+    location ^~ /api/ {
         set $backend "${BACKEND_URL}";
         proxy_pass $backend$request_uri;
         proxy_connect_timeout 5s;
