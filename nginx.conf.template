@@ -4,6 +4,8 @@ server {
 
     root /usr/share/nginx/html;
     index index.html;
+    # Allow large file uploads (e.g. custom client builds up to 200 MB).
+    client_max_body_size 200m;
     # DNS resolver is auto-detected from /etc/resolv.conf at container startup.
     resolver ${NGINX_RESOLVER} valid=5s ipv6=off;
 
