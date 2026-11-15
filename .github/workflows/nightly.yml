@@ -290,9 +290,14 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Copy image to ACR
-        run: |
-          docker buildx imagetools create \
-            --provenance=false \
-            --tag ${{ vars.ACR_DOMAIN }}/databk/rustdesk-console-web:nightly \
-            databk/rustdesk-console-web:nightly
+      - name: Build and push Docker image to ACR
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          push: true
+          provenance: false
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            ${{ vars.ACR_DOMAIN }}/databk/rustdesk-console-web:nightly
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

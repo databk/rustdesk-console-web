@@ -331,15 +331,21 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Copy image to ACR
-        run: |
-          docker buildx imagetools create \
-            --provenance=false \
-            --tag ${{ vars.ACR_DOMAIN }}/databk/rustdesk-console-web:${{ steps.version.outputs.version }} \
-            --tag ${{ vars.ACR_DOMAIN }}/databk/rustdesk-console-web:${{ steps.version.outputs.major_minor }} \
-            --tag ${{ vars.ACR_DOMAIN }}/databk/rustdesk-console-web:${{ steps.version.outputs.major }} \
-            --tag ${{ vars.ACR_DOMAIN }}/databk/rustdesk-console-web:latest \
-            databk/rustdesk-console-web:latest
+      - name: Build and push Docker image to ACR
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          push: true
+          provenance: false
+          build-args: SOURCE_COMMIT=${{ needs.prepare.outputs.source_commit }}
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            ${{ vars.ACR_DOMAIN }}/databk/rustdesk-console-web:${{ steps.version.outputs.version }}
+            ${{ vars.ACR_DOMAIN }}/databk/rustdesk-console-web:${{ steps.version.outputs.major_minor }}
+            ${{ vars.ACR_DOMAIN }}/databk/rustdesk-console-web:${{ steps.version.outputs.major }}
+            ${{ vars.ACR_DOMAIN }}/databk/rustdesk-console-web:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: Record immutable Docker evidence
         env:
