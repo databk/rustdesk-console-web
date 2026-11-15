@@ -13,9 +13,9 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { getStrategyList } from '@/services/rustdesk-console';
 import {
   type ConfigOption,
+  configCategories,
   configOptionsMap,
-  getStrategyCategories,
-  getStrategyOptionsByCategory,
+  getOptionsByCategory,
 } from '@/pages/strategy/configOptions';
 import {
   getConfigOptionDescriptionMessageId,
@@ -272,16 +272,15 @@ const StrategyConfigStep: React.FC<StrategyConfigStepProps> = ({
   const handleStrategySelect = (guid: string) => {
     setSelectedStrategyGuid(guid);
     const strategy = strategyList.find((s) => s.guid === guid);
-    if (strategy?.config_options) {
-      const newValues: StrategyConfigValues = {};
-      Object.entries(strategy.config_options).forEach(([key, val]) => {
-        if (configOptionsMap[key]) {
-          newValues[key] = { mode: 'default', value: val };
-        }
-      });
-      setLocalValue(newValues);
-      onChange?.(newValues);
-    }
+    const configOptions = strategy?.config_options ?? {};
+    const newValues: StrategyConfigValues = {};
+    Object.entries(configOptions).forEach(([key, val]) => {
+      if (configOptionsMap[key]) {
+        newValues[key] = { mode: 'default', value: val };
+      }
+    });
+    setLocalValue(newValues);
+    onChange?.(newValues);
   };
 
   const handleClearStrategy = () => {
@@ -300,11 +299,11 @@ const StrategyConfigStep: React.FC<StrategyConfigStepProps> = ({
     (key) => localValue[key]?.mode === 'default',
   ).length;
 
-  const strategyCategories = useMemo(() => getStrategyCategories(), []);
+  const allCategories = useMemo(() => configCategories, []);
   const tabItems = useMemo(
     () =>
-      strategyCategories.map((cat) => {
-        const options = getStrategyOptionsByCategory(cat.key);
+      allCategories.map((cat) => {
+        const options = getOptionsByCategory(cat.key);
         const categoryActiveCount = options.filter(
           (opt) => localValue[opt.key]?.mode !== 'off',
         ).length;
@@ -337,7 +336,7 @@ const StrategyConfigStep: React.FC<StrategyConfigStepProps> = ({
           ),
         };
       }),
-    [strategyCategories, localValue, handleChange, intl],
+    [allCategories, localValue, handleChange, intl],
   );
 
   return (
@@ -401,7 +400,7 @@ const StrategyConfigStep: React.FC<StrategyConfigStepProps> = ({
         </div>
       </div>
 
-      {strategyCategories.length === 0 ? (
+      {allCategories.length === 0 ? (
         <Empty
           description={intl.formatMessage({
             id: 'pages.customClient.noStrategyOptions',

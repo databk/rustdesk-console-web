@@ -137,7 +137,7 @@ const CreateBuildModal: React.FC<CreateBuildModalProps> = ({
   };
 
   const handleSubmit = () => {
-    const formValues = form.getFieldsValue();
+    const formValues = form.getFieldsValue(true);
     onSubmit({
       ...formValues,
       strategyConfig,
