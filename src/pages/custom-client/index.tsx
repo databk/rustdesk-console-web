@@ -13,7 +13,7 @@ import BuildList from './components/BuildList';
 import CreateBuildModal from './components/CreateBuildModal';
 import ProgressModal from './components/ProgressModal';
 import SettingsModal from './components/SettingsModal';
-import { SERVER_FIELDS } from './constants';
+import type { StrategyConfigValues } from './components/StrategyConfigStep';
 
 type PageState = 'loading' | 'settingsRequired' | 'loadFailed' | 'ready';
 
@@ -74,18 +74,15 @@ const CustomClientPage: React.FC = () => {
       custom['disable-tcp-listen'] = values['disable-tcp-listen'];
     if (values['app-name']) custom['app-name'] = values['app-name'];
 
+    const strategyConfig: StrategyConfigValues = values.strategyConfig || {};
     const overrideSettings: Record<string, string> = {};
     const defaultSettings: Record<string, string> = {};
 
-    SERVER_FIELDS.forEach(({ key }) => {
-      const value = values[key];
-      const settingType = values[`${key}_type`];
-      if (value) {
-        if (settingType === 'override') {
-          overrideSettings[key] = value;
-        } else {
-          defaultSettings[key] = value;
-        }
+    Object.entries(strategyConfig).forEach(([key, item]) => {
+      if (item.mode === 'override') {
+        overrideSettings[key] = item.value;
+      } else if (item.mode === 'default' && item.value) {
+        defaultSettings[key] = item.value;
       }
     });
 
