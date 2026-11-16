@@ -40,7 +40,12 @@ const TERMINAL_STATUSES = [
   'action_required',
 ];
 
-const RETRYABLE_STATUSES = ['failed', 'cancelled', 'timed_out', 'action_required'];
+const RETRYABLE_STATUSES = [
+  'failed',
+  'cancelled',
+  'timed_out',
+  'action_required',
+];
 
 const statusConfig: Record<string, { color: string; icon: React.ReactNode }> = {
   pending: { color: 'processing', icon: <LoadingOutlined /> },
