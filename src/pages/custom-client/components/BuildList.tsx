@@ -1,8 +1,11 @@
 import {
   CheckCircleOutlined,
+  ClockCircleOutlined,
   CloudDownloadOutlined,
   DeleteOutlined,
+  GithubOutlined,
   LoadingOutlined,
+  MinusCircleOutlined,
   PlusOutlined,
   RedoOutlined,
   WarningOutlined,
@@ -27,12 +30,28 @@ interface BuildListProps {
   onProgress: (uuid: string) => void;
 }
 
+const TERMINAL_STATUSES = [
+  'completed',
+  'failed',
+  'cancelled',
+  'skipped',
+  'timed_out',
+  'neutral',
+  'action_required',
+];
+
+const RETRYABLE_STATUSES = ['failed', 'cancelled', 'timed_out', 'action_required'];
+
 const statusConfig: Record<string, { color: string; icon: React.ReactNode }> = {
   pending: { color: 'processing', icon: <LoadingOutlined /> },
   building: { color: 'processing', icon: <LoadingOutlined /> },
   completed: { color: 'success', icon: <CheckCircleOutlined /> },
   failed: { color: 'error', icon: <WarningOutlined /> },
   cancelled: { color: 'warning', icon: <WarningOutlined /> },
+  skipped: { color: 'default', icon: <MinusCircleOutlined /> },
+  timed_out: { color: 'error', icon: <ClockCircleOutlined /> },
+  neutral: { color: 'default', icon: <MinusCircleOutlined /> },
+  action_required: { color: 'warning', icon: <WarningOutlined /> },
 };
 
 const BuildList: React.FC<BuildListProps> = ({
@@ -69,6 +88,22 @@ const BuildList: React.FC<BuildListProps> = ({
       cancelled: intl.formatMessage({
         id: 'pages.customClient.statusCancelled',
         defaultMessage: 'Build Cancelled',
+      }),
+      skipped: intl.formatMessage({
+        id: 'pages.customClient.statusSkipped',
+        defaultMessage: 'Build Skipped',
+      }),
+      timed_out: intl.formatMessage({
+        id: 'pages.customClient.statusTimedOut',
+        defaultMessage: 'Build Timed Out',
+      }),
+      neutral: intl.formatMessage({
+        id: 'pages.customClient.statusNeutral',
+        defaultMessage: 'Build Neutral',
+      }),
+      action_required: intl.formatMessage({
+        id: 'pages.customClient.statusActionRequired',
+        defaultMessage: 'Action Required',
       }),
     };
     return map[status] || status;
@@ -142,6 +177,11 @@ const BuildList: React.FC<BuildListProps> = ({
     }
   };
 
+  const githubActionUrl = (record: API.CustomClientBuild): string | null => {
+    if (!record.githubRunId) return null;
+    return `https://github.com/rustdesk/rustdesk/actions/runs/${record.githubRunId}`;
+  };
+
   const columns: ProColumns<API.CustomClientBuild>[] = [
     {
       title: intl.formatMessage({
@@ -209,17 +249,16 @@ const BuildList: React.FC<BuildListProps> = ({
         defaultMessage: 'Action',
       }),
       key: 'action',
-      width: 240,
+      width: 280,
       search: false,
       render: (_: any, record: API.CustomClientBuild) => {
         const isDownloading = downloadLoading.has(record.uuid);
         const files: string[] = record.files ? JSON.parse(record.files) : [];
         const isInProgress =
           record.status === 'pending' || record.status === 'building';
-        const isTerminal =
-          record.status === 'failed' ||
-          record.status === 'cancelled' ||
-          record.status === 'completed';
+        const isTerminal = TERMINAL_STATUSES.includes(record.status);
+        const isRetryable = RETRYABLE_STATUSES.includes(record.status);
+        const actionUrl = githubActionUrl(record);
 
         return (
           <Space
@@ -238,7 +277,7 @@ const BuildList: React.FC<BuildListProps> = ({
                 />
               </Button>
             )}
-            {record.status === 'failed' && (
+            {isRetryable && (
               <Button
                 type="link"
                 size="small"
@@ -248,6 +287,20 @@ const BuildList: React.FC<BuildListProps> = ({
                 <FormattedMessage
                   id="pages.customClient.retryBuild"
                   defaultMessage="Retry"
+                />
+              </Button>
+            )}
+            {actionUrl && (
+              <Button
+                type="link"
+                size="small"
+                icon={<GithubOutlined />}
+                href={actionUrl}
+                target="_blank"
+              >
+                <FormattedMessage
+                  id="pages.customClient.viewOnGithub"
+                  defaultMessage="GitHub"
                 />
               </Button>
             )}

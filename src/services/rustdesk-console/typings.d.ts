@@ -9,7 +9,16 @@ declare namespace API {
   type FileAuditType = 0 | 1;
   type AlarmType = 0 | 1 | 2 | 6 | 7 | 8 | 9 | 10;
   type ShareRule = 1 | 2 | 3;
-  type BuildStatus = 'pending' | 'building' | 'completed' | 'failed' | 'cancelled';
+  type BuildStatus =
+    | 'pending'
+    | 'building'
+    | 'completed'
+    | 'failed'
+    | 'cancelled'
+    | 'skipped'
+    | 'timed_out'
+    | 'neutral'
+    | 'action_required';
 
   // ── Auth ────────────────────────────────────────────────────────
 
@@ -1255,7 +1264,7 @@ declare namespace API {
   type SubmitCustomClientBuildResult = {
     uuid: string;
     status: string;
-    message: string;
+
   };
 
   type CustomClientBuild = {
@@ -1265,7 +1274,7 @@ declare namespace API {
     arch: string;
     custom: string | null;
     status: BuildStatus;
-    message: string | null;
+
     files: string | null;
     callbackToken: string;
     githubRunId: number | null;

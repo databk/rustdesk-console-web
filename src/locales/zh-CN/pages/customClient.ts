@@ -47,6 +47,12 @@ export default {
   'pages.customClient.statusCompleted': '构建完成',
   'pages.customClient.statusFailed': '构建失败',
   'pages.customClient.statusCancelled': '构建已取消',
+  'pages.customClient.statusSkipped': '构建已跳过',
+  'pages.customClient.statusTimedOut': '构建超时',
+  'pages.customClient.statusNeutral': '构建中性',
+  'pages.customClient.statusActionRequired': '需要操作',
+  'pages.customClient.buildSubmitted': '构建请求已提交',
+  'pages.customClient.viewOnGithub': 'GitHub',
   'pages.customClient.settings': '设置',
   'pages.customClient.settingsRequired': 'GitHub Token 未配置',
   'pages.customClient.settingsRequiredDesc':

@@ -105,7 +105,12 @@ const CustomClientPage: React.FC = () => {
         arch: values.os === 'all' ? undefined : values.arch,
         custom,
       });
-      msgApi.success(result.message || 'Build request submitted');
+      msgApi.success(
+        intl.formatMessage({
+          id: 'pages.customClient.buildSubmitted',
+          defaultMessage: 'Build request submitted',
+        }),
+      );
       setCreateModalOpen(false);
       setPageState('ready');
       buildListActionRef.current?.reload();
@@ -130,7 +135,12 @@ const CustomClientPage: React.FC = () => {
         arch: record.arch ? (record.arch as any) : undefined,
         custom,
       });
-      msgApi.success(result.message || 'Build request submitted');
+      msgApi.success(
+        intl.formatMessage({
+          id: 'pages.customClient.buildSubmitted',
+          defaultMessage: 'Build request submitted',
+        }),
+      );
       buildListActionRef.current?.reload();
     } catch (error: any) {
       msgApi.error(
