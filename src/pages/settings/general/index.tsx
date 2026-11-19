@@ -43,6 +43,7 @@ const LANGUAGE_OPTIONS = [
   { value: 'pt-BR', label: 'Português' },
   { value: 'ru-RU', label: 'Русский' },
   { value: 'fr-FR', label: 'Français' },
+  { value: 'es-ES', label: 'Español' },
 ];
 
 const GeneralSettings: React.FC = () => {

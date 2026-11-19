@@ -1,5 +1,6 @@
 import { expect, test } from '@jest/globals';
 import en from './en-US/pages';
+import es from './es-ES/pages';
 import zh from './zh-CN/pages';
 import fr from './fr-FR/pages';
 import pt from './pt-BR/pages';
@@ -16,6 +17,7 @@ test.each([
   ['法语', fr],
   ['葡萄牙语', pt],
   ['俄语', ru],
+  ['西班牙语', es],
 ] as const)('%s 网页角色和审计文案完整', (_, dictionary) => {
   expect(keys.length).toBe(22);
   for (const key of keys)

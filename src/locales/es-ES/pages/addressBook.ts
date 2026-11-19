@@ -1,0 +1,100 @@
+export default {
+  'pages.addressBook.name': 'Nombre',
+  'pages.addressBook.note': 'Nota',
+  'pages.addressBook.shared': 'Libretas de direcciones compartidas',
+  'pages.addressBook.create': 'Crear libreta de direcciones',
+  'pages.addressBook.edit': 'Editar libreta de direcciones',
+  'pages.addressBook.personal': 'Libreta de direcciones personal',
+  'pages.addressBook.currentAddressBook': 'Libreta de direcciones',
+  'pages.addressBook.myAddressBook': 'Mi libreta de direcciones',
+  'pages.addressBook.loadFailed':
+    'No se pudieron cargar las libretas de direcciones',
+  'pages.addressBook.addPeer': 'Añadir por ID',
+  'pages.addressBook.addTag': 'Añadir etiqueta',
+  'pages.addressBook.tagName': 'Nombre de la etiqueta',
+  'pages.addressBook.tagAdded': 'Etiqueta añadida',
+  'pages.addressBook.tagAddFailed': 'No se pudo añadir la etiqueta',
+  'pages.addressBook.tagDeleted': 'Etiqueta eliminada',
+  'pages.addressBook.tagDeleteFailed': 'No se pudo eliminar la etiqueta',
+  'pages.addressBook.deleteTagConfirm':
+    '¿Seguro que quieres eliminar esta etiqueta?',
+  'pages.addressBook.tagModeUnion': 'Cualquiera',
+  'pages.addressBook.tagModeIntersection': 'Todas',
+  'pages.addressBook.importDevices': 'Importar desde Dispositivos',
+  'pages.addressBook.importSuccess': 'Se han importado {count} dispositivo(s)',
+  'pages.addressBook.importPartialFailed':
+    'No se pudieron importar {count} dispositivo(s)',
+  'pages.addressBook.createSuccess': 'Libreta de direcciones creada',
+  'pages.addressBook.createFailed':
+    'No se pudo crear la libreta de direcciones',
+  'pages.addressBook.updateSuccess': 'Libreta de direcciones actualizada',
+  'pages.addressBook.updateFailed':
+    'No se pudo actualizar la libreta de direcciones',
+  'pages.addressBook.deleteSuccess': 'Libreta(s) de direcciones eliminada(s)',
+  'pages.addressBook.deleteFailed':
+    'No se pudo eliminar la(s) libreta(s) de direcciones',
+  'pages.addressBook.deleteConfirm':
+    '¿Seguro que quieres eliminar esta libreta de direcciones?',
+  'pages.addressBook.batchDeleteConfirm':
+    '¿Seguro que quieres eliminar las libretas de direcciones seleccionadas?',
+  'pages.addressBook.device': 'Dispositivo',
+  'pages.addressBook.alias': 'Alias',
+  'pages.addressBook.tags': 'Etiquetas',
+  'pages.addressBook.peerAdded': 'Dispositivo añadido',
+  'pages.addressBook.peerAddFailed': 'No se pudo añadir el dispositivo',
+  'pages.addressBook.peerDeleted': 'Dispositivo eliminado',
+  'pages.addressBook.peerDeleteFailed': 'No se pudo eliminar el dispositivo',
+  'pages.addressBook.deletePeerConfirm':
+    '¿Seguro que quieres eliminar este dispositivo?',
+  'pages.addressBook.import': 'Importar desde Dispositivos',
+  'pages.addressBook.userGroup': 'Grupo de usuarios',
+  'pages.addressBook.permission': 'Permiso',
+  'pages.addressBook.permissionRead': 'Solo lectura',
+  'pages.addressBook.permissionReadWrite': 'Lectura y escritura',
+  'pages.addressBook.permissionFull': 'Control total',
+  'pages.addressBook.shareAccess': 'Compartir',
+  'pages.addressBook.accessTitle': '{name}: gestión de accesos',
+  'pages.addressBook.accessReadOnlyTitle':
+    '{name}: configuración de uso compartido',
+  'pages.addressBook.viewShareSettings': 'Configuración de uso compartido',
+  'pages.addressBook.shareType': 'Tipo de uso compartido',
+  'pages.addressBook.shareTarget': 'Destinatario',
+  'pages.addressBook.shareTypeEveryone': 'Todos',
+  'pages.addressBook.shareTypeUser': 'Usuario',
+  'pages.addressBook.shareTypeGroup': 'Grupo de usuarios',
+  'pages.addressBook.selectUser': 'Selecciona un usuario',
+  'pages.addressBook.selectUserPlaceholder':
+    'Buscar por nombre de usuario o correo electrónico',
+  'pages.addressBook.everyoneHint':
+    'Todos los usuarios tendrán acceso a esta libreta de direcciones',
+  'pages.addressBook.allUsers': 'Todos los usuarios',
+  'pages.addressBook.addAccess': 'Añadir acceso',
+  'pages.addressBook.accessLoadFailed':
+    'No se pudieron cargar las reglas de acceso',
+  'pages.addressBook.accessAdded': 'Regla de acceso añadida',
+  'pages.addressBook.accessAddFailed': 'No se pudo añadir la regla de acceso',
+  'pages.addressBook.accessUpdated': 'Regla de acceso actualizada',
+  'pages.addressBook.accessUpdateFailed':
+    'No se pudo actualizar la regla de acceso',
+  'pages.addressBook.accessDeleted': 'Regla de acceso eliminada',
+  'pages.addressBook.accessDeleteFailed':
+    'No se pudo eliminar la regla de acceso',
+  'pages.addressBook.accessDeleteConfirm': '¿Eliminar esta regla de acceso?',
+  'pages.addressBook.color': 'Color',
+  'pages.addressBook.deviceInfo': 'usuario@nombre_del_dispositivo',
+  'pages.addressBook.manageTags': 'Gestionar etiquetas',
+  'pages.addressBook.newTagName': 'Nuevo nombre de la etiqueta',
+  'pages.addressBook.peerUpdateFailed': 'No se pudo actualizar el dispositivo',
+  'pages.addressBook.peerUpdated': 'Dispositivo actualizado',
+  'pages.addressBook.renameTag': 'Cambiar nombre de la etiqueta',
+  'pages.addressBook.selectTags': 'Selecciona etiquetas',
+  'pages.addressBook.tagColorUpdateFailed':
+    'No se pudo actualizar el color de la etiqueta',
+  'pages.addressBook.tagRenameFailed':
+    'No se pudo cambiar el nombre de la etiqueta',
+  'pages.addressBook.tagRenamed': 'Nombre de la etiqueta cambiado',
+  'pages.addressBook.untagged': 'Sin etiqueta',
+  'pages.addressBook.searchIdPlaceholder': 'Buscar por ID',
+  'pages.addressBook.searchNamePlaceholder': 'Buscar por nombre',
+  'pages.addressBook.searchNotePlaceholder': 'Buscar por nota',
+};
