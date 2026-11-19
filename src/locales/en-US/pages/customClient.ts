@@ -48,6 +48,12 @@ export default {
   'pages.customClient.statusCompleted': 'Build Completed',
   'pages.customClient.statusFailed': 'Build Failed',
   'pages.customClient.statusCancelled': 'Build Cancelled',
+  'pages.customClient.statusSkipped': 'Build Skipped',
+  'pages.customClient.statusTimedOut': 'Build Timed Out',
+  'pages.customClient.statusNeutral': 'Build Neutral',
+  'pages.customClient.statusActionRequired': 'Action Required',
+  'pages.customClient.buildSubmitted': 'Build request submitted',
+  'pages.customClient.viewOnGithub': 'GitHub',
   'pages.customClient.settings': 'Settings',
   'pages.customClient.settingsRequired': 'GitHub token not configured',
   'pages.customClient.settingsRequiredDesc':
