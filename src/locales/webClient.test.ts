@@ -7,6 +7,7 @@ import type { CallState } from '../features/web-client/worker/contract';
 import type { PasteStatus } from '../features/web-client/clipboard/paste';
 import type { FileProgress } from '../features/web-client/files/transfer';
 import en from './en-US/webClient';
+import es from './es-ES/webClient';
 import frenchEntry from './fr-FR';
 import fr from './fr-FR/webClient';
 import pt from './pt-BR/webClient';
@@ -19,6 +20,7 @@ const dictionaries: Record<string, Record<string, string>> = {
   'pt-BR': pt,
   'ru-RU': ru,
   'fr-FR': fr,
+  'es-ES': es,
 };
 const english: Record<string, string> = en;
 const keys = Object.keys(english).sort();
@@ -186,7 +188,7 @@ test('会话、权限、粘贴和文件的动态状态也都有翻译', () => {
   }
 });
 
-test('实际会话组件的静态及条件文案键均有五语翻译，不依赖英文回退', () => {
+test('实际会话组件的静态及条件文案键均有六语翻译，不依赖英文回退', () => {
   const pageDirectory = join(__dirname, '../pages/web-client');
   const referenced = new Set<string>();
   for (const file of readdirSync(pageDirectory)) {
