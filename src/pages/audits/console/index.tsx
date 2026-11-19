@@ -170,6 +170,18 @@ const ConsoleAudit: React.FC = () => {
       search: false,
     },
     {
+      title: (
+        <FormattedMessage
+          id="pages.audits.clientIp"
+          defaultMessage="Client IP"
+        />
+      ),
+      dataIndex: 'client_ip',
+      width: 150,
+      ellipsis: true,
+      search: false,
+    },
+    {
       title: <FormattedMessage id="pages.audits.time" defaultMessage="Time" />,
       dataIndex: 'created_at',
       valueType: 'dateTime',
@@ -309,6 +321,26 @@ const ConsoleAudit: React.FC = () => {
                 :
               </strong>{' '}
               {selected.target_type || '-'} / {selected.target_guid || '-'}
+            </Typography.Paragraph>
+            <Typography.Paragraph>
+              <strong>
+                {intl.formatMessage({
+                  id: 'pages.audits.clientIp',
+                  defaultMessage: 'Client IP',
+                })}
+                :
+              </strong>{' '}
+              {selected.client_ip || '-'}
+            </Typography.Paragraph>
+            <Typography.Paragraph>
+              <strong>
+                {intl.formatMessage({
+                  id: 'pages.audits.userAgent',
+                  defaultMessage: 'User agent',
+                })}
+                :
+              </strong>{' '}
+              {selected.user_agent || '-'}
             </Typography.Paragraph>
             <Typography.Paragraph>
               <strong>

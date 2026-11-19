@@ -47,6 +47,8 @@ export default {
   'pages.audits.target': 'Target',
   'pages.audits.beforeState': 'Before state',
   'pages.audits.afterState': 'After state',
+  'pages.audits.clientIp': 'Client IP',
+  'pages.audits.userAgent': 'User agent',
   'pages.audits.type': 'Type',
   'pages.audits.connType.remoteDesktop': 'Remote Desktop',
   'pages.audits.connType.fileTransfer': 'File Transfer',

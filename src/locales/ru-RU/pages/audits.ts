@@ -46,6 +46,8 @@ export default {
   'pages.audits.target': 'Цель',
   'pages.audits.beforeState': 'Состояние до',
   'pages.audits.afterState': 'Состояние после',
+  'pages.audits.clientIp': 'IP клиента',
+  'pages.audits.userAgent': 'User-Agent',
   'pages.audits.type': 'Тип',
   'pages.audits.connType.remoteDesktop': 'Удаленный рабочий стол',
   'pages.audits.connType.fileTransfer': 'Передача файлов',

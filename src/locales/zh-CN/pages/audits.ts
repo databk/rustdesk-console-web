@@ -41,6 +41,8 @@ export default {
   'pages.audits.target': '目标',
   'pages.audits.beforeState': '变更前状态',
   'pages.audits.afterState': '变更后状态',
+  'pages.audits.clientIp': '客户端 IP',
+  'pages.audits.userAgent': '用户代理',
   'pages.audits.type': '类型',
   'pages.audits.connType.remoteDesktop': '远程桌面',
   'pages.audits.connType.fileTransfer': '文件传输',

@@ -112,4 +112,6 @@ export default {
   'pages.audits.target': 'Cible',
   'pages.audits.beforeState': 'État antérieur',
   'pages.audits.afterState': 'État postérieur',
+  'pages.audits.clientIp': 'IP du client',
+  'pages.audits.userAgent': 'Agent utilisateur',
 };
