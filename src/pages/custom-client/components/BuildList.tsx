@@ -70,6 +70,8 @@ const BuildList: React.FC<BuildListProps> = ({
   const { message: msgApi } = App.useApp();
   const pollRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
   const pollDataRef = React.useRef<() => Promise<void>>(async () => {});
+  const requestIdRef = React.useRef(0);
+  const mountedRef = React.useRef(true);
   const [dataSource, setDataSource] = React.useState<API.CustomClientBuild[]>(
     [],
   );
@@ -120,8 +122,10 @@ const BuildList: React.FC<BuildListProps> = ({
   };
 
   const loadData = React.useCallback(async () => {
+    const requestId = ++requestIdRef.current;
     try {
       const records = await getBuildList();
+      if (requestId !== requestIdRef.current || !mountedRef.current) return;
       setDataSource((prev) => {
         const prevMap = new Map(prev.map((item) => [item.uuid, item]));
         return records.map((record) => {
@@ -154,8 +158,11 @@ const BuildList: React.FC<BuildListProps> = ({
   pollDataRef.current = loadData;
 
   React.useEffect(() => {
+    mountedRef.current = true;
     loadData();
     return () => {
+      mountedRef.current = false;
+      requestIdRef.current++;
       if (pollRef.current) clearInterval(pollRef.current);
     };
   }, [loadData]);
