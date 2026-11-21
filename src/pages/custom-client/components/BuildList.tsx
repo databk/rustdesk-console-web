@@ -8,6 +8,7 @@ import {
   MinusCircleOutlined,
   PlusOutlined,
   RedoOutlined,
+  ReloadOutlined,
   WarningOutlined,
 } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
@@ -68,6 +69,12 @@ const BuildList: React.FC<BuildListProps> = ({
   const intl = useIntl();
   const { message: msgApi } = App.useApp();
   const pollRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
+  const pollDataRef = React.useRef<() => Promise<void>>(async () => {});
+  const requestIdRef = React.useRef(0);
+  const mountedRef = React.useRef(true);
+  const [dataSource, setDataSource] = React.useState<API.CustomClientBuild[]>(
+    [],
+  );
   const [downloadLoading, setDownloadLoading] = React.useState<Set<string>>(
     new Set(),
   );
@@ -114,25 +121,55 @@ const BuildList: React.FC<BuildListProps> = ({
     return map[status] || status;
   };
 
-  const managePolling = (records: API.CustomClientBuild[]) => {
-    const hasPending = records.some(
-      (r) => r.status === 'pending' || r.status === 'building',
-    );
-    if (hasPending && !pollRef.current) {
-      pollRef.current = setInterval(() => {
-        actionRef.current?.reload();
-      }, 5000);
-    } else if (!hasPending && pollRef.current) {
-      clearInterval(pollRef.current);
-      pollRef.current = null;
+  const loadData = React.useCallback(async () => {
+    const requestId = ++requestIdRef.current;
+    try {
+      const records = await getBuildList();
+      if (requestId !== requestIdRef.current || !mountedRef.current) return;
+      setDataSource((prev) => {
+        const prevMap = new Map(prev.map((item) => [item.uuid, item]));
+        return records.map((record) => {
+          const existing = prevMap.get(record.uuid);
+          if (
+            existing &&
+            existing.status === record.status &&
+            existing.files === record.files &&
+            existing.githubRunId === record.githubRunId
+          ) {
+            return existing;
+          }
+          return existing ? { ...existing, ...record } : record;
+        });
+      });
+      const hasPending = records.some(
+        (r) => r.status === 'pending' || r.status === 'building',
+      );
+      if (hasPending && !pollRef.current) {
+        pollRef.current = setInterval(() => pollDataRef.current(), 5000);
+      } else if (!hasPending && pollRef.current) {
+        clearInterval(pollRef.current);
+        pollRef.current = null;
+      }
+    } catch {
+      // ignore polling errors
     }
-  };
+  }, []);
+
+  pollDataRef.current = loadData;
 
   React.useEffect(() => {
+    mountedRef.current = true;
+    loadData();
     return () => {
+      mountedRef.current = false;
+      requestIdRef.current++;
       if (pollRef.current) clearInterval(pollRef.current);
     };
-  }, []);
+  }, [loadData]);
+
+  React.useEffect(() => {
+    actionRef.current = { reload: loadData } as ActionType;
+  }, [loadData, actionRef]);
 
   const handleDelete = async (uuid: string) => {
     try {
@@ -143,7 +180,7 @@ const BuildList: React.FC<BuildListProps> = ({
           defaultMessage: 'Build record deleted',
         }),
       );
-      actionRef.current?.reload();
+      await loadData();
     } catch {
       msgApi.error(
         intl.formatMessage({
@@ -378,10 +415,10 @@ const BuildList: React.FC<BuildListProps> = ({
         persistenceType: 'localStorage',
         persistenceKey: 'custom_client_build_list_columns_state',
       }}
-      actionRef={actionRef}
       rowKey="uuid"
       search={false}
       columns={columns}
+      dataSource={dataSource}
       pagination={{
         defaultPageSize: 20,
         showSizeChanger: true,
@@ -392,9 +429,10 @@ const BuildList: React.FC<BuildListProps> = ({
         density: true,
         setting: { listsHeight: 400 },
         fullScreen: false,
-        reload: true,
+        reload: false,
       }}
       toolBarRender={() => [
+        <Button key="refresh" icon={<ReloadOutlined />} onClick={loadData} />,
         <Button
           key="create"
           type="primary"
@@ -407,21 +445,6 @@ const BuildList: React.FC<BuildListProps> = ({
           />
         </Button>,
       ]}
-      request={async () => {
-        try {
-          const records = await getBuildList();
-          managePolling(records);
-          return {
-            data: records,
-            success: true,
-          };
-        } catch {
-          return {
-            data: [],
-            success: false,
-          };
-        }
-      }}
     />
   );
 };
