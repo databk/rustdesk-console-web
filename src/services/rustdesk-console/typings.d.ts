@@ -682,6 +682,8 @@ declare namespace API {
     before_state?: unknown;
     after_state?: unknown;
     request_id?: string | null;
+    client_ip?: string | null;
+    user_agent?: string | null;
     created_at?: string | null;
   };
 
