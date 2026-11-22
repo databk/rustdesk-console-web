@@ -29,6 +29,7 @@ interface BuildListProps {
   onCreate: () => void;
   onRetry: (record: API.CustomClientBuild) => void;
   onProgress: (uuid: string) => void;
+  generatorRepo: string;
 }
 
 const TERMINAL_STATUSES = [
@@ -65,6 +66,7 @@ const BuildList: React.FC<BuildListProps> = ({
   onCreate,
   onRetry,
   onProgress,
+  generatorRepo,
 }) => {
   const intl = useIntl();
   const { message: msgApi } = App.useApp();
@@ -221,7 +223,7 @@ const BuildList: React.FC<BuildListProps> = ({
 
   const githubActionUrl = (record: API.CustomClientBuild): string | null => {
     if (!record.githubRunId) return null;
-    return `https://github.com/rustdesk/rustdesk/actions/runs/${record.githubRunId}`;
+    return `https://github.com/${generatorRepo}/actions/runs/${record.githubRunId}`;
   };
 
   const columns: ProColumns<API.CustomClientBuild>[] = [
