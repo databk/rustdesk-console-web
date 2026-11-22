@@ -26,6 +26,7 @@ const CustomClientPage: React.FC = () => {
   const [settingsModalOpen, setSettingsModalOpen] = useState(false);
   const [buildLoading, setBuildLoading] = useState(false);
   const [progressUuid, setProgressUuid] = useState<string | null>(null);
+  const [generatorRepo, setGeneratorRepo] = useState('');
 
   const buildListActionRef = useRef<ActionType | null>(null);
 
@@ -42,6 +43,7 @@ const CustomClientPage: React.FC = () => {
       setPageState('settingsRequired');
       return;
     }
+    setGeneratorRepo(settings.generatorRepo);
     try {
       await getBuildList();
       setPageState('ready');
@@ -234,6 +236,7 @@ const CustomClientPage: React.FC = () => {
           onCreate={() => setCreateModalOpen(true)}
           onRetry={handleRetry}
           onProgress={(uuid) => setProgressUuid(uuid)}
+          generatorRepo={generatorRepo}
         />
       )}
       <CreateBuildModal
