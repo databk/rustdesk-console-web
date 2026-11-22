@@ -8,7 +8,6 @@ import {
   MinusCircleOutlined,
   PlusOutlined,
   RedoOutlined,
-  ReloadOutlined,
   WarningOutlined,
 } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
@@ -431,10 +430,9 @@ const BuildList: React.FC<BuildListProps> = ({
         density: true,
         setting: { listsHeight: 400 },
         fullScreen: false,
-        reload: false,
+        reload: true,
       }}
       toolBarRender={() => [
-        <Button key="refresh" icon={<ReloadOutlined />} onClick={loadData} />,
         <Button
           key="create"
           type="primary"
