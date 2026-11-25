@@ -75,9 +75,12 @@ export async function disconnectConnection(
   connIds: number[],
   options?: Record<string, unknown>,
 ) {
-  return request<API.ResponseResult>(`/api/devices/${uuid}/disconnect`, {
-    method: 'POST',
-    data: { connIds },
-    ...(options || {}),
-  });
+  return request<API.ResponseResult>(
+    `/api/devices/${encodeURIComponent(uuid)}/disconnect`,
+    {
+      method: 'POST',
+      data: { connIds },
+      ...(options || {}),
+    },
+  );
 }
