@@ -57,14 +57,16 @@ export async function batchUpdateDeviceStatus(params: {
 }
 
 export async function deleteDevice(guid: string) {
-  return request(`/api/devices/${guid}`, { method: 'DELETE' });
+  return request(`/api/devices/${encodeURIComponent(guid)}`, {
+    method: 'DELETE',
+  });
 }
 
 export async function updateDevice(
   guid: string,
   data: API.UpdateDeviceParams,
 ) {
-  return request(`/api/devices/${guid}`, {
+  return request(`/api/devices/${encodeURIComponent(guid)}`, {
     method: 'PATCH',
     data,
   });
